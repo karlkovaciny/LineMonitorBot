@@ -1,4 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+	<item
+        android:id="@+id/action_pick_job"
+        android:orderInCategory="2"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_pick_job_title"
+        android:actionLayout="@layout/action_pick_job"  />
+	<item
+        android:id="@+id/action_pick_line"
+        android:orderInCategory="3"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_pick_line_title"
+        android:actionLayout="@layout/action_pick_line"  />
 
     <item
         android:id="@+id/action_settings"
