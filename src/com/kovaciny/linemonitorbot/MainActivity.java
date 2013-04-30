@@ -116,11 +116,12 @@ public class MainActivity extends FragmentActivity implements
 		@Override
 		public Fragment getItem(int position) {
 			// getItem is called to instantiate the fragment for the given page.
-			// Return a DummySectionFragment (defined as a static inner class
-			// below) with the page number as its lone argument.
-			Fragment fragment = new DummySectionFragment();
+						
+			// Return a SectionFragment with the page number as its lone argument.
+			
+			Fragment fragment = new SectionFragment();
 			Bundle args = new Bundle();
-			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+			args.putInt(SectionFragment.ARG_SECTION_NUMBER, position + 1);
 			fragment.setArguments(args);
 			return fragment;
 		}
@@ -150,25 +151,63 @@ public class MainActivity extends FragmentActivity implements
 	 * A dummy fragment representing a section of the app, but that simply
 	 * displays dummy text.
 	 */
-	public static class DummySectionFragment extends Fragment {
+	public static class SectionFragment extends Fragment {
+		int mSectionNum;
+		
 		/**
 		 * The fragment argument representing the section number for this
 		 * fragment.
 		 */
 		public static final String ARG_SECTION_NUMBER = "section_number";
+		
+		/**
+	     * Create a new instance of SectionFragment, providing "sectionnum"
+	     * as an argument.
+	     */
+	    static SectionFragment newInstance(int sectionnum) {
+	        SectionFragment f = new SectionFragment();
 
-		public DummySectionFragment() {
+	        // Supply num input as an argument.
+	        Bundle args = new Bundle();
+	        args.putInt(ARG_SECTION_NUMBER, sectionnum);
+	        f.setArguments(args);
+
+	        return f;
+	    }
+		
+		
+		public SectionFragment() {
 		}
 
 		@Override
+		public void onCreate (Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			if ( getArguments() != null ) {
+				mSectionNum = getArguments().getInt(ARG_SECTION_NUMBER, 1000);
+			}
+			else mSectionNum = 1000;
+		}
+				
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main_dummy,
+			int resLayout;
+			switch (mSectionNum) {
+			case 1: resLayout = R.layout.skid_times_fragment;
+					break;
+			case 2: resLayout = R.layout.rates_fragment;
+					break;
+			case 3: resLayout = R.layout.draining_fragment;
+					break;
+			default: resLayout = R.layout.fragment_main_dummy;
+			}
+			View rootView = inflater.inflate(resLayout,
 					container, false);
-			TextView dummyTextView = (TextView) rootView
-					.findViewById(R.id.section_label);
-			dummyTextView.setText(Integer.toString(getArguments().getInt(
-					ARG_SECTION_NUMBER)));
+			//TextView dummyTextView = (TextView) rootView
+					//.findViewById(R.id.section_label);
+			//dummyTextView.setText(Integer.toString(getArguments().getInt(
+					//ARG_SECTION_NUMBER)));
+			//dummyTextView.setText(Integer.toString(mSectionNum));
+			//dummyTextView.append("more sissies");
 			return rootView;
 		}
 	}

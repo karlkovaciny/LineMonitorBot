@@ -4,8 +4,8 @@
     <string name="app_name">LineMonitorBot</string>
     <string name="action_settings">Settings</string>
     <string name="title_section1">Skid Times</string>
-    <string name="title_section2">Draining</string>
-    <string name="title_section3">Rates</string>
+    <string name="title_section2">Rates</string>
+    <string name="title_section3">Draining</string>
     <string name="action_pick_line_title">Pick Line</string>
     <string name="action_pick_job_title">Pick Job</string>
     <string-array name="line_list">
@@ -30,7 +30,7 @@
     </string-array>
     <string-array name="jobs_list">
         <item >W0 #1</item>
-        <item >+ New</item>
+        <item >+ New&#160;</item>
     </string-array>
 
 </resources>
