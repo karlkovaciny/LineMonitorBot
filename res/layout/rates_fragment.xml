@@ -12,7 +12,7 @@
             android:id="@+id/buttonCalculateColorPercent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Calculate Color %" />
+            android:text="Calculate Color % and pop up" />
 
         <LinearLayout
             android:layout_width="wrap_content"
