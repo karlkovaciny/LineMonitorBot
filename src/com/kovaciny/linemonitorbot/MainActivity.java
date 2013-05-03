@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 
 public class MainActivity extends FragmentActivity implements
 		ActionBar.TabListener {
@@ -29,6 +31,8 @@ public class MainActivity extends FragmentActivity implements
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
+	MenuItem mJobPicker;
+	MenuItem mDebugDisplay;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +79,27 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		mJobPicker = (MenuItem) menu.findItem(R.id.action_pick_job);
+		mJobPicker.setTitle("but it is working");
+		//mDebugDisplay = (MenuItem) menu.findItem(R.id.debug_display);
+		//boolean b = mJobPicker.hasSubMenu();
+		//Menu pickJobSubmenu = mJobPicker.getSubMenu();
+		if (Math.random() > 0.5) mDebugDisplay.setTitle("has menu"); else mDebugDisplay.setTitle("no menu");
+//		pickJobSubmenu.add("big gay sissy");
+		String lineList[] = getResources().getStringArray(R.array.line_list);
+		ArrayAdapter<String> lineListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, lineList);
+		//+		lineSpinner.setAdapter(lineListAdapter);*/
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+	    case R.id.new_wo:
+	        item.setTitle("new wo");
+	        return true;
+	    }
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
