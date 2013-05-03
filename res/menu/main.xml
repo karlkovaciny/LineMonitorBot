@@ -10,13 +10,14 @@
         android:id="@+id/action_pick_line"
         android:orderInCategory="1"
         android:showAsAction="ifRoom"
-        android:title="@string/action_pick_line_title" />
+        android:title="@string/action_pick_line_title" >
 		<!-- pick line submenu --> 
         <menu>
             <item android:id="@+id/line_list"
-                  android:title="@string/placeholder"
-                  />
-        </menu>	
+                  android:title="@string/placeholder" >
+            </item>
+        </menu>
+    </item>
 	<item
         android:id="@+id/action_pick_job"
         android:orderInCategory="2"

@@ -10,9 +10,9 @@
     <string name="action_pick_job_title">Pick Job</string>
     <string-array name="line_list">
         <item >Line 1</item>
-        <item >Line 10</item>
-        <item >Line 10</item>
-        <item >Line 10</item>
+        <item >Line 2</item>
+        <item >Line 3</item>
+        <item >Line 4</item>
         <item >Line 10</item>
         <item >Line 10</item>
         <item >Line 10</item>
@@ -34,5 +34,5 @@
     </string-array>
 	<string name="new_wo">+ New</string>
 	<string name="clear_wos">Clear</string>
-	<string name="placeholder">Placeholder</string>
+	<string name="placeholder">...</string>
 </resources>

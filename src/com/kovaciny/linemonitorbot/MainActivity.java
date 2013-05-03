@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 
 public class MainActivity extends FragmentActivity implements
 		ActionBar.TabListener {
@@ -32,7 +31,8 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	ViewPager mViewPager;
 	MenuItem mJobPicker;
-	MenuItem mDebugDisplay;
+	MenuItem mLinePicker;
+	MenuItem mDebugDisplay;	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,15 +80,30 @@ public class MainActivity extends FragmentActivity implements
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		mJobPicker = (MenuItem) menu.findItem(R.id.action_pick_job);
-		mJobPicker.setTitle("but it is working");
-		//mDebugDisplay = (MenuItem) menu.findItem(R.id.debug_display);
-		//boolean b = mJobPicker.hasSubMenu();
-		//Menu pickJobSubmenu = mJobPicker.getSubMenu();
-		if (Math.random() > 0.5) mDebugDisplay.setTitle("has menu"); else mDebugDisplay.setTitle("no menu");
-//		pickJobSubmenu.add("big gay sissy");
+		mLinePicker = (MenuItem) menu.findItem(R.id.action_pick_line);
+		mDebugDisplay = (MenuItem) menu.findItem(R.id.debug_display);
+		mDebugDisplay.setVisible(false);
+		
+		//populate the line picker with lines
+		Menu pickLineSubMenu = mLinePicker.getSubMenu();
+		pickLineSubMenu.clear();
 		String lineList[] = getResources().getStringArray(R.array.line_list);
-		ArrayAdapter<String> lineListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, lineList);
-		//+		lineSpinner.setAdapter(lineListAdapter);*/
+		for (int i=0; i<lineList.length; i++) {
+			pickLineSubMenu.add(lineList[i]);
+		}
+		
+		//populate the job picker with jobs
+		Menu pickJobSubMenu = mJobPicker.getSubMenu();
+		pickJobSubMenu.clear();
+		String jobList[]= {"Wo #1", "Wo #2"};
+		int jobListGroup = 0;
+		for (int i=0; i<jobList.length; i++) {
+			int menuId = i;
+			pickJobSubMenu.add(jobListGroup, menuId, Menu.FLAG_APPEND_TO_GROUP, jobList[i]);
+		}
+		int jobOptionsGroup = 1;
+		pickJobSubMenu.add(jobOptionsGroup, R.id.new_wo, Menu.FLAG_APPEND_TO_GROUP, "+ New");
+		pickJobSubMenu.add(jobOptionsGroup, R.id.clear_wos, Menu.FLAG_APPEND_TO_GROUP, "Clear");
 		return true;
 	}
 
