@@ -4,7 +4,7 @@
         android:id="@+id/debug_display"
         android:orderInCategory="0"
         android:showAsAction="ifRoom"
-        android:title="debug" />
+        android:title="@string/debug_display" />
     
 	<item
         android:id="@+id/action_pick_line"

@@ -34,5 +34,6 @@
     </string-array>
 	<string name="new_wo">+ New</string>
 	<string name="clear_wos">Clear</string>
-	<string name="placeholder">...</string>
+	<string name="placeholder">&#8230;</string>
+	<string name="debug_display">Debug</string>
 </resources>
