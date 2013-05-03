@@ -197,22 +197,16 @@ public class MainActivity extends FragmentActivity implements
 	}
 	
 	public class PopulateMenusTask extends AsyncTask<Void,Void,Void> {
-		
-		//Context mContext;
-		
+				
 		public PopulateMenusTask() {
 			super();
-			//this.mContext = getApplicationContext();
 		}
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			// using mContext
-		    SystemClock.sleep(5000);
 			return null;
 		}
 		@Override
 		protected void onPostExecute(Void result) {
-			mLinePicker.setTitle("Async complete");
 			super.onPostExecute(result);
 		}
 		
