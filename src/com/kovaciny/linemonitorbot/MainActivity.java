@@ -4,10 +4,10 @@ import java.util.Locale;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -76,6 +76,9 @@ public class MainActivity extends FragmentActivity implements
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
+		
+		//instantiate database.
+		new PopulateMenusTask().execute();
 	}
 
 	@Override
@@ -88,7 +91,6 @@ public class MainActivity extends FragmentActivity implements
 		mDebugDisplay.setVisible(false);
 		
 		//populate the line picker with lines
-		new PopulateMenusTask().execute();
 		Menu pickLineSubMenu = mLinePicker.getSubMenu();
 		pickLineSubMenu.clear();
 		String lineList[] = getResources().getStringArray(R.array.line_list);
@@ -203,6 +205,22 @@ public class MainActivity extends FragmentActivity implements
 		}
 		@Override
 		protected Void doInBackground(Void... arg0) {
+			/*	// Gets the data repository in write mode
+			PrimexSQLiteOpenHelper mDbHelper = new PrimexSQLiteOpenHelper(getApplicationContext());
+			SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+			// Create a new map of values, where column names are the keys
+			ContentValues values = new ContentValues();
+			values.put(PrimexDatabaseSchema.PrimexLines.COLUMN_NAME_ENTRY_ID, id);
+			values.put(PrimexDatabaseSchema.PrimexLines.COLUMN_NAME_LINE_NUMBER, title);
+			values.put(PrimexDatabaseSchema.PrimexLines.COLUMN_NAME_CONTENT, content);
+
+			// Insert the new row, returning the primary key value of the new row
+			long newRowId;
+			newRowId = db.insert(
+					PrimexDatabaseSchema.PrimexLines.TABLE_NAME,
+					null,
+			         values);*/
 			return null;
 		}
 		@Override
