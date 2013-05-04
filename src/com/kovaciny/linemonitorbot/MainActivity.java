@@ -6,8 +6,10 @@ import java.util.Locale;
 import android.app.ActionBar;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -79,6 +81,7 @@ public class MainActivity extends FragmentActivity implements
 		
 		//instantiate database.
 		new PopulateMenusTask().execute();
+		
 	}
 
 	@Override
@@ -91,12 +94,6 @@ public class MainActivity extends FragmentActivity implements
 		mDebugDisplay.setVisible(false);
 		
 		//populate the line picker with lines
-		Menu pickLineSubMenu = mLinePicker.getSubMenu();
-		pickLineSubMenu.clear();
-		String lineList[] = getResources().getStringArray(R.array.line_list);
-		for (int i=0; i<lineList.length; i++) {
-			pickLineSubMenu.add(lineList[i]);
-		}
 		
 		//populate the job picker with jobs
 		Menu pickJobSubMenu = mJobPicker.getSubMenu();
@@ -211,11 +208,11 @@ public class MainActivity extends FragmentActivity implements
 			DataHelper dh = new DataHelper(getBaseContext());
 			String Status = (String) dh.getCode("appState","safetyDisabled");
 			//mserviceStart = (Date) dh.getCode("serviceStartTime",null);
-			for (int i=0; i<20; i++) {
+			/*for (int i=0; i<20; i++) {
 				String ii = Integer.toString(i);
 				String lineii = "Line " + ii;
 				dh.setCode(ii, lineii, "String");
-			}
+			}*/
 			//dh.setCode("key", "value", "String");
 			for (int i=0; i<20; i++) {
 				mLineList.add(i, (String) dh.getCode(Integer.toString(i), "default")); 
