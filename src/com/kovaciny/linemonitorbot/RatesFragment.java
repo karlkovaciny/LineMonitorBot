@@ -1,9 +1,11 @@
 package com.kovaciny.linemonitorbot;
 
 import java.text.DecimalFormat;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,6 +35,18 @@ public class RatesFragment extends SectionFragment {
 		junkrate = (TextView) rootView.findViewById(R.id.textView2);
 		junkedit = (EditText) rootView.findViewById(R.id.editText1);
 		 junkedit.setText("1");
+		 junkedit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus == true) {
+					junkedit.setError("got focus");
+				}
+				else junkedit.setError("lost focus");
+				
+			}
+		});
+		
 		junkbuttonconc.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
