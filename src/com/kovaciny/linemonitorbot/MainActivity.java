@@ -1,6 +1,6 @@
 package com.kovaciny.linemonitorbot;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.ActionBar;
@@ -200,7 +200,7 @@ public class MainActivity extends FragmentActivity implements
 	
 	public class PopulateMenusTask extends AsyncTask<Void,Void,Void> {
 		
-		String mStatus;
+		ArrayList<String> mLineList = new ArrayList<String>();
 		//Date mserviceStart;
 		
 		public PopulateMenusTask() {
@@ -211,17 +211,20 @@ public class MainActivity extends FragmentActivity implements
 			DataHelper dh = new DataHelper(getBaseContext());
 			String Status = (String) dh.getCode("appState","safetyDisabled");
 			//mserviceStart = (Date) dh.getCode("serviceStartTime",null);
-			for (int i=0; i<10; i++) {
-				mStatus += (String) dh.getCode(Integer.toString(i), "default");
-				/*String ii = Integer.toString(i);
+			for (int i=0; i<20; i++) {
+				String ii = Integer.toString(i);
 				String lineii = "Line " + ii;
-				dh.setCode(ii, lineii, "String");*/
+				dh.setCode(ii, lineii, "String");
 			}
 			//dh.setCode("key", "value", "String");
-			
+			for (int i=0; i<20; i++) {
+				mLineList.add(i, (String) dh.getCode(Integer.toString(i), "default")); 
+			}
+			mLineList.get(7);
 			dh.close();
 			dh = null;
 			
+
 			/*	// Gets the data repository in write mode
 			PrimexSQLiteOpenHelper mDbHelper = new PrimexSQLiteOpenHelper(getApplicationContext());
 			SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -243,7 +246,13 @@ public class MainActivity extends FragmentActivity implements
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			showDummyDialog(mStatus);
+			Menu pickLineSubMenu = mLinePicker.getSubMenu();
+			pickLineSubMenu.clear();
+			//String lineList[] = getResources().getStringArray(R.array.line_list);
+			for (int i=0; i<mLineList.size(); i++) {
+				pickLineSubMenu.add(mLineList.get(i));
+			}
+			//showDummyDialog(mStatus);
 		}
 		
 	
