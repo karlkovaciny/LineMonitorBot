@@ -34,99 +34,109 @@ public class DataHelper {
 
     public void setCode(String codeName, Object codeValue, String codeDataType)
     {
-        Cursor codeRow  = db.rawQuery("SELECT * FROM code WHERE codeName = '"+  codeName + "'", null);
-        String cv = "" ;
-
-        if (codeDataType.toLowerCase().trim().equals("long") == true)
-        {   
-            cv = String.valueOf(codeValue);
-        }
-        else if (codeDataType.toLowerCase().trim().equals("int") == true)
-        {
-            cv = String.valueOf(codeValue);
-        }
-        else if (codeDataType.toLowerCase().trim().equals("date") == true)
-        {
-            cv = String.valueOf(((Date)codeValue).getTime());
-        }
-        else if (codeDataType.toLowerCase().trim().equals("boolean") == true)
-        {
-            String.valueOf(codeValue);
-        }
-        else
-        {
-            cv = String.valueOf(codeValue);
-        }
-
-        if(codeRow.getCount() > 0) //exists-- update
-        { 
-            db.execSQL("update code set codeValue = '" + cv + 
-                "' where codeName = '" + codeName + "'");
-        }
-        else // does not exist, insert
-        {
-            db.execSQL("INSERT INTO code (codeName, codeValue, codeDataType) VALUES(" + 
-                    "'" + codeName + "'," + 
-                    "'" + cv + "'," + 
-                    "'" + codeDataType + "')" );
-        }
+    	Cursor codeRow = null;
+        try {
+		        codeRow  = db.rawQuery("SELECT * FROM code WHERE codeName = '"+  codeName + "'", null);
+		        
+		        String cv = "" ;
+		
+		        if (codeDataType.toLowerCase().trim().equals("long") == true)
+		        {   
+		            cv = String.valueOf(codeValue);
+		        }
+		        else if (codeDataType.toLowerCase().trim().equals("int") == true)
+		        {
+		            cv = String.valueOf(codeValue);
+		        }
+		        else if (codeDataType.toLowerCase().trim().equals("date") == true)
+		        {
+		            cv = String.valueOf(((Date)codeValue).getTime());
+		        }
+		        else if (codeDataType.toLowerCase().trim().equals("boolean") == true)
+		        {
+		            String.valueOf(codeValue);
+		        }
+		        else
+		        {
+		            cv = String.valueOf(codeValue);
+		        }
+		
+		        if(codeRow.getCount() > 0) //exists-- update
+		        { 
+		            db.execSQL("update code set codeValue = '" + cv + 
+		                "' where codeName = '" + codeName + "'");
+		        }
+		        else // does not exist, insert
+		        {
+		            db.execSQL("INSERT INTO code (codeName, codeValue, codeDataType) VALUES(" + 
+		                    "'" + codeName + "'," + 
+		                    "'" + cv + "'," + 
+		                    "'" + codeDataType + "')" );
+		        }
+	        } finally {
+	        	if (codeRow != null) codeRow.close();
+	        }
     }
 
     public Object getCode(String codeName,Object defaultValue)
     {
-
-        //check to see if it already exists
-        String codeValue = "";
-        String codeDataType = "";
-        boolean found = false;
-        Cursor codeRow  = db.rawQuery("SELECT * FROM code WHERE codeName = '"+  codeName + "'", null);
-        if(codeRow.moveToFirst()) 
-        {
-            codeValue = codeRow.getString(codeRow.getColumnIndex("codeValue"));
-            codeDataType = codeRow.getString(codeRow.getColumnIndex("codeDataType"));
-            found = true;
-        }
-
-        if (found == false)
-        {
-            return defaultValue;
-        }
-        else if (codeDataType.toLowerCase().trim().equals("long") == true)
-        {   
-            if (codeValue.equals("") == true)
-            {
-                return (long)0;
-            }
-            return Long.parseLong(codeValue);
-        }
-        else if (codeDataType.toLowerCase().trim().equals("int") == true)
-        {
-            if (codeValue.equals("") == true)
-            {
-                return (int)0;
-            }
-            return Integer.parseInt(codeValue);
-        }
-        else if (codeDataType.toLowerCase().trim().equals("date") == true)
-        {
-            if (codeValue.equals("") == true)
-            {
-                return null;
-            }
-            return new Date(Long.parseLong(codeValue));
-        }
-        else if (codeDataType.toLowerCase().trim().equals("boolean") == true)
-        {
-            if (codeValue.equals("") == true)
-            {
-                return false;
-            }
-            return Boolean.parseBoolean(codeValue);
-        }
-        else
-        {
-            return (String)codeValue;
-        }
+    	Cursor codeRow = null; 
+    	try {
+	        //check to see if it already exists
+	        String codeValue = "";
+	        String codeDataType = "";
+	        boolean found = false;
+	        codeRow  = db.rawQuery("SELECT * FROM code WHERE codeName = '"+  codeName + "'", null);
+	        if(codeRow.moveToFirst()) 
+	        {
+	            codeValue = codeRow.getString(codeRow.getColumnIndex("codeValue"));
+	            codeDataType = codeRow.getString(codeRow.getColumnIndex("codeDataType"));
+	            found = true;
+	        }
+	
+	        if (found == false)
+	        {
+	            return defaultValue;
+	        }
+	        else if (codeDataType.toLowerCase().trim().equals("long") == true)
+	        {   
+	            if (codeValue.equals("") == true)
+	            {
+	                return (long)0;
+	            }
+	            return Long.parseLong(codeValue);
+	        }
+	        else if (codeDataType.toLowerCase().trim().equals("int") == true)
+	        {
+	            if (codeValue.equals("") == true)
+	            {
+	                return (int)0;
+	            }
+	            return Integer.parseInt(codeValue);
+	        }
+	        else if (codeDataType.toLowerCase().trim().equals("date") == true)
+	        {
+	            if (codeValue.equals("") == true)
+	            {
+	                return null;
+	            }
+	            return new Date(Long.parseLong(codeValue));
+	        }
+	        else if (codeDataType.toLowerCase().trim().equals("boolean") == true)
+	        {
+	            if (codeValue.equals("") == true)
+	            {
+	                return false;
+	            }
+	            return Boolean.parseBoolean(codeValue);
+	        }
+	        else
+	        {
+	        	return (String)codeValue;
+	        }
+    	} finally {
+    		if (codeRow != null) codeRow.close();
+    	}
     }
 
 
