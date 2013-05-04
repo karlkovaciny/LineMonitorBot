@@ -1,11 +1,11 @@
 package com.kovaciny.linemonitorbot;
 
+import java.util.Date;
 import java.util.Locale;
 
 import android.app.ActionBar;
+import android.app.DialogFragment;
 import android.app.FragmentTransaction;
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -199,12 +199,29 @@ public class MainActivity extends FragmentActivity implements
 	}
 	
 	public class PopulateMenusTask extends AsyncTask<Void,Void,Void> {
-				
+		
+		String mStatus;
+		//Date mserviceStart;
+		
 		public PopulateMenusTask() {
 			super();
 		}
 		@Override
 		protected Void doInBackground(Void... arg0) {
+			DataHelper dh = new DataHelper(getBaseContext());
+			String Status = (String) dh.getCode("appState","safetyDisabled");
+			//mserviceStart = (Date) dh.getCode("serviceStartTime",null);
+			for (int i=0; i<10; i++) {
+				mStatus += (String) dh.getCode(Integer.toString(i), "default");
+				/*String ii = Integer.toString(i);
+				String lineii = "Line " + ii;
+				dh.setCode(ii, lineii, "String");*/
+			}
+			//dh.setCode("key", "value", "String");
+			
+			dh.close();
+			dh = null;
+			
 			/*	// Gets the data repository in write mode
 			PrimexSQLiteOpenHelper mDbHelper = new PrimexSQLiteOpenHelper(getApplicationContext());
 			SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -226,9 +243,15 @@ public class MainActivity extends FragmentActivity implements
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
+			showDummyDialog(mStatus);
 		}
 		
 	
+	}
+	void showDummyDialog(String text) {
+	    // Create the fragment and show it as a dialog.
+	    DialogFragment newFragment = MyDialogFragment.newInstance(text);
+	    newFragment.show(getFragmentManager(), "dialog");
 	}
 
 }
