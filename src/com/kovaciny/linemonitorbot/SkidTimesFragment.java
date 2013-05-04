@@ -13,20 +13,20 @@ import android.widget.Toast;
 
 
 public class SkidTimesFragment extends SectionFragment {
-	private SkidFinishedBroadcastReceiver alarm;
+	private SkidFinishedBroadcastReceiver mAlarmReceiver;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_alarm_manager);
-        alarm = new SkidFinishedBroadcastReceiver();
+        mAlarmReceiver = new SkidFinishedBroadcastReceiver();
     }
     
     public void onetimeTimer(View view, Integer interval){
         
     	Context context = getActivity();
-        if(alarm != null){
-         alarm.setOnetimeTimer(context, interval);
+        if(mAlarmReceiver != null){
+         mAlarmReceiver.setOnetimeTimer(context, interval);
         }else{
          Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
         }
@@ -46,7 +46,7 @@ public class SkidTimesFragment extends SectionFragment {
 			@Override
 			public void onClick(View v) {
 				showTimePickerDialog(v);
-				onetimeTimer(v, 20*60*1000);
+				onetimeTimer(v, 60*60*1000);
 			}
 		});
 		
