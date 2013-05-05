@@ -2,16 +2,18 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
+
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:orientation="vertical" >
+	    android:orientation="vertical"
+	    android:divider="?android:attr/dividerHorizontal"
+	    android:showDividers="middle" >
 
 		<LinearLayout
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:orientation="vertical"
-		    android:background="@drawable/border_rectangle" >"
+		    android:orientation="vertical">
 
 			<TextView
 			    android:id="@+id/dummy_dialog_text"
@@ -77,8 +79,7 @@
 	                    android:id="@+id/textView2"
 	                    android:layout_width="wrap_content"
 	                    android:layout_height="wrap_content"
-	                    android:text="SkidNo"
-	                    android:textColor="@color/teal" />
+	                    android:text="SkidNo" />
 	
 	                <TextView
 	                    android:id="@+id/textView3"
