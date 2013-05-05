@@ -18,7 +18,7 @@
 	    <LinearLayout
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_gravity="right"
+	        android:layout_gravity="center_horizontal"
 	        android:layout_marginBottom="@dimen/fragment_vertical_margin"
 	        android:orientation="horizontal" >
 
@@ -35,22 +35,23 @@
 	                android:text="Sheets per minute" />
 
 	            <EditText
-	                android:id="@+id/editText6"
+	                android:id="@+id/sheets_per_minute"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_gravity="right"
 	                android:layout_weight="1"
 	                android:gravity="center_vertical|right"
 	                android:inputType="numberDecimal"
-	                android:maxEms="4"
-	                android:maxLength="5"
-	                android:minEms="4"
+	                android:maxEms="3"
+	                android:maxLength="4"
+	                android:minEms="3"
+	                android:selectAllOnFocus="true"
 	                android:text="10" />
 
 	        </LinearLayout>
 
 	        <ImageButton
-	            android:id="@+id/imageButton1"
+	            android:id="@+id/calc_sheets_per_minute"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:src="@drawable/calculator" />
@@ -115,43 +116,52 @@
 	                android:showDividers="beginning|middle|end" >
 
 	                <EditText
-	                    android:id="@+id/editText1"
+	                    android:id="@+id/skid_number"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="number"
 	                    android:maxEms="3"
 	                    android:maxLength="4"
 	                    android:minEms="3"
+	                    android:selectAllOnFocus="true"
 	                    android:text="123" >
+
 	                </EditText>
 
 	                <EditText
-	                    android:id="@+id/editText3"
+	                    android:id="@+id/current_count"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="number"
+	                    android:maxLength="4"
+	                    android:selectAllOnFocus="true"
 	                    android:text="1000" />
 
 	                <EditText
-	                    android:id="@+id/editText4"
+	                    android:id="@+id/total_sheets_per_skid"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="number"
+	                    android:maxLength="3"
+	                    android:selectAllOnFocus="true"
 	                    android:text="1000" />
 
 	                <EditText
-	                    android:id="@+id/editText2"
+	                    android:id="@+id/skid_start_time"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="time"
+	                    android:maxLength="5"
 	                    android:text="23:33" />
 
 	                <EditText
-	                    android:id="@+id/editText7"
+	                    android:id="@+id/skid_finish_time"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="time"
+	                    android:maxLength="5"
 	                    android:text="23:34" />
+
 	            </TableRow>
 	            
 	            <TableRow
@@ -226,13 +236,6 @@
 	        android:layout_weight="1"
 	        android:orientation="vertical" >
 	    </LinearLayout>
-
-	    <Button
-	        android:id="@+id/button1"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:text="Calculate" />
 
 	    <LinearLayout
 	        android:layout_width="match_parent"

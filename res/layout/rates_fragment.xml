@@ -12,7 +12,7 @@
             android:id="@+id/buttonCalculateColorPercent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Calculate Color % and pop up" />
+            android:text="Calculate Color %" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -26,7 +26,7 @@
                 android:text="Nova setpt" />
 
             <EditText
-                android:id="@+id/editText1"
+                android:id="@+id/skid_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"

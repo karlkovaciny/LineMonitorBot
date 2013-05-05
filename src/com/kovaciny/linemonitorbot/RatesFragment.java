@@ -33,7 +33,7 @@ public class RatesFragment extends SectionFragment {
 		junkbuttonconc = (Button) rootView.findViewById(R.id.buttonCalculateColorPercent);
 		junktextview = (TextView) rootView.findViewById(R.id.textView3);
 		junkrate = (TextView) rootView.findViewById(R.id.textView2);
-		junkedit = (EditText) rootView.findViewById(R.id.editText1);
+		junkedit = (EditText) rootView.findViewById(R.id.skid_number);
 		 junkedit.setText("1");
 		 junkedit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			
