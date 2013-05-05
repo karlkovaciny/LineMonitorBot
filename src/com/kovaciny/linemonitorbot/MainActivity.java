@@ -6,10 +6,8 @@ import java.util.Locale;
 import android.app.ActionBar;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -17,10 +15,15 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 
 public class MainActivity extends FragmentActivity implements
 		ActionBar.TabListener {
 
+	private static final int LINE_LIST_MENU_GROUP = 1111;
+	private static final int LINE_LIST_ID_RANDOMIZER = 1234;
+	private static final int JOB_LIST_MENU_GROUP = 2222;
+	private static final int JOB_OPTIONS_MENU_GROUP = 2223;
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a
@@ -35,9 +38,17 @@ public class MainActivity extends FragmentActivity implements
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
-	MenuItem mJobPicker;
-	MenuItem mLinePicker;
-	MenuItem mDebugDisplay;	
+
+
+	private MenuItem mJobPicker;
+	private MenuItem mLinePicker;
+	private MenuItem mDebugDisplay;
+	private Integer mSelectedLine;
+	
+	/**
+	 * Handles database connections.
+	 */
+	DataHelper mDataHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +89,6 @@ public class MainActivity extends FragmentActivity implements
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
-		
-		//instantiate database.
-		new PopulateMenusTask().execute();
-		
 	}
 
 	@Override
@@ -94,32 +101,82 @@ public class MainActivity extends FragmentActivity implements
 		mDebugDisplay.setVisible(false);
 		
 		//populate the line picker with lines
+		ArrayList<String> lineList = new ArrayList<String>();				
+		for (int i=0; i<20; i++) {
+			String line = (String) mDataHelper.getCode(Integer.toString(i), "default");
+			if (line != "default") lineList.add(i, line); 
+		}
 		
+		Menu pickLineSubMenu = mLinePicker.getSubMenu();
+		pickLineSubMenu.clear();
+		
+		for (int i=0; i<lineList.size(); i++) {
+			//don't have access to View.generateViewId(), so fake a random ID
+			pickLineSubMenu.add(LINE_LIST_MENU_GROUP, i*LINE_LIST_ID_RANDOMIZER, Menu.FLAG_APPEND_TO_GROUP, lineList.get(i));
+		}
+		
+		//Select the line that we used last time
+		setSelectedLine((Integer) mDataHelper.getCode("mSelectedLine", 0));
+				
 		//populate the job picker with jobs
 		Menu pickJobSubMenu = mJobPicker.getSubMenu();
 		pickJobSubMenu.clear();
 		String jobList[]= {"Wo #1", "Wo #2"};
-		int jobListGroup = 0;
 		for (int i=0; i<jobList.length; i++) {
 			int menuId = i;
-			pickJobSubMenu.add(jobListGroup, menuId, Menu.FLAG_APPEND_TO_GROUP, jobList[i]);
+			pickJobSubMenu.add(JOB_LIST_MENU_GROUP, menuId, Menu.FLAG_APPEND_TO_GROUP, jobList[i]);
 		}
-		int jobOptionsGroup = 1;
-		pickJobSubMenu.add(jobOptionsGroup, R.id.new_wo, Menu.FLAG_APPEND_TO_GROUP, "+ New");
-		pickJobSubMenu.add(jobOptionsGroup, R.id.clear_wos, Menu.FLAG_APPEND_TO_GROUP, "Clear");
+		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.new_wo, Menu.FLAG_APPEND_TO_GROUP, "+ New");
+		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.clear_wos, Menu.FLAG_APPEND_TO_GROUP, "Clear");
 		return true;
+	}
+
+	public Integer getSelectedLine() {
+		return mSelectedLine;
+	}
+
+	public void setSelectedLine(Integer selectedLine) {
+		this.mSelectedLine = selectedLine;
+		if (mSelectedLine != null) {
+			CharSequence lineTitle = mLinePicker.getSubMenu().findItem(mSelectedLine * LINE_LIST_ID_RANDOMIZER).getTitle();
+			mLinePicker.setTitle(lineTitle);
+		}
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		
+		if (item.getGroupId() == LINE_LIST_MENU_GROUP) {
+			setSelectedLine(item.getItemId() / LINE_LIST_ID_RANDOMIZER);
+		}
+		if (item.getGroupId() == JOB_LIST_MENU_GROUP) {
+			mJobPicker.setTitle(item.getTitle());
+		}
+		
 		switch (item.getItemId()) {
-	    case R.id.new_wo:
+		case R.id.new_wo:
 	        item.setTitle("new wo");
-	        return true;
+	        break;
+	    default:
 	    }
 		return super.onOptionsItemSelected(item);
 	}
 
+
+/*
+ * ---------------------------------------------------------
+ * start of functions I never change
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
 	@Override
 	public void onTabSelected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
@@ -195,65 +252,84 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 	
+/*
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * end of functions I never change
+ * ---------------------------------------
+ */
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		
+		//open database connection
+		mDataHelper = new DataHelper(this);
+		//String Status = (String) dh.getCode("appState","safetyDisabled");
+		//mserviceStart = (Date) dh.getCode("serviceStartTime",null);
+		
+		//populate database
+		/*mDataHelper.upgradeDb(1, 2);
+		String lineList[] = this.getResources().getStringArray(R.array.line_list);
+		
+		for (int i=0; i<lineList.length; i++) {
+			String key = Integer.toString(i);
+			String value = lineList[i];
+			mDataHelper.setCode(key, value, "String");
+		}*/
+		
+		//look up database asynchronously.
+		//new PopulateMenusTask().execute();		
+	}
+
+	
 	public class PopulateMenusTask extends AsyncTask<Void,Void,Void> {
-		
-		ArrayList<String> mLineList = new ArrayList<String>();
-		//Date mserviceStart;
-		
+				
 		public PopulateMenusTask() {
 			super();
 		}
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			DataHelper dh = new DataHelper(getBaseContext());
-			String Status = (String) dh.getCode("appState","safetyDisabled");
-			//mserviceStart = (Date) dh.getCode("serviceStartTime",null);
-			/*for (int i=0; i<20; i++) {
-				String ii = Integer.toString(i);
-				String lineii = "Line " + ii;
-				dh.setCode(ii, lineii, "String");
-			}*/
-			//dh.setCode("key", "value", "String");
-			for (int i=0; i<20; i++) {
-				mLineList.add(i, (String) dh.getCode(Integer.toString(i), "default")); 
-			}
-			mLineList.get(7);
-			dh.close();
-			dh = null;
 			
-
-			/*	// Gets the data repository in write mode
-			PrimexSQLiteOpenHelper mDbHelper = new PrimexSQLiteOpenHelper(getApplicationContext());
-			SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-			// Create a new map of values, where column names are the keys
-			ContentValues values = new ContentValues();
-			values.put(PrimexDatabaseSchema.PrimexLines.COLUMN_NAME_ENTRY_ID, id);
-			values.put(PrimexDatabaseSchema.PrimexLines.COLUMN_NAME_LINE_NUMBER, title);
-			values.put(PrimexDatabaseSchema.PrimexLines.COLUMN_NAME_CONTENT, content);
-
-			// Insert the new row, returning the primary key value of the new row
-			long newRowId;
-			newRowId = db.insert(
-					PrimexDatabaseSchema.PrimexLines.TABLE_NAME,
-					null,
-			         values);*/
+			
 			return null;
 		}
+		
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			Menu pickLineSubMenu = mLinePicker.getSubMenu();
-			pickLineSubMenu.clear();
-			//String lineList[] = getResources().getStringArray(R.array.line_list);
-			for (int i=0; i<mLineList.size(); i++) {
-				pickLineSubMenu.add(mLineList.get(i));
-			}
-			//showDummyDialog(mStatus);
+			
+			//Now it's safe to update UI elements.
+			
 		}
-		
-	
 	}
+
+	@Override
+	protected void onPause() {
+		//store persistent data
+		mDataHelper.setCode("mSelectedLine", getSelectedLine(), "INTEGER");
+		mDataHelper.close();
+		mDataHelper = null;
+		super.onPause();
+	}
+
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+	}
+	
 	void showDummyDialog(String text) {
 	    // Create the fragment and show it as a dialog.
 	    DialogFragment newFragment = MyDialogFragment.newInstance(text);

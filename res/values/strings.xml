@@ -10,23 +10,18 @@
     <string name="action_pick_job_title">Pick Job</string>
     <string-array name="line_list">
         <item >Line 1</item>
-        <item >Line 2</item>
-        <item >Line 3</item>
-        <item >Line 4</item>
+        <item >Line 6</item>
+        <item >Line 7</item>
+        <item >Line 9</item>
         <item >Line 10</item>
-        <item >Line 10</item>
-        <item >Line 10</item>
-        <item >Line 10</item>
-        <item >Line 10</item>
-        <item >Line 10</item>
-        <item >Line 10</item>
-        <item >Line 10</item>
-        <item >Line 10</item>
-        <item >Line 10</item>
-        <item >Line 10</item>
-        <item >Line 10</item>
-        <item >Line 10</item>
-        <item >Line 10</item>
+        <item >Line 11</item>
+        <item >Line 12</item>
+        <item >Line 13</item>
+        <item >Line 14</item>
+        <item >Line 15</item>
+        <item >Line 16</item>
+        <item >Line 17</item>
+        <item >Line 18</item>        
     </string-array>
     <string-array name="jobs_list">
         <item >W0 #1</item>

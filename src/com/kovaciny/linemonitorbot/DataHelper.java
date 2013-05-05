@@ -1,6 +1,8 @@
 package com.kovaciny.linemonitorbot;
 
 import java.util.Date;
+import java.util.Locale;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -31,6 +33,9 @@ public class DataHelper {
         SQLiteDatabase.releaseMemory();
     }
 
+    public void upgradeDb(int oldVersion, int newVersion) {
+    	oh.onUpgrade(db, oldVersion, newVersion);
+    }
 
     public void setCode(String codeName, Object codeValue, String codeDataType)
     {
@@ -44,7 +49,7 @@ public class DataHelper {
 		        {   
 		            cv = String.valueOf(codeValue);
 		        }
-		        else if (codeDataType.toLowerCase().trim().equals("int") == true)
+		        else if (codeDataType.toLowerCase().trim().equals("integer") == true)
 		        {
 		            cv = String.valueOf(codeValue);
 		        }
@@ -65,6 +70,9 @@ public class DataHelper {
 		        { 
 		            db.execSQL("update code set codeValue = '" + cv + 
 		                "' where codeName = '" + codeName + "'");
+		            //otherwise you can't correct bad data type
+		            db.execSQL("update code set codeDataType = '" + codeDataType + 
+			                "' where codeName = '" + codeName + "'");
 		        }
 		        else // does not exist, insert
 		        {
@@ -78,7 +86,7 @@ public class DataHelper {
 	        }
     }
 
-    public Object getCode(String codeName,Object defaultValue)
+    public Object getCode(String codeName,Object defaultValue) //note, defaultValue can't be null because this PoS isn't parameterized and thinks 
     {
     	Cursor codeRow = null; 
     	try {
@@ -98,7 +106,7 @@ public class DataHelper {
 	        {
 	            return defaultValue;
 	        }
-	        else if (codeDataType.toLowerCase().trim().equals("long") == true)
+	        else if (codeDataType.toLowerCase(Locale.getDefault()).trim().equals("long") == true)
 	        {   
 	            if (codeValue.equals("") == true)
 	            {
@@ -106,15 +114,15 @@ public class DataHelper {
 	            }
 	            return Long.parseLong(codeValue);
 	        }
-	        else if (codeDataType.toLowerCase().trim().equals("int") == true)
+	        else if (codeDataType.toLowerCase(Locale.getDefault()).trim().equals("integer") == true)
 	        {
-	            if (codeValue.equals("") == true)
+	            if ( (codeValue == null) || codeValue.equals("") || codeValue.equals("null") ) //because .equals("") didn't catch nulls.
 	            {
-	                return (int)0;
+	                return 0;  //can't return null because not an int
 	            }
 	            return Integer.parseInt(codeValue);
 	        }
-	        else if (codeDataType.toLowerCase().trim().equals("date") == true)
+	        else if (codeDataType.toLowerCase(Locale.getDefault()).trim().equals("date") == true)
 	        {
 	            if (codeValue.equals("") == true)
 	            {
@@ -122,7 +130,7 @@ public class DataHelper {
 	            }
 	            return new Date(Long.parseLong(codeValue));
 	        }
-	        else if (codeDataType.toLowerCase().trim().equals("boolean") == true)
+	        else if (codeDataType.toLowerCase(Locale.getDefault()).trim().equals("boolean") == true)
 	        {
 	            if (codeValue.equals("") == true)
 	            {
@@ -154,6 +162,10 @@ public class DataHelper {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            // This database is only a cache for online data, so its upgrade policy is
+            // to simply to discard the data and start over
+            db.execSQL("DROP TABLE IF EXISTS code");
+            onCreate(db);
         }
     }
 }

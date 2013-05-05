@@ -12,7 +12,8 @@
         android:showAsAction="ifRoom"
         android:title="@string/action_pick_line_title" >
 		<!-- pick line submenu --> 
-        <menu>
+        <menu 
+            android:id = "@+id/pick_line_submenu">
             <item android:id="@+id/line_list"
                   android:title="@string/placeholder" >
             </item>
@@ -24,7 +25,8 @@
         android:showAsAction="ifRoom"
         android:title="@string/action_pick_job_title" >
         <!-- pick job submenu -->
-        <menu>
+        <menu
+            android:id="@+id/pick_job_submenu">
             <item android:id="@+id/new_wo"
                   android:title="@string/new_wo" />
             <item android:id="@+id/clear_wos"
