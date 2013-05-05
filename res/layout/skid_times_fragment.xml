@@ -6,8 +6,13 @@
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:orientation="vertical"
 	    android:divider="?android:attr/dividerHorizontal"
+	    android:dividerPadding="@dimen/fragment_divider_padding"
+	    android:orientation="vertical"
+	    android:paddingBottom="@dimen/fragment_vertical_margin"
+	    android:paddingLeft="@dimen/fragment_horizontal_margin"
+	    android:paddingRight="@dimen/fragment_vertical_margin"
+	    android:paddingTop="@dimen/fragment_horizontal_margin"
 	    android:showDividers="middle" >
 
 		<LinearLayout
@@ -20,13 +25,7 @@
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:text="Sheets per Minute" />
-
-			<LinearLayout
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:orientation="vertical" >
-			</LinearLayout>
-
+♥
 			<LinearLayout
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content" >
@@ -39,7 +38,8 @@
 			        android:inputType="numberDecimal"
 			        android:maxEms="4"
 			        android:maxLength="5"
-			        android:minEms="4" >
+			        android:minEms="4"
+			        android:text="1" >
 
 			    </EditText>
 
@@ -48,6 +48,7 @@
 			        android:layout_height="match_parent"
 			        android:layout_weight="1"
 			        android:orientation="vertical" >
+
 			    </LinearLayout>
 
 			    <Button
@@ -68,103 +69,127 @@
 	        <TableLayout
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:layout_weight="1" >
+	            android:layout_weight="1"
+	            android:divider="?android:attr/dividerHorizontal"
+	            android:dividerPadding="0dp"
+	            android:showDividers="beginning|middle|end" >
 	
 	            <TableRow
 	                android:id="@+id/tableRow1"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content" >
+	                android:divider="?android:attr/dividerVertical"
+	                android:dividerPadding="0dp"
+	                android:gravity="center_horizontal"
+	                android:showDividers="beginning|middle|end" >
 	
 	                <TextView
 	                    android:id="@+id/textView2"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:text="SkidNo" />
+	                    android:layout_weight="1"
+	                    android:gravity="center_horizontal"
+	                    android:text="Skid\nNo" />
 	
 	                <TextView
 	                    android:id="@+id/textView3"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
 	                    android:layout_weight="1"
-	                    android:text="CurSht" />
+	                    android:gravity="center_horizontal"
+	                    android:text="Sheets\n(now)" />
 	
 	                <TextView
 	                    android:id="@+id/textView4"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:text="FinCount" />
+	                    android:layout_weight="1"
+	                    android:gravity="center_horizontal"
+	                    android:text="Sheets\n(done)" />
 	
 	                <TextView
 	                    android:id="@+id/textView5"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:text="Start" />
+	                    android:layout_weight="1"
+	                    android:gravity="center_horizontal"
+	                    android:text="Start\ntime" />
 	
 	                <TextView
 	                    android:id="@+id/textView6"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:text="Finish" />
+	                    android:layout_weight="1"
+	                    android:gravity="center_horizontal"
+	                    android:text="Finish\ntime" />
 	
 	                <TextView
 	                    android:id="@+id/textView7"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:text="Alarm" />
+	                    android:layout_weight="1"
+	                    android:gravity="center_horizontal" />
 	
 	            </TableRow>
 	
 	            <TableRow
 	                android:id="@+id/tableRow2"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content" >
+	                android:divider="?android:attr/dividerVertical"
+	                android:dividerPadding="0dp"
+	                android:gravity="center_horizontal"
+	                android:showDividers="beginning|middle|end" >
 	
 	                <EditText
 	                    android:id="@+id/editText1"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
+	                    android:layout_weight="1"
+	                    android:gravity="center_horizontal"
 	                    android:inputType="number"
 	                    android:maxEms="3"
 	                    android:maxLength="4"
-	                    android:minEms="3" >
+	                    android:minEms="3"
+	                    android:text="123" >
+
 	                </EditText>
 	
 	                <EditText
 	                    android:id="@+id/editText3"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:inputType="number" />
+	                    android:layout_weight="1"
+	                    android:gravity="center_horizontal"
+	                    android:inputType="number"
+	                    android:text="1000" />
 	
 	                <EditText
 	                    android:id="@+id/editText4"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:inputType="number" />
+	                    android:layout_weight="1"
+	                    android:gravity="center_horizontal"
+	                    android:inputType="number"
+	                    android:text="1000" />
 	
 	                <EditText
 	                    android:id="@+id/editText2"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:inputType="time" />
+	                    android:layout_weight="1"
+	                    android:gravity="center_horizontal"
+	                    android:inputType="time"
+	                    android:text="23:33" />
+
+	                <EditText
+	                    android:id="@+id/editText7"
+	                    android:layout_weight="1"
+	                    android:gravity="center_horizontal"
+	                    android:inputType="time"
+	                    android:text="23:34" />
+
+	                <ImageView
+	                    android:id="@+id/imageView4"
+	                    android:layout_weight="1"
+	                    android:gravity="center_horizontal"
+	                    android:src="@drawable/ic_audio_alarm_dark" />
 	
 	            </TableRow>
-	
+	♥
 	            <TableRow
 	                android:id="@+id/tableRow3"
 	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content" >
+	                android:layout_height="wrap_content" 
+	                android:divider="?android:attr/dividerVertical"
+	                android:dividerPadding="0dp"
+	                android:showDividers="beginning|middle|end" >
+
 	            </TableRow>
 	
 	            <TableRow
 	                android:id="@+id/tableRow4"
 	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content" >
-	
-	                <TextView
-	                    android:id="@+id/textView12"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:text="TextView" />
+	                android:layout_height="wrap_content" 
+	                android:divider="?android:attr/dividerVertical"
+	                android:dividerPadding="0dp"
+	                android:showDividers="beginning|middle|end" >
 	
 	            </TableRow>
 	        </TableLayout>
@@ -218,6 +243,12 @@
 	            android:text="0:00" />
 	
 	    </LinearLayout>
+
+	    <ImageButton
+	        android:id="@+id/imageButton1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:src="@drawable/calculator" />
 	
 	    <LinearLayout
 	        android:layout_width="match_parent"
