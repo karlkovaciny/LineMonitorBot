@@ -1,19 +1,40 @@
 package com.kovaciny.linemonitorbot;
 
-import android.app.AlarmManager;
+import java.util.ArrayList;
+
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 
 public class SkidTimesFragment extends SectionFragment {
 	private SkidFinishedBroadcastReceiver mAlarmReceiver;
+	private View mRootView;
+	private float mSheetsPerMinute;
+	private ArrayList<Skid> mSkidList;
+
+	public float getSheetsPerMinute() {
+		return mSheetsPerMinute;
+	}
+
+	public void setSheetsPerMinute(float mSheetsPerMinute) {
+		this.mSheetsPerMinute = mSheetsPerMinute;
+	}
+
+	public ArrayList<Skid> getSkidList() {
+		return mSkidList;
+	}
+
+	public void setSkidList(ArrayList<Skid> skidList) {
+		this.mSkidList = skidList;
+	}
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -21,26 +42,32 @@ public class SkidTimesFragment extends SectionFragment {
         //setContentView(R.layout.activity_alarm_manager);
         mAlarmReceiver = new SkidFinishedBroadcastReceiver();
     }
-    
-    public void onetimeTimer(View view, Integer interval){
         
-    	Context context = getActivity();
-        if(mAlarmReceiver != null){
-         mAlarmReceiver.setOnetimeTimer(context, interval);
-        }else{
-         Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
-        }
-    }
-    
+	@Override
+	public void onAttach(Activity activity) {
+		String j = "god damn is this bullshit";
+		super.onAttach(activity);
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		View rootView = inflater.inflate(R.layout.skid_times_fragment,
+		mRootView = inflater.inflate(R.layout.skid_times_fragment,
 				container, false);
 		
+		//DataHelper dh = MainActivity.mDataHelper;
+		MainActivity ac = (MainActivity) getActivity(); 
+		int line = ac.getSelectedLine(); //(Integer) dh.getCode("mSelectedLine", 0);
+		String sLine = Integer.toString(line);
 		
-		Button btnSetAlarm = (Button) rootView.findViewById(R.id.btn_set_alarm);
+		EditText sheetsPerMinute = (EditText) mRootView.findViewById(R.id.sheets_per_minute);
+		sheetsPerMinute.setText(sLine);
+		//this.setSheetsPerMinute( Float.parseFloat( sheetsPerMinute.getText().toString() ) );
+		
+		//Skid firstSkid = 
+		
+		Button btnSetAlarm = (Button) mRootView.findViewById(R.id.btn_set_alarm);
 		btnSetAlarm.setOnClickListener(new View.OnClickListener() {
 		
 			@Override
@@ -51,13 +78,28 @@ public class SkidTimesFragment extends SectionFragment {
 		});
 		
 		
-		return rootView;
+		return mRootView;
 	}
 		
-
+public void onetimeTimer(View view, Integer interval){
+        
+    	Context context = getActivity();
+        if(mAlarmReceiver != null){
+         mAlarmReceiver.setOnetimeTimer(context, interval);
+        }else{
+         Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
+        }
+    }
+    
 
 	public void showTimePickerDialog(View v) {
 	    DialogFragment newFragment = new TimePickerFragment();
 	    newFragment.show(getActivity().getFragmentManager(), "timePicker");
+	}
+
+	@Override
+	public void onPause() {
+		//store persistent data
+		super.onPause();
 	}
 }

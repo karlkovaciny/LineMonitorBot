@@ -48,7 +48,7 @@ public class MainActivity extends FragmentActivity implements
 	/**
 	 * Handles database connections.
 	 */
-	DataHelper mDataHelper;
+	public DataHelper mDataHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +88,13 @@ public class MainActivity extends FragmentActivity implements
 			actionBar.addTab(actionBar.newTab()
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
+		}
+		
+		//open database connection
+		mDataHelper = new DataHelper(this);
+		if (mDataHelper == null){
+			String q = "god damn its null!!!";
+			throw new NullPointerException("that damn datahelper is null");
 		}
 	}
 
@@ -132,7 +139,8 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public Integer getSelectedLine() {
-		return mSelectedLine;
+		int j = 0;
+		return this.mSelectedLine;
 	}
 
 	public void setSelectedLine(Integer selectedLine) {
@@ -272,10 +280,7 @@ public class MainActivity extends FragmentActivity implements
 	
 	@Override
 	protected void onStart() {
-		super.onStart();
-		
-		//open database connection
-		mDataHelper = new DataHelper(this);
+		super.onStart();		
 		//String Status = (String) dh.getCode("appState","safetyDisabled");
 		//mserviceStart = (Date) dh.getCode("serviceStartTime",null);
 		
