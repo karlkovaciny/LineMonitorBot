@@ -45,7 +45,6 @@ public class SkidTimesFragment extends SectionFragment {
         
 	@Override
 	public void onAttach(Activity activity) {
-		String j = "god damn is this bullshit";
 		super.onAttach(activity);
 	}
 
@@ -57,12 +56,12 @@ public class SkidTimesFragment extends SectionFragment {
 				container, false);
 		
 		//DataHelper dh = MainActivity.mDataHelper;
-		MainActivity ac = (MainActivity) getActivity(); 
-		int line = ac.getSelectedLine(); //(Integer) dh.getCode("mSelectedLine", 0);
-		String sLine = Integer.toString(line);
+		//MainActivity ac = (MainActivity) getActivity(); 
+		//int line = ac.getSelectedLine(); //(Integer) dh.getCode("mSelectedLine", 0);
+		//String sLine = Integer.toString(line);
 		
 		EditText sheetsPerMinute = (EditText) mRootView.findViewById(R.id.sheets_per_minute);
-		sheetsPerMinute.setText(sLine);
+		sheetsPerMinute.setText("12");
 		//this.setSheetsPerMinute( Float.parseFloat( sheetsPerMinute.getText().toString() ) );
 		
 		//Skid firstSkid = 
@@ -73,7 +72,7 @@ public class SkidTimesFragment extends SectionFragment {
 			@Override
 			public void onClick(View v) {
 				showTimePickerDialog(v);
-				onetimeTimer(v, 60*60*1000);
+				onetimeTimer(v, 60*60*1000);	  
 			}
 		});
 		

@@ -13,9 +13,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 
 public class MainActivity extends FragmentActivity implements
 		ActionBar.TabListener {
@@ -108,8 +108,11 @@ public class MainActivity extends FragmentActivity implements
 		mDebugDisplay.setVisible(false);
 		
 		//populate the line picker with lines
-		ArrayList<String> lineList = new ArrayList<String>();				
-		for (int i=0; i<20; i++) {
+		ArrayList<String> lineList = new ArrayList<String>();
+		mDataHelper = new DataHelper(this);
+		Object what = mDataHelper.getCode("numberOfLines", 0);
+		int numLines = Integer.valueOf((String)what);
+		for (int i=0; i<numLines; i++) {
 			String line = (String) mDataHelper.getCode(Integer.toString(i), "default");
 			if (line != "default") lineList.add(i, line); 
 		}
@@ -139,7 +142,6 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public Integer getSelectedLine() {
-		int j = 0;
 		return this.mSelectedLine;
 	}
 
@@ -285,14 +287,15 @@ public class MainActivity extends FragmentActivity implements
 		//mserviceStart = (Date) dh.getCode("serviceStartTime",null);
 		
 		//populate database
-		/*mDataHelper.upgradeDb(1, 2);
+		/*mDataHelper.upgradeDb(2,3); //change this i guess?
 		String lineList[] = this.getResources().getStringArray(R.array.line_list);
-		
+		mDataHelper.setCode("numberOfLines", lineList.length, "default");
 		for (int i=0; i<lineList.length; i++) {
 			String key = Integer.toString(i);
 			String value = lineList[i];
 			mDataHelper.setCode(key, value, "String");
-		}*/
+			Log.i("Added to datahelper: ", key + ", " + value + "\\n");
+		} //note: this code resets the line picking somehow. */ 
 		
 		//look up database asynchronously.
 		//new PopulateMenusTask().execute();		

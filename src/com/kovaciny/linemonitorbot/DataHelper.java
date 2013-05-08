@@ -105,41 +105,32 @@ public class DataHelper {
 	        if (found == false)
 	        {
 	            return defaultValue;
-	        }
-	        else if (codeDataType.toLowerCase(Locale.getDefault()).trim().equals("long") == true)
-	        {   
-	            if (codeValue.equals("") == true)
-	            {
+	        } else if (codeDataType.toLowerCase(Locale.getDefault()).trim().equals("long") == true) {   
+	            if (codeValue.equals("") == true) {
 	                return (long)0;
 	            }
 	            return Long.parseLong(codeValue);
 	        }
-	        else if (codeDataType.toLowerCase(Locale.getDefault()).trim().equals("integer") == true)
-	        {
+	        
+	        else if (codeDataType.toLowerCase(Locale.getDefault()).trim().equals("integer") == true) {
 	            if ( (codeValue == null) || codeValue.equals("") || codeValue.equals("null") ) //because .equals("") didn't catch nulls.
 	            {
 	                return 0;  //can't return null because not an int
 	            }
 	            return Integer.parseInt(codeValue);
-	        }
-	        else if (codeDataType.toLowerCase(Locale.getDefault()).trim().equals("date") == true)
-	        {
+	        } else if (codeDataType.toLowerCase(Locale.getDefault()).trim().equals("date") == true) {
 	            if (codeValue.equals("") == true)
 	            {
 	                return null;
 	            }
 	            return new Date(Long.parseLong(codeValue));
-	        }
-	        else if (codeDataType.toLowerCase(Locale.getDefault()).trim().equals("boolean") == true)
-	        {
+	        } else if (codeDataType.toLowerCase(Locale.getDefault()).trim().equals("boolean") == true) {
 	            if (codeValue.equals("") == true)
 	            {
 	                return false;
 	            }
 	            return Boolean.parseBoolean(codeValue);
-	        }
-	        else
-	        {
+	        } else {
 	        	return (String)codeValue;
 	        }
     	} finally {
