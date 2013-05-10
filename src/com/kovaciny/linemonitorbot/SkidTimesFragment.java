@@ -55,16 +55,9 @@ public class SkidTimesFragment extends SectionFragment {
 		mRootView = inflater.inflate(R.layout.skid_times_fragment,
 				container, false);
 		
-		//DataHelper dh = MainActivity.mDataHelper;
-		//MainActivity ac = (MainActivity) getActivity(); 
-		//int line = ac.getSelectedLine(); //(Integer) dh.getCode("mSelectedLine", 0);
-		//String sLine = Integer.toString(line);
-		
 		EditText sheetsPerMinute = (EditText) mRootView.findViewById(R.id.sheets_per_minute);
 		sheetsPerMinute.setText("12");
 		//this.setSheetsPerMinute( Float.parseFloat( sheetsPerMinute.getText().toString() ) );
-		
-		//Skid firstSkid = 
 		
 		Button btnSetAlarm = (Button) mRootView.findViewById(R.id.btn_set_alarm);
 		btnSetAlarm.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +65,7 @@ public class SkidTimesFragment extends SectionFragment {
 			@Override
 			public void onClick(View v) {
 				showTimePickerDialog(v);
-				onetimeTimer(v, 60*60*1000);	  
+				onetimeTimer(v, 60*60*1000);
 			}
 		});
 		

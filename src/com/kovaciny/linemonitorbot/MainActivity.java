@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -45,11 +44,6 @@ public class MainActivity extends FragmentActivity implements
 	private MenuItem mDebugDisplay;
 	private Integer mSelectedLine;
 	
-	/**
-	 * Handles database connections.
-	 */
-	public DataHelper mDataHelper;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -90,12 +84,12 @@ public class MainActivity extends FragmentActivity implements
 					.setTabListener(this));
 		}
 		
-		//open database connection
-		mDataHelper = new DataHelper(this);
-		if (mDataHelper == null){
-			String q = "god damn its null!!!";
-			throw new NullPointerException("that damn datahelper is null");
-		}
+		//make database entries -- comment out after doing once
+		PrimexSQLiteOpenHelper dbHelper = new PrimexSQLiteOpenHelper(this);
+		ProductionLine line10 = new ProductionLine(10, 50, 64, "direct", "Maxson");
+		ProductionLine line18 = new ProductionLine(18, 50, 53, "direct", "Maxson");
+		dbHelper.addLine(line10);
+		dbHelper.addLine(line18);		
 	}
 
 	@Override
@@ -107,26 +101,20 @@ public class MainActivity extends FragmentActivity implements
 		mDebugDisplay = (MenuItem) menu.findItem(R.id.debug_display);
 		mDebugDisplay.setVisible(false);
 		
-		//populate the line picker with lines
-		ArrayList<String> lineList = new ArrayList<String>();
-		mDataHelper = new DataHelper(this);
-		Object what = mDataHelper.getCode("numberOfLines", 0);
-		int numLines = Integer.valueOf((String)what);
-		for (int i=0; i<numLines; i++) {
-			String line = (String) mDataHelper.getCode(Integer.toString(i), "default");
-			if (line != "default") lineList.add(i, line); 
-		}
-		
+		//populate the line picker with line numbers from the database
+		PrimexSQLiteOpenHelper dbHelper = new PrimexSQLiteOpenHelper(this);
+		Integer[] lineNumberList = dbHelper.getLineNumbers();
+				
 		Menu pickLineSubMenu = mLinePicker.getSubMenu();
 		pickLineSubMenu.clear();
 		
-		for (int i=0; i<lineList.size(); i++) {
+		for (int i=0; i<lineNumberList.length; i++) {
 			//don't have access to View.generateViewId(), so fake a random ID
-			pickLineSubMenu.add(LINE_LIST_MENU_GROUP, i*LINE_LIST_ID_RANDOMIZER, Menu.FLAG_APPEND_TO_GROUP, lineList.get(i));
+			pickLineSubMenu.add(LINE_LIST_MENU_GROUP, i*LINE_LIST_ID_RANDOMIZER, Menu.FLAG_APPEND_TO_GROUP, String.valueOf(lineNumberList[i]));
 		}
 		
 		//Select the line that we used last time
-		setSelectedLine((Integer) mDataHelper.getCode("mSelectedLine", 0));
+		/*setSelectedLine((Integer) mDataHelper.getCode("mSelectedLine", 0));*/
 				
 		//populate the job picker with jobs
 		Menu pickJobSubMenu = mJobPicker.getSubMenu();
@@ -283,19 +271,6 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onStart() {
 		super.onStart();		
-		//String Status = (String) dh.getCode("appState","safetyDisabled");
-		//mserviceStart = (Date) dh.getCode("serviceStartTime",null);
-		
-		//populate database
-		/*mDataHelper.upgradeDb(2,3); //change this i guess?
-		String lineList[] = this.getResources().getStringArray(R.array.line_list);
-		mDataHelper.setCode("numberOfLines", lineList.length, "default");
-		for (int i=0; i<lineList.length; i++) {
-			String key = Integer.toString(i);
-			String value = lineList[i];
-			mDataHelper.setCode(key, value, "String");
-			Log.i("Added to datahelper: ", key + ", " + value + "\\n");
-		} //note: this code resets the line picking somehow. */ 
 		
 		//look up database asynchronously.
 		//new PopulateMenusTask().execute();		
@@ -326,9 +301,6 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onPause() {
 		//store persistent data
-		mDataHelper.setCode("mSelectedLine", getSelectedLine(), "INTEGER");
-		mDataHelper.close();
-		mDataHelper = null;
 		super.onPause();
 	}
 
