@@ -1,6 +1,5 @@
 package com.kovaciny.linemonitorbot;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.ActionBar;
@@ -86,10 +85,16 @@ public class MainActivity extends FragmentActivity implements
 		
 		//make database entries -- comment out after doing once
 		PrimexSQLiteOpenHelper dbHelper = new PrimexSQLiteOpenHelper(this);
+		
 		ProductionLine line10 = new ProductionLine(10, 50, 64, "direct", "Maxson");
 		ProductionLine line18 = new ProductionLine(18, 50, 53, "direct", "Maxson");
 		dbHelper.addLine(line10);
 		dbHelper.addLine(line18);		
+		
+		WorkOrder wo1 = new WorkOrder(123456,1);
+		WorkOrder wo2 = new WorkOrder(123457,1);
+		dbHelper.addWorkOrder(wo1);
+		dbHelper.addWorkOrder(wo2);
 	}
 
 	@Override
@@ -119,10 +124,10 @@ public class MainActivity extends FragmentActivity implements
 		//populate the job picker with jobs
 		Menu pickJobSubMenu = mJobPicker.getSubMenu();
 		pickJobSubMenu.clear();
-		String jobList[]= {"Wo #1", "Wo #2"};
+		Integer[] jobList= dbHelper.getWoNumbers();
 		for (int i=0; i<jobList.length; i++) {
 			int menuId = i;
-			pickJobSubMenu.add(JOB_LIST_MENU_GROUP, menuId, Menu.FLAG_APPEND_TO_GROUP, jobList[i]);
+			pickJobSubMenu.add(JOB_LIST_MENU_GROUP, menuId, Menu.FLAG_APPEND_TO_GROUP, String.valueOf(jobList[i]));
 		}
 		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.new_wo, Menu.FLAG_APPEND_TO_GROUP, "+ New");
 		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.clear_wos, Menu.FLAG_APPEND_TO_GROUP, "Clear");
