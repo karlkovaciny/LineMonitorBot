@@ -45,6 +45,7 @@ public class MainActivity extends FragmentActivity implements
 	private MenuItem mLinePicker;
 	private MenuItem mDebugDisplay;
 	private Integer mSelectedLine = 0;
+	private Integer mSelectedWorkOrder = 0;
 	private PrimexSQLiteOpenHelper mDbHelper;
 	
 	@Override
@@ -112,20 +113,23 @@ public class MainActivity extends FragmentActivity implements
 			pickLineSubMenu.add(LINE_LIST_MENU_GROUP, (i + LINE_LIST_ID_RANDOMIZER), Menu.FLAG_APPEND_TO_GROUP, String.valueOf(lineNumberList.get(i)));
 		}
 		
-		//Select the line that we used last time
-		SharedPreferences settings = getPreferences(MODE_PRIVATE);
-		setSelectedLine( settings.getInt("selectedLine", 0) );		
-				
 		//populate the job picker with jobs
 		Menu pickJobSubMenu = mJobPicker.getSubMenu();
 		pickJobSubMenu.clear();
-		Integer[] jobList= mDbHelper.getWoNumbers();
-		for (int i=0; i<jobList.length; i++) {
-			int menuId = i;
-			pickJobSubMenu.add(JOB_LIST_MENU_GROUP, menuId, Menu.FLAG_APPEND_TO_GROUP, String.valueOf(jobList[i]));
+		List<Integer> jobList = new ArrayList<Integer>();
+		jobList= mDbHelper.getWoNumbers();
+		for (int i=0; i<jobList.size(); i++) {
+			String title = "WO #" + String.valueOf(jobList.get(i));
+			pickJobSubMenu.add(JOB_LIST_MENU_GROUP, jobList.get(i), Menu.FLAG_APPEND_TO_GROUP, title);
 		}
 		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.new_wo, Menu.FLAG_APPEND_TO_GROUP, "+ New");
 		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.clear_wos, Menu.FLAG_APPEND_TO_GROUP, "Clear");
+		
+		//Select the line and job that we used last time
+		SharedPreferences settings = getPreferences(MODE_PRIVATE);
+		setSelectedLine( settings.getInt("selectedLine", 0) );
+		setSelectedWorkOrder( settings.getInt("selectedWorkOrder", 0));
+		
 		return true;
 	}
 
@@ -141,6 +145,18 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
+	public Integer getSelectedWorkOrder() {
+		return mSelectedWorkOrder;
+	}
+
+	public void setSelectedWorkOrder(Integer selectedWorkOrder) {
+		this.mSelectedWorkOrder = selectedWorkOrder;
+		if (mSelectedWorkOrder != 0) {
+			CharSequence woTitle = "WO #" + mJobPicker.getSubMenu().findItem(mSelectedWorkOrder).getItemId();
+			mJobPicker.setTitle(woTitle);
+		}
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
@@ -148,12 +164,16 @@ public class MainActivity extends FragmentActivity implements
 			setSelectedLine(item.getItemId() - LINE_LIST_ID_RANDOMIZER);
 		}
 		if (item.getGroupId() == JOB_LIST_MENU_GROUP) {
-			mJobPicker.setTitle(item.getTitle());
+			setSelectedWorkOrder(item.getItemId());
 		}
 		
 		switch (item.getItemId()) {
 		case R.id.new_wo:
-	        item.setTitle("new wo");
+			int newWoNumber = getSelectedWorkOrder() + 1;
+			String newTitle = "WO #" + String.valueOf(newWoNumber);
+			mJobPicker.getSubMenu().add(JOB_LIST_MENU_GROUP, newWoNumber, Menu.FLAG_APPEND_TO_GROUP, newTitle);
+			mDbHelper.addWorkOrder(new WorkOrder(newWoNumber, 0));
+			setSelectedWorkOrder(newWoNumber);
 	        break;
 	    default:
 	    }
@@ -305,6 +325,7 @@ public class MainActivity extends FragmentActivity implements
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
 	    SharedPreferences.Editor editor = settings.edit();
 	    editor.putInt("selectedLine", mSelectedLine);
+	    editor.putInt("selectedWorkOrder", mSelectedWorkOrder);
 	    
 	    // Commit the edits!
 	    editor.commit();

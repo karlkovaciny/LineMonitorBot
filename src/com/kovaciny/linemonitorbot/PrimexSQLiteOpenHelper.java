@@ -273,10 +273,10 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	
 	
 	
-	public Integer[] getWoNumbers() {
+	public List<Integer> getWoNumbers() {
 		SQLiteDatabase db = getReadableDatabase();
 		
-		//String[] projection = {PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER};
+		List<Integer> workOrders = new ArrayList<Integer>();
 		    	
 		Cursor c = db.query(
 			    PrimexDatabaseSchema.WorkOrders.TABLE_NAME,  // The table to query
@@ -289,13 +289,10 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			    );
 		
 		try {
-			Integer[] returnArray = new Integer[c.getCount()];
-			c.moveToFirst();
-			for(int i = 0; i < c.getCount(); i++) {
-				returnArray[i] = c.getInt(c.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER));
-				c.moveToNext();
+			while (c.moveToNext()) {
+				workOrders.add( c.getInt( c.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER) ) );
 			}
-			return returnArray;
+			return workOrders;
 		} finally {
 	    	if (c != null) c.close();
 		}
