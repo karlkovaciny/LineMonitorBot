@@ -1,5 +1,8 @@
 package com.kovaciny.linemonitorbot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -18,7 +21,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	private static final String COMMA_SEP = ",";
 		
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 7;
     public static final String DATABASE_NAME = "Primex.db";
     
     private static final String SQL_CREATE_PRODUCTION_LINES =
@@ -142,11 +145,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	}    	
     }
     
-    public Integer[] getLineNumbers() {
+    public List<Integer> getLineNumbers() {
     	SQLiteDatabase db = getReadableDatabase();
     	
-    	String[] projection = {PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER};
-    	    	
     	Cursor c = db.query(
     		    PrimexDatabaseSchema.ProductionLines.TABLE_NAME,  // The table to query
     		    null,                               // The columns to return
@@ -158,17 +159,12 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     		    );
     	
     	try {
-    		int cnt = c.getCount();
-    		Integer[] returnArray;
-    		returnArray = new Integer[cnt];
-    		c.moveToFirst();
-    		for(int i = 0; i < c.getCount(); i++) {
-    			int index = c.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER);
-    			int ln = c.getInt(index);
-    			returnArray[i] = ln;
-    			c.moveToNext();
+    		List<Integer> lineNumbers = new ArrayList<Integer>();
+    		while (c.moveToNext()) {
+				int column = c.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER);
+				lineNumbers.add(c.getInt(column));
     		}
-    		return returnArray;
+	    	return lineNumbers;    		    		
     	} finally {
 	    	if (c != null) c.close();
     	}
@@ -229,6 +225,23 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		}    	
 	}
 	
+	
+	public int updateWorkOrder(WorkOrder changedWO){
+		SQLiteDatabase db = getReadableDatabase();
+		
+		ContentValues values = new ContentValues();
+		// don't change WO number, duh values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, changedWO.getWoNumber());
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_PRODUCTS_LIST_POINTER, changedWO.getProductsListPointer());
+		
+		int numAffectedRows = db.update(
+				PrimexDatabaseSchema.WorkOrders.TABLE_NAME,
+				values, 
+				PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + "=?",
+				new String[] {String.valueOf(changedWO.getWoNumber())}
+				);
+				
+		return numAffectedRows;	    
+	}
 	
 	
 	

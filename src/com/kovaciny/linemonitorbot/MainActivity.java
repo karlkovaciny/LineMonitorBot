@@ -1,5 +1,7 @@
 package com.kovaciny.linemonitorbot;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.ActionBar;
@@ -84,17 +86,17 @@ public class MainActivity extends FragmentActivity implements
 		}
 		
 		//make database entries -- comment out after doing once
-		PrimexSQLiteOpenHelper dbHelper = new PrimexSQLiteOpenHelper(this);
+		/*PrimexSQLiteOpenHelper dbHelper = new PrimexSQLiteOpenHelper(this);
 		
 		ProductionLine line10 = new ProductionLine(10, 50, 64, "direct", "Maxson");
 		ProductionLine line18 = new ProductionLine(18, 50, 53, "direct", "Maxson");
 		dbHelper.addLine(line10);
-		dbHelper.addLine(line18);		
+		dbHelper.addLine(line18);	
 		
 		WorkOrder wo1 = new WorkOrder(123456,1);
-		WorkOrder wo2 = new WorkOrder(123457,1);
 		dbHelper.addWorkOrder(wo1);
-		dbHelper.addWorkOrder(wo2);
+		WorkOrder wo2 = new WorkOrder(234567,69);
+		dbHelper.addWorkOrder(wo2);*/
 	}
 
 	@Override
@@ -108,14 +110,15 @@ public class MainActivity extends FragmentActivity implements
 		
 		//populate the line picker with line numbers from the database
 		PrimexSQLiteOpenHelper dbHelper = new PrimexSQLiteOpenHelper(this);
-		Integer[] lineNumberList = dbHelper.getLineNumbers();
+		List<Integer> lineNumberList = new ArrayList<Integer>();
+		lineNumberList = dbHelper.getLineNumbers();
 				
 		Menu pickLineSubMenu = mLinePicker.getSubMenu();
 		pickLineSubMenu.clear();
 		
-		for (int i=0; i<lineNumberList.length; i++) {
+		for (int i=0; i<lineNumberList.size(); i++) {
 			//don't have access to View.generateViewId(), so fake a random ID
-			pickLineSubMenu.add(LINE_LIST_MENU_GROUP, i*LINE_LIST_ID_RANDOMIZER, Menu.FLAG_APPEND_TO_GROUP, String.valueOf(lineNumberList[i]));
+			pickLineSubMenu.add(LINE_LIST_MENU_GROUP, i*LINE_LIST_ID_RANDOMIZER, Menu.FLAG_APPEND_TO_GROUP, String.valueOf(lineNumberList.get(i)));
 		}
 		
 		//Select the line that we used last time

@@ -1,6 +1,7 @@
 package com.kovaciny.linemonitorbot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -40,7 +41,7 @@ public class SkidTimesFragment extends SectionFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_alarm_manager);
-        mAlarmReceiver = new SkidFinishedBroadcastReceiver();
+        mAlarmReceiver = new SkidFinishedBroadcastReceiver();      
     }
         
 	@Override
@@ -56,7 +57,14 @@ public class SkidTimesFragment extends SectionFragment {
 				container, false);
 		
 		EditText sheetsPerMinute = (EditText) mRootView.findViewById(R.id.sheets_per_minute);
-		sheetsPerMinute.setText("12");
+		PrimexSQLiteOpenHelper dbHelper = new PrimexSQLiteOpenHelper(getActivity());
+		List<Integer> lineNumberList = new ArrayList<Integer>();
+		lineNumberList = dbHelper.getLineNumbers();
+		if ( !lineNumberList.isEmpty() ) {
+			sheetsPerMinute.setText(String.valueOf(lineNumberList.get(0)));
+		}
+		WorkOrder aWo = dbHelper.getWorkOrder(234567);
+		sheetsPerMinute.setText(String.valueOf(aWo.getProductsListPointer()));
 		//this.setSheetsPerMinute( Float.parseFloat( sheetsPerMinute.getText().toString() ) );
 		
 		Button btnSetAlarm = (Button) mRootView.findViewById(R.id.btn_set_alarm);
@@ -92,6 +100,10 @@ public void onetimeTimer(View view, Integer interval){
 	@Override
 	public void onPause() {
 		//store persistent data
+		
+		PrimexSQLiteOpenHelper dbHelper = new PrimexSQLiteOpenHelper(getActivity());
+		WorkOrder newWO = new WorkOrder(135678, 0);
+		//dbHelper.updateWorkOrder(newWO); //TODO what if you update an unexisting? check rows returnedw
 		super.onPause();
 	}
 }
