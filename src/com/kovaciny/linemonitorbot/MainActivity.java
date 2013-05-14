@@ -7,6 +7,7 @@ import java.util.Locale;
 import android.app.ActionBar;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -43,7 +44,7 @@ public class MainActivity extends FragmentActivity implements
 	private MenuItem mJobPicker;
 	private MenuItem mLinePicker;
 	private MenuItem mDebugDisplay;
-	private Integer mSelectedLine;
+	private Integer mSelectedLine = 0;
 	private PrimexSQLiteOpenHelper mDbHelper;
 	
 	@Override
@@ -86,20 +87,8 @@ public class MainActivity extends FragmentActivity implements
 					.setTabListener(this));
 		}
 		
-		//make database entries -- comment out after doing once
 		mDbHelper = new PrimexSQLiteOpenHelper(getApplicationContext());
 		mDbHelper.getWritableDatabase();
-		
-		
-		/*ProductionLine line10 = new ProductionLine(10, 50, 64, "direct", "Maxson");
-		ProductionLine line18 = new ProductionLine(18, 50, 53, "direct", "Maxson");
-		dbHelper.addLine(line10);
-		dbHelper.addLine(line18);	
-		
-		WorkOrder wo1 = new WorkOrder(123456,1);
-		dbHelper.addWorkOrder(wo1);
-		WorkOrder wo2 = new WorkOrder(234567,69);
-		dbHelper.addWorkOrder(wo2);*/
 	}
 
 	@Override
@@ -120,11 +109,12 @@ public class MainActivity extends FragmentActivity implements
 		
 		for (int i=0; i<lineNumberList.size(); i++) {
 			//don't have access to View.generateViewId(), so fake a random ID
-			pickLineSubMenu.add(LINE_LIST_MENU_GROUP, i*LINE_LIST_ID_RANDOMIZER, Menu.FLAG_APPEND_TO_GROUP, String.valueOf(lineNumberList.get(i)));
+			pickLineSubMenu.add(LINE_LIST_MENU_GROUP, (i + LINE_LIST_ID_RANDOMIZER), Menu.FLAG_APPEND_TO_GROUP, String.valueOf(lineNumberList.get(i)));
 		}
 		
 		//Select the line that we used last time
-		/*setSelectedLine((Integer) mDataHelper.getCode("mSelectedLine", 0));*/
+		SharedPreferences settings = getPreferences(MODE_PRIVATE);
+		setSelectedLine( settings.getInt("selectedLine", 0) );		
 				
 		//populate the job picker with jobs
 		Menu pickJobSubMenu = mJobPicker.getSubMenu();
@@ -145,8 +135,8 @@ public class MainActivity extends FragmentActivity implements
 
 	public void setSelectedLine(Integer selectedLine) {
 		this.mSelectedLine = selectedLine;
-		if (mSelectedLine != null) {
-			CharSequence lineTitle = mLinePicker.getSubMenu().findItem(mSelectedLine * LINE_LIST_ID_RANDOMIZER).getTitle();
+		if (mSelectedLine != 0) {
+			CharSequence lineTitle = "Line " + mLinePicker.getSubMenu().findItem((mSelectedLine + LINE_LIST_ID_RANDOMIZER)).getTitle();
 			mLinePicker.setTitle(lineTitle);
 		}
 	}
@@ -155,7 +145,7 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
 		if (item.getGroupId() == LINE_LIST_MENU_GROUP) {
-			setSelectedLine(item.getItemId() / LINE_LIST_ID_RANDOMIZER);
+			setSelectedLine(item.getItemId() - LINE_LIST_ID_RANDOMIZER);
 		}
 		if (item.getGroupId() == JOB_LIST_MENU_GROUP) {
 			mJobPicker.setTitle(item.getTitle());
@@ -312,6 +302,13 @@ public class MainActivity extends FragmentActivity implements
 	protected void onPause() {
 		//store persistent data
 		mDbHelper.close();
+		SharedPreferences settings = getPreferences(MODE_PRIVATE);
+	    SharedPreferences.Editor editor = settings.edit();
+	    editor.putInt("selectedLine", mSelectedLine);
+	    
+	    // Commit the edits!
+	    editor.commit();
+
 		super.onPause();
 	}
 

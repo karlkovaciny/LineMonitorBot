@@ -21,7 +21,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	private static final String COMMA_SEP = ",";
 		
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 7;
+    public static final int DATABASE_VERSION = 8;
     public static final String DATABASE_NAME = "Primex.db";
     
     private static final String SQL_CREATE_PRODUCTION_LINES =
@@ -52,6 +52,31 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	 
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_PRODUCTION_LINES);
+        //Batch insert to SQLite database on Android
+        try
+        {
+        	Integer[] lineNumbers = {1,6,7,9,10,11,12,13,14,15,16,17,18};
+          db.beginTransaction();
+          for (int i = 0; i < lineNumbers.length; i++) {
+        	ContentValues values = new ContentValues();
+        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, lineNumbers[i]);
+        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LENGTH, 0);
+        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH, 0);
+        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE, "Direct");
+        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE, "Maxson");
+        	
+        	long rowId = db.insert(
+        			PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
+        			null, 
+        			values);
+        	
+          }
+          db.setTransactionSuccessful();
+        } finally
+        {
+          db.endTransaction();
+        }
+        
         db.execSQL(SQL_CREATE_WORK_ORDERS);
     }
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -213,13 +238,15 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				null,
 				null
 				);
-				
+		
+		int wonum = 0;
+		int prodlist = 0; 
 		try {
-			resultCursor.moveToFirst();
-	    	int wonum = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER));
-	    	int pl = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_PRODUCTS_LIST_POINTER));
-	    	
-	    	return new WorkOrder(wonum, pl);
+			if (resultCursor.moveToFirst()) {
+		    	wonum = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER));
+		    	prodlist = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_PRODUCTS_LIST_POINTER));
+			}
+	    	return new WorkOrder(wonum, prodlist);
 	    } finally {
 	    	if (resultCursor != null) resultCursor.close();
 		}    	
