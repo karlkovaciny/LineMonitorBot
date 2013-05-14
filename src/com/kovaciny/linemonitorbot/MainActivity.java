@@ -44,6 +44,7 @@ public class MainActivity extends FragmentActivity implements
 	private MenuItem mLinePicker;
 	private MenuItem mDebugDisplay;
 	private Integer mSelectedLine;
+	private PrimexSQLiteOpenHelper mDbHelper;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,9 +87,11 @@ public class MainActivity extends FragmentActivity implements
 		}
 		
 		//make database entries -- comment out after doing once
-		/*PrimexSQLiteOpenHelper dbHelper = new PrimexSQLiteOpenHelper(this);
+		mDbHelper = new PrimexSQLiteOpenHelper(getApplicationContext());
+		mDbHelper.getWritableDatabase();
 		
-		ProductionLine line10 = new ProductionLine(10, 50, 64, "direct", "Maxson");
+		
+		/*ProductionLine line10 = new ProductionLine(10, 50, 64, "direct", "Maxson");
 		ProductionLine line18 = new ProductionLine(18, 50, 53, "direct", "Maxson");
 		dbHelper.addLine(line10);
 		dbHelper.addLine(line18);	
@@ -109,9 +112,8 @@ public class MainActivity extends FragmentActivity implements
 		mDebugDisplay.setVisible(false);
 		
 		//populate the line picker with line numbers from the database
-		PrimexSQLiteOpenHelper dbHelper = new PrimexSQLiteOpenHelper(this);
 		List<Integer> lineNumberList = new ArrayList<Integer>();
-		lineNumberList = dbHelper.getLineNumbers();
+		lineNumberList = mDbHelper.getLineNumbers();
 				
 		Menu pickLineSubMenu = mLinePicker.getSubMenu();
 		pickLineSubMenu.clear();
@@ -127,7 +129,7 @@ public class MainActivity extends FragmentActivity implements
 		//populate the job picker with jobs
 		Menu pickJobSubMenu = mJobPicker.getSubMenu();
 		pickJobSubMenu.clear();
-		Integer[] jobList= dbHelper.getWoNumbers();
+		Integer[] jobList= mDbHelper.getWoNumbers();
 		for (int i=0; i<jobList.length; i++) {
 			int menuId = i;
 			pickJobSubMenu.add(JOB_LIST_MENU_GROUP, menuId, Menu.FLAG_APPEND_TO_GROUP, String.valueOf(jobList[i]));
@@ -309,6 +311,7 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onPause() {
 		//store persistent data
+		mDbHelper.close();
 		super.onPause();
 	}
 
