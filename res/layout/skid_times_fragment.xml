@@ -5,7 +5,7 @@
 
 	<LinearLayout
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
+	    android:layout_height="wrap_content"
 	    android:divider="?android:attr/dividerHorizontal"
 	    android:dividerPadding="@dimen/fragment_divider_padding"
 	    android:orientation="vertical"
@@ -58,7 +58,7 @@
 
 	    <LinearLayout
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
+	        android:layout_height="0dip"
 	        android:layout_weight="1" >
 
 	        <TableLayout
@@ -123,7 +123,7 @@
 	                    android:maxLength="4"
 	                    android:minEms="3"
 	                    android:selectAllOnFocus="true"
-	                    android:text="123" >
+	                    android:hint="123" >
 	                </EditText>
 
 	                <EditText
@@ -133,7 +133,7 @@
 	                    android:inputType="number"
 	                    android:maxLength="4"
 	                    android:selectAllOnFocus="true"
-	                    android:text="1000" />
+	                    android:hint="1000" />
 
 	                <EditText
 	                    android:id="@+id/total_sheets_per_skid"
@@ -142,7 +142,7 @@
 	                    android:inputType="number"
 	                    android:maxLength="4"
 	                    android:selectAllOnFocus="true"
-	                    android:text="1000" />
+	                    android:hint="1000" />
 
 	                <EditText
 	                    android:id="@+id/skid_start_time"
@@ -150,7 +150,7 @@
 	                    android:gravity="center_horizontal"
 	                    android:inputType="time"
 	                    android:maxLength="5"
-	                    android:text="23:33" />
+	                    android:hint="23:33" />
 
 	                <EditText
 	                    android:id="@+id/skid_finish_time"
@@ -158,7 +158,7 @@
 	                    android:gravity="center_horizontal"
 	                    android:inputType="time"
 	                    android:maxLength="5"
-	                    android:text="23:34" />
+	                    android:hint="23:34" />
 	            </TableRow>
 
 	            <TableRow
