@@ -8,6 +8,7 @@ import android.app.ActionBar;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -44,7 +45,7 @@ public class MainActivity extends FragmentActivity implements
 	private MenuItem mJobPicker;
 	private MenuItem mLinePicker;
 	private MenuItem mDebugDisplay;
-	private Integer mSelectedLine = 0;
+	private Integer mSelectedLine = -1;
 	private Integer mSelectedWorkOrder = 0;
 	private PrimexSQLiteOpenHelper mDbHelper;
 	
@@ -117,7 +118,15 @@ public class MainActivity extends FragmentActivity implements
 		Menu pickJobSubMenu = mJobPicker.getSubMenu();
 		pickJobSubMenu.clear();
 		List<Integer> jobList = new ArrayList<Integer>();
-		jobList= mDbHelper.getWoNumbers();
+		Cursor c = mDbHelper.getWoNumbers();
+		try {
+			while (c.moveToNext()) {
+				jobList.add( c.getInt( c.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER) ) );
+			}
+		} finally {
+	    	if (c != null) c.close();
+		}
+		
 		for (int i=0; i<jobList.size(); i++) {
 			String title = "WO #" + String.valueOf(jobList.get(i));
 			pickJobSubMenu.add(JOB_LIST_MENU_GROUP, jobList.get(i), Menu.FLAG_APPEND_TO_GROUP, title);
@@ -127,7 +136,7 @@ public class MainActivity extends FragmentActivity implements
 		
 		//Select the line and job that we used last time
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
-		setSelectedLine( settings.getInt("selectedLine", 0) );
+		setSelectedLine( settings.getInt("selectedLine", -1) );
 		setSelectedWorkOrder( settings.getInt("selectedWorkOrder", 0));
 		
 		return true;
@@ -139,10 +148,10 @@ public class MainActivity extends FragmentActivity implements
 
 	public void setSelectedLine(Integer selectedLine) {
 		this.mSelectedLine = selectedLine;
-		if (mSelectedLine != 0) {
+		if (mSelectedLine != -1) {
 			CharSequence lineTitle = "Line " + mLinePicker.getSubMenu().findItem((mSelectedLine + LINE_LIST_ID_RANDOMIZER)).getTitle();
 			mLinePicker.setTitle(lineTitle);
-		}
+		} 		
 	}
 
 	public Integer getSelectedWorkOrder() {
@@ -169,12 +178,27 @@ public class MainActivity extends FragmentActivity implements
 		
 		switch (item.getItemId()) {
 		case R.id.new_wo:
-			int newWoNumber = getSelectedWorkOrder() + 1;
+			//increment highest WO
+			int newWoNumber = mDbHelper.getHighestWoNumber() + 1;
 			String newTitle = "WO #" + String.valueOf(newWoNumber);
 			mJobPicker.getSubMenu().add(JOB_LIST_MENU_GROUP, newWoNumber, Menu.FLAG_APPEND_TO_GROUP, newTitle);
 			mDbHelper.addWorkOrder(new WorkOrder(newWoNumber, 0));
+			invalidateOptionsMenu(); //so it refreshes
 			setSelectedWorkOrder(newWoNumber);
 	        break;
+		case R.id.clear_wos:
+			//clear the menu
+			mJobPicker.getSubMenu().removeGroup(JOB_LIST_MENU_GROUP);
+			
+			//clear the menu title
+			mJobPicker.setTitle(R.string.action_pick_job_title);
+			
+			//clear the database
+			mDbHelper.clearWoNumbers();
+			
+			//clear the selected WO
+			mSelectedWorkOrder = 0;
+			break;
 	    default:
 	    }
 		return super.onOptionsItemSelected(item);

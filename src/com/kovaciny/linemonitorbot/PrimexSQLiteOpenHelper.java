@@ -271,9 +271,26 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	}
 	
 	
+	public int getHighestWoNumber() {
+		SQLiteDatabase db = getReadableDatabase();
+		
+		Cursor c = db.query(
+			    PrimexDatabaseSchema.WorkOrders.TABLE_NAME,  // The table to query
+			    new String[] {"MAX(WO_number)"}, // The columns to return
+			    null,                                // The columns for the WHERE clause
+			    null,                            // The values for the WHERE clause
+			    null,                                     // don't group the rows
+			    null,                                     // don't filter by row groups
+			    null	                                 // The sort order
+			    );
+		
+		try { 
+			c.moveToFirst(); 
+			return c.getInt(0); 
+		} finally { c.close(); } 
+	}
 	
-	
-	public List<Integer> getWoNumbers() {
+	public Cursor getWoNumbers() {
 		SQLiteDatabase db = getReadableDatabase();
 		
 		List<Integer> workOrders = new ArrayList<Integer>();
@@ -288,13 +305,13 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			    null	                                 // The sort order
 			    );
 		
-		try {
-			while (c.moveToNext()) {
-				workOrders.add( c.getInt( c.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER) ) );
-			}
-			return workOrders;
-		} finally {
-	    	if (c != null) c.close();
-		}
+		return c;
+	}
+	
+	public void clearWoNumbers() {
+		SQLiteDatabase db = getWritableDatabase();
+			
+		db.execSQL(SQL_DELETE_WORK_ORDERS);
+		db.execSQL(SQL_CREATE_WORK_ORDERS);
 	}
 }
