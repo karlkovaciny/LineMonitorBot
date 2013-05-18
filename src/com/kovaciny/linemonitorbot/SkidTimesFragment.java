@@ -10,6 +10,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -96,6 +97,15 @@ public class SkidTimesFragment extends SectionFragment {
 		//edit_sheetsPerMinute.setText(String.valueOf(aWo.getProductsListPointer()));
 		int ijk = ((MainActivity)getActivity()).testing;
 		mEdit_sheetsPerMinute.setText(String.valueOf(ijk));
+		mEdit_sheetsPerMinute.setOnFocusChangeListener(new OnFocusChangeListener(){
+
+			@Override
+			public void onFocusChange(View arg0, boolean hasFocus) {
+				if (!hasFocus){
+					//Toast.makeText(getActivity(), "this text changed", Toast.LENGTH_SHORT).show();
+					((MainActivity)getActivity()).onTextChanged();
+				}
+			}});
 		//this.setSheetsPerMinute( Float.parseFloat( sheetsPerMinute.getText().toString() ) );
 		
 		Button btnSetAlarm = (Button) mRootView.findViewById(R.id.btn_set_alarm);
