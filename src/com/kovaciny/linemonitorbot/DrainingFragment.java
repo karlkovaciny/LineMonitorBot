@@ -1,5 +1,6 @@
 package com.kovaciny.linemonitorbot;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -47,7 +48,14 @@ public class DrainingFragment extends SectionFragment {
 	    handler.postDelayed(new Runnable() { 
 	         public void run() { 
 	        		Integer testArray[] = {1,2,3,4,5,6,7,8,9,10,11,12};
-	        		ArrayAdapter<Integer> secondAdapter = new ArrayAdapter<Integer>(getActivity(), android.R.layout.simple_list_item_1, testArray);
+	        		Context cont = getActivity();
+	        		if (cont.equals(null)) {
+	        			throw new NullPointerException("context null");
+	        		}
+	        		if (android.R.layout.simple_list_item_1 == 0) {
+	        			throw new NullPointerException("layout null");
+	        		}
+	        		ArrayAdapter<Integer> secondAdapter = new ArrayAdapter<Integer>(cont, android.R.layout.simple_list_item_1, testArray);
 	        		testList.setAdapter(secondAdapter);
 	         } 
 	    }, 2000); 
