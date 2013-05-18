@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.kovaciny.database.PrimexDatabaseSchema;
-import com.kovaciny.database.PrimexSQLiteOpenHelper;
-import com.kovaciny.primexmodel.WorkOrder;
-
 import android.app.ActionBar;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
@@ -23,8 +19,13 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kovaciny.database.PrimexDatabaseSchema;
+import com.kovaciny.database.PrimexSQLiteOpenHelper;
+import com.kovaciny.primexmodel.PrimexModel;
+import com.kovaciny.primexmodel.WorkOrder;
+
 public class MainActivity extends FragmentActivity implements
-		ActionBar.TabListener {
+		ActionBar.TabListener, SkidTimesFragment.OnSheetsPerMinuteChangeListener {
 
 	private static final int LINE_LIST_MENU_GROUP = 1111;
 	private static final int LINE_LIST_ID_RANDOMIZER = 1234;
@@ -52,6 +53,8 @@ public class MainActivity extends FragmentActivity implements
 	private Integer mSelectedLine = -1;
 	private Integer mSelectedWorkOrder = 0;
 	private PrimexSQLiteOpenHelper mDbHelper;
+	private PrimexModel mModel;
+	public int testing = 1001;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +100,11 @@ public class MainActivity extends FragmentActivity implements
 		mDbHelper.getWritableDatabase();
 	}
 
+	//implementing interface
+	public void onTextChanged(){
+		showDummyDialog("text changed");
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

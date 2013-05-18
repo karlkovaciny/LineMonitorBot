@@ -29,6 +29,14 @@ public class SkidTimesFragment extends SectionFragment {
 	private List<View> mViewList;
 	private ListIterator<View> mViewListItr;
 	private PrimexSQLiteOpenHelper mDbHelper;
+	private int stftesting;
+	private EditText mEdit_sheetsPerMinute;
+	OnSheetsPerMinuteChangeListener mCallback;
+	
+    // Container Activity must implement this interface
+    public interface OnSheetsPerMinuteChangeListener {
+        public void onTextChanged();
+    }
 	
 	public float getSheetsPerMinute() {
 		return mSheetsPerMinute;
@@ -57,7 +65,16 @@ public class SkidTimesFragment extends SectionFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-	}
+        
+		// This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnSheetsPerMinuteChangeListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,16 +84,18 @@ public class SkidTimesFragment extends SectionFragment {
 				container, false);
 		
         mViewList = new ArrayList<View>();
-		EditText edit_sheetsPerMinute = (EditText) mRootView.findViewById(R.id.sheets_per_minute);
-		mViewList.add(edit_sheetsPerMinute);
+		mEdit_sheetsPerMinute = (EditText) mRootView.findViewById(R.id.sheets_per_minute);
+		mViewList.add(mEdit_sheetsPerMinute);
 		PrimexSQLiteOpenHelper dbHelper = new PrimexSQLiteOpenHelper(getActivity());
 		List<Integer> lineNumberList = new ArrayList<Integer>();
 		lineNumberList = dbHelper.getLineNumbers();
 		if ( !lineNumberList.isEmpty() ) {
-			edit_sheetsPerMinute.setText(String.valueOf(lineNumberList.get(0)));
+			mEdit_sheetsPerMinute.setText(String.valueOf(lineNumberList.get(0)));
 		}
 		WorkOrder aWo = dbHelper.getWorkOrder(234567);
-		edit_sheetsPerMinute.setText(String.valueOf(aWo.getProductsListPointer()));
+		//edit_sheetsPerMinute.setText(String.valueOf(aWo.getProductsListPointer()));
+		int ijk = ((MainActivity)getActivity()).testing;
+		mEdit_sheetsPerMinute.setText(String.valueOf(ijk));
 		//this.setSheetsPerMinute( Float.parseFloat( sheetsPerMinute.getText().toString() ) );
 		
 		Button btnSetAlarm = (Button) mRootView.findViewById(R.id.btn_set_alarm);
