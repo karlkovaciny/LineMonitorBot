@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.kovaciny.database.PrimexDatabaseSchema;
+import com.kovaciny.database.PrimexSQLiteOpenHelper;
+import com.kovaciny.primexmodel.WorkOrder;
+
 import android.app.ActionBar;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;

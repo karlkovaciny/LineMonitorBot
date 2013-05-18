@@ -1,12 +1,13 @@
-package com.kovaciny.linemonitorbot;
+package com.kovaciny.primexmodel;
 
 public class ProductionLine {
 	private int mLineNumber;
 	private int mLineLength; //in feet
 	private int mDieWidth; //in inches
+	private float mLineSpeed = 0; //in feet per minute
 	private String mSpeedControllerType;
-	private String mTakeoffEquipmentType; 
-
+	private String mTakeoffEquipmentType;
+	
 	public ProductionLine(int lineNumber, int lineLength, int dieWidth, String speedControllerType, String takeoffEquipmentType) {
 		setLineNumber(lineNumber);
 		setLineLength(lineLength);
@@ -32,6 +33,16 @@ public class ProductionLine {
 	public void setDieWidth(int mDieWidth) {
 		this.mDieWidth = mDieWidth;
 	}
+	public float getLineSpeed(){
+		return mLineSpeed;
+	}
+	public void setLineSpeed(float setpoint, float fudgeFactor) {
+		if (this.getSpeedControllerType() == "Direct"){
+			mLineSpeed = setpoint * fudgeFactor;		
+		} else {
+			mLineSpeed = setpoint * fudgeFactor;
+		}
+	}
 	public String getSpeedControllerType() {
 		return mSpeedControllerType;
 	}
@@ -43,6 +54,10 @@ public class ProductionLine {
 	}
 	public void setTakeoffEquipmentType(String takeOffEquipment) {
 		this.mTakeoffEquipmentType = takeOffEquipment;
+	}
+	
+	public float getProductsPerMinute(Product product){
+		return 12 / product.getLength() * this.getLineSpeed();  
 	}
 	
 	/* (non-Javadoc)

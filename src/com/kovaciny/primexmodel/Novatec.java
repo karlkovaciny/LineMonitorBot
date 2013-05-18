@@ -1,6 +1,6 @@
-package com.kovaciny.linemonitorbot;
+package com.kovaciny.primexmodel;
 
-class Novatec implements Hopper {
+public class Novatec implements Hopper {
 	float mCapacity; //in pounds of mReferenceMaterial
 	/**
 	 * percent of full capacity at which alarm sounds.  100 = no alarm.
@@ -14,7 +14,7 @@ class Novatec implements Hopper {
 	private float mRate;
 	Material mContents;
 	
-	Novatec(float capacity, float setpoint, float screwSize) {
+	public Novatec(float capacity, float setpoint, float screwSize) {
 		mCapacity = Math.max(capacity, 0);
 		mControllerSetpoint = Math.max(setpoint, 0);
 		mScrewSize = Math.max(screwSize,0);
@@ -24,7 +24,7 @@ class Novatec implements Hopper {
 		mAlarmPercent = 100;
 	}
 	
-	Novatec() {
+	public Novatec() {
 		this(0,0,1);
 	}
 	

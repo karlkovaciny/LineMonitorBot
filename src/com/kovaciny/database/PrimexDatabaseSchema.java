@@ -1,4 +1,4 @@
-package com.kovaciny.linemonitorbot;
+package com.kovaciny.database;
 
 import android.provider.BaseColumns;
 

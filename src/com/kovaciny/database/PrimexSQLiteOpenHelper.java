@@ -1,4 +1,4 @@
-package com.kovaciny.linemonitorbot;
+package com.kovaciny.database;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.kovaciny.primexmodel.ProductionLine;
+import com.kovaciny.primexmodel.WorkOrder;
 
 public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     
@@ -65,7 +68,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE, "Direct");
         	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE, "Maxson");
         	
-        	long rowId = db.insert(
+        	long rowId = db.insertOrThrow(
         			PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
         			null, 
         			values);
@@ -132,7 +135,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE, newLine.getSpeedControllerType());
     	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE, newLine.getTakeoffEquipmentType());
     	
-    	long rowId = db.insert(
+    	long rowId = db.insertOrThrow(
     			PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
     			null, 
     			values);

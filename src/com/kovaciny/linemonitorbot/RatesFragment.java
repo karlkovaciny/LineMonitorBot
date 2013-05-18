@@ -2,10 +2,13 @@ package com.kovaciny.linemonitorbot;
 
 import java.text.DecimalFormat;
 
+import com.kovaciny.primexmodel.Novatec;
+
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -61,6 +64,13 @@ public class RatesFragment extends SectionFragment {
 				
 			}
 		});
+		
+		//activate fragment
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        DrainingFragment fragment = new DrainingFragment();        
+        fragmentTransaction.add(R.id.FragmentContainer, fragment);
+        fragmentTransaction.commit();
 		return rootView;
 	}
 		

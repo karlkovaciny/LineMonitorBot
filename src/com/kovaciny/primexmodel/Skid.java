@@ -1,8 +1,8 @@
-package com.kovaciny.linemonitorbot;
+package com.kovaciny.primexmodel;
 
 import java.util.Date;
 
-class Skid<E extends Product> {
+public class Skid<E extends Product> {
 	Pallet mPallet;
 	E mProductUnit;
 	int mCurrentItems;
@@ -15,7 +15,7 @@ class Skid<E extends Product> {
 	Date mFinishTime;
 	
 	
-	Skid(Pallet p, int totalItems, float packagingWeight, int numStacks, Date start, E product){
+	public Skid(Pallet p, int totalItems, float packagingWeight, int numStacks, Date start, E product){
 		mPallet = p;
 		mProductUnit = product;
 		mCurrentItems = 0;
@@ -26,7 +26,7 @@ class Skid<E extends Product> {
 		mNumberOfStacks = numStacks;
 	}
 	
-	Skid() {
+	public Skid() {
 	}
 	
 	public float getStackHeight(){

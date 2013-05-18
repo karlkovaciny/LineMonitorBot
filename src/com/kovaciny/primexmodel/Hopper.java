@@ -1,6 +1,6 @@
-package com.kovaciny.linemonitorbot;
+package com.kovaciny.primexmodel;
 
-interface Hopper {
+public interface Hopper {
 	float setControllerSetpoint(float setpoint);
 	float getControllerSetpoint();
 	float estimateMinimumFullCapacity();

@@ -1,4 +1,4 @@
-package com.kovaciny.linemonitorbot;
+package com.kovaciny.primexmodel;
 
 public class Material {
 	private float mDensity;

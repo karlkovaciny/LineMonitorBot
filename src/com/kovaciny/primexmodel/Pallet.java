@@ -1,6 +1,6 @@
-package com.kovaciny.linemonitorbot;
+package com.kovaciny.primexmodel;
 
-class Pallet {
+public class Pallet {
 	float mLength; //stringer direction
 	float mWidth;
 	float mWeight; //in pounds

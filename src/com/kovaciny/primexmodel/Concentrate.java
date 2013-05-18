@@ -1,4 +1,4 @@
-package com.kovaciny.linemonitorbot;
+package com.kovaciny.primexmodel;
 
 /**
  * Currently not needed
