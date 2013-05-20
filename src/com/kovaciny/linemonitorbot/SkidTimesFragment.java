@@ -102,8 +102,7 @@ public class SkidTimesFragment extends SectionFragment {
 			@Override
 			public void onFocusChange(View arg0, boolean hasFocus) {
 				if (!hasFocus){
-					//Toast.makeText(getActivity(), "this text changed", Toast.LENGTH_SHORT).show();
-					((MainActivity)getActivity()).onTextChanged();
+					mCallback.onTextChanged();
 				}
 			}});
 		//this.setSheetsPerMinute( Float.parseFloat( sheetsPerMinute.getText().toString() ) );

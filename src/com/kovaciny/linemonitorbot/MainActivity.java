@@ -31,6 +31,10 @@ public class MainActivity extends FragmentActivity implements
 	private static final int LINE_LIST_ID_RANDOMIZER = 1234;
 	private static final int JOB_LIST_MENU_GROUP = 2222;
 	private static final int JOB_OPTIONS_MENU_GROUP = 2223;
+	
+	private static final int SKID_TIMES_FRAGMENT_POSITION = 0;
+	private static final int RATES_FRAGMENT_POSITION = 1;
+	private static final int DRAINING_FRAGMENT_POSITION = 2;
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a
@@ -102,7 +106,10 @@ public class MainActivity extends FragmentActivity implements
 
 	//implementing interface
 	public void onTextChanged(){
-		showDummyDialog("text changed");
+		//FragmentManager fm = getSupportFragmentManager();
+		//fm.findFragmentByTag(R.layout.rates_fragment);
+		//mDbHelper.
+		//rf.junkedit.setText("234"); //fatal error
 	}
 	
 	@Override
@@ -265,14 +272,15 @@ public class MainActivity extends FragmentActivity implements
 						
 			// Return a SectionFragment with the page number as its lone argument.
 			Fragment fragment;
+			
 			switch(position){
-			case 0:
+			case SKID_TIMES_FRAGMENT_POSITION:
 				fragment = new SkidTimesFragment();
 				break;
-			case 1: 
+			case RATES_FRAGMENT_POSITION: 
 				fragment = new RatesFragment();
 				break;
-			case 2:
+			case DRAINING_FRAGMENT_POSITION:
 				fragment = new DrainingFragment();
 				break;
 			default:
@@ -281,6 +289,7 @@ public class MainActivity extends FragmentActivity implements
 			
 			Bundle args = new Bundle();
 			args.putInt(SectionFragment.ARG_SECTION_NUMBER, position + 1);
+			args.putInt("passingavalue", 722);
 			fragment.setArguments(args);
 			return fragment;
 		}

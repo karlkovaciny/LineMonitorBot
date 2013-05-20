@@ -52,9 +52,6 @@ public class DrainingFragment extends SectionFragment {
 	        		if (cont.equals(null)) {
 	        			throw new NullPointerException("context null");
 	        		}
-	        		if (android.R.layout.simple_list_item_1 == 0) {
-	        			throw new NullPointerException("layout null");
-	        		}
 	        		ArrayAdapter<Integer> secondAdapter = new ArrayAdapter<Integer>(cont, android.R.layout.simple_list_item_1, testArray);
 	        		testList.setAdapter(secondAdapter);
 	         } 

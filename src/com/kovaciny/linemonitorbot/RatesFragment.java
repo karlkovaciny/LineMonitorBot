@@ -19,12 +19,14 @@ public class RatesFragment extends SectionFragment {
 	TextView junktextview;
 	TextView junkrate;
 	EditText junkedit;
+	int mJunkeditValue;
 
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		Bundle b = getArguments();
+		mJunkeditValue = b.getInt("passingavalue", 4004); 
 	}
 	
 	@Override
@@ -37,7 +39,7 @@ public class RatesFragment extends SectionFragment {
 		junktextview = (TextView) rootView.findViewById(R.id.textView3);
 		junkrate = (TextView) rootView.findViewById(R.id.textView2);
 		junkedit = (EditText) rootView.findViewById(R.id.skid_number);
-		 junkedit.setText("1");
+		 junkedit.setText(String.valueOf(mJunkeditValue));
 		 junkedit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			
 			@Override
@@ -65,12 +67,6 @@ public class RatesFragment extends SectionFragment {
 			}
 		});
 		
-		//activate fragment
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        DrainingFragment fragment = new DrainingFragment();        
-        fragmentTransaction.add(R.id.FragmentContainer, fragment);
-        fragmentTransaction.commit();
 		return rootView;
 	}
 		
