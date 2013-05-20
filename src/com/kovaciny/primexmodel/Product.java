@@ -1,11 +1,11 @@
 package com.kovaciny.primexmodel;
 
 public interface Product {
-	float getHeight();
-	float getWeight();
-	float getWidth(); //in inches
-	float getLength(); // in inches
-	float getEstimatedWeight();
+	double getHeight();
+	double getWeight();
+	double getWidth(); //in inches
+	double getLength(); // in inches
+	double getEstimatedWeight();
 	String getMaterialType();
 	boolean setMaterialType();
 }

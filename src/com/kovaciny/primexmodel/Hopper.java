@@ -1,14 +1,14 @@
 package com.kovaciny.primexmodel;
 
 public interface Hopper {
-	float setControllerSetpoint(float setpoint);
-	float getControllerSetpoint();
-	float estimateMinimumFullCapacity();
+	double setControllerSetpoint(double setpoint);
+	double getControllerSetpoint();
+	double estimateMinimumFullCapacity();
 	/*
 	 * Estimate the number of pounds left when the low alarm sounds.
 	 */
-	float estimateAlarmCapacity();
-	float getLbsContained();
-	float setLbsContained(float lbs);
-	float getRate(); //measured in pounds per hour
+	double estimateAlarmCapacity();
+	double getLbsContained();
+	double setLbsContained(double lbs);
+	double getRate(); //measured in pounds per hour
 }

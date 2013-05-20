@@ -1,11 +1,11 @@
 package com.kovaciny.primexmodel;
 
 public class Pallet {
-	float mLength; //stringer direction
-	float mWidth;
-	float mWeight; //in pounds
+	double mLength; //stringer direction
+	double mWidth;
+	double mWeight; //in pounds
 	
-	public float getWeight(){
+	public double getWeight(){
 		return mWeight;
 	}
 	

@@ -1,13 +1,13 @@
 package com.kovaciny.primexmodel;
 
 public class Roll implements Product {
-	private float mLinearFootWeight = 0;
+	private double mLinearFootWeight = 0;
 	private int mLinearFeet = 0;
-	private float mGauge; //sheet thickness in inches
-	private float mWidth; //traverse direction in inches
-	private float mDensity;
+	private double mGauge; //sheet thickness in inches
+	private double mWidth; //traverse direction in inches
+	private double mDensity;
 	
-	public Roll(float gauge, float width, int linearFeet) {
+	public Roll(double gauge, double width, int linearFeet) {
 		if ( (gauge < 0 || width < 0) ) {
 			throw new IllegalArgumentException();
 		}
@@ -18,24 +18,24 @@ public class Roll implements Product {
 		mLinearFootWeight = getEstimatedWeight();
 	}
 	
-	public float getEstimatedWeight() {
+	public double getEstimatedWeight() {
 		return ( mGauge * mWidth * mDensity * mLinearFeet);
 	}
-	public float getHeight() {
+	public double getHeight() {
 		//depends on eye-to-sky status
 		//TODO
-		return 0f;		
+		return 0d;		
 	}
 	
-	public float getWeight() {
+	public double getWeight() {
 		return mLinearFootWeight * mLinearFeet;
 	}
 	
-	public float getLength() {
+	public double getLength() {
 		return 12; //one linear foot
 	}
 	
-	public float getWidth() {
+	public double getWidth() {
 		return mWidth;
 	}
 	public String getMaterialType() {

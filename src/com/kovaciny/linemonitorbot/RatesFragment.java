@@ -56,10 +56,10 @@ public class RatesFragment extends SectionFragment {
 			
 			@Override
 			public void onClick(View v) {
-				float setpt = Float.valueOf(junkedit.getText().toString());
+				double setpt = Double.valueOf(junkedit.getText().toString());
 				Novatec mNovatec = new Novatec(50,setpt,1);
-				float grosspph = Float.valueOf(junkrate.getText().toString());
-				float concpct = mNovatec.getRate()/grosspph;
+				double grosspph = Double.valueOf(junkrate.getText().toString());
+				double concpct = mNovatec.getRate()/grosspph;
 				String concdisp = new DecimalFormat("#.00").format(concpct*100); //use round instead
 				concdisp += "%";
 				junktextview.setText(concdisp);

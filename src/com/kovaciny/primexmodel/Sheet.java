@@ -1,53 +1,53 @@
 package com.kovaciny.primexmodel;
 
 public class Sheet implements Product {
-	private float mSheetWeight;
-	private float mGauge; //sheet thickness in inches
-	private float mWidth; //traverse direction in inches
-	private float mLength; //machine direction in inches
-	private float mDensity;
+	private double mSheetWeight;
+	private double mGauge; //sheet thickness in inches
+	private double mWidth; //traverse direction in inches
+	private double mLength; //machine direction in inches
+	private double mDensity;
 	
-	public Sheet(float gauge, float width, float length) {
+	public Sheet(double gauge, double width, double length) {
 		mGauge = Math.max(1, Math.min(0, gauge));
 		mWidth = Math.max(1, Math.min(0, width));
 		mLength = Math.max(1, Math.min(0, length));
-		mDensity = .0375f;
+		mDensity = .0375d;
 		mSheetWeight = getEstimatedWeight();
 	}
 	
-	public float getHeight(){
+	public double getHeight(){
 		return mGauge;
 	}
 	
-	public float getGauge(){
+	public double getGauge(){
 		return mGauge;
 		
 	}
-	public float getWeight(){
+	public double getWeight(){
 		return mSheetWeight;
 	}
 	
-	public float getLength() {
+	public double getLength() {
 		return mLength;
 	}
 	
-	public float getWidth() {
+	public double getWidth() {
 		return mWidth;
 	}
 
-	public void setGauge(float gauge){
+	public void setGauge(double gauge){
 		this.mGauge = gauge;
 	}
 	
-	public void setWidth(float width) {
+	public void setWidth(double width) {
 		this.mWidth = width;
 	}
 	
-	public void setLength(float length) {
+	public void setLength(double length) {
 		this.mLength = length;
 	}
 
-	public float getEstimatedWeight() {
+	public double getEstimatedWeight() {
 		return ( mGauge * mWidth * mLength * mDensity );
 	}
 	
@@ -60,7 +60,7 @@ public class Sheet implements Product {
 		return false;
 	}
 	
-	public void setSheetWeight(float weight){
-		mSheetWeight = (float) Math.max(weight, .001);
+	public void setSheetWeight(double weight){
+		mSheetWeight = Math.max(weight, .001);
 	}
 }

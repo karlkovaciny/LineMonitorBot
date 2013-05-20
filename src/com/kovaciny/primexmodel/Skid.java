@@ -7,15 +7,15 @@ public class Skid<E extends Product> {
 	E mProductUnit;
 	int mCurrentItems;
 	int mTotalItems;
-	float mPackagingWeight;	
-	float mFinishedNetWeight;
-	float mFinishedGrossWeight;
+	double mPackagingWeight;	
+	double mFinishedNetWeight;
+	double mFinishedGrossWeight;
 	int mNumberOfStacks;	
 	Date mStartTime;
 	Date mFinishTime;
 	
 	
-	public Skid(Pallet p, int totalItems, float packagingWeight, int numStacks, Date start, E product){
+	public Skid(Pallet p, int totalItems, double packagingWeight, int numStacks, Date start, E product){
 		mPallet = p;
 		mProductUnit = product;
 		mCurrentItems = 0;
@@ -29,15 +29,15 @@ public class Skid<E extends Product> {
 	public Skid() {
 	}
 	
-	public float getStackHeight(){
+	public double getStackHeight(){
 			return mTotalItems / mNumberOfStacks * mProductUnit.getHeight();
 	}
 	
-	public float getFinishedNetWeight(){
+	public double getFinishedNetWeight(){
 		return mProductUnit.getWeight() * mTotalItems;
 	}
 	
-	public float getFinishedGrossWeight(){
+	public double getFinishedGrossWeight(){
 		return mPallet.getWeight() + mProductUnit.getWeight() * mTotalItems + mPackagingWeight; 		
 	}
 
@@ -81,7 +81,7 @@ public class Skid<E extends Product> {
 		this.mFinishTime = mFinishTime;
 	}
 
-	public void setmPackagingWeight(float mPackagingWeight) {
+	public void setmPackagingWeight(double mPackagingWeight) {
 		this.mPackagingWeight = mPackagingWeight;
 	}
 }

@@ -1,20 +1,20 @@
 package com.kovaciny.primexmodel;
 
 public class Novatec implements Hopper {
-	float mCapacity; //in pounds of mReferenceMaterial
+	double mCapacity; //in pounds of mReferenceMaterial
 	/**
 	 * percent of full capacity at which alarm sounds.  100 = no alarm.
 	 * Not implemented yet.
 	 */
-	float mAlarmPercent; 
+	double mAlarmPercent; 
 	Material mReferenceMaterial; 
-	private float mControllerSetpoint;
-	float mLbsContained;
-	private float mScrewSize;
-	private float mRate;
+	private double mControllerSetpoint;
+	double mLbsContained;
+	private double mScrewSize;
+	private double mRate;
 	Material mContents;
 	
-	public Novatec(float capacity, float setpoint, float screwSize) {
+	public Novatec(double capacity, double setpoint, double screwSize) {
 		mCapacity = Math.max(capacity, 0);
 		mControllerSetpoint = Math.max(setpoint, 0);
 		mScrewSize = Math.max(screwSize,0);
@@ -31,41 +31,41 @@ public class Novatec implements Hopper {
 	private void updateRate(){
 		mRate = mControllerSetpoint * mScrewSize * mContents.getDensity()/mReferenceMaterial.getDensity();
 	}
-	public float getRate(){
+	public double getRate(){
 		return mRate;
 	}
 	
-	public float setControllerSetpoint(float setpoint) {
+	public double setControllerSetpoint(double setpoint) {
 		setpoint = Math.max(setpoint,0);
 		updateRate();
 		return mControllerSetpoint = setpoint;
 	}
-	public float getControllerSetpoint() {
+	public double getControllerSetpoint() {
 		return mControllerSetpoint;
 	}
 	
-	public float estimateMinimumFullCapacity() {
+	public double estimateMinimumFullCapacity() {
 		return mCapacity ; //need to change w/ new matl
 	}
 	
-	public float estimateAlarmCapacity() {
+	public double estimateAlarmCapacity() {
 		return mAlarmPercent * mCapacity;
 	}
 	
-	public float getLbsContained() {
+	public double getLbsContained() {
 		return mLbsContained;
 	}
 	
-	public float setLbsContained(float lbs) {
+	public double setLbsContained(double lbs) {
 		if (lbs < 0) return 0;
 		else return mLbsContained = lbs;
 	}
 
-	public float getScrewSize() {
+	public double getScrewSize() {
 		return mScrewSize;
 	}
 
-	public void setScrewSize(float mScrewSize) {
+	public void setScrewSize(double mScrewSize) {
 		this.mScrewSize = mScrewSize;
 		updateRate();
 	}

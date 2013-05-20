@@ -14,6 +14,7 @@ import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kovaciny.database.PrimexSQLiteOpenHelper;
@@ -25,7 +26,7 @@ import com.kovaciny.primexmodel.WorkOrder;
 public class SkidTimesFragment extends SectionFragment {
 	private SkidFinishedBroadcastReceiver mAlarmReceiver;
 	private View mRootView; //the ScrollView that holds all other views
-	private float mSheetsPerMinute;
+	private double mSheetsPerMinute;
 	private List<Skid<Product>> mSkidList;
 	private List<View> mViewList;
 	private ListIterator<View> mViewListItr;
@@ -36,14 +37,14 @@ public class SkidTimesFragment extends SectionFragment {
 	
     // Container Activity must implement this interface
     public interface OnSheetsPerMinuteChangeListener {
-        public void onTextChanged();
+        public void onSheetsPerMinuteChanged(double sheetsPerMinute);
     }
 	
-	public float getSheetsPerMinute() {
+	public double getSheetsPerMinute() {
 		return mSheetsPerMinute;
 	}
 
-	public void setSheetsPerMinute(float mSheetsPerMinute) {
+	public void setSheetsPerMinute(double mSheetsPerMinute) {
 		this.mSheetsPerMinute = mSheetsPerMinute;
 	}
 
@@ -94,18 +95,16 @@ public class SkidTimesFragment extends SectionFragment {
 			mEdit_sheetsPerMinute.setText(String.valueOf(lineNumberList.get(0)));
 		}
 		WorkOrder aWo = dbHelper.getWorkOrder(234567);
-		//edit_sheetsPerMinute.setText(String.valueOf(aWo.getProductsListPointer()));
-		int ijk = ((MainActivity)getActivity()).testing;
-		mEdit_sheetsPerMinute.setText(String.valueOf(ijk));
+		//mEdit_sheetsPerMinute.setText(String.valueOf(ijk));
 		mEdit_sheetsPerMinute.setOnFocusChangeListener(new OnFocusChangeListener(){
 
 			@Override
 			public void onFocusChange(View arg0, boolean hasFocus) {
 				if (!hasFocus){
-					mCallback.onTextChanged();
+					double sheetsPerMin = Double.valueOf(((TextView)arg0).getText().toString());
+					mCallback.onSheetsPerMinuteChanged(sheetsPerMin); //the whole app needs to know when the sheets per minute change
 				}
 			}});
-		//this.setSheetsPerMinute( Float.parseFloat( sheetsPerMinute.getText().toString() ) );
 		
 		Button btnSetAlarm = (Button) mRootView.findViewById(R.id.btn_set_alarm);
 		btnSetAlarm.setOnClickListener(new View.OnClickListener() {

@@ -1,7 +1,7 @@
 package com.kovaciny.primexmodel;
 
 public class Material {
-	private float mDensity;
+	private double mDensity;
 	private String mName;
 		
 	public Material() {
@@ -11,13 +11,13 @@ public class Material {
 	public Material(String name) {
 		this(1f, name);
 	}
-	public Material(float mDensity, String mName) {
+	public Material(double mDensity, String mName) {
 		super();
 		this.mDensity = mDensity;
 		this.mName = mName;
 	}
 		
-	public float getDensity() {
+	public double getDensity() {
 		return mDensity;
 	}
 

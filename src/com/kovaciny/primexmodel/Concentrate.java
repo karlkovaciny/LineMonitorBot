@@ -9,7 +9,7 @@ public class Concentrate extends Material {
 		this(1, "Concentrate");
 	}
 
-	public Concentrate(float mDensity, String mName) {
+	public Concentrate(double mDensity, String mName) {
 		super(mDensity, mName);
 	}
 }

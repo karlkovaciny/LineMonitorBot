@@ -4,10 +4,10 @@ public class ProductionLine {
 	private int mLineNumber;
 	private int mLineLength; //in feet
 	private int mDieWidth; //in inches
-	private float mLineSpeed = 0; //in feet per minute
-	private float mProductsPerMinute; 
-	private float mNetRate; //in lbs/hr
-	private float mGrossRate; //in lbs/hr
+	private double mLineSpeed = 0; //in feet per minute
+	private double mProductsPerMinute; //there is no setter, change line speed or length 
+	private double mNetRate; //in lbs/hr
+	private double mGrossRate; //in lbs/hr
 	private String mSpeedControllerType;
 	private String mTakeoffEquipmentType;
 	private Product mProduct = null;
@@ -20,7 +20,7 @@ public class ProductionLine {
 		setTakeoffEquipmentType(takeoffEquipmentType);
 	}
 	
-	public void setLineSpeed(float setpoint, float fudgeFactor) {
+	public void setLineSpeed(double setpoint, double fudgeFactor) {
 		if (this.getSpeedControllerType() == "Direct"){
 			mLineSpeed = setpoint * fudgeFactor;		
 		} else {
@@ -28,13 +28,9 @@ public class ProductionLine {
 		}
 	}
 
-	public float getProductsPerMinute(Product product){
+	public double getProductsPerMinute(Product product){
 		mProductsPerMinute = 12 / product.getLength() * this.getLineSpeed(); 
 		return mProductsPerMinute;
-	}
-	
-	public void setProductsPerMinute(float ppm){
-		//The only way the ppm can change for a given product is if you change the line speed 
 	}
 	
 	/* (non-Javadoc)
@@ -74,7 +70,7 @@ public class ProductionLine {
 	public void setDieWidth(int mDieWidth) {
 		this.mDieWidth = mDieWidth;
 	}
-	public float getLineSpeed(){
+	public double getLineSpeed(){
 		return mLineSpeed;
 	}
 	public String getSpeedControllerType() {
