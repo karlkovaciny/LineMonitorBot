@@ -5,8 +5,12 @@ public class ProductionLine {
 	private int mLineLength; //in feet
 	private int mDieWidth; //in inches
 	private float mLineSpeed = 0; //in feet per minute
+	private float mProductsPerMinute; 
+	private float mNetRate; //in lbs/hr
+	private float mGrossRate; //in lbs/hr
 	private String mSpeedControllerType;
 	private String mTakeoffEquipmentType;
+	private Product mProduct = null;
 	
 	public ProductionLine(int lineNumber, int lineLength, int dieWidth, String speedControllerType, String takeoffEquipmentType) {
 		setLineNumber(lineNumber);
@@ -15,6 +19,43 @@ public class ProductionLine {
 		setSpeedControllerType(speedControllerType);
 		setTakeoffEquipmentType(takeoffEquipmentType);
 	}
+	
+	public void setLineSpeed(float setpoint, float fudgeFactor) {
+		if (this.getSpeedControllerType() == "Direct"){
+			mLineSpeed = setpoint * fudgeFactor;		
+		} else {
+			mLineSpeed = setpoint * fudgeFactor;
+		}
+	}
+
+	public float getProductsPerMinute(Product product){
+		mProductsPerMinute = 12 / product.getLength() * this.getLineSpeed(); 
+		return mProductsPerMinute;
+	}
+	
+	public void setProductsPerMinute(float ppm){
+		//The only way the ppm can change for a given product is if you change the line speed 
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("Line ");
+		sb.append(
+				getLineNumber()).append(", length ").append(getLineLength()).append(", die width ").append(getDieWidth())
+				.append (", speed controller type: ").append(getSpeedControllerType()).append(", takeoff equipment: ")
+				.append(getTakeoffEquipmentType()).append("\n").append(super.toString());
+		return sb.toString();
+	}
+	
+
+	
+	/*
+	 * Boilerplate from here on down
+	 */
+	
 	public int getLineNumber() {
 		return mLineNumber;
 	}
@@ -36,13 +77,6 @@ public class ProductionLine {
 	public float getLineSpeed(){
 		return mLineSpeed;
 	}
-	public void setLineSpeed(float setpoint, float fudgeFactor) {
-		if (this.getSpeedControllerType() == "Direct"){
-			mLineSpeed = setpoint * fudgeFactor;		
-		} else {
-			mLineSpeed = setpoint * fudgeFactor;
-		}
-	}
 	public String getSpeedControllerType() {
 		return mSpeedControllerType;
 	}
@@ -54,25 +88,5 @@ public class ProductionLine {
 	}
 	public void setTakeoffEquipmentType(String takeOffEquipment) {
 		this.mTakeoffEquipmentType = takeOffEquipment;
-	}
-	
-	public float getProductsPerMinute(Product product){
-		return 12 / product.getLength() * this.getLineSpeed();  
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder("Line ");
-		sb.append(
-				getLineNumber()).append(", length ").append(getLineLength()).append(", die width ").append(getDieWidth())
-				.append (", speed controller type: ").append(getSpeedControllerType()).append(", takeoff equipment: ")
-				.append(getTakeoffEquipmentType()).append("\n").append(super.toString());
-		return sb.toString();
-	}
-	
-	
-	
+	}	
 }
