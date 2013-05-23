@@ -20,12 +20,13 @@ public class ProductionLine {
 		setTakeoffEquipmentType(takeoffEquipmentType);
 	}
 	
-	public void setLineSpeed(double setpoint, double fudgeFactor) {
+	public double setLineSpeed(double setpoint, double fudgeFactor) {
 		if (this.getSpeedControllerType() == "Direct"){
 			mLineSpeed = setpoint * fudgeFactor;		
 		} else {
 			mLineSpeed = setpoint * fudgeFactor;
 		}
+		return mLineSpeed;
 	}
 
 	public double getProductsPerMinute(Product product){
