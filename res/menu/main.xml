@@ -1,11 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item
-        android:id="@+id/debug_display"
-        android:orderInCategory="0"
-        android:showAsAction="ifRoom"
-        android:title="@string/debug_display" />
-    
 	<item
         android:id="@+id/action_pick_line"
         android:orderInCategory="1"

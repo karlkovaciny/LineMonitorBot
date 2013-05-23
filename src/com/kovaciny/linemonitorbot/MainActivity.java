@@ -136,8 +136,6 @@ public class MainActivity extends FragmentActivity implements
 		getMenuInflater().inflate(R.menu.main, menu);
 		mJobPicker = (MenuItem) menu.findItem(R.id.action_pick_job);
 		mLinePicker = (MenuItem) menu.findItem(R.id.action_pick_line);
-		mDebugDisplay = (MenuItem) menu.findItem(R.id.debug_display);
-		mDebugDisplay.setVisible(false);
 		
 		//populate the line picker with line numbers from the database
 		List<Integer> lineNumberList = new ArrayList<Integer>();
