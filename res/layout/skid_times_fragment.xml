@@ -47,6 +47,8 @@
 	                android:maxLength="4"
 	                android:minEms="3"
 	                android:selectAllOnFocus="true"
+	                style="@style/user_entered"
+	                android:imeOptions="actionDone"
 	                android:text="10" />
 	        </LinearLayout>
 
