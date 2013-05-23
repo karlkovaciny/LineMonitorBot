@@ -34,9 +34,6 @@ public class SkidTimesFragment extends SectionFragment {
 	private double mSheetsPerMinute;
 	private List<Skid<Product>> mSkidList;
 	private List<View> mViewList;
-	private ListIterator<View> mViewListItr;
-	private PrimexSQLiteOpenHelper mDbHelper;
-	private int stftesting;
 	private EditText mEdit_sheetsPerMinute;
 	OnSheetsPerMinuteChangeListener mCallback;
 	
@@ -64,8 +61,7 @@ public class SkidTimesFragment extends SectionFragment {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		mDbHelper = new PrimexSQLiteOpenHelper(getActivity());
-        //setContentView(R.layout.activity_alarm_manager);
+		
         mAlarmReceiver = new SkidFinishedBroadcastReceiver();      
     }
         
@@ -99,13 +95,8 @@ public class SkidTimesFragment extends SectionFragment {
 		if ( !lineNumberList.isEmpty() ) {
 			mEdit_sheetsPerMinute.setText(String.valueOf(lineNumberList.get(0)));
 		}
-		WorkOrder aWo = dbHelper.getWorkOrder(234567);
-		//mEdit_sheetsPerMinute.setText(String.valueOf(ijk));
+		
 		mEdit_sheetsPerMinute.setOnEditorActionListener(new OnEditorActionListener(){
-
-			/* (non-Javadoc)
-			 * @see android.widget.TextView.OnEditorActionListener#onEditorAction(android.widget.TextView, int, android.view.KeyEvent)
-			 */
 			@Override
 			public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
 				if ( (arg1 == EditorInfo.IME_ACTION_DONE) || (arg1 == EditorInfo.IME_ACTION_NEXT) ){
@@ -115,8 +106,7 @@ public class SkidTimesFragment extends SectionFragment {
 					}
 				}
 				return false;
-			}
-			
+			}			
 		});
 		
 		Button btnSetAlarm = (Button) mRootView.findViewById(R.id.btn_set_alarm);
