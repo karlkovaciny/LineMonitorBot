@@ -8,13 +8,18 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.kovaciny.database.PrimexSQLiteOpenHelper;
@@ -96,15 +101,23 @@ public class SkidTimesFragment extends SectionFragment {
 		}
 		WorkOrder aWo = dbHelper.getWorkOrder(234567);
 		//mEdit_sheetsPerMinute.setText(String.valueOf(ijk));
-		mEdit_sheetsPerMinute.setOnFocusChangeListener(new OnFocusChangeListener(){
+		mEdit_sheetsPerMinute.setOnEditorActionListener(new OnEditorActionListener(){
 
+			/* (non-Javadoc)
+			 * @see android.widget.TextView.OnEditorActionListener#onEditorAction(android.widget.TextView, int, android.view.KeyEvent)
+			 */
 			@Override
-			public void onFocusChange(View arg0, boolean hasFocus) {
-				if (!hasFocus){
-					double sheetsPerMin = Double.valueOf(((TextView)arg0).getText().toString());
-					mCallback.onSheetsPerMinuteChanged(sheetsPerMin); //the whole app needs to know when the sheets per minute change
+			public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
+				if ( (arg1 == EditorInfo.IME_ACTION_DONE) || (arg1 == EditorInfo.IME_ACTION_NEXT) ){
+					String sheetsPerMin = ((TextView)arg0).getText().toString();
+					if (sheetsPerMin.length() != 0) {
+						mCallback.onSheetsPerMinuteChanged(Double.valueOf(sheetsPerMin)); //the whole app needs to know when the sheets per minute change						
+					}
 				}
-			}});
+				return false;
+			}
+			
+		});
 		
 		Button btnSetAlarm = (Button) mRootView.findViewById(R.id.btn_set_alarm);
 		btnSetAlarm.setOnClickListener(new View.OnClickListener() {

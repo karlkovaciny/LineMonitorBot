@@ -1,5 +1,7 @@
 package com.kovaciny.linemonitorbot;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -18,6 +20,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.kovaciny.database.PrimexDatabaseSchema;
 import com.kovaciny.database.PrimexSQLiteOpenHelper;
@@ -25,7 +28,7 @@ import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.WorkOrder;
 
 public class MainActivity extends FragmentActivity implements
-		ActionBar.TabListener, SkidTimesFragment.OnSheetsPerMinuteChangeListener {
+		ActionBar.TabListener, SkidTimesFragment.OnSheetsPerMinuteChangeListener, PropertyChangeListener {
 
 	private static final int LINE_LIST_MENU_GROUP = 1111;
 	private static final int LINE_LIST_ID_RANDOMIZER = 1234;
@@ -58,8 +61,7 @@ public class MainActivity extends FragmentActivity implements
 	private Integer mSelectedWorkOrder = 0;
 	private PrimexSQLiteOpenHelper mDbHelper;
 	private PrimexModel mModel;
-	public int testing = 1001;
-	
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -102,16 +104,32 @@ public class MainActivity extends FragmentActivity implements
 		
 		mDbHelper = new PrimexSQLiteOpenHelper(getApplicationContext());
 		mDbHelper.getWritableDatabase();
+		
+		this.mModel = new PrimexModel();
+		mModel.addPropertyChangeListener(this);
 	}
 
 	//implementing interface
-	public void onTextChanged(){
-		//FragmentManager fm = getSupportFragmentManager();
-		//fm.findFragmentByTag(R.layout.rates_fragment);
-		//mDbHelper.
-		//rf.junkedit.setText("234"); //fatal error
+	public void onSheetsPerMinuteChanged(double sheetsPerMin){
+		//TODO this function is NOT compatible with rotating the screen
+		//tell model of change
+		mModel.changeCurrentLineSpeed(sheetsPerMin);
+		//ask model for updates
+		//tell views to change
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		if (event.getPropertyName() == PrimexModel.LINE_SPEED_CHANGE_EVENT) {
+			Toast t = Toast.makeText(this, "Changed line speed to " + String.valueOf(mModel.getCurrentLineSpeed()), Toast.LENGTH_SHORT);				
+			t.show();
+		}
+		
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -365,6 +383,7 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	protected void onPause() {
+		super.onPause();
 		//store persistent data
 		mDbHelper.close();
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
@@ -375,7 +394,6 @@ public class MainActivity extends FragmentActivity implements
 	    // Commit the edits!
 	    editor.commit();
 
-		super.onPause();
 	}
 
 	
