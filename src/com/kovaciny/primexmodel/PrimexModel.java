@@ -5,9 +5,11 @@ import java.beans.PropertyChangeSupport;
 
 
 public class PrimexModel {
+	/*
+	 * This section sets up notifying observers about changes.
+	 */
 	public static final String LINE_SPEED_CHANGE_EVENT = "PrimexModel.SPEED_CHANGE";
-	private ProductionLine mPline = new ProductionLine(22,5,5,"blah","blah");
-	
+		
 	// Create PropertyChangeSupport to manage listeners and fire events.
 	private final PropertyChangeSupport propChangeSupport = new PropertyChangeSupport(this);
 	  
@@ -20,7 +22,13 @@ public class PrimexModel {
 	    propChangeSupport.removePropertyChangeListener(l);
 	}
 
-	//each object has propertychanged flag that propagates up chain of command till model says "firePropertyChange()"
+	/*
+	 * This section holds the different objects and their relation to each other, getters and setters.
+	 */
+	
+	
+	private ProductionLine mPline = new ProductionLine(22,5,5,"blah","blah");
+	
 	public void changeCurrentLineSpeed(double setpoint){
 		if (mPline.getLineSpeed() != setpoint) {
 			double oldspeed = mPline.getLineSpeed();
