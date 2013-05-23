@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <style name="user_entered">
+       <item name="android:textColor">@color/win8_green</item>
+   </style>
+   <style name="calculated">
+       <item name="android:textColor">@color/DodgerBlue</item>
+   </style>  
+   <style name="guess">
+       <item name="android:textColor">@color/win8_orange</item>
+   </style> 
+</resources>
