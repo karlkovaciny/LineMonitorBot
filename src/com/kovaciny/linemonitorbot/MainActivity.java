@@ -36,9 +36,9 @@ public class MainActivity extends FragmentActivity implements
 	private static final int JOB_LIST_MENU_GROUP = 2222;
 	private static final int JOB_OPTIONS_MENU_GROUP = 2223;
 	
-	private static final int SKID_TIMES_FRAGMENT_POSITION = 0;
-	private static final int RATES_FRAGMENT_POSITION = 1;
-	private static final int DRAINING_FRAGMENT_POSITION = 2;
+	public static final int SKID_TIMES_FRAGMENT_POSITION = 0;
+	public static final int RATES_FRAGMENT_POSITION = 1;
+	public static final int DRAINING_FRAGMENT_POSITION = 2;
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a
@@ -63,13 +63,7 @@ public class MainActivity extends FragmentActivity implements
 	private PrimexSQLiteOpenHelper mDbHelper;
 	private PrimexModel mModel;
 		
-    // Implementing interface for SheetsPerMinuteDialogFragment
-    public void onClickPositiveButton(DialogFragment d) {
-    	//d.get
-    	Toast t = Toast.makeText(this, "clicked ok", Toast.LENGTH_SHORT);
-    	t.show();
-    }
-    
+   
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -126,6 +120,11 @@ public class MainActivity extends FragmentActivity implements
 		//tell views to change
 	}
 	
+	// Implementing interface for SheetsPerMinuteDialogFragment
+    public void onClickPositiveButton(DialogFragment d) {
+    	Toast t = Toast.makeText(this, "clicked ok", Toast.LENGTH_SHORT);
+    	t.show();
+    }	
 	/* (non-Javadoc)
 	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
 	 */
@@ -337,6 +336,11 @@ public class MainActivity extends FragmentActivity implements
 			}
 			return null;
 		}
+	}
+	
+	public Fragment findFragmentByPosition(int pos) {
+		String tag = "android:switcher:" + mViewPager.getId() + ":" + pos;
+		return getSupportFragmentManager().findFragmentByTag(tag);
 	}
 	
 /*

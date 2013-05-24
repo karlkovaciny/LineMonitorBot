@@ -5,9 +5,9 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +41,7 @@ public class SkidTimesFragment extends SectionFragment implements OnClickListene
     public interface OnSheetsPerMinuteChangeListener {
         public void onSheetsPerMinuteChanged(double sheetsPerMinute);
     }
-    
+        
 	public double getSheetsPerMinute() {
 		return mSheetsPerMinute;
 	}
@@ -128,8 +128,7 @@ public class SkidTimesFragment extends SectionFragment implements OnClickListene
 		case(R.id.calc_sheets_per_minute):
 		    // Create the fragment and show it as a dialog.
 			SheetsPerMinuteDialogFragment newFragment = new SheetsPerMinuteDialogFragment();
-		    newFragment.setTargetFragment(newFragment, 0);
-		    newFragment.show(getActivity().getFragmentManager(), "AlertDialog");
+		    newFragment.show(getActivity().getFragmentManager(), "SheetsPerMinuteDialog");
 			break;
 		}
 	}
