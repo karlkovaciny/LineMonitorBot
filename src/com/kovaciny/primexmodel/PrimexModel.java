@@ -2,6 +2,7 @@ package com.kovaciny.primexmodel;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 
 
 public class PrimexModel {
@@ -26,29 +27,22 @@ public class PrimexModel {
 	 * This section holds the different objects and their relation to each other, getters and setters.
 	 */
 	
+	private ArrayList<ProductionLine> linesList;
+	private ProductionLine mSelectedLine;
+	private ArrayList<Skid> skidsList;
+	private Skid mSelectedSkid;
+	private Product mSelectedProduct;
 	
-	private ProductionLine mPline = new ProductionLine(22,5,5,"blah","blah");
 	
 	public void changeCurrentLineSpeed(double setpoint){
-		if (mPline.getLineSpeed() != setpoint) {
-			double oldspeed = mPline.getLineSpeed();
-			double newspeed = mPline.setLineSpeed(setpoint, 1);
+		if (mSelectedLine.getLineSpeed() != setpoint) {
+			double oldspeed = mSelectedLine.getLineSpeed();
+			double newspeed = mSelectedLine.setLineSpeed(setpoint, 1);
 			propChangeSupport.firePropertyChange(LINE_SPEED_CHANGE_EVENT, oldspeed, newspeed);
 		}
 	}
 	
 	public double getCurrentLineSpeed(){
-		return mPline.getLineSpeed();
+		return mSelectedLine.getLineSpeed();
 	}
-	
-	  /*// Simple example of how to fire an event when the value of 'foo' is changed.
-	  protected void setFoo(int foo) {
-	    if (this.foo != foo) {
-	      // Remember previous value, assign new value and then fire event.
-	      int oldFoo = this.foo;
-	      this.foo = foo;
-	      propChangeSupport.firePropertyChange("foo", oldFoo, this.foo);
-	    }
-	  }*/
-
 }
