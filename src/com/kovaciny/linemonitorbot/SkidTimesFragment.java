@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,6 +127,11 @@ public class SkidTimesFragment extends SectionFragment implements OnClickListene
 		case(R.id.calc_sheets_per_minute):
 		    // Create the fragment and show it as a dialog.
 			SheetsPerMinuteDialogFragment newFragment = new SheetsPerMinuteDialogFragment();
+			Bundle args = new Bundle();
+			args.putDouble("SheetLength", 71.5);
+			args.putDouble("LineSpeed", 0d);
+			args.putDouble("SpeedFactor", 0d);
+			newFragment.setArguments(args);
 		    newFragment.show(getActivity().getFragmentManager(), "SheetsPerMinuteDialog");
 			break;
 		}

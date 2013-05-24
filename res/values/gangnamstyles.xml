@@ -9,4 +9,7 @@
    <style name="guess">
        <item name="android:textColor">@color/win8_orange</item>
    </style> 
+   <style name="label" parent="@android:style/TextAppearance.Small">
+       <item name="android:textColor">@color/DodgerBlue</item>
+   </style>
 </resources>

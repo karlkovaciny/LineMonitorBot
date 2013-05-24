@@ -123,7 +123,10 @@ public class MainActivity extends FragmentActivity implements
 	// Implementing interface for SheetsPerMinuteDialogFragment
     public void onClickPositiveButton(DialogFragment d) {
     	if (d.getTag() == "SheetsPerMinuteDialog") {
-    		Toast t = Toast.makeText(this, "text is " + ((SheetsPerMinuteDialogFragment)d).getMyText(), Toast.LENGTH_SHORT);
+    		SheetsPerMinuteDialogFragment spmd = (SheetsPerMinuteDialogFragment)d; 
+    		String s = "The numbers you entered were " + spmd.getSheetLengthValue() + ", " +
+    				spmd.getLineSpeedValue() + ", and " + spmd.getSpeedFactorValue();
+    		Toast t = Toast.makeText(this, s, Toast.LENGTH_SHORT);
         	t.show();	
     	}
     	
