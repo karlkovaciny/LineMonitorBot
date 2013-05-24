@@ -122,8 +122,11 @@ public class MainActivity extends FragmentActivity implements
 	
 	// Implementing interface for SheetsPerMinuteDialogFragment
     public void onClickPositiveButton(DialogFragment d) {
-    	Toast t = Toast.makeText(this, "clicked ok", Toast.LENGTH_SHORT);
-    	t.show();
+    	if (d.getTag() == "SheetsPerMinuteDialog") {
+    		Toast t = Toast.makeText(this, "text is " + ((SheetsPerMinuteDialogFragment)d).getMyText(), Toast.LENGTH_SHORT);
+        	t.show();	
+    	}
+    	
     }	
 	/* (non-Javadoc)
 	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)

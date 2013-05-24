@@ -7,6 +7,8 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 public class SheetsPerMinuteDialogFragment extends DialogFragment {
 
@@ -21,6 +23,8 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment {
   	public interface SheetsPerMinuteDialogListener {
 		public void onClickPositiveButton(DialogFragment d);
 	}
+  	
+  	TextView mTextView;
   	
     // Use this instance of the interface to deliver action events
     SheetsPerMinuteDialogListener mListener;
@@ -49,8 +53,11 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		// Set other dialog properties
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		builder.setView(inflater.inflate(R.layout.calculate_sheets_per_minute_dialog, null));
-				
+		View rootView = inflater.inflate(R.layout.calculate_sheets_per_minute_dialog, null);
+		builder.setView(rootView);
+
+		mTextView = (TextView)rootView.findViewById(R.id.textView1);
+		
 		// Add action buttons
 		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
@@ -65,5 +72,9 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment {
 		
 		// Create the AlertDialog
 		return builder.create();
+	}
+	
+	public String getMyText() {
+		return mTextView.getText().toString();
 	}
 }
