@@ -28,6 +28,8 @@
         <item >+ New&#160;</item>
     </string-array>
 	<string name="new_wo">+ New</string>
+	<string name="ok">OK</string>
+	<string name="cancel">Cancel</string>
 	<string name="clear_wos">Clear</string>
 	<string name="placeholder">&#8230;</string>
 	<string name="debug_display">Debug</string>

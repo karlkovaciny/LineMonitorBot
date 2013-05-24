@@ -28,7 +28,8 @@ import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.WorkOrder;
 
 public class MainActivity extends FragmentActivity implements
-		ActionBar.TabListener, SkidTimesFragment.OnSheetsPerMinuteChangeListener, PropertyChangeListener {
+		ActionBar.TabListener, SkidTimesFragment.OnSheetsPerMinuteChangeListener, PropertyChangeListener,
+		SheetsPerMinuteDialogFragment.SheetsPerMinuteDialogListener {
 
 	private static final int LINE_LIST_MENU_GROUP = 1111;
 	private static final int LINE_LIST_ID_RANDOMIZER = 1234;
@@ -62,6 +63,13 @@ public class MainActivity extends FragmentActivity implements
 	private PrimexSQLiteOpenHelper mDbHelper;
 	private PrimexModel mModel;
 		
+    // Implementing interface for SheetsPerMinuteDialogFragment
+    public void onClickPositiveButton(DialogFragment d) {
+    	//d.get
+    	Toast t = Toast.makeText(this, "clicked ok", Toast.LENGTH_SHORT);
+    	t.show();
+    }
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

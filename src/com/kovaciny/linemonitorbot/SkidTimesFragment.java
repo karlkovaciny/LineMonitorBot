@@ -2,22 +2,21 @@ package com.kovaciny.linemonitorbot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -28,20 +27,21 @@ import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.WorkOrder;
 
 
-public class SkidTimesFragment extends SectionFragment {
+public class SkidTimesFragment extends SectionFragment implements OnClickListener {
 	private SkidFinishedBroadcastReceiver mAlarmReceiver;
 	private View mRootView; //the ScrollView that holds all other views
 	private double mSheetsPerMinute;
 	private List<Skid<Product>> mSkidList;
 	private List<View> mViewList;
 	private EditText mEdit_sheetsPerMinute;
+	private ImageButton mImageBtn_calcSheetsPerMinute;
 	OnSheetsPerMinuteChangeListener mCallback;
 	
     // Container Activity must implement this interface
     public interface OnSheetsPerMinuteChangeListener {
         public void onSheetsPerMinuteChanged(double sheetsPerMinute);
     }
-	
+    
 	public double getSheetsPerMinute() {
 		return mSheetsPerMinute;
 	}
@@ -110,17 +110,31 @@ public class SkidTimesFragment extends SectionFragment {
 		});
 		
 		Button btnSetAlarm = (Button) mRootView.findViewById(R.id.btn_set_alarm);
-		btnSetAlarm.setOnClickListener(new View.OnClickListener() {
+		btnSetAlarm.setOnClickListener(this);
 		
-			@Override
-			public void onClick(View v) {
-				showTimePickerDialog(v);
-				onetimeTimer(v, 60*60*1000);
-			}
-		});
+		mImageBtn_calcSheetsPerMinute = (ImageButton)mRootView.findViewById(R.id.calc_sheets_per_minute);
+		mImageBtn_calcSheetsPerMinute.setOnClickListener(this);
 		
 		return mRootView;
 	}
+	
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case(R.id.btn_set_alarm):
+			showTimePickerDialog(v);
+			//onetimeTimer(v, 60*60*1000);
+			break;
+		case(R.id.calc_sheets_per_minute):
+		    // Create the fragment and show it as a dialog.
+			SheetsPerMinuteDialogFragment newFragment = new SheetsPerMinuteDialogFragment();
+		    newFragment.setTargetFragment(newFragment, 0);
+		    newFragment.show(getActivity().getFragmentManager(), "AlertDialog");
+			break;
+		}
+	}
+
+
 		
 public void onetimeTimer(View view, Integer interval){
         
