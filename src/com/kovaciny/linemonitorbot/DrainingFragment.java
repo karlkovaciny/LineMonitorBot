@@ -20,24 +20,8 @@ public class DrainingFragment extends SectionFragment {
 				container, false);
 		
 		final ListView testList = (ListView) rootView.findViewById(R.id.listView1);
-		final Button myButton = (Button)rootView.findViewById(R.id.button1);
-		myButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-			    myButton.setText("You click...");
-			    // SLEEP 2 SECONDS HERE ...
-			    Handler handler = new Handler(); 
-			    handler.postDelayed(new Runnable() { 
-			         public void run() { 
-			              myButton.setText("and I respond."); 
-			         } 
-			    }, 2000); 
-				
-			}
-		});
 		
-		String testStrings[] = {"one","two","three", "four","five","six","seven","eight","nine","ten"};
+		String testStrings[] = {"one","two","three", "four","five","six"};
 		
 		
 		ArrayAdapter<String> testAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, testStrings);
@@ -48,12 +32,12 @@ public class DrainingFragment extends SectionFragment {
 	    handler.postDelayed(new Runnable() { 
 	         public void run() { 
 	        		Integer testArray[] = {1,2,3,4,5,6,7,8,9,10,11,12};
+	        		
 	        		Context cont = getActivity();
-	        		if (cont.equals(null)) {
-	        			throw new NullPointerException("context null");
+	        		if (cont != null) {
+	        			ArrayAdapter<Integer> secondAdapter = new ArrayAdapter<Integer>(cont, android.R.layout.simple_list_item_1, testArray);
+		        		testList.setAdapter(secondAdapter);
 	        		}
-	        		ArrayAdapter<Integer> secondAdapter = new ArrayAdapter<Integer>(cont, android.R.layout.simple_list_item_1, testArray);
-	        		testList.setAdapter(secondAdapter);
 	         } 
 	    }, 2000); 
 	    
