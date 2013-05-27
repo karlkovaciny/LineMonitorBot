@@ -3,7 +3,7 @@ package com.kovaciny.primexmodel;
 public class WorkOrder {
 	private int woNumber;
 	private Product[] productsList;
-	private int productsListPointer;
+	private int productsListPointer; //TODO this seems rubbish.
 	
 	public WorkOrder(int woNumber, int productsListPointer){
 		setWoNumber(woNumber);
@@ -18,7 +18,7 @@ public class WorkOrder {
 	}	
 	
 	/*
-	 * Boilerplate from here on down
+	 * Boilerplate from here on down... if I remember to move any functions I update.
 	 */
 	
 	public int getProductsListPointer() {

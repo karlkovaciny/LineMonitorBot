@@ -107,7 +107,7 @@ public class MainActivity extends FragmentActivity implements
 		mDbHelper = new PrimexSQLiteOpenHelper(getApplicationContext());
 		mDbHelper.getWritableDatabase();
 		
-		this.mModel = new PrimexModel();
+		this.mModel = new PrimexModel(MainActivity.this);
 		mModel.addPropertyChangeListener(this);
 	}
 
