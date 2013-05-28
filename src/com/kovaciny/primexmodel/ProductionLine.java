@@ -4,10 +4,11 @@ public class ProductionLine {
 	private int mLineNumber;
 	private int mLineLength; //in feet
 	private int mDieWidth; //in inches
-	private double mLineSpeed = 0; //in feet per minute
 	private double mProductsPerMinute; //there is no setter, change line speed or length 
 	private double mNetRate; //in lbs/hr
 	private double mGrossRate; //in lbs/hr
+	private double mFudgeFactor;
+	private double mLineSpeedSetpoint;
 	private String mSpeedControllerType;
 	private String mTakeoffEquipmentType;
 	private Product mProduct = null;
@@ -20,19 +21,16 @@ public class ProductionLine {
 		setTakeoffEquipmentType(takeoffEquipmentType);
 	}
 	
-	public double setLineSpeed(double setpoint, double fudgeFactor) {
-		if (this.getSpeedControllerType() == "Direct"){
-			mLineSpeed = setpoint * fudgeFactor;		
-		} else {
-			mLineSpeed = setpoint * fudgeFactor;
-		}
-		return mLineSpeed;
-	}
+
 
 	public double getProductsPerMinute(Product product){
-		mProductsPerMinute = 12 / product.getLength() * this.getLineSpeed(); 
+		if (this.mSpeedControllerType == "Direct") {
+			//TODO do something
+		}
+		mProductsPerMinute = 12 / product.getLength() * this.getLineSpeedSetpoint() * this.getFudgeFactor(); 
 		return mProductsPerMinute;
 	}
+	
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -62,6 +60,18 @@ public class ProductionLine {
 	public int getLineLength() {
 		return mLineLength;
 	}
+	public void setFudgeFactor(double fudgeFactor){
+		mFudgeFactor = fudgeFactor;
+	}
+	public double getFudgeFactor() {
+		return this.mFudgeFactor;
+	}
+	public void setLineSpeedSetpoint(double setpoint) {
+		this.mLineSpeedSetpoint = setpoint;
+	}
+	public double getLineSpeedSetpoint() {
+		return this.mLineSpeedSetpoint;
+	}
 	public void setLineLength(int mLineLength) {
 		this.mLineLength = mLineLength;
 	}
@@ -70,9 +80,6 @@ public class ProductionLine {
 	}
 	public void setDieWidth(int mDieWidth) {
 		this.mDieWidth = mDieWidth;
-	}
-	public double getLineSpeed(){
-		return mLineSpeed;
 	}
 	public String getSpeedControllerType() {
 		return mSpeedControllerType;

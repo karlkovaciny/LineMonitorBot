@@ -10,7 +10,6 @@ import android.app.ActionBar;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,8 +21,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.kovaciny.database.PrimexDatabaseSchema;
-import com.kovaciny.database.PrimexSQLiteOpenHelper;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.WorkOrder;
 
@@ -58,9 +55,8 @@ public class MainActivity extends FragmentActivity implements
 	private MenuItem mJobPicker;
 	private MenuItem mLinePicker;
 	private MenuItem mDebugDisplay;
-	private Integer mSelectedLine = -1;
-	private Integer mSelectedWorkOrder = 0;
-	private PrimexSQLiteOpenHelper mDbHelper;
+	private Boolean mHasSelectedLine = false;
+	private Boolean mHasSelectedWorkOrder = false;
 	private PrimexModel mModel;
 		
    
@@ -104,9 +100,6 @@ public class MainActivity extends FragmentActivity implements
 					.setTabListener(this));
 		}
 		
-		mDbHelper = new PrimexSQLiteOpenHelper(getApplicationContext());
-		mDbHelper.getWritableDatabase();
-		
 		this.mModel = new PrimexModel(MainActivity.this);
 		mModel.addPropertyChangeListener(this);
 	}
@@ -115,7 +108,7 @@ public class MainActivity extends FragmentActivity implements
 	public void onSheetsPerMinuteChanged(double sheetsPerMin){
 		//TODO this function is NOT compatible with rotating the screen
 		//tell model of change
-		mModel.changeCurrentLineSpeed(sheetsPerMin);
+		mModel.changeCurrentLineSpeedSetpoint(sheetsPerMin);
 		//ask model for updates
 		//tell views to change
 	}
@@ -123,7 +116,12 @@ public class MainActivity extends FragmentActivity implements
 	// Implementing interface for SheetsPerMinuteDialogFragment
     public void onClickPositiveButton(DialogFragment d) {
     	if (d.getTag() == "SheetsPerMinuteDialog") {
-    		SheetsPerMinuteDialogFragment spmd = (SheetsPerMinuteDialogFragment)d; 
+    		SheetsPerMinuteDialogFragment spmd = (SheetsPerMinuteDialogFragment)d;
+    		//TODO error checking
+    		mModel.changeCurrentLineSpeedSetpoint(spmd.getLineSpeedValue());
+    		//mModel.changeCurrentSheetLength(spmd.getSheetLengthValue());
+    		//mModel.changeCurrentSpeedFactor(spmd.getSpeedFactorValue());
+    		//TODO get fragment and tell it to update its sheets per minute value, its time done, and whatever else
     		String s = "The numbers you entered were " + spmd.getSheetLengthValue() + ", " +
     				spmd.getLineSpeedValue() + ", and " + spmd.getSpeedFactorValue();
     		Toast t = Toast.makeText(this, s, Toast.LENGTH_SHORT);
@@ -136,11 +134,33 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getPropertyName() == PrimexModel.LINE_SPEED_CHANGE_EVENT) {
-			Toast t = Toast.makeText(this, "Changed line speed to " + String.valueOf(mModel.getCurrentLineSpeed()), Toast.LENGTH_SHORT);				
+		String eventName = event.getPropertyName();
+		if (eventName == PrimexModel.LINE_SPEED_CHANGE_EVENT) {
+			Toast t = Toast.makeText(this, "Changed line speed setpoint to " + String.valueOf(mModel.getCurrentLineSpeedSetpoint()), Toast.LENGTH_SHORT);				
 			t.show();
+			//TODO
 		}
-		
+		if (eventName == PrimexModel.SELECTED_LINE_CHANGE_EVENT) {
+			//if there is no selected line, don't change anything but the menu item?
+			//if there was one, then either
+				//create a whole new environment with a blank work order
+				//or load up whatever data was last entered on that line
+				//TODO
+			Toast t = Toast.makeText(this, "Selected line number" + String.valueOf(mModel.getSelectedLine().getLineNumber()), Toast.LENGTH_SHORT);				
+			t.show();
+			CharSequence lineTitle = "Line " + String.valueOf(mModel.getSelectedLine().getLineNumber());
+			mLinePicker.setTitle(lineTitle);
+		}
+		if (eventName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
+			CharSequence woTitle = "WO #" + String.valueOf(mModel.getSelectedWorkOrder().getWoNumber());
+			mJobPicker.setTitle(woTitle);
+		}
+		if (eventName == PrimexModel.NEW_WORK_ORDER_CHANGE_EVENT) { //not safe to fire without a selected WO
+			int newWonum = ((WorkOrder)event.getNewValue()).getWoNumber();
+			String newTitle = "WO #" + String.valueOf(newWonum);
+			mJobPicker.getSubMenu().add(JOB_LIST_MENU_GROUP, newWonum, Menu.FLAG_APPEND_TO_GROUP, newTitle);
+			invalidateOptionsMenu(); //so it refreshes			
+		}
 	}
 
 	@Override
@@ -152,28 +172,21 @@ public class MainActivity extends FragmentActivity implements
 		
 		//populate the line picker with line numbers from the database
 		List<Integer> lineNumberList = new ArrayList<Integer>();
-		lineNumberList = mDbHelper.getLineNumbers();
+		lineNumberList = mModel.getLineNumbers();
 				
 		Menu pickLineSubMenu = mLinePicker.getSubMenu();
 		pickLineSubMenu.clear();
 		
 		for (int i=0; i<lineNumberList.size(); i++) {
 			//don't have access to View.generateViewId(), so fake a random ID
-			pickLineSubMenu.add(LINE_LIST_MENU_GROUP, (i + LINE_LIST_ID_RANDOMIZER), Menu.FLAG_APPEND_TO_GROUP, String.valueOf(lineNumberList.get(i)));
+			pickLineSubMenu.add(LINE_LIST_MENU_GROUP, (lineNumberList.get(i) + LINE_LIST_ID_RANDOMIZER), Menu.FLAG_APPEND_TO_GROUP, String.valueOf(lineNumberList.get(i)));
 		}
 		
 		//populate the job picker with jobs
 		Menu pickJobSubMenu = mJobPicker.getSubMenu();
 		pickJobSubMenu.clear();
-		List<Integer> jobList = new ArrayList<Integer>();
-		Cursor c = mDbHelper.getWoNumbers();
-		try {
-			while (c.moveToNext()) {
-				jobList.add( c.getInt( c.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER) ) );
-			}
-		} finally {
-	    	if (c != null) c.close();
-		}
+		List<Integer> jobList = new ArrayList<Integer>(); 
+		jobList = mModel.getWoNumbers();
 		
 		for (int i=0; i<jobList.size(); i++) {
 			String title = "WO #" + String.valueOf(jobList.get(i));
@@ -184,34 +197,20 @@ public class MainActivity extends FragmentActivity implements
 		
 		//Select the line and job that we used last time
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
-		setSelectedLine( settings.getInt("selectedLine", -1) );
-		setSelectedWorkOrder( settings.getInt("selectedWorkOrder", 0));
+		int selectedLine = settings.getInt("selectedLine", -1);
+		if ( selectedLine != -1) {
+			setSelectedLine( selectedLine );			
+		} else {
+			//TODO requestSelectLine();
+		}
+		int selectedWO = settings.getInt("selectedWorkOrder", 0);
+		if ( selectedWO != 0) {
+			setSelectedWorkOrder( selectedWO );
+		} else {
+			//TODO requestSelectWo();
+		}
 		
 		return true;
-	}
-
-	public Integer getSelectedLine() {
-		return this.mSelectedLine;
-	}
-
-	public void setSelectedLine(Integer selectedLine) {
-		this.mSelectedLine = selectedLine;
-		if (mSelectedLine != -1) {
-			CharSequence lineTitle = "Line " + mLinePicker.getSubMenu().findItem((mSelectedLine + LINE_LIST_ID_RANDOMIZER)).getTitle();
-			mLinePicker.setTitle(lineTitle);
-		} 		
-	}
-
-	public Integer getSelectedWorkOrder() {
-		return mSelectedWorkOrder;
-	}
-
-	public void setSelectedWorkOrder(Integer selectedWorkOrder) {
-		this.mSelectedWorkOrder = selectedWorkOrder;
-		if (mSelectedWorkOrder != 0) {
-			CharSequence woTitle = "WO #" + mJobPicker.getSubMenu().findItem(mSelectedWorkOrder).getItemId();
-			mJobPicker.setTitle(woTitle);
-		}
 	}
 
 	@Override
@@ -227,12 +226,15 @@ public class MainActivity extends FragmentActivity implements
 		switch (item.getItemId()) {
 		case R.id.new_wo:
 			//increment highest WO
-			int newWoNumber = mDbHelper.getHighestWoNumber() + 1;
-			String newTitle = "WO #" + String.valueOf(newWoNumber);
-			mJobPicker.getSubMenu().add(JOB_LIST_MENU_GROUP, newWoNumber, Menu.FLAG_APPEND_TO_GROUP, newTitle);
-			mDbHelper.addWorkOrder(new WorkOrder(newWoNumber, 0));
-			invalidateOptionsMenu(); //so it refreshes
-			setSelectedWorkOrder(newWoNumber);
+			//TODO this code should just change the model and fire the listener
+			int newWoNumber = mModel.getHighestWoNumber() + 1;
+			if (mModel.addWorkOrder(new WorkOrder(newWoNumber, 0))) {
+				setSelectedWorkOrder(newWoNumber);	
+			} else {
+				throw new RuntimeException("addWorkOrder failed");
+			}
+				
+			
 	        break;
 		case R.id.clear_wos:
 			//clear the menu
@@ -242,14 +244,24 @@ public class MainActivity extends FragmentActivity implements
 			mJobPicker.setTitle(R.string.action_pick_job_title);
 			
 			//clear the database
-			mDbHelper.clearWoNumbers();
+			mModel.clearWoNumbers();
 			
 			//clear the selected WO
-			mSelectedWorkOrder = 0;
+			mHasSelectedWorkOrder = false;
 			break;
 	    default:
 	    }
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public void setSelectedLine(Integer selectedLine) {
+		mModel.setSelectedLine(selectedLine);
+		this.mHasSelectedLine = true;
+	}
+
+	public void setSelectedWorkOrder(Integer selectedWorkOrder) {
+		mModel.setSelectedWorkOrder(selectedWorkOrder);
+		this.mHasSelectedWorkOrder = true;
 	}
 
 
@@ -401,14 +413,24 @@ public class MainActivity extends FragmentActivity implements
 	protected void onPause() {
 		super.onPause();
 		//store persistent data
-		mDbHelper.close();
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
 	    SharedPreferences.Editor editor = settings.edit();
-	    editor.putInt("selectedLine", mSelectedLine);
-	    editor.putInt("selectedWorkOrder", mSelectedWorkOrder);
+	    if (mHasSelectedLine) {
+	    	editor.putInt("selectedLine", mModel.getSelectedLine().getLineNumber());
+	    } else {
+	    	editor.remove("selectedLine");
+	    }
+	    if (mHasSelectedWorkOrder) {
+	    	editor.putInt("selectedWorkOrder", mModel.getSelectedWorkOrder().getWoNumber());
+	    } else {
+	    	editor.remove("selectedWorkOrder");
+	    }
 	    
 	    // Commit the edits!
 	    editor.commit();
+	    
+	    //Release the database?
+	    //mModel.closeDb(); TODO, cause lag
 
 	}
 
