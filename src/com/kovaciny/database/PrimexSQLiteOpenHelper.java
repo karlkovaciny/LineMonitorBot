@@ -146,8 +146,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     public ProductionLine getLine(int lineNumber){
     	SQLiteDatabase db = getReadableDatabase();
     	
-    	String[] projection = {""}; //too lazy to pick columns now
-    	
     	Cursor resultCursor = db.query(
     			PrimexDatabaseSchema.ProductionLines.TABLE_NAME,
     			null, 
@@ -221,10 +219,11 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, newWO.getWoNumber());
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_PRODUCTS_LIST_POINTER, newWO.getProductsListPointer());
 		
-		long rowId = db.insertOrThrow(
+		long rowId = db.insertWithOnConflict(
 				PrimexDatabaseSchema.WorkOrders.TABLE_NAME, 
 				null, 
-				values);
+				values,
+				SQLiteDatabase.CONFLICT_IGNORE);
 		
 		return rowId;
 	}
@@ -288,12 +287,14 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			    );
 		
 		try { 
-			c.moveToFirst(); 
-			return c.getInt(0); 
+			if (c.moveToFirst()) {
+				return c.getInt(0);
+			}
+			else return 0; 
 		} finally { c.close(); } 
 	}
 	
-	public Cursor getWoNumbers() {
+	public List<Integer> getWoNumbers() {
 		SQLiteDatabase db = getReadableDatabase();
 		
 		List<Integer> workOrders = new ArrayList<Integer>();
@@ -308,7 +309,15 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			    null	                                 // The sort order
 			    );
 		
-		return c;
+		try {
+			while (c.moveToNext()) {
+				workOrders.add( c.getInt( c.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER) ) );
+			}
+		} finally {
+	    	if (c != null) c.close();
+		}
+		
+		return workOrders;
 	}
 	
 	public void clearWoNumbers() {
