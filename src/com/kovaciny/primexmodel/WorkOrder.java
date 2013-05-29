@@ -1,13 +1,18 @@
 package com.kovaciny.primexmodel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WorkOrder {
 	private int woNumber;
-	private Product[] productsList;
+	private List<Skid<Product>> mSkidsList;
+	private Skid<Product> mSelectedSkid;
 	private int productsListPointer; //TODO this seems rubbish.
 	
 	public WorkOrder(int woNumber, int productsListPointer){
 		setWoNumber(woNumber);
 		setProductsListPointer(productsListPointer);
+		mSkidsList = new ArrayList<Skid<Product>>();
 	}
 	
 	public void setWoNumber(int woNumber) {
@@ -16,6 +21,10 @@ public class WorkOrder {
 		}
 				this.woNumber = woNumber;
 	}	
+	
+	public void addSkid (Skid<Product> skid) {
+		mSkidsList.add(skid);
+	}
 	
 	/*
 	 * Boilerplate from here on down... if I remember to move any functions I update.
@@ -33,11 +42,8 @@ public class WorkOrder {
 		return woNumber;
 	}
 	
-	public Product[] getProductsList() {
-		return productsList;
+	public List<Skid<Product>> getProductsList() {
+		return mSkidsList;
 	}
 	
-	public void setProductsList(Product[] productsList) {
-		this.productsList = productsList;
-	}
 }

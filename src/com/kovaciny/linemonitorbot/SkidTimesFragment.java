@@ -47,6 +47,7 @@ public class SkidTimesFragment extends SectionFragment implements OnClickListene
 
 	public void setSheetsPerMinute(double mSheetsPerMinute) {
 		this.mSheetsPerMinute = mSheetsPerMinute;
+		this.mEdit_sheetsPerMinute.setText(String.valueOf(mSheetsPerMinute));
 	}
 
 	public List<Skid<Product>> getSkidList() {
@@ -88,12 +89,6 @@ public class SkidTimesFragment extends SectionFragment implements OnClickListene
         mViewList = new ArrayList<View>();
 		mEdit_sheetsPerMinute = (EditText) mRootView.findViewById(R.id.sheets_per_minute);
 		mViewList.add(mEdit_sheetsPerMinute);
-		PrimexSQLiteOpenHelper dbHelper = new PrimexSQLiteOpenHelper(getActivity());
-		List<Integer> lineNumberList = new ArrayList<Integer>();
-		lineNumberList = dbHelper.getLineNumbers();
-		if ( !lineNumberList.isEmpty() ) {
-			mEdit_sheetsPerMinute.setText(String.valueOf(lineNumberList.get(0)));
-		}
 		
 		mEdit_sheetsPerMinute.setOnEditorActionListener(new OnEditorActionListener(){
 			@Override
@@ -126,11 +121,15 @@ public class SkidTimesFragment extends SectionFragment implements OnClickListene
 			break;
 		case(R.id.calc_sheets_per_minute):
 		    // Create the fragment and show it as a dialog.
+			//TODO get all these args from the activty or model
 			SheetsPerMinuteDialogFragment newFragment = new SheetsPerMinuteDialogFragment();
 			Bundle args = new Bundle();
-			args.putDouble("SheetLength", 71.5);
-			args.putDouble("LineSpeed", 0d);
-			args.putDouble("SpeedFactor", 0d);
+			args.putDouble("Gauge", .015d);
+			args.putDouble("SheetWidth", 48d);
+			args.putDouble("SheetLength", 96d);
+			args.putDouble("LineSpeed", 48d);
+			args.putDouble("SpeedFactor", 1d);
+			args.putInt("SheetsOrRolls", SheetsPerMinuteDialogFragment.SHEETS_MODE);
 			newFragment.setArguments(args);
 		    newFragment.show(getActivity().getFragmentManager(), "SheetsPerMinuteDialog");
 			break;

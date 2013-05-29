@@ -21,6 +21,7 @@ public class PrimexModel {
 		}
 		mSelectedLine = mDbHelper.getLine(mLineNumbersList.get(0));
 		mWoNumbersList = mDbHelper.getWoNumbers();
+		this.mProductType = Product.SHEETS_TYPE;
 	}
 	/*
 	 * This section sets up notifying observers about changes.
@@ -52,8 +53,8 @@ public class PrimexModel {
 	private WorkOrder mSelectedWorkOrder;
 	private List<Skid> skidsList;
 	private Skid mSelectedSkid;
-	private Product mSelectedProduct;
 	private PrimexSQLiteOpenHelper mDbHelper;
+	private int mProductType;
 	
 	public void setSelectedLine (Integer lineNumber) {
 		Integer oldLine = -1;
@@ -100,7 +101,31 @@ public class PrimexModel {
 		mSelectedLine.setLineSpeedSetpoint(setpoint);
 		propChangeSupport.firePropertyChange(LINE_SPEED_CHANGE_EVENT, oldsetpoint, setpoint);
 	}
-
+	
+	public void setCurrentProductLength(double length) {
+		double oldLength = mSelectedLine.getProduct().getLength();
+		mSelectedLine.getProduct().setLength(length);
+		//TODO? propChangeSupport.firePropertyChange(PRODUCT_LENGTH_CHANGE_EVENT, oldLength, length);
+	}
+	
+	public void setCurrentSpeedFactor (double speedFactor) {
+		double oldFactor = mSelectedLine.getSpeedFactor();
+		mSelectedLine.setSpeedFactor(speedFactor);
+		//TODO propChange
+	}
+ 
+	public void setCurrentProduct(int type, double gauge, double width, double length) {
+		if ( (type != Product.SHEETS_TYPE) && (type != Product.ROLLS_TYPE) ) throw new IllegalArgumentException("not a valid product type");
+		if (type == Product.SHEETS_TYPE) {
+			this.mSelectedLine.setProduct(new Sheet(gauge, width, length));
+		} else if (type == Product.ROLLS_TYPE) {
+			this.mSelectedLine.setProduct(new Roll(gauge, width, 0));
+		}
+	}
+	
+	public int getCurrentProductType() {
+		return this.mProductType;
+	}
 	public void closeDb() {
 		mDbHelper.close();
 	}

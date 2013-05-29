@@ -2,11 +2,77 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal" >
+
+        <ImageButton
+            android:id="@+id/imgbtn_sheets_or_rolls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/sheet_slider120"/>
+
+    </LinearLayout>
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
+
+        <TableRow
+            android:id="@+id/TableRow02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_gauge"
+                style="@style/label"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:maxLines="3"
+                android:maxWidth="150dp"
+                android:text="Gauge" />
+
+            <EditText
+                android:id="@+id/edit_gauge"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:inputType="numberDecimal"
+                android:maxLength="5"
+                android:selectAllOnFocus="true" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/TableRow01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_sheet_width"
+                style="@style/label"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:maxLines="3"
+                android:maxWidth="150dp"
+                android:text="Width" />
+
+            <EditText
+                android:id="@+id/edit_sheet_width"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:inputType="numberDecimal"
+                android:maxLength="5"
+                android:selectAllOnFocus="true" >
+
+                <requestFocus />
+            </EditText>
+        </TableRow>
 
         <TableRow
             android:id="@+id/tableRow1"
@@ -19,10 +85,9 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
-                android:lines="3"
                 android:maxLines="3"
                 android:maxWidth="150dp"
-                android:text="Sheet length\n(use 12 for rolls)" />
+                android:text="Length" />
 
             <EditText
                 android:id="@+id/edit_sheet_length"

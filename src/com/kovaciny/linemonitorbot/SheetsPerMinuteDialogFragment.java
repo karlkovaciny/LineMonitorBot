@@ -8,10 +8,11 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ImageButton;
 
-public class SheetsPerMinuteDialogFragment extends DialogFragment {
+public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnClickListener {
 
 	public SheetsPerMinuteDialogFragment() {
 		super();
@@ -24,9 +25,16 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment {
 		public void onClickPositiveButton(DialogFragment d);
 	}
   	
+  	public static final int SHEETS_MODE = 0;
+  	public static final int ROLLS_MODE = 1;
+  	
+  	EditText mEdit_gauge;
+  	EditText mEdit_sheetWidth;
   	EditText mEdit_sheetLength;
   	EditText mEdit_lineSpeed;
   	EditText mEdit_speedFactor;
+  	ImageButton mImgbtnSheetsOrRolls;
+  	private int mSheetsOrRollsState;
   	
     // Use this instance of the interface to deliver action events
     SheetsPerMinuteDialogListener mListener;
@@ -58,6 +66,12 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment {
 		View rootView = inflater.inflate(R.layout.calculate_sheets_per_minute_dialog, null);
 		builder.setView(rootView);
 
+		mEdit_gauge = (EditText) rootView.findViewById(R.id.edit_gauge);
+		mEdit_gauge.setText(String.valueOf(getArguments().getDouble("Gauge")));
+		
+		mEdit_sheetWidth = (EditText) rootView.findViewById(R.id.edit_sheet_width);
+		mEdit_sheetWidth.setText(String.valueOf(getArguments().getDouble("SheetWidth")));
+		
 		mEdit_sheetLength = (EditText) rootView.findViewById(R.id.edit_sheet_length);
 		mEdit_sheetLength.setText(String.valueOf(getArguments().getDouble("SheetLength")));
 	  	
@@ -67,6 +81,11 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment {
 	  	mEdit_speedFactor = (EditText) rootView.findViewById(R.id.edit_speed_factor);
 	  	mEdit_speedFactor.setText(String.valueOf(getArguments().getDouble("SpeedFactor")));
 	  	
+	  	mImgbtnSheetsOrRolls = (ImageButton) rootView.findViewById(R.id.imgbtn_sheets_or_rolls);
+	  	mSheetsOrRollsState = getArguments().getInt("SheetsOrRolls", SHEETS_MODE);
+	  	setSheetsOrRollsState(mSheetsOrRollsState);
+	  	mImgbtnSheetsOrRolls.setOnClickListener(this);
+		
 		// Add action buttons
 		builder.setPositiveButton(R.string.calculate, new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
@@ -82,20 +101,55 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment {
 		// Create the AlertDialog
 		AlertDialog alertDialog = builder.create();
 		alertDialog.show();
-		alertDialog.getWindow().setLayout(450,400);
+		alertDialog.getWindow().setLayout(450,700);
 		return alertDialog;
 	}
+
 	
+	/* (non-Javadoc)
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 */
+	@Override
+	public void onClick(View v) {
+		if (v.getId() == R.id.imgbtn_sheets_or_rolls) {
+			if (mSheetsOrRollsState == SHEETS_MODE) {
+				setSheetsOrRollsState(ROLLS_MODE);
+			} else setSheetsOrRollsState(SHEETS_MODE);
+		}
+	}
+ 
+	private void setSheetsOrRollsState (int state) {
+		if (state == ROLLS_MODE) {
+			this.mSheetsOrRollsState = ROLLS_MODE;
+			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.roll_slider120);
+			this.mEdit_sheetLength.setText("12");
+			this.mEdit_sheetLength.setEnabled(false);
+		} else if (state == SHEETS_MODE) {
+			this.mSheetsOrRollsState = SHEETS_MODE;
+			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.sheet_slider120);
+			this.mEdit_sheetLength.setEnabled(true);
+		}
+	}
+
 	public double getLineSpeedValue() {
 		String s = mEdit_lineSpeed.getText().toString();
 		if (s.length() > 0) {	
 			return Double.valueOf(s);
 		} else return 0f;
 	}
+	public double getGauge() {
+		return Double.valueOf(mEdit_gauge.getText().toString());
+	}
+	public double getSheetWidthValue() {
+		return Double.valueOf(mEdit_sheetWidth.getText().toString());
+	}
 	public double getSheetLengthValue() {
 		return Double.valueOf(mEdit_sheetLength.getText().toString());
 	}
 	public double getSpeedFactorValue() {
 		return Double.valueOf(mEdit_speedFactor.getText().toString());
+	}
+	public int getSheetsOrRollsState() {
+		return mSheetsOrRollsState;
 	}
 }

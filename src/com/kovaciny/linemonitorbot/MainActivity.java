@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.kovaciny.primexmodel.PrimexModel;
+import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.WorkOrder;
 
 public class MainActivity extends FragmentActivity implements
@@ -116,13 +117,17 @@ public class MainActivity extends FragmentActivity implements
     		SheetsPerMinuteDialogFragment spmd = (SheetsPerMinuteDialogFragment)d;
     		//TODO error checking
     		mModel.setCurrentLineSpeedSetpoint(spmd.getLineSpeedValue());
-    		mModel.setCurrentProductLength(spmd.getSheetLengthValue());
     		mModel.setCurrentSpeedFactor(spmd.getSpeedFactorValue());
+    		
+    		int prodtype;
+    		if (spmd.getSheetsOrRollsState() == SheetsPerMinuteDialogFragment.SHEETS_MODE) {
+    			prodtype = Product.SHEETS_TYPE;  
+    		} else prodtype = Product.ROLLS_TYPE;
+    		    		mModel.setCurrentProduct(prodtype, spmd.getGauge(), spmd.getSheetWidthValue(), spmd.getSheetLengthValue());
+    		
     		//TODO get fragment and tell it to update its sheets per minute value, its time done, and whatever else
-    		String s = "The numbers you entered were " + spmd.getSheetLengthValue() + ", " +
-    				spmd.getLineSpeedValue() + ", and " + spmd.getSpeedFactorValue();
-    		Toast t = Toast.makeText(this, s, Toast.LENGTH_SHORT);
-        	t.show();	
+    		SkidTimesFragment stfrg = (SkidTimesFragment) this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
+    		stfrg.setSheetsPerMinute(mModel.getSelectedLine().getProductsPerMinute());
     	}
     	
     }	

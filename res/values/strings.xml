@@ -31,6 +31,8 @@
 	<string name="ok">OK</string>
 	<string name="cancel">Cancel</string>
 	<string name="clear_wos">Clear</string>
+	<string name="switch_sheets">Sheet</string>
+	<string name="switch_rolls">Roll</string>
 	<string name="placeholder">&#8230;</string>
 	<string name="debug_display">Debug</string>
 	<string name="calculate">Calculate</string>

@@ -7,7 +7,7 @@ public class ProductionLine {
 	private double mProductsPerMinute; //there is no setter, change line speed or length 
 	private double mNetRate; //in lbs/hr
 	private double mGrossRate; //in lbs/hr
-	private double mFudgeFactor;
+	private double mSpeedFactor;
 	private double mLineSpeedSetpoint;
 	private String mSpeedControllerType;
 	private String mTakeoffEquipmentType;
@@ -23,11 +23,11 @@ public class ProductionLine {
 	
 
 
-	public double getProductsPerMinute(Product product){
+	public double getProductsPerMinute(){
 		if (this.mSpeedControllerType == "Direct") {
 			//TODO do something
 		}
-		mProductsPerMinute = 12 / product.getLength() * this.getLineSpeedSetpoint() * this.getFudgeFactor(); 
+		mProductsPerMinute = 12 / mProduct.getLength() * this.mLineSpeedSetpoint * this.mSpeedFactor; 
 		return mProductsPerMinute;
 	}
 	
@@ -50,7 +50,12 @@ public class ProductionLine {
 	/*
 	 * Boilerplate from here on down
 	 */
-	
+	public void setProduct(Product product) {
+		this.mProduct = product;
+	}
+	public Product getProduct() {
+		return mProduct;
+	}
 	public int getLineNumber() {
 		return mLineNumber;
 	}
@@ -60,11 +65,11 @@ public class ProductionLine {
 	public int getLineLength() {
 		return mLineLength;
 	}
-	public void setFudgeFactor(double fudgeFactor){
-		mFudgeFactor = fudgeFactor;
+	public void setSpeedFactor(double fudgeFactor){
+		mSpeedFactor = fudgeFactor;
 	}
-	public double getFudgeFactor() {
-		return this.mFudgeFactor;
+	public double getSpeedFactor() {
+		return this.mSpeedFactor;
 	}
 	public void setLineSpeedSetpoint(double setpoint) {
 		this.mLineSpeedSetpoint = setpoint;

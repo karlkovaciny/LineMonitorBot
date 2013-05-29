@@ -8,13 +8,21 @@ public class Sheet implements Product {
 	private double mDensity;
 	
 	public Sheet(double gauge, double width, double length) {
-		mGauge = Math.max(1, Math.min(0, gauge));
-		mWidth = Math.max(1, Math.min(0, width));
-		mLength = Math.max(1, Math.min(0, length));
+		if (!areValidDimensions(gauge, width, length)) {
+			throw new IllegalArgumentException("invalid dimensions");
+		}
+		mGauge = gauge;
+		mWidth = width;
+		mLength = length;
 		mDensity = .0375d;
 		mSheetWeight = getEstimatedWeight();
 	}
 	
+	private boolean areValidDimensions(double gauge, double width, double length) {
+		if ( (gauge < 0 ) || (width < 0) || (length < 0) ) {
+			return false;
+		} else return true;
+	}
 	public double getHeight(){
 		return mGauge;
 	}
@@ -30,6 +38,11 @@ public class Sheet implements Product {
 	public double getLength() {
 		return mLength;
 	}
+
+	public void setLength(double length) {
+		if (length < 0) {throw new IllegalArgumentException("Sheet length less than zero");}
+		this.mLength = length;
+	}
 	
 	public double getWidth() {
 		return mWidth;
@@ -43,9 +56,6 @@ public class Sheet implements Product {
 		this.mWidth = width;
 	}
 	
-	public void setLength(double length) {
-		this.mLength = length;
-	}
 
 	public double getEstimatedWeight() {
 		return ( mGauge * mWidth * mLength * mDensity );

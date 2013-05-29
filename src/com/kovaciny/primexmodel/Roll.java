@@ -5,6 +5,7 @@ public class Roll implements Product {
 	private int mLinearFeet = 0;
 	private double mGauge; //sheet thickness in inches
 	private double mWidth; //traverse direction in inches
+	private double mLength = 12d; //one linear foot
 	private double mDensity;
 	
 	public Roll(double gauge, double width, int linearFeet) {
@@ -14,7 +15,7 @@ public class Roll implements Product {
 		mGauge = gauge;
 		mWidth = width;
 		mLinearFeet = linearFeet;
-		mDensity = .0375f;
+		mDensity = .0375d;
 		mLinearFootWeight = getEstimatedWeight();
 	}
 	
@@ -34,7 +35,11 @@ public class Roll implements Product {
 	public double getLength() {
 		return 12; //one linear foot
 	}
-	
+	public void setLength(double length) {
+		if (length != 12) {
+			throw new IllegalArgumentException("Sheet length for rolls must always be 12");
+		}
+	}
 	public double getWidth() {
 		return mWidth;
 	}
