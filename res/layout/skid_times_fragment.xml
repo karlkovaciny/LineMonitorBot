@@ -212,16 +212,16 @@
 	            android:layout_below="@id/relative_layout_anchor">
 
 	            <TextView
-	                android:id="@+id/textView9"
+	                android:id="@+id/lbl_time_per_skid"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:text="Time per Skid: " />
 
 	            <TextView
-	                android:id="@+id/textView10"
+	                android:id="@+id/txt_time_per_skid"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:layout_toRightOf="@id/textView9"
+	                android:layout_toRightOf="@id/lbl_time_per_skid"
 	                android:text="0:00" />
 	        </LinearLayout>
 

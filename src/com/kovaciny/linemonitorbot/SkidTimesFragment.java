@@ -41,6 +41,8 @@ public class SkidTimesFragment extends SectionFragment implements OnClickListene
 	private EditText mEdit_skidStartTime;
 	private EditText mEdit_skidFinishTime;
 	private EditText mEdit_numSkidsInJob;
+	
+	private TextView mTxt_timePerSkid;
 	OnSheetsPerMinuteChangeListener mCallback;
 	
     // Container Activity must implement this interface
@@ -76,6 +78,8 @@ public class SkidTimesFragment extends SectionFragment implements OnClickListene
 			((EditText)v).setOnEditorActionListener(this);
 		}
 		
+		this.mTxt_timePerSkid = (TextView) mRootView.findViewById(R.id.txt_time_per_skid);
+		
 		Button btnSetAlarm = (Button) mRootView.findViewById(R.id.btn_set_alarm);
 		btnSetAlarm.setOnClickListener(this);
 		
@@ -92,13 +96,21 @@ public class SkidTimesFragment extends SectionFragment implements OnClickListene
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent arg2) {
 		if ( (actionId == EditorInfo.IME_ACTION_DONE) || (actionId == EditorInfo.IME_ACTION_NEXT) ){
-			if (v.getId() == R.id.sheets_per_minute) {
+			v.setTextAppearance(getActivity(), R.style.user_entered);
+			/*if (v.getId() == R.id.sheets_per_minute) {
 				String sheetsPerMin = ((TextView)v).getText().toString();
 				if (sheetsPerMin.length() != 0) {
 					mCallback.onSheetsPerMinuteChanged(Double.valueOf(sheetsPerMin)); //the whole app needs to know when the sheets per minute change						
 				}
+			}*/
+			String currentCount = this.mEdit_currentCount.getText().toString();
+			String totalCount = this.mEdit_totalSheetsPerSkid.getText().toString();
+			String spm = this.mEdit_sheetsPerMinute.getText().toString();
+			if ( (currentCount.length() > 0 ) && (totalCount.length() > 0) && (spm.length() > 0) ) {
+				double min = (Double.valueOf(totalCount) - Double.valueOf(currentCount)) / Double.valueOf(spm);
+				String timeLeft = String.valueOf(min) + "minutes left";
+				this.mTxt_timePerSkid.setText(timeLeft);
 			}
-			
 		}
 		return false;
 	}
