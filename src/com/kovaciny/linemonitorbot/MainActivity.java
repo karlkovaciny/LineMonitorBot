@@ -105,7 +105,7 @@ public class MainActivity extends FragmentActivity implements
 	public void onSheetsPerMinuteChanged(double sheetsPerMin){
 		//TODO this function is NOT compatible with rotating the screen
 		//tell model of change
-		mModel.changeCurrentLineSpeedSetpoint(sheetsPerMin);
+		mModel.setCurrentLineSpeedSetpoint(sheetsPerMin);
 		//ask model for updates
 		//tell views to change
 	}
@@ -115,9 +115,9 @@ public class MainActivity extends FragmentActivity implements
     	if (d.getTag() == "SheetsPerMinuteDialog") {
     		SheetsPerMinuteDialogFragment spmd = (SheetsPerMinuteDialogFragment)d;
     		//TODO error checking
-    		mModel.changeCurrentLineSpeedSetpoint(spmd.getLineSpeedValue());
-    		//mModel.changeCurrentSheetLength(spmd.getSheetLengthValue());
-    		//mModel.changeCurrentSpeedFactor(spmd.getSpeedFactorValue());
+    		mModel.setCurrentLineSpeedSetpoint(spmd.getLineSpeedValue());
+    		mModel.setCurrentProductLength(spmd.getSheetLengthValue());
+    		mModel.setCurrentSpeedFactor(spmd.getSpeedFactorValue());
     		//TODO get fragment and tell it to update its sheets per minute value, its time done, and whatever else
     		String s = "The numbers you entered were " + spmd.getSheetLengthValue() + ", " +
     				spmd.getLineSpeedValue() + ", and " + spmd.getSpeedFactorValue();
@@ -209,7 +209,7 @@ public class MainActivity extends FragmentActivity implements
 		}
 		int selectedWO = settings.getInt("selectedWorkOrder", -1);
 		if ( selectedWO != -1) {
-			mModel.setSelectedWorkOrder( selectedWO ); //TODO bug is here
+			mModel.setSelectedWorkOrder( selectedWO ); 
 		} else {
 			//TODO requestSelectWo();
 		}
@@ -230,7 +230,6 @@ public class MainActivity extends FragmentActivity implements
 		switch (item.getItemId()) {
 		case R.id.new_wo:
 			//increment highest WO
-			//TODO this code should just change the model and fire the listener
 			int newWoNumber = mModel.getHighestWoNumber() + 1;
 			if (mModel.addWorkOrder(new WorkOrder(newWoNumber, 0))) {
 				mModel.setSelectedWorkOrder(newWoNumber);	

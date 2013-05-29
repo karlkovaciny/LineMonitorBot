@@ -15,7 +15,6 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment {
 
 	public SheetsPerMinuteDialogFragment() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	 /* The activity that creates an instance of this dialog fragment must

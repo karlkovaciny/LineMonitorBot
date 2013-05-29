@@ -93,7 +93,7 @@ public class PrimexModel {
 		} else return false;
 	}
 	
-	public void changeCurrentLineSpeedSetpoint(double setpoint){
+	public void setCurrentLineSpeedSetpoint(double setpoint){
 		if (setpoint < 0) {throw new IllegalArgumentException("Line speed setpoint less than zero");}
 		
 		double oldsetpoint = mSelectedLine.getLineSpeedSetpoint();
