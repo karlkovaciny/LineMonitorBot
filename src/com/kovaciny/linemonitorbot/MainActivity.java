@@ -139,8 +139,6 @@ public class MainActivity extends FragmentActivity implements
 		String eventName = event.getPropertyName();
 		
 		if (eventName == PrimexModel.LINE_SPEED_CHANGE_EVENT) {
-			Toast t = Toast.makeText(this, "Changed line speed setpoint to " + String.valueOf(mModel.getCurrentLineSpeedSetpoint()), Toast.LENGTH_SHORT);				
-			t.show();
 			//TODO
 			
 		} else if (eventName == PrimexModel.SELECTED_LINE_CHANGE_EVENT) {

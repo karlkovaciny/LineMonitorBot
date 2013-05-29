@@ -31,15 +31,61 @@ public class SkidTimesFragment extends SectionFragment implements OnClickListene
 	private View mRootView; //the ScrollView that holds all other views
 	private double mSheetsPerMinute;
 	private List<Skid<Product>> mSkidList;
-	private EditText mEdit_sheetsPerMinute;
 	private ImageButton mImageBtn_calcSheetsPerMinute;
+	
+	private List<View> mEditTextList;
+	private EditText mEdit_sheetsPerMinute;
+	private EditText mEdit_skidNumber;
+	private EditText mEdit_currentCount;
+	private EditText mEdit_totalSheetsPerSkid;
+	private EditText mEdit_skidStartTime;
+	private EditText mEdit_skidFinishTime;
+	private EditText mEdit_numSkidsInJob;
 	OnSheetsPerMinuteChangeListener mCallback;
 	
     // Container Activity must implement this interface
     public interface OnSheetsPerMinuteChangeListener {
         public void onSheetsPerMinuteChanged(double sheetsPerMinute);
     }
-        
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		
+		mRootView = inflater.inflate(R.layout.skid_times_fragment,
+				container, false);
+		
+		mEditTextList = new ArrayList<View>();
+		
+		mEdit_sheetsPerMinute = (EditText) mRootView.findViewById(R.id.sheets_per_minute);
+		mEditTextList.add(mEdit_sheetsPerMinute);
+		mEdit_skidNumber = (EditText) mRootView.findViewById(R.id.edit_skid_number);
+		mEditTextList.add(mEdit_skidNumber);
+		mEdit_currentCount = (EditText) mRootView.findViewById(R.id.edit_current_count);
+		mEditTextList.add(mEdit_currentCount);
+		mEdit_totalSheetsPerSkid = (EditText) mRootView.findViewById(R.id.edit_total_sheets_per_skid);
+		mEditTextList.add(mEdit_totalSheetsPerSkid);
+		mEdit_skidStartTime = (EditText) mRootView.findViewById(R.id.edit_skid_start_time);
+		mEditTextList.add(mEdit_skidStartTime);
+		mEdit_skidFinishTime = (EditText) mRootView.findViewById(R.id.edit_skid_finish_time);
+		mEditTextList.add(mEdit_skidFinishTime);
+		mEdit_numSkidsInJob = (EditText) mRootView.findViewById(R.id.edit_num_skids_in_job);
+		mEditTextList.add(mEdit_numSkidsInJob);
+		
+		for (View v : mEditTextList) {
+			((EditText)v).setOnEditorActionListener(this);
+		}
+		
+		Button btnSetAlarm = (Button) mRootView.findViewById(R.id.btn_set_alarm);
+		btnSetAlarm.setOnClickListener(this);
+		
+		mImageBtn_calcSheetsPerMinute = (ImageButton)mRootView.findViewById(R.id.calc_sheets_per_minute);
+		mImageBtn_calcSheetsPerMinute.setOnClickListener(this);
+		
+		return mRootView;
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see android.widget.TextView.OnEditorActionListener#onEditorAction(android.widget.TextView, int, android.view.KeyEvent)
 	 */
@@ -52,6 +98,7 @@ public class SkidTimesFragment extends SectionFragment implements OnClickListene
 					mCallback.onSheetsPerMinuteChanged(Double.valueOf(sheetsPerMin)); //the whole app needs to know when the sheets per minute change						
 				}
 			}
+			
 		}
 		return false;
 	}
@@ -94,25 +141,6 @@ public class SkidTimesFragment extends SectionFragment implements OnClickListene
         }
     }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		
-		mRootView = inflater.inflate(R.layout.skid_times_fragment,
-				container, false);
-		
-		mEdit_sheetsPerMinute = (EditText) mRootView.findViewById(R.id.sheets_per_minute);
-		mEdit_sheetsPerMinute.setOnEditorActionListener(this);
-		
-		Button btnSetAlarm = (Button) mRootView.findViewById(R.id.btn_set_alarm);
-		btnSetAlarm.setOnClickListener(this);
-		
-		mImageBtn_calcSheetsPerMinute = (ImageButton)mRootView.findViewById(R.id.calc_sheets_per_minute);
-		mImageBtn_calcSheetsPerMinute.setOnClickListener(this);
-		
-		return mRootView;
-	}
-	
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -160,9 +188,7 @@ public void onetimeTimer(View view, Integer interval){
 		//store persistent data
 		ViewGroup vg = (ViewGroup)mRootView;
 		vg.getChildCount();
-		vg.indexOfChild(mRootView.findViewById(R.id.editText5));
-		WorkOrder newWO = new WorkOrder(135678, 0);
-		//dbHelper.updateWorkOrder(newWO); //TODO what if you update an unexisting? check rows returnedw
+//		vg.indexOfChild(mRootView.findViewById(R.id.editText5));
 		super.onPause();
 	}
 }

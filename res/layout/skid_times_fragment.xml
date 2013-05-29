@@ -31,7 +31,7 @@
 	            android:orientation="vertical" >
 
 	            <TextView
-	                android:id="@+id/dummy_dialog_text"
+	                android:id="@+id/lbl_sheets_per_minute"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_weight="1"
@@ -118,7 +118,7 @@
 	                android:showDividers="beginning|middle|end" >
 
 	                <EditText
-	                    android:id="@+id/skid_number"
+	                    android:id="@+id/edit_skid_number"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="number"
@@ -130,7 +130,7 @@
 	                </EditText>
 
 	                <EditText
-	                    android:id="@+id/current_count"
+	                    android:id="@+id/edit_current_count"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="number"
@@ -139,7 +139,7 @@
 	                    android:hint="0" />
 
 	                <EditText
-	                    android:id="@+id/total_sheets_per_skid"
+	                    android:id="@+id/edit_total_sheets_per_skid"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="number"
@@ -148,14 +148,14 @@
 	                    android:hint="1000" />
 
 	                <EditText
-	                    android:id="@+id/skid_start_time"
+	                    android:id="@+id/edit_skid_start_time"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="time"
 	                    android:maxLength="5"/>
 
 	                <EditText
-	                    android:id="@+id/skid_finish_time"
+	                    android:id="@+id/edit_skid_finish_time"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="time"
@@ -198,7 +198,7 @@
 	                android:text="Number of skids in job: " />
 
 	            <EditText
-	                android:id="@+id/editText5"
+	                android:id="@+id/edit_num_skids_in_job"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:inputType="number"
