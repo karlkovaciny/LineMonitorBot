@@ -56,23 +56,32 @@ public class PrimexModel {
 	private PrimexSQLiteOpenHelper mDbHelper;
 	
 	public void setSelectedLine (Integer lineNumber) {
+		Integer oldLine = -1;
 		if (mLineNumbersList.contains(lineNumber)) {
-			Integer oldLine = mSelectedLine.getLineNumber();
+			if (mSelectedLine != null) {
+				oldLine = mSelectedLine.getLineNumber();
+			}
 			mSelectedLine = mDbHelper.getLine(lineNumber);
 			Integer newLine = mSelectedLine.getLineNumber();
 			propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLine, newLine);
+		} else if (lineNumber == null) {
+			mSelectedLine = null;
+			propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLine, null);
 		} else throw new NoSuchElementException("Line number not in the list of lines");
 	}
 	
 	public void setSelectedWorkOrder(Integer woNumber) {
+		Integer oldSelection = -1;
 		if (mWoNumbersList.contains(woNumber)) {
-			Integer oldSelection = -1;
 			if (mSelectedWorkOrder != null) {
 				oldSelection = mSelectedWorkOrder.getWoNumber();
 			}
 			mSelectedWorkOrder = mDbHelper.getWorkOrder(woNumber);
 			Integer newSelection = mSelectedWorkOrder.getWoNumber();
 			propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldSelection, newSelection);
+		} else if (woNumber == null) {
+			mSelectedWorkOrder = null;
+			propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldSelection, null);
 		} else throw new NoSuchElementException("Work order number not in the list of work orders");
 	}
 
@@ -98,7 +107,16 @@ public class PrimexModel {
 	public double getCurrentLineSpeedSetpoint(){
 		return mSelectedLine.getLineSpeedSetpoint();
 	}
-	
+	public boolean hasSelectedLine() {
+		if (mSelectedLine != null) {
+			return true;
+		} else return false;
+	}
+	public boolean hasSelectedWorkOrder(){
+		if (mSelectedWorkOrder != null) {
+			return true;
+		} else return false;		
+	}
 	public ProductionLine getSelectedLine() {
 		return mSelectedLine;
 	}
@@ -121,6 +139,6 @@ public class PrimexModel {
 	
 	public void clearWoNumbers() {
 		mDbHelper.clearWoNumbers();
-		mSelectedLine = null;
+		setSelectedWorkOrder(null);
 	}
 }

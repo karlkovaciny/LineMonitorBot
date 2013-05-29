@@ -54,9 +54,6 @@ public class MainActivity extends FragmentActivity implements
 
 	private MenuItem mJobPicker;
 	private MenuItem mLinePicker;
-	private MenuItem mDebugDisplay;
-	private Boolean mHasSelectedLine = false;
-	private Boolean mHasSelectedWorkOrder = false;
 	private PrimexModel mModel;
 		
    
@@ -135,31 +132,38 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
+		
 		if (eventName == PrimexModel.LINE_SPEED_CHANGE_EVENT) {
 			Toast t = Toast.makeText(this, "Changed line speed setpoint to " + String.valueOf(mModel.getCurrentLineSpeedSetpoint()), Toast.LENGTH_SHORT);				
 			t.show();
 			//TODO
-		}
-		if (eventName == PrimexModel.SELECTED_LINE_CHANGE_EVENT) {
-			//if there is no selected line, don't change anything but the menu item?
+			
+		} else if (eventName == PrimexModel.SELECTED_LINE_CHANGE_EVENT) {
+			if (event.getNewValue() == null) {
+				//mLinePicker.setTitle(R.string.action_pick_line_title);
+				throw new RuntimeException("cannot change to no line");
+			} else {
 			//if there was one, then either
 				//create a whole new environment with a blank work order
 				//or load up whatever data was last entered on that line
 				//TODO
-			Toast t = Toast.makeText(this, "Selected line number" + String.valueOf(mModel.getSelectedLine().getLineNumber()), Toast.LENGTH_SHORT);				
-			t.show();
 			CharSequence lineTitle = "Line " + String.valueOf(mModel.getSelectedLine().getLineNumber());
 			mLinePicker.setTitle(lineTitle);
-		}
-		if (eventName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
-			CharSequence woTitle = "WO #" + String.valueOf(mModel.getSelectedWorkOrder().getWoNumber());
-			mJobPicker.setTitle(woTitle);
-		}
-		if (eventName == PrimexModel.NEW_WORK_ORDER_CHANGE_EVENT) { //not safe to fire without a selected WO
+			}
+			
+		} else if (eventName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
+			if (event.getNewValue() == null) {
+				mJobPicker.setTitle(R.string.action_pick_job_title);
+			} else {
+				CharSequence woTitle = "WO #" + String.valueOf(event.getNewValue());
+				mJobPicker.setTitle(woTitle);
+			}
+			
+		} else if (eventName == PrimexModel.NEW_WORK_ORDER_CHANGE_EVENT) { //not safe to fire without a selected WO
 			int newWonum = ((WorkOrder)event.getNewValue()).getWoNumber();
 			String newTitle = "WO #" + String.valueOf(newWonum);
 			mJobPicker.getSubMenu().add(JOB_LIST_MENU_GROUP, newWonum, Menu.FLAG_APPEND_TO_GROUP, newTitle);
-			invalidateOptionsMenu(); //so it refreshes			
+			//invalidateOptionsMenu(); //so it refreshes	TODO: try clearing the submenu instead		
 		}
 	}
 
@@ -199,13 +203,13 @@ public class MainActivity extends FragmentActivity implements
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
 		int selectedLine = settings.getInt("selectedLine", -1);
 		if ( selectedLine != -1) {
-			setSelectedLine( selectedLine );			
+			mModel.setSelectedLine( selectedLine );			
 		} else {
 			//TODO requestSelectLine();
 		}
-		int selectedWO = settings.getInt("selectedWorkOrder", 0);
-		if ( selectedWO != 0) {
-			setSelectedWorkOrder( selectedWO );
+		int selectedWO = settings.getInt("selectedWorkOrder", -1);
+		if ( selectedWO != -1) {
+			mModel.setSelectedWorkOrder( selectedWO ); //TODO bug is here
 		} else {
 			//TODO requestSelectWo();
 		}
@@ -217,10 +221,10 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
 		if (item.getGroupId() == LINE_LIST_MENU_GROUP) {
-			setSelectedLine(item.getItemId() - LINE_LIST_ID_RANDOMIZER);
+			mModel.setSelectedLine(item.getItemId() - LINE_LIST_ID_RANDOMIZER);
 		}
 		if (item.getGroupId() == JOB_LIST_MENU_GROUP) {
-			setSelectedWorkOrder(item.getItemId());
+			mModel.setSelectedWorkOrder(item.getItemId());
 		}
 		
 		switch (item.getItemId()) {
@@ -229,12 +233,10 @@ public class MainActivity extends FragmentActivity implements
 			//TODO this code should just change the model and fire the listener
 			int newWoNumber = mModel.getHighestWoNumber() + 1;
 			if (mModel.addWorkOrder(new WorkOrder(newWoNumber, 0))) {
-				setSelectedWorkOrder(newWoNumber);	
+				mModel.setSelectedWorkOrder(newWoNumber);	
 			} else {
 				throw new RuntimeException("addWorkOrder failed");
-			}
-				
-			
+			}							
 	        break;
 		case R.id.clear_wos:
 			//clear the menu
@@ -246,25 +248,15 @@ public class MainActivity extends FragmentActivity implements
 			//clear the database
 			mModel.clearWoNumbers();
 			
-			//clear the selected WO
-			mHasSelectedWorkOrder = false;
+			//clear the shared preferences
+			updateSharedPreferences();			
 			break;
 	    default:
 	    }
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public void setSelectedLine(Integer selectedLine) {
-		mModel.setSelectedLine(selectedLine);
-		this.mHasSelectedLine = true;
-	}
-
-	public void setSelectedWorkOrder(Integer selectedWorkOrder) {
-		mModel.setSelectedWorkOrder(selectedWorkOrder);
-		this.mHasSelectedWorkOrder = true;
-	}
-
-
+	
 /*
  * ---------------------------------------------------------
  * start of functions I never change
@@ -413,14 +405,22 @@ public class MainActivity extends FragmentActivity implements
 	protected void onPause() {
 		super.onPause();
 		//store persistent data
+		updateSharedPreferences();
+		
+	    //Release the database?
+	    //mModel.closeDb(); TODO, cause lag
+
+	}
+
+	protected void updateSharedPreferences(){
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
 	    SharedPreferences.Editor editor = settings.edit();
-	    if (mHasSelectedLine) {
+	    if (mModel.hasSelectedLine()) {
 	    	editor.putInt("selectedLine", mModel.getSelectedLine().getLineNumber());
 	    } else {
 	    	editor.remove("selectedLine");
 	    }
-	    if (mHasSelectedWorkOrder) {
+	    if (mModel.hasSelectedWorkOrder()) {
 	    	editor.putInt("selectedWorkOrder", mModel.getSelectedWorkOrder().getWoNumber());
 	    } else {
 	    	editor.remove("selectedWorkOrder");
@@ -429,12 +429,7 @@ public class MainActivity extends FragmentActivity implements
 	    // Commit the edits!
 	    editor.commit();
 	    
-	    //Release the database?
-	    //mModel.closeDb(); TODO, cause lag
-
 	}
-
-	
 	@Override
 	protected void onStop() {
 		super.onStop();
