@@ -106,7 +106,7 @@ public class MainActivity extends FragmentActivity implements
 	public void onSheetsPerMinuteChanged(double sheetsPerMin){
 		//TODO this function is NOT compatible with rotating the screen
 		//tell model of change
-		mModel.setCurrentLineSpeedSetpoint(sheetsPerMin);
+		//mModel.setCurrentLineSpeedSetpoint(sheetsPerMin);
 		//ask model for updates
 		//tell views to change
 	}

@@ -26,12 +26,11 @@ import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.WorkOrder;
 
 
-public class SkidTimesFragment extends SectionFragment implements OnClickListener {
+public class SkidTimesFragment extends SectionFragment implements OnClickListener, OnEditorActionListener {
 	private SkidFinishedBroadcastReceiver mAlarmReceiver;
 	private View mRootView; //the ScrollView that holds all other views
 	private double mSheetsPerMinute;
 	private List<Skid<Product>> mSkidList;
-	private List<View> mViewList;
 	private EditText mEdit_sheetsPerMinute;
 	private ImageButton mImageBtn_calcSheetsPerMinute;
 	OnSheetsPerMinuteChangeListener mCallback;
@@ -41,6 +40,22 @@ public class SkidTimesFragment extends SectionFragment implements OnClickListene
         public void onSheetsPerMinuteChanged(double sheetsPerMinute);
     }
         
+	/* (non-Javadoc)
+	 * @see android.widget.TextView.OnEditorActionListener#onEditorAction(android.widget.TextView, int, android.view.KeyEvent)
+	 */
+	@Override
+	public boolean onEditorAction(TextView v, int actionId, KeyEvent arg2) {
+		if ( (actionId == EditorInfo.IME_ACTION_DONE) || (actionId == EditorInfo.IME_ACTION_NEXT) ){
+			if (v.getId() == R.id.sheets_per_minute) {
+				String sheetsPerMin = ((TextView)v).getText().toString();
+				if (sheetsPerMin.length() != 0) {
+					mCallback.onSheetsPerMinuteChanged(Double.valueOf(sheetsPerMin)); //the whole app needs to know when the sheets per minute change						
+				}
+			}
+		}
+		return false;
+	}
+
 	public double getSheetsPerMinute() {
 		return mSheetsPerMinute;
 	}
@@ -86,22 +101,8 @@ public class SkidTimesFragment extends SectionFragment implements OnClickListene
 		mRootView = inflater.inflate(R.layout.skid_times_fragment,
 				container, false);
 		
-        mViewList = new ArrayList<View>();
 		mEdit_sheetsPerMinute = (EditText) mRootView.findViewById(R.id.sheets_per_minute);
-		mViewList.add(mEdit_sheetsPerMinute);
-		
-		mEdit_sheetsPerMinute.setOnEditorActionListener(new OnEditorActionListener(){
-			@Override
-			public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
-				if ( (arg1 == EditorInfo.IME_ACTION_DONE) || (arg1 == EditorInfo.IME_ACTION_NEXT) ){
-					String sheetsPerMin = ((TextView)arg0).getText().toString();
-					if (sheetsPerMin.length() != 0) {
-						mCallback.onSheetsPerMinuteChanged(Double.valueOf(sheetsPerMin)); //the whole app needs to know when the sheets per minute change						
-					}
-				}
-				return false;
-			}			
-		});
+		mEdit_sheetsPerMinute.setOnEditorActionListener(this);
 		
 		Button btnSetAlarm = (Button) mRootView.findViewById(R.id.btn_set_alarm);
 		btnSetAlarm.setOnClickListener(this);
