@@ -7,38 +7,39 @@ public class Skid<E extends Product> {
 	E mProductUnit;
 	int mCurrentItems;
 	int mTotalItems;
-	double mPackagingWeight;	
+	double mPackagingWeight;
 	double mFinishedNetWeight;
 	double mFinishedGrossWeight;
-	int mNumberOfStacks;	
+	int mNumberOfStacks;
 	Date mStartTime;
 	Date mFinishTime;
-	
-	
-	public Skid(Pallet p, int totalItems, double packagingWeight, int numStacks, Date start, E product){
+
+	public Skid(Pallet p, int totalItems, double packagingWeight,
+			int numStacks, Date start, E product) {
 		mPallet = p;
 		mProductUnit = product;
 		mCurrentItems = 0;
 		mTotalItems = totalItems;
-		mPackagingWeight = 0; //unimportant for now
+		mPackagingWeight = 0; // unimportant for now
 		mFinishedNetWeight = getFinishedNetWeight();
 		mFinishedGrossWeight = getFinishedGrossWeight();
 		mNumberOfStacks = numStacks;
 	}
-	
+
 	public Skid() {
 	}
-	
-	public double getStackHeight(){
-			return mTotalItems / mNumberOfStacks * mProductUnit.getHeight();
+
+	public double getStackHeight() {
+		return mTotalItems / mNumberOfStacks * mProductUnit.getHeight();
 	}
-	
-	public double getFinishedNetWeight(){
+
+	public double getFinishedNetWeight() {
 		return mProductUnit.getWeight() * mTotalItems;
 	}
-	
-	public double getFinishedGrossWeight(){
-		return mPallet.getWeight() + mProductUnit.getWeight() * mTotalItems + mPackagingWeight; 		
+
+	public double getFinishedGrossWeight() {
+		return mPallet.getWeight() + mProductUnit.getWeight() * mTotalItems
+				+ mPackagingWeight;
 	}
 
 	public int getmCurrentItems() {

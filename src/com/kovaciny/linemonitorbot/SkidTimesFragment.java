@@ -20,10 +20,8 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.kovaciny.database.PrimexSQLiteOpenHelper;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Skid;
-import com.kovaciny.primexmodel.WorkOrder;
 
 
 public class SkidTimesFragment extends SectionFragment implements OnClickListener, OnEditorActionListener {
@@ -107,9 +105,7 @@ public class SkidTimesFragment extends SectionFragment implements OnClickListene
 			String totalCount = this.mEdit_totalSheetsPerSkid.getText().toString();
 			String spm = this.mEdit_sheetsPerMinute.getText().toString();
 			if ( (currentCount.length() > 0 ) && (totalCount.length() > 0) && (spm.length() > 0) ) {
-				double min = (Double.valueOf(totalCount) - Double.valueOf(currentCount)) / Double.valueOf(spm);
-				String timeLeft = String.valueOf(min) + "minutes left";
-				this.mTxt_timePerSkid.setText(timeLeft);
+				//TODO calc and display minutes left
 			}
 		}
 		return false;
