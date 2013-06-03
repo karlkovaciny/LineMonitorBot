@@ -1,13 +1,16 @@
 package com.kovaciny.linemonitorbot;
 
-import android.content.Context;
+import java.util.ArrayList;
+
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.kovaciny.database.DatabaseViewer;
+import com.kovaciny.database.PrimexDatabaseSchema;
 
 public class DrainingFragment extends SectionFragment {
 	
@@ -20,12 +23,23 @@ public class DrainingFragment extends SectionFragment {
 		
 		final ListView testList = (ListView) rootView.findViewById(R.id.listView1);
 		
-		String testStrings[] = {"one","two","three", "four","five","six"};
+		//String testStrings[] = {"one","two","three", "four","five","six"};
+		/*Product p = ((MainActivity)getActivity()).getModel().getSelectedLine().getProduct();
+		String testStrings[]= {"Selected Product", String.valueOf(p.getGauge()), String.valueOf(p.getLength()), String.valueOf(p.getWidth()), String.valueOf(p.getUnit()), String.valueOf(p.getLineNumber())};
+		*/
 		
-		
-		ArrayAdapter<String> testAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, testStrings);
+		DatabaseViewer dbviewer = new DatabaseViewer(getActivity());
+		ArrayList<ArrayList<String>> abcd = dbviewer.selectRecordsFromDBList(PrimexDatabaseSchema.Products.TABLE_NAME, new String[]{"*"}, null, null, null, null, null);
+		ArrayList<String> results = new ArrayList<String>();
+		//String testStrings[] = {firstRow.get(0)};
+		for (ArrayList<String> abcdrow : abcd) {
+			results.add("Product");
+			results.addAll(abcdrow);
+		}
+		ArrayAdapter<String> testAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, results);
 		testList.setAdapter(testAdapter);
-		
+
+		/*
 	    // SLEEP 2 SECONDS HERE ...
 	    Handler handler = new Handler(); 
 	    handler.postDelayed(new Runnable() { 
@@ -39,7 +53,8 @@ public class DrainingFragment extends SectionFragment {
 	        		}
 	         } 
 	    }, 2000); 
-	    
+	    */
+		
 		return rootView;
 	}
 }
