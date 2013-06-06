@@ -225,6 +225,11 @@ public class SkidTimesFragment extends SectionFragment implements
 				onetimeTimer( Integer.valueOf(interval.intValue()) );	
 				
 			}			
+		} else if (propertyName == PrimexModel.SKID_START_TIME_CHANGE_EVENT) {
+			SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
+			String formattedTime = formatter.format((Date)newProperty);
+			mEdit_skidStartTime.setText(formattedTime);
+			
 		} else if (propertyName == PrimexModel.TOTAL_SHEET_COUNT_CHANGE_EVENT) {
 			
 		} else if (propertyName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {

@@ -39,6 +39,7 @@ public class PrimexModel {
 	public static final String CURRENT_SHEET_COUNT_CHANGE_EVENT = "PrimexModel.SHEET_COUNT_CHANGE"; 
 	public static final String TOTAL_SHEET_COUNT_CHANGE_EVENT = "PrimexModel.TOTAL_COUNT_CHANGE";
 	public static final String SKID_FINISH_TIME_CHANGE_EVENT = "PrimexModel.FINISH_TIME_CHANGE"; 
+	public static final String SKID_START_TIME_CHANGE_EVENT = "PrimexModel.START_TIME_CHANGE"; 
 	public static final String MINUTES_PER_SKID_CHANGE_EVENT = "PrimexModel.SKID_TIME_CHANGE"; 
 	 
 	
@@ -180,7 +181,7 @@ public class PrimexModel {
 		Double oldSpm = mProductsPerMinute;
 		mProductsPerMinute = spm; //TODO validity checking
 		calculateRates();
-		calculateFinishTimes();
+		calculateTimes();
 		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldSpm, spm);
 	}
 	
@@ -201,18 +202,18 @@ public class PrimexModel {
 	public void setCurrentCount (Integer currentCount) {
 		Integer oldCount = mSelectedSkid.getCurrentItems();
 		mSelectedSkid.setCurrentItems(currentCount);
-		calculateFinishTimes();
+		calculateTimes();
 		propChangeSupport.firePropertyChange(CURRENT_SHEET_COUNT_CHANGE_EVENT, oldCount, currentCount);
 	}
 	
 	public void setTotalCount (Integer totalCount) {
 		Integer oldCount = mSelectedSkid.getTotalItems();
 		mSelectedSkid.setTotalItems(totalCount);
-		calculateFinishTimes();
+		calculateTimes();
 		propChangeSupport.firePropertyChange(TOTAL_SHEET_COUNT_CHANGE_EVENT, oldCount, totalCount);
 	}
 	
-	public void calculateFinishTimes() {
+	public void calculateTimes() {
 		Integer totalItems = mSelectedSkid.getTotalItems();
 		Integer currentItems = mSelectedSkid.getCurrentItems();
 		if ( (totalItems != null) && (mProductsPerMinute != null) && (mProductsPerMinute != 0)) {
@@ -222,15 +223,21 @@ public class PrimexModel {
 			propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, oldMinutes, mMinutesPerSkid);
 			
 			if (currentItems != null) { 
-				//calculate skid finish time
+				//calculate skid start and finish time
 				double minutesLeft = (totalItems - currentItems ) / mProductsPerMinute;
+				double minutesElapsed = currentItems / mProductsPerMinute;
 				long millisLeft = (long) (minutesLeft * HelperFunction.ONE_MINUTE_IN_MILLIS);
+				long millisElapsed = (long) (minutesElapsed * HelperFunction.ONE_MINUTE_IN_MILLIS);
 				Date currentDate = new Date();
 				long t = currentDate.getTime();
 				Date oldFinishTime = mSelectedSkid.getFinishTime();
+				Date oldStartTime = mSelectedSkid.getStartTime();
 				Date finishTime = new Date( t + (millisLeft));
+				Date startTime = new Date( t - (millisElapsed));
 				mSelectedSkid.setFinishTime( finishTime );
+				mSelectedSkid.setStartTime( startTime );
 				propChangeSupport.firePropertyChange(SKID_FINISH_TIME_CHANGE_EVENT, oldFinishTime, mSelectedSkid.getFinishTime());	
+				propChangeSupport.firePropertyChange(SKID_START_TIME_CHANGE_EVENT, oldStartTime, mSelectedSkid.getStartTime());	
 			}			
 		}
 		//TODO calc job finish times

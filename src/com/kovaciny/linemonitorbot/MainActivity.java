@@ -216,6 +216,8 @@ public class MainActivity extends FragmentActivity implements
 			
 		} else if (eventName == PrimexModel.SKID_FINISH_TIME_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);
+		} else if (eventName == PrimexModel.SKID_START_TIME_CHANGE_EVENT) {
+			skidTimesFrag.modelPropertyChange(event);
 		} else if (eventName == PrimexModel.TOTAL_SHEET_COUNT_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);
 		} else if (eventName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
