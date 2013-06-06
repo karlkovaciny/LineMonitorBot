@@ -161,12 +161,12 @@ public class MainActivity extends FragmentActivity implements
     		} else if (mode.equals(SheetsPerMinuteDialogFragment.ROLLS_MODE)) {
     			prodtype = Product.ROLLS_TYPE;
     		} else throw new RuntimeException ("unknown product type"); //debug
-    		Toast.makeText(this, "going to set product with sheets or rolls state of " + prodtype, Toast.LENGTH_SHORT).show();
+//    		Toast.makeText(this, "going to set product with sheets or rolls state of " + prodtype, Toast.LENGTH_SHORT).show();
     		mModel.setSelectedProduct(prodtype, spmd.getGauge(), spmd.getSheetWidthValue(), spmd.getSheetLengthValue());
     		int curntline = mModel.getSelectedLine().getLineNumber();
     		Product crntprod = mModel.getSelectedProduct();
     		crntprod.setLineNumber(curntline);
-    		Toast.makeText(this, "and the new product's sheet state is " + crntprod.getType(), Toast.LENGTH_SHORT).show();
+//    		Toast.makeText(this, "and the new product's sheet state is " + crntprod.getType(), Toast.LENGTH_SHORT).show();
     	}
     	
     }	
@@ -265,8 +265,8 @@ public class MainActivity extends FragmentActivity implements
 			boolean hadProduct = settings.getBoolean("hasSelectedProduct", false);
 			if (hadProduct) {
 				mModel.setSelectedProductByLineNumber(selectedLine);
-				Toast.makeText(this, "looking up product for line number" + String.valueOf(selectedLine), Toast.LENGTH_SHORT).show();
-				Toast.makeText(this, "has selected product now = " + String.valueOf(mModel.hasSelectedProduct()), Toast.LENGTH_SHORT).show();	
+//				Toast.makeText(this, "looking up product for line number" + String.valueOf(selectedLine), Toast.LENGTH_SHORT).show();
+//				Toast.makeText(this, "has selected product now = " + String.valueOf(mModel.hasSelectedProduct()), Toast.LENGTH_SHORT).show();	
 			}
 		} else {
 			//TODO requestSelectLine();
@@ -487,10 +487,8 @@ public class MainActivity extends FragmentActivity implements
 	    SharedPreferences.Editor editor = settings.edit();
 	    if (mModel.hasSelectedLine()) {
 	    	editor.putInt("selectedLine", mModel.getSelectedLine().getLineNumber());
-	    	Toast.makeText(this, "saving selected line", Toast.LENGTH_SHORT).show();
 	    } else {
 	    	editor.remove("selectedLine");
-	    	Toast.makeText(this, "not saving selected line", Toast.LENGTH_SHORT).show();
 	    }
 	    if (mModel.hasSelectedWorkOrder()) {
 	    	editor.putInt("selectedWorkOrder", mModel.getSelectedWorkOrder().getWoNumber());
@@ -498,7 +496,7 @@ public class MainActivity extends FragmentActivity implements
 	    	editor.remove("selectedWorkOrder");
 	    }
 	    editor.putBoolean("hasSelectedProduct", mModel.hasSelectedProduct());
-	    Toast.makeText(this, "saving, has selected product = " + String.valueOf(mModel.hasSelectedProduct()), Toast.LENGTH_SHORT).show();
+//	    Toast.makeText(this, "saving, has selected product = " + String.valueOf(mModel.hasSelectedProduct()), Toast.LENGTH_SHORT).show();
 	    
 	    Product selectedProd = mModel.getSelectedLine().getProduct();
 	    if (selectedProd != null) {

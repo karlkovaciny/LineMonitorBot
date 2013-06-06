@@ -81,30 +81,35 @@
 
 	                <TextView
 	                    android:id="@+id/textView2"
+	                    android:layout_width="0dip"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:text="Skid #" />
 
 	                <TextView
 	                    android:id="@+id/textView3"
+	                    android:layout_width="0dip"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:text="Current\ncount" />
 
 	                <TextView
 	                    android:id="@+id/lbl_total_products"
+	                    android:layout_width="0dip"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:text="Total\nsheets" />
 
 	                <TextView
 	                    android:id="@+id/textView5"
+	                    android:layout_width="0dip"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:text="Start\ntime" />
 
 	                <TextView
 	                    android:id="@+id/textView6"
+	                    android:layout_width="0dip"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:text="Finish\ntime" />
@@ -119,6 +124,7 @@
 
 	                <EditText
 	                    android:id="@+id/edit_skid_number"
+	                    android:layout_width="0dip"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="number"
@@ -132,6 +138,7 @@
 	                <EditText
 	                    android:id="@+id/edit_current_count"
 	                    android:layout_weight="1"
+	                    android:layout_width="0dip"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="number"
 	                    android:maxLength="4"
@@ -140,6 +147,7 @@
 	                <EditText
 	                    android:id="@+id/edit_total_sheets_per_skid"
 	                    android:layout_weight="1"
+	                    android:layout_width="0dip"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="number"
 	                    android:maxLength="4"
@@ -148,6 +156,7 @@
 	                <EditText
 	                    android:id="@+id/edit_skid_start_time"
 	                    android:layout_weight="1"
+	                    android:layout_width="0dip"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="time"
 	                    android:maxLength="5"/>
@@ -155,6 +164,7 @@
 	                <EditText
 	                    android:id="@+id/edit_skid_finish_time"
 	                    android:layout_weight="1"
+	                    android:layout_width="0dip"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="time"
 	                    android:maxLength="5"/>

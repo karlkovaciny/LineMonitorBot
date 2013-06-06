@@ -29,7 +29,7 @@ import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Skid;
 
 public class SkidTimesFragment extends SectionFragment implements
-		OnClickListener, OnEditorActionListener, ViewEventResponder {
+		OnClickListener, OnEditorActionListener, View.OnFocusChangeListener, ViewEventResponder {
 	private SkidFinishedBroadcastReceiver mAlarmReceiver;
 	private List<Skid<Product>> mSkidList;
 	private ImageButton mImageBtn_calcSheetsPerMinute;
@@ -86,7 +86,9 @@ public class SkidTimesFragment extends SectionFragment implements
 		mEditTextList.add(mEdit_numSkidsInJob);
 
 		for (View v : mEditTextList) {
-			((EditText) v).setOnEditorActionListener(this);
+			EditText etv = (EditText) v;
+			etv.setOnEditorActionListener(this);
+			etv.setOnFocusChangeListener(this);
 		}
 
 		this.mTxt_timePerSkid = (TextView) rootView
@@ -117,14 +119,32 @@ public class SkidTimesFragment extends SectionFragment implements
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent arg2) {
 		if ((actionId == EditorInfo.IME_ACTION_DONE)
 				|| (actionId == EditorInfo.IME_ACTION_NEXT)) {
-			v.setTextAppearance(getActivity(), R.style.user_entered);
-			String userEntry = ((TextView) v).getText().toString();
-			//TODO: data validation
-			if (userEntry.length() != 0) {
-				mCallback.onViewChange(v.getId(), userEntry);
-			}
+			processUserTextEntry(v);
 		}
 		return false;
+	}
+
+	
+	/* (non-Javadoc)
+	 * @see android.view.View.OnFocusChangeListener#onFocusChange(android.view.View, boolean)
+	 */
+	@Override
+	public void onFocusChange(View v, boolean hasFocus) {
+		if (!hasFocus) {
+			EditText etv = (EditText)v;
+			if ( mEditTextList.contains(etv) ) {
+				processUserTextEntry(etv);
+			}
+		}
+	}
+	
+	public void processUserTextEntry(TextView tv) {
+		tv.setTextAppearance(getActivity(), R.style.user_entered);
+		String userEntry = tv.getText().toString();
+		//TODO: data validation
+		if (userEntry.length() != 0) {
+			mCallback.onViewChange(tv.getId(), userEntry);
+		}
 	}
 
 	public void hideAll() {
@@ -173,7 +193,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		}
 	}
 
-	public void onetimeTimer(Integer interval) {
+	public void onetimeTimer(View v, Integer interval) {
 
 		Context context = getActivity();
 		if (mAlarmReceiver != null) {
@@ -220,9 +240,9 @@ public class SkidTimesFragment extends SectionFragment implements
 			//Toast.makeText(getActivity(), "time then is " + formattedTimeThen + String.valueOf(timeThen), Toast.LENGTH_SHORT).show();
 			Long timeBetweenMinutes = (timeThen - timeNow) / HelperFunction.ONE_MINUTE_IN_MILLIS; 
 			Long interval = timeThen - timeNow - alarmLeadTime;
-			Toast.makeText(getActivity(), "interval is " + String.valueOf(interval), Toast.LENGTH_SHORT).show();
+//			Toast.makeText(getActivity(), "interval is " + String.valueOf(interval), Toast.LENGTH_SHORT).show();
 			if (interval > 0) {
-				onetimeTimer( Integer.valueOf(interval.intValue()) );	
+				onetimeTimer( mEdit_skidFinishTime, Integer.valueOf(interval.intValue()) );	
 				
 			}			
 		} else if (propertyName == PrimexModel.SKID_START_TIME_CHANGE_EVENT) {
