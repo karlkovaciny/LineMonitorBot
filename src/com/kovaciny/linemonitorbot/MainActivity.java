@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 
 import android.app.ActionBar;
 import android.app.DialogFragment;
@@ -17,8 +18,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kovaciny.primexmodel.PrimexModel;
@@ -111,6 +114,23 @@ public class MainActivity extends FragmentActivity implements
 		//tell views to change
 	}
 	
+	public void showSheetsPerMinuteDialog() {
+		// Create the fragment and show it as a dialog.
+		SheetsPerMinuteDialogFragment newFragment = new SheetsPerMinuteDialogFragment();
+		Product currentProd = mModel.getSelectedProduct();
+		if (currentProd != null) {
+			Bundle args = new Bundle();
+			args.putDouble("Gauge", currentProd.getGauge());
+			args.putDouble("SheetWidth", currentProd.getWidth());
+			args.putDouble("SheetLength", currentProd.getLength());
+			args.putDouble("LineSpeed", mModel.getSelectedLine().getLineSpeedSetpoint());
+			args.putDouble("SpeedFactor", mModel.getSelectedLine().getSpeedFactor());
+			args.putString("ProductType", currentProd.getType());
+			newFragment.setArguments(args);
+		}
+		newFragment.show(this.getFragmentManager(),
+				"SheetsPerMinuteDialog");
+	}
 	// Implementing interface for SheetsPerMinuteDialogFragment
     public void onClickPositiveButton(DialogFragment d) {
     	if (d.getTag() == "SheetsPerMinuteDialog") {
@@ -119,11 +139,19 @@ public class MainActivity extends FragmentActivity implements
     		mModel.setCurrentLineSpeedSetpoint(spmd.getLineSpeedValue());
     		mModel.setCurrentSpeedFactor(spmd.getSpeedFactorValue());
     		
-    		int prodtype;
-    		if (spmd.getSheetsOrRollsState() == SheetsPerMinuteDialogFragment.SHEETS_MODE) {
+    		String prodtype;
+    		String mode = spmd.getSheetsOrRollsState();
+    		if (mode.equals(SheetsPerMinuteDialogFragment.SHEETS_MODE)) {
     			prodtype = Product.SHEETS_TYPE;  
-    		} else prodtype = Product.ROLLS_TYPE;
-    		    		mModel.setCurrentProduct(prodtype, spmd.getGauge(), spmd.getSheetWidthValue(), spmd.getSheetLengthValue());
+    		} else if (mode.equals(SheetsPerMinuteDialogFragment.ROLLS_MODE)) {
+    			prodtype = Product.ROLLS_TYPE;
+    		} else throw new RuntimeException ("unknown product type"); //debug
+    		Toast.makeText(this, "going to set product with sheets or rolls state of " + prodtype, Toast.LENGTH_SHORT).show();
+    		mModel.setSelectedProduct(prodtype, spmd.getGauge(), spmd.getSheetWidthValue(), spmd.getSheetLengthValue());
+    		int curntline = mModel.getSelectedLine().getLineNumber();
+    		Product crntprod = mModel.getSelectedProduct();
+    		crntprod.setLineNumber(curntline);
+    		Toast.makeText(this, "and the new product's sheet state is " + crntprod.getType(), Toast.LENGTH_SHORT).show();
     		
     		//TODO get fragment and tell it to update its sheets per minute value, its time done, and whatever else
     		SkidTimesFragment stfrg = (SkidTimesFragment) this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
@@ -167,6 +195,9 @@ public class MainActivity extends FragmentActivity implements
 			String newTitle = "WO #" + String.valueOf(newWonum);
 			mJobPicker.getSubMenu().add(JOB_LIST_MENU_GROUP, newWonum, Menu.FLAG_APPEND_TO_GROUP, newTitle);
 			//invalidateOptionsMenu(); //so it refreshes	TODO: try clearing the submenu instead		
+		} else if (eventName == PrimexModel.PRODUCT_CHANGE_EVENT) {
+			SkidTimesFragment stfrg = (SkidTimesFragment) this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
+    		stfrg.modelPropertyChange(event);
 		}
 	}
 
@@ -183,7 +214,7 @@ public class MainActivity extends FragmentActivity implements
 				
 		Menu pickLineSubMenu = mLinePicker.getSubMenu();
 		pickLineSubMenu.clear();
-		
+				
 		for (int i=0; i<lineNumberList.size(); i++) {
 			//don't have access to View.generateViewId(), so fake a random ID
 			pickLineSubMenu.add(LINE_LIST_MENU_GROUP, (lineNumberList.get(i) + LINE_LIST_ID_RANDOMIZER), Menu.FLAG_APPEND_TO_GROUP, String.valueOf(lineNumberList.get(i)));
@@ -206,13 +237,26 @@ public class MainActivity extends FragmentActivity implements
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
 		int selectedLine = settings.getInt("selectedLine", -1);
 		if ( selectedLine != -1) {
-			mModel.setSelectedLine( selectedLine );			
+			mModel.setSelectedLine( selectedLine );
+			boolean hadProduct = settings.getBoolean("hasSelectedProduct", false);
+			if (hadProduct) {
+				mModel.setSelectedProductByLineNumber(selectedLine);
+				Toast.makeText(this, "looking up product for line number" + String.valueOf(selectedLine), Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "has selected product now = " + String.valueOf(mModel.hasSelectedProduct()), Toast.LENGTH_SHORT).show();	
+			}
 		} else {
 			//TODO requestSelectLine();
 		}
 		int selectedWO = settings.getInt("selectedWorkOrder", -1);
 		if ( selectedWO != -1) {
-			mModel.setSelectedWorkOrder( selectedWO ); 
+			try {
+				mModel.setSelectedWorkOrder( selectedWO ); 
+			} catch (NoSuchElementException e) {
+				System.out.println("Restoring the WO selection failed (database deleted?)");
+				Log.e("problemtag", "Restoring the Wo selection " + String.valueOf(selectedWO) + " failed (database deleted)?");
+				mJobPicker.setTitle("Debug");
+				mModel.setSelectedWorkOrder( null );				
+			}
 		} else {
 			//TODO requestSelectWo();
 		}
@@ -238,7 +282,7 @@ public class MainActivity extends FragmentActivity implements
 				mModel.setSelectedWorkOrder(newWoNumber);	
 			} else {
 				throw new RuntimeException("addWorkOrder failed");
-			}							
+			}
 	        break;
 		case R.id.clear_wos:
 			//clear the menu
@@ -413,29 +457,33 @@ public class MainActivity extends FragmentActivity implements
 	    //mModel.closeDb(); TODO, cause lag
 
 	}
-
+	
 	protected void updateSharedPreferences(){
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
 	    SharedPreferences.Editor editor = settings.edit();
 	    if (mModel.hasSelectedLine()) {
 	    	editor.putInt("selectedLine", mModel.getSelectedLine().getLineNumber());
+	    	Toast.makeText(this, "saving selected line", Toast.LENGTH_SHORT).show();
 	    } else {
 	    	editor.remove("selectedLine");
+	    	Toast.makeText(this, "not saving selected line", Toast.LENGTH_SHORT).show();
 	    }
 	    if (mModel.hasSelectedWorkOrder()) {
 	    	editor.putInt("selectedWorkOrder", mModel.getSelectedWorkOrder().getWoNumber());
 	    } else {
 	    	editor.remove("selectedWorkOrder");
 	    }
+	    editor.putBoolean("hasSelectedProduct", mModel.hasSelectedProduct());
+	    Toast.makeText(this, "saving, has selected product = " + String.valueOf(mModel.hasSelectedProduct()), Toast.LENGTH_SHORT).show();
 	    
+	    Product selectedProd = mModel.getSelectedLine().getProduct();
+	    if (selectedProd != null) {
+	    	//TODO needed?
+	    }
 	    // Commit the edits!
 	    editor.commit();
-	    
 	}
-	@Override
-	protected void onStop() {
-		super.onStop();
-	}
+	
 	
 	void showDummyDialog(String text) {
 	    // Create the fragment and show it as a dialog.

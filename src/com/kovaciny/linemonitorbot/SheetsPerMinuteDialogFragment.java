@@ -1,5 +1,7 @@
 package com.kovaciny.linemonitorbot;
 
+import com.kovaciny.primexmodel.Product;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnClickListener {
 
@@ -25,8 +28,8 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		public void onClickPositiveButton(DialogFragment d);
 	}
   	
-  	public static final int SHEETS_MODE = 0;
-  	public static final int ROLLS_MODE = 1;
+  	public static final String SHEETS_MODE = Product.SHEETS_TYPE;
+  	public static final String ROLLS_MODE = Product.ROLLS_TYPE;
   	
   	EditText mEdit_gauge;
   	EditText mEdit_sheetWidth;
@@ -34,7 +37,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
   	EditText mEdit_lineSpeed;
   	EditText mEdit_speedFactor;
   	ImageButton mImgbtnSheetsOrRolls;
-  	private int mSheetsOrRollsState;
+  	private String mSheetsOrRollsState = SHEETS_MODE;
   	
     // Use this instance of the interface to deliver action events
     SheetsPerMinuteDialogListener mListener;
@@ -67,24 +70,29 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		builder.setView(rootView);
 
 		mEdit_gauge = (EditText) rootView.findViewById(R.id.edit_gauge);
-		mEdit_gauge.setText(String.valueOf(getArguments().getDouble("Gauge")));
-		
 		mEdit_sheetWidth = (EditText) rootView.findViewById(R.id.edit_sheet_width);
-		mEdit_sheetWidth.setText(String.valueOf(getArguments().getDouble("SheetWidth")));
-		
 		mEdit_sheetLength = (EditText) rootView.findViewById(R.id.edit_sheet_length);
-		mEdit_sheetLength.setText(String.valueOf(getArguments().getDouble("SheetLength")));
-	  	
 		mEdit_lineSpeed = (EditText) rootView.findViewById(R.id.edit_line_speed);
-		mEdit_lineSpeed.setText(String.valueOf(getArguments().getDouble("LineSpeed")));
-		
-	  	mEdit_speedFactor = (EditText) rootView.findViewById(R.id.edit_speed_factor);
-	  	mEdit_speedFactor.setText(String.valueOf(getArguments().getDouble("SpeedFactor")));
+		mEdit_speedFactor = (EditText) rootView.findViewById(R.id.edit_speed_factor);
+		mImgbtnSheetsOrRolls = (ImageButton) rootView.findViewById(R.id.imgbtn_sheets_or_rolls);
 	  	
-	  	mImgbtnSheetsOrRolls = (ImageButton) rootView.findViewById(R.id.imgbtn_sheets_or_rolls);
-	  	mSheetsOrRollsState = getArguments().getInt("SheetsOrRolls", SHEETS_MODE);
-	  	setSheetsOrRollsState(mSheetsOrRollsState);
-	  	mImgbtnSheetsOrRolls.setOnClickListener(this);
+		if (getArguments() != null) {
+			mEdit_gauge.setText(String.valueOf(getArguments().getDouble("Gauge")));
+			
+			mEdit_sheetWidth.setText(String.valueOf(getArguments().getDouble("SheetWidth")));
+			
+			mEdit_sheetLength.setText(String.valueOf(getArguments().getDouble("SheetLength")));
+		  	
+			mEdit_lineSpeed.setText(String.valueOf(getArguments().getDouble("LineSpeed")));
+			
+		  	mEdit_speedFactor.setText(String.valueOf(getArguments().getDouble("SpeedFactor")));
+		  	
+		  	mSheetsOrRollsState = getArguments().getString("ProductType");
+		  	setSheetsOrRollsState(mSheetsOrRollsState);
+		  	Toast.makeText(getActivity(), "setting sheets or rolls state to " + mSheetsOrRollsState, Toast.LENGTH_SHORT).show();
+		}
+		
+		mImgbtnSheetsOrRolls.setOnClickListener(this);
 		
 		// Add action buttons
 		builder.setPositiveButton(R.string.calculate, new DialogInterface.OnClickListener() {
@@ -112,19 +120,21 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.imgbtn_sheets_or_rolls) {
-			if (mSheetsOrRollsState == SHEETS_MODE) {
+			if (mSheetsOrRollsState.equals(SHEETS_MODE)) {
 				setSheetsOrRollsState(ROLLS_MODE);
-			} else setSheetsOrRollsState(SHEETS_MODE);
+			} else if (mSheetsOrRollsState.equals(ROLLS_MODE)) {
+				setSheetsOrRollsState(SHEETS_MODE);
+			} else throw new RuntimeException ("unknown sheet or rolls state"); //debug
 		}
 	}
  
-	private void setSheetsOrRollsState (int state) {
-		if (state == ROLLS_MODE) {
+	private void setSheetsOrRollsState (String state) {
+		if (state.equals(ROLLS_MODE)) {
 			this.mSheetsOrRollsState = ROLLS_MODE;
 			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.roll_slider120);
 			this.mEdit_sheetLength.setText("12");
 			this.mEdit_sheetLength.setEnabled(false);
-		} else if (state == SHEETS_MODE) {
+		} else if (state.equals(SHEETS_MODE)) {
 			this.mSheetsOrRollsState = SHEETS_MODE;
 			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.sheet_slider120);
 			this.mEdit_sheetLength.setEnabled(true);
@@ -149,7 +159,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 	public double getSpeedFactorValue() {
 		return Double.valueOf(mEdit_speedFactor.getText().toString());
 	}
-	public int getSheetsOrRollsState() {
+	public String getSheetsOrRollsState() {
 		return mSheetsOrRollsState;
 	}
 }

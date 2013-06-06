@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/skid_times_fragment_container">"
+    android:id="@+id/skid_times_fragment_container">
 
 	<LinearLayout
 	    android:layout_width="match_parent"
@@ -31,7 +31,7 @@
 	            android:orientation="vertical" >
 
 	            <TextView
-	                android:id="@+id/lbl_sheets_per_minute"
+	                android:id="@+id/lbl_products_per_minute"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_weight="1"
@@ -92,7 +92,7 @@
 	                    android:text="Current\ncount" />
 
 	                <TextView
-	                    android:id="@+id/textView4"
+	                    android:id="@+id/lbl_total_products"
 	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:text="Total\nsheets" />
@@ -126,7 +126,7 @@
 	                    android:maxLength="4"
 	                    android:minEms="3"
 	                    android:selectAllOnFocus="true"
-	                    android:hint="1" >
+	                    android:text="1">
 	                </EditText>
 
 	                <EditText
@@ -135,8 +135,7 @@
 	                    android:gravity="center_horizontal"
 	                    android:inputType="number"
 	                    android:maxLength="4"
-	                    android:selectAllOnFocus="true"
-	                    android:hint="0" />
+	                    android:selectAllOnFocus="true"/>
 
 	                <EditText
 	                    android:id="@+id/edit_total_sheets_per_skid"
@@ -144,8 +143,7 @@
 	                    android:gravity="center_horizontal"
 	                    android:inputType="number"
 	                    android:maxLength="4"
-	                    android:selectAllOnFocus="true"
-	                    android:hint="1000" />
+	                    android:selectAllOnFocus="true"/>
 
 	                <EditText
 	                    android:id="@+id/edit_skid_start_time"

@@ -6,7 +6,16 @@ public class Sheet implements Product {
 	private double mWidth; //traverse direction in inches
 	private double mLength; //machine direction in inches
 	private double mDensity;
+	private String mUnitSingular = "Sheet";
+	private String mUnitPlural = "Sheets";
+	public int mLineNumber;
 	
+	public int getLineNumber() {
+		return mLineNumber; //debug TODO
+	}
+	public void setLineNumber(int ln) {
+		mLineNumber = ln;
+	}
 	public Sheet(double gauge, double width, double length) {
 		if (!areValidDimensions(gauge, width, length)) {
 			throw new IllegalArgumentException("invalid dimensions");
@@ -72,5 +81,16 @@ public class Sheet implements Product {
 	
 	public void setSheetWeight(double weight){
 		mSheetWeight = Math.max(weight, .001);
+	}
+	
+	public String getUnit() {
+		return this.mUnitSingular;
+	}
+	
+	public String getUnits() {
+		return this.mUnitPlural;
+	}
+	public String getType() {
+		return Product.SHEETS_TYPE;
 	}
 }

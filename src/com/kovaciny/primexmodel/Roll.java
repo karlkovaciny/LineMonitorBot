@@ -7,7 +7,16 @@ public class Roll implements Product {
 	private double mWidth; //traverse direction in inches
 	private double mLength = 12d; //one linear foot
 	private double mDensity;
+	private String mUnitSingular = "foot";
+	private String mUnitPlural = "feet";
+	public int mLineNumber;
 	
+	public int getLineNumber() {
+		return mLineNumber; //debug TODO
+	}
+	public void setLineNumber(int ln) {
+		mLineNumber = ln;
+	}
 	public Roll(double gauge, double width, int linearFeet) {
 		if ( (gauge < 0 || width < 0) ) {
 			throw new IllegalArgumentException();
@@ -18,7 +27,7 @@ public class Roll implements Product {
 		mDensity = .0375d;
 		mLinearFootWeight = getEstimatedWeight();
 	}
-	
+		
 	public double getEstimatedWeight() {
 		return ( mGauge * mWidth * mDensity * mLinearFeet);
 	}
@@ -28,6 +37,9 @@ public class Roll implements Product {
 		return 0d;		
 	}
 	
+	public double getGauge() {
+		return mGauge;
+	}
 	public double getWeight() {
 		return mLinearFootWeight * mLinearFeet;
 	}
@@ -49,5 +61,16 @@ public class Roll implements Product {
 	public boolean setMaterialType(){
 		//TODO
 		return false;
+	}
+	public String getUnit() {
+		return this.mUnitSingular;
+	}
+	
+	public String getUnits() {
+		return this.mUnitPlural;
+	}
+	
+	public String getType() {
+		return Product.ROLLS_TYPE;
 	}
 }

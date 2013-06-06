@@ -31,11 +31,19 @@ public class DrainingFragment extends SectionFragment {
 		DatabaseViewer dbviewer = new DatabaseViewer(getActivity());
 		ArrayList<ArrayList<String>> abcd = dbviewer.selectRecordsFromDBList(PrimexDatabaseSchema.Products.TABLE_NAME, new String[]{"*"}, null, null, null, null, null);
 		ArrayList<String> results = new ArrayList<String>();
+		ArrayList<ArrayList<String>> efgh = dbviewer.selectRecordsFromDBList(PrimexDatabaseSchema.ProductTypes.TABLE_NAME, new String[]{"*"}, null, null, null, null, null);
+		ArrayList<String> efgresults = new ArrayList<String>();
+		
 		//String testStrings[] = {firstRow.get(0)};
+		for (ArrayList<String> efgrow : efgh) {
+			results.add("Product Type");
+			results.addAll(efgrow);
+		}
 		for (ArrayList<String> abcdrow : abcd) {
 			results.add("Product");
 			results.addAll(abcdrow);
 		}
+		
 		ArrayAdapter<String> testAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, results);
 		testList.setAdapter(testAdapter);
 

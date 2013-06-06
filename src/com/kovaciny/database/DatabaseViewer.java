@@ -13,8 +13,8 @@ public class DatabaseViewer extends SQLiteOpenHelper{
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 	
-    public static final int DATABASE_VERSION = 15;
-    public static final String DATABASE_NAME = "Primex.db";
+    public static final int DATABASE_VERSION = PrimexSQLiteOpenHelper.DATABASE_VERSION;
+    public static final String DATABASE_NAME = PrimexSQLiteOpenHelper.DATABASE_NAME;
 
 /**
  * This function used to select the records from DB.

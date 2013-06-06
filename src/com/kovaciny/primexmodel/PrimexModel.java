@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.kovaciny.database.PrimexSQLiteOpenHelper;
 
@@ -21,7 +22,6 @@ public class PrimexModel {
 		}
 		mSelectedLine = mDbHelper.getLine(mLineNumbersList.get(0));
 		mWoNumbersList = mDbHelper.getWoNumbers();
-		this.mProductType = Product.SHEETS_TYPE;
 	}
 	/*
 	 * This section sets up notifying observers about changes.
@@ -30,6 +30,7 @@ public class PrimexModel {
 	public static final String SELECTED_LINE_CHANGE_EVENT = "PrimexModel.LINE_CHANGE";
 	public static final String SELECTED_WO_CHANGE_EVENT = "PrimexModel.WO_CHANGE";
 	public static final String NEW_WORK_ORDER_CHANGE_EVENT = "PrimexModel.NEW_WORK_ORDER"; 
+	public static final String PRODUCT_CHANGE_EVENT = "PrimexModel.NEW_PRODUCT"; 
 		
 	// Create PropertyChangeSupport to manage listeners and fire events.
 	private final PropertyChangeSupport propChangeSupport = new PropertyChangeSupport(this);
@@ -53,9 +54,12 @@ public class PrimexModel {
 	private WorkOrder mSelectedWorkOrder;
 	private List<Skid> skidsList;
 	private Skid mSelectedSkid;
+	private Product mSelectedProduct;
 	private PrimexSQLiteOpenHelper mDbHelper;
-	private int mProductType;
 	
+	/*
+	 * also selects product currently
+	 */
 	public void setSelectedLine (Integer lineNumber) {
 		Integer oldLine = -1;
 		if (mLineNumbersList.contains(lineNumber)) {
@@ -64,7 +68,10 @@ public class PrimexModel {
 			}
 			mSelectedLine = mDbHelper.getLine(lineNumber);
 			Integer newLine = mSelectedLine.getLineNumber();
+			
+			setSelectedProductByLineNumber(lineNumber);
 			propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLine, newLine);
+		
 		} else if (lineNumber == null) {
 			mSelectedLine = null;
 			propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLine, null);
@@ -114,18 +121,40 @@ public class PrimexModel {
 		//TODO propChange
 	}
  
-	public void setCurrentProduct(int type, double gauge, double width, double length) {
-		if ( (type != Product.SHEETS_TYPE) && (type != Product.ROLLS_TYPE) ) throw new IllegalArgumentException("not a valid product type");
-		if (type == Product.SHEETS_TYPE) {
-			this.mSelectedLine.setProduct(new Sheet(gauge, width, length));
-		} else if (type == Product.ROLLS_TYPE) {
-			this.mSelectedLine.setProduct(new Roll(gauge, width, 0));
-		}
+	public void setSelectedProduct(String type, double gauge, double width, double length) {
+		//this function creates a new product of the specified dimensions and type. Then it updates the
+		//database with that product and the current line number. blah blah debug
+		Log.v("verbose", "setSelectedProduct is running");
+		Product oldProduct = mSelectedProduct;
+		if (type.equals(Product.SHEETS_TYPE)) {
+			mSelectedProduct = new Sheet(gauge, width, length);
+		} else if (type.equals(Product.ROLLS_TYPE)) {
+			mSelectedProduct = new Roll(gauge, width, 0);
+		} else throw new IllegalArgumentException("not a valid product type");
+		Product newProduct = mSelectedProduct;
+		mDbHelper.insertOrReplaceProduct(newProduct, getSelectedLine().getLineNumber());
+		mSelectedLine.setProduct(newProduct);
+		mSelectedProduct.setLineNumber(mSelectedLine.getLineNumber());
+		this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, oldProduct, newProduct);
 	}
 	
-	public int getCurrentProductType() {
-		return this.mProductType;
+	public void setSelectedProduct(Product p) {
+		if (p == null) {
+			mSelectedProduct = null;
+		} else {
+			setSelectedProduct(p.getType(), p.getGauge(), p.getWidth(), p.getLength());
+		}
 	}
+	 
+	public void setSelectedProductByLineNumber(int lineNumber) {
+		Product newProduct = mDbHelper.getProduct(lineNumber);
+		setSelectedProduct(newProduct);		
+	}
+	
+	public Product getSelectedProduct() {
+		return mSelectedProduct;
+	}
+	
 	public void closeDb() {
 		mDbHelper.close();
 	}
@@ -141,6 +170,11 @@ public class PrimexModel {
 		if (mSelectedWorkOrder != null) {
 			return true;
 		} else return false;		
+	}
+	public boolean hasSelectedProduct() {
+		if (mSelectedProduct != null) {
+			return true;
+		} else return false;
 	}
 	public ProductionLine getSelectedLine() {
 		return mSelectedLine;
