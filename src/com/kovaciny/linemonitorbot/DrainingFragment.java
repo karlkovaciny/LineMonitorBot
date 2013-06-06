@@ -14,6 +14,9 @@ import com.kovaciny.database.PrimexDatabaseSchema;
 
 public class DrainingFragment extends SectionFragment {
 	
+	private DatabaseViewer mDbViewer;
+	private ListView mTableViewer;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -21,17 +24,21 @@ public class DrainingFragment extends SectionFragment {
 		View rootView = inflater.inflate(R.layout.draining_fragment,
 				container, false);
 		
-		final ListView testList = (ListView) rootView.findViewById(R.id.listView1);
+		mTableViewer = (ListView) rootView.findViewById(R.id.listView1);
 		
 		//String testStrings[] = {"one","two","three", "four","five","six"};
 		/*Product p = ((MainActivity)getActivity()).getModel().getSelectedLine().getProduct();
 		String testStrings[]= {"Selected Product", String.valueOf(p.getGauge()), String.valueOf(p.getLength()), String.valueOf(p.getWidth()), String.valueOf(p.getUnit()), String.valueOf(p.getLineNumber())};
 		*/
 		
-		DatabaseViewer dbviewer = new DatabaseViewer(getActivity());
-		ArrayList<ArrayList<String>> abcd = dbviewer.selectRecordsFromDBList(PrimexDatabaseSchema.Products.TABLE_NAME, new String[]{"*"}, null, null, null, null, null);
+		mDbViewer = new DatabaseViewer(getActivity());
+		String[] toShow = new String[]{PrimexDatabaseSchema.ProductTypes.TABLE_NAME, 
+				PrimexDatabaseSchema.ProductionLines.TABLE_NAME
+		};
+		displayTables(toShow);
+		/*ArrayList<ArrayList<String>> abcd = mDbViewer.selectRecordsFromDBList(PrimexDatabaseSchema.Products.TABLE_NAME, new String[]{"*"}, null, null, null, null, null);
 		ArrayList<String> results = new ArrayList<String>();
-		ArrayList<ArrayList<String>> efgh = dbviewer.selectRecordsFromDBList(PrimexDatabaseSchema.ProductTypes.TABLE_NAME, new String[]{"*"}, null, null, null, null, null);
+		ArrayList<ArrayList<String>> efgh = mDbViewer.selectRecordsFromDBList(PrimexDatabaseSchema.ProductTypes.TABLE_NAME, new String[]{"*"}, null, null, null, null, null);
 		ArrayList<String> efgresults = new ArrayList<String>();
 		
 		//String testStrings[] = {firstRow.get(0)};
@@ -45,7 +52,7 @@ public class DrainingFragment extends SectionFragment {
 		}
 		
 		ArrayAdapter<String> testAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, results);
-		testList.setAdapter(testAdapter);
+		mTableViewer.setAdapter(testAdapter);*/
 
 		/*
 	    // SLEEP 2 SECONDS HERE ...
@@ -64,5 +71,22 @@ public class DrainingFragment extends SectionFragment {
 	    */
 		
 		return rootView;
+	}
+	
+	protected void displayTables(String[] tableNames) {
+		ArrayList<String> results = new ArrayList<String>();
+		
+		for (String tableName : tableNames) {
+			ArrayList<ArrayList<String>> records =	
+					mDbViewer.selectRecordsFromDBList(tableName, new String[]{"*"}, null, null, null, null, null);
+			
+			for (ArrayList<String> record : records) {
+				results.add(tableName);
+				results.addAll(record);
+			}
+		}
+			
+		ArrayAdapter<String> testAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, results);
+		mTableViewer.setAdapter(testAdapter);
 	}
 }
