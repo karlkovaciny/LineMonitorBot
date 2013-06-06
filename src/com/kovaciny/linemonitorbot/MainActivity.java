@@ -29,7 +29,7 @@ import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.WorkOrder;
 
 public class MainActivity extends FragmentActivity implements
-		ActionBar.TabListener, SkidTimesFragment.OnSheetsPerMinuteChangeListener, PropertyChangeListener,
+		ActionBar.TabListener, SkidTimesFragment.OnViewChangeListener, PropertyChangeListener,
 		SheetsPerMinuteDialogFragment.SheetsPerMinuteDialogListener {
 
 	private static final int LINE_LIST_MENU_GROUP = 1111;
@@ -106,7 +106,19 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	//implementing interface
-	public void onSheetsPerMinuteChanged(double sheetsPerMin){
+	public void onViewChange(int viewId, String userEntry){
+		switch(viewId) {
+		case(R.id.edit_products_per_minute):
+			mModel.setProductsPerMinute(Double.valueOf(userEntry));
+			break;
+		case(R.id.edit_current_count):
+			mModel.setCurrentCount(Integer.valueOf(userEntry));
+			break;
+		case(R.id.edit_total_sheets_per_skid):
+			mModel.setTotalCount(Integer.valueOf(userEntry));
+			break;		
+		default:
+		}
 		//User directly entered a sheets per minute value, so we must not calculate one.
 		//well, if we have a product, we could adjust the speed factor.
 		
@@ -194,12 +206,21 @@ public class MainActivity extends FragmentActivity implements
 			int newWonum = ((WorkOrder)event.getNewValue()).getWoNumber();
 			String newTitle = "WO #" + String.valueOf(newWonum);
 			mJobPicker.getSubMenu().add(JOB_LIST_MENU_GROUP, newWonum, Menu.FLAG_APPEND_TO_GROUP, newTitle);
-			//invalidateOptionsMenu(); //so it refreshes	TODO: try clearing the submenu instead		
+			//invalidateOptionsMenu(); //so it refreshes	TODO: try clearing the submenu instead
+			
 		} else if (eventName == PrimexModel.PRODUCT_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);
+			
 		} else if (eventName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);
-		}
+			
+		} else if (eventName == PrimexModel.SKID_FINISH_TIME_CHANGE_EVENT) {
+			skidTimesFrag.modelPropertyChange(event);
+		} else if (eventName == PrimexModel.TOTAL_SHEET_COUNT_CHANGE_EVENT) {
+			skidTimesFrag.modelPropertyChange(event);
+		} else if (eventName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
+			skidTimesFrag.modelPropertyChange(event);
+		}  
 	}
 
 	@Override

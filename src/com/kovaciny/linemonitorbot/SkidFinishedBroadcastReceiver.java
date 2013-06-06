@@ -44,7 +44,8 @@ public class SkidFinishedBroadcastReceiver extends BroadcastReceiver {
 		         msgStr.append(formatter.format(new Date()));
 		 
 		         Toast.makeText(context, msgStr, Toast.LENGTH_LONG).show();
-		         vibe.vibrate(1000);
+		         long[] offOnPattern = {0, 5000, 500, 3000, 300, 300, 300, 300, 300, 300, 300, 3000};
+		         vibe.vibrate(offOnPattern, -1);
 		         
 		     } finally {
 		         //Release the lock

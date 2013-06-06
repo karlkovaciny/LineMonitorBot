@@ -2,6 +2,7 @@ package com.kovaciny.primexmodel;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -10,6 +11,7 @@ import android.util.Log;
 
 import com.kovaciny.database.PrimexDatabaseSchema;
 import com.kovaciny.database.PrimexSQLiteOpenHelper;
+import com.kovaciny.helperfunctions.HelperFunction;
 
 
 public class PrimexModel {
@@ -21,8 +23,9 @@ public class PrimexModel {
 		if (mLineNumbersList.size() == 0) {
 			throw new RuntimeException("database didn't find any lines");
 		}
-		mSelectedLine = mDbHelper.getLine(mLineNumbersList.get(0));
-		mWoNumbersList = mDbHelper.getWoNumbers();
+		mSelectedSkid = new Skid<Sheet>(); //TODO
+		setSelectedLine(mLineNumbersList.get(0));
+		mWoNumbersList = mDbHelper.getWoNumbers();		
 	}
 	/*
 	 * This section sets up notifying observers about changes.
@@ -33,6 +36,11 @@ public class PrimexModel {
 	public static final String NEW_WORK_ORDER_CHANGE_EVENT = "PrimexModel.NEW_WORK_ORDER"; 
 	public static final String PRODUCT_CHANGE_EVENT = "PrimexModel.NEW_PRODUCT"; 
 	public static final String PRODUCTS_PER_MINUTE_CHANGE_EVENT = "PrimexModel.PPM_CHANGE"; 
+	public static final String CURRENT_SHEET_COUNT_CHANGE_EVENT = "PrimexModel.SHEET_COUNT_CHANGE"; 
+	public static final String TOTAL_SHEET_COUNT_CHANGE_EVENT = "PrimexModel.TOTAL_COUNT_CHANGE";
+	public static final String SKID_FINISH_TIME_CHANGE_EVENT = "PrimexModel.FINISH_TIME_CHANGE"; 
+	public static final String MINUTES_PER_SKID_CHANGE_EVENT = "PrimexModel.SKID_TIME_CHANGE"; 
+	 
 	
 	public static final double INCHES_PER_FOOT = 12.0; 
 		
@@ -60,9 +68,10 @@ public class PrimexModel {
 	private Skid mSelectedSkid;
 	private Product mSelectedProduct;
 	private PrimexSQLiteOpenHelper mDbHelper;
-	private double mProductsPerMinute;
+	private Double mProductsPerMinute;
 	private double mNetRate;
 	private double mGrossRate;
+	private long mMinutesPerSkid;
 	
 	/*
 	 * also selects product currently
@@ -79,6 +88,7 @@ public class PrimexModel {
 			setSelectedProductByLineNumber(lineNumber);
 			propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLine, newLine);
 		
+			
 		} else if (lineNumber == null) {
 			mSelectedLine = null;
 			propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLine, null);
@@ -167,9 +177,10 @@ public class PrimexModel {
 	}
 	
 	public void setProductsPerMinute(double spm) {
-		double oldSpm = mProductsPerMinute;
+		Double oldSpm = mProductsPerMinute;
 		mProductsPerMinute = spm; //TODO validity checking
 		calculateRates();
+		calculateFinishTimes();
 		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldSpm, spm);
 	}
 	
@@ -184,8 +195,45 @@ public class PrimexModel {
 		if (hasSelectedProduct()) {
 			mNetRate = mProductsPerMinute * mSelectedProduct.getWeight();
 			//TODO gross rate
+		}		
+	}
+	
+	public void setCurrentCount (Integer currentCount) {
+		Integer oldCount = mSelectedSkid.getCurrentItems();
+		mSelectedSkid.setCurrentItems(currentCount);
+		calculateFinishTimes();
+		propChangeSupport.firePropertyChange(CURRENT_SHEET_COUNT_CHANGE_EVENT, oldCount, currentCount);
+	}
+	
+	public void setTotalCount (Integer totalCount) {
+		Integer oldCount = mSelectedSkid.getTotalItems();
+		mSelectedSkid.setTotalItems(totalCount);
+		calculateFinishTimes();
+		propChangeSupport.firePropertyChange(TOTAL_SHEET_COUNT_CHANGE_EVENT, oldCount, totalCount);
+	}
+	
+	public void calculateFinishTimes() {
+		Integer totalItems = mSelectedSkid.getTotalItems();
+		Integer currentItems = mSelectedSkid.getCurrentItems();
+		if ( (totalItems != null) && (mProductsPerMinute != null) && (mProductsPerMinute != 0)) {
+			//calculate total time per skid. 
+			long oldMinutes = mMinutesPerSkid;
+			mMinutesPerSkid = Math.round(totalItems / mProductsPerMinute);
+			propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, oldMinutes, mMinutesPerSkid);
+			
+			if (currentItems != null) { 
+				//calculate skid finish time
+				double minutesLeft = (totalItems - currentItems ) / mProductsPerMinute;
+				long millisLeft = (long) (minutesLeft * HelperFunction.ONE_MINUTE_IN_MILLIS);
+				Date currentDate = new Date();
+				long t = currentDate.getTime();
+				Date oldFinishTime = mSelectedSkid.getFinishTime();
+				Date finishTime = new Date( t + (millisLeft));
+				mSelectedSkid.setFinishTime( finishTime );
+				propChangeSupport.firePropertyChange(SKID_FINISH_TIME_CHANGE_EVENT, oldFinishTime, mSelectedSkid.getFinishTime());	
+			}			
 		}
-		
+		//TODO calc job finish times
 	}
 	
 	public void setSelectedProductByLineNumber(int lineNumber) {

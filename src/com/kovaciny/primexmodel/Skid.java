@@ -5,8 +5,8 @@ import java.util.Date;
 public class Skid<E extends Product> {
 	Pallet mPallet;
 	E mProductUnit;
-	int mCurrentItems;
-	int mTotalItems;
+	Integer mCurrentItems = null;
+	Integer mTotalItems = null;
 	double mPackagingWeight;
 	double mFinishedNetWeight;
 	double mFinishedGrossWeight;
@@ -42,47 +42,47 @@ public class Skid<E extends Product> {
 				+ mPackagingWeight;
 	}
 
-	public int getmCurrentItems() {
+	public Integer getCurrentItems() {
 		return mCurrentItems;
 	}
 
-	public void setmCurrentItems(int mCurrentItems) {
-		this.mCurrentItems = mCurrentItems;
+	public void setCurrentItems(int currentItems) {
+		this.mCurrentItems = currentItems;
 	}
 
-	public int getmTotalItems() {
+	public Integer getTotalItems() {
 		return mTotalItems;
 	}
 
-	public void setmTotalItems(int mTotalItems) {
-		this.mTotalItems = mTotalItems;
+	public void setTotalItems(int totalItems) {
+		this.mTotalItems = totalItems;
 	}
 
 	public int getmNumberOfStacks() {
 		return mNumberOfStacks;
 	}
 
-	public void setmNumberOfStacks(int mNumberOfStacks) {
-		this.mNumberOfStacks = mNumberOfStacks;
+	public void setNumberOfStacks(int numberOfStacks) {
+		this.mNumberOfStacks = numberOfStacks;
 	}
 
-	public Date getmStartTime() {
+	public Date getStartTime() {
 		return mStartTime;
 	}
 
-	public void setmStartTime(Date mStartTime) {
-		this.mStartTime = mStartTime;
+	public void setStartTime(Date startTime) {
+		this.mStartTime = startTime;
 	}
 
-	public Date getmFinishTime() {
+	public Date getFinishTime() {
 		return mFinishTime;
 	}
 
-	public void setmFinishTime(Date mFinishTime) {
-		this.mFinishTime = mFinishTime;
+	public void setFinishTime(Date finishTime) {
+		this.mFinishTime = finishTime;
 	}
 
-	public void setmPackagingWeight(double mPackagingWeight) {
-		this.mPackagingWeight = mPackagingWeight;
+	public void setPackagingWeight(double packagingWeight) {
+		this.mPackagingWeight = packagingWeight;
 	}
 }

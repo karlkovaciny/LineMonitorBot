@@ -1,7 +1,9 @@
 package com.kovaciny.linemonitorbot;
 
 import java.beans.PropertyChangeEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -45,11 +47,11 @@ public class SkidTimesFragment extends SectionFragment implements
 	private TextView mLbl_productsPerMinute;
 	private TextView mLbl_totalProducts;
 
-	OnSheetsPerMinuteChangeListener mCallback;
+	OnViewChangeListener mCallback;
 
 	// Container Activity must implement this interface
-	public interface OnSheetsPerMinuteChangeListener {
-		public void onSheetsPerMinuteChanged(double sheetsPerMinute);
+	public interface OnViewChangeListener {
+		public void onViewChange (int viewId, String userEntry);
 	}
 
 	@Override
@@ -62,7 +64,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		mEditTextList = new ArrayList<View>();
 
 		mEdit_sheetsPerMinute = (EditText) rootView
-				.findViewById(R.id.sheets_per_minute);
+				.findViewById(R.id.edit_products_per_minute);
 		mEditTextList.add(mEdit_sheetsPerMinute);
 		mEdit_skidNumber = (EditText) rootView
 				.findViewById(R.id.edit_skid_number);
@@ -116,25 +118,10 @@ public class SkidTimesFragment extends SectionFragment implements
 		if ((actionId == EditorInfo.IME_ACTION_DONE)
 				|| (actionId == EditorInfo.IME_ACTION_NEXT)) {
 			v.setTextAppearance(getActivity(), R.style.user_entered);
-			if (v.getId() == R.id.sheets_per_minute) {
-				String sheetsPerMin = ((TextView) v).getText().toString();
-				if (sheetsPerMin.length() != 0) {
-					mCallback.onSheetsPerMinuteChanged(Double
-							.valueOf(sheetsPerMin)); // the whole app needs to
-														// know when the sheets
-														// per minute change
-				}
-			}
-			String currentCount = this.mEdit_currentCount.getText().toString();
-			String totalCount = this.mEdit_totalSheetsPerSkid.getText()
-					.toString();
-			String spm = this.mEdit_sheetsPerMinute.getText().toString();
-			if ((currentCount.length() > 0) && (totalCount.length() > 0)
-					&& (spm.length() > 0)) {
-				double minutesLeft = (Double.valueOf(totalCount) - Double
-						.valueOf(currentCount)) / Double.valueOf(spm);
-				this.mTxt_timePerSkid.setText(HelperFunction
-						.formatMinutesAsHours(Math.round(minutesLeft)));
+			String userEntry = ((TextView) v).getText().toString();
+			//TODO: data validation
+			if (userEntry.length() != 0) {
+				mCallback.onViewChange(v.getId(), userEntry);
 			}
 		}
 		return false;
@@ -166,7 +153,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		// This makes sure that the container activity has implemented
 		// the callback interface. If not, it throws an exception
 		try {
-			mCallback = (OnSheetsPerMinuteChangeListener) activity;
+			mCallback = (OnViewChangeListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnHeadlineSelectedListener");
@@ -186,7 +173,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		}
 	}
 
-	public void onetimeTimer(View view, Integer interval) {
+	public void onetimeTimer(Integer interval) {
 
 		Context context = getActivity();
 		if (mAlarmReceiver != null) {
@@ -211,8 +198,38 @@ public class SkidTimesFragment extends SectionFragment implements
 			capUnits.setCharAt(0, Character.toUpperCase(units.charAt(0)));
 			this.mLbl_productsPerMinute.setText(capUnits.toString() + " per minute");
 			this.mLbl_totalProducts.setText("Total\n" + units);
+			
 		} else if (propertyName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {
 			this.mEdit_sheetsPerMinute.setText(String.valueOf(newProperty));
+			
+		} else if (propertyName == PrimexModel.CURRENT_SHEET_COUNT_CHANGE_EVENT) {
+			
+		} else if (propertyName == PrimexModel.SKID_FINISH_TIME_CHANGE_EVENT) {
+			SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
+			String formattedTime = formatter.format((Date)newProperty);
+			mEdit_skidFinishTime.setText(formattedTime);
+			
+			//set alarm 
+			long alarmLeadTime = 3 * HelperFunction.ONE_MINUTE_IN_MILLIS; //TODO
+			Date curDate = new Date();
+			long timeNow = curDate.getTime();
+			String formattedTimeNow = formatter.format(timeNow);
+			//Toast.makeText(getActivity(), "time now is " + formattedTimeNow + String.valueOf(timeNow), Toast.LENGTH_SHORT).show();
+			long timeThen = ((Date)newProperty).getTime();
+			String formattedTimeThen = formatter.format(timeThen);
+			//Toast.makeText(getActivity(), "time then is " + formattedTimeThen + String.valueOf(timeThen), Toast.LENGTH_SHORT).show();
+			Long timeBetweenMinutes = (timeThen - timeNow) / HelperFunction.ONE_MINUTE_IN_MILLIS; 
+			Long interval = timeThen - timeNow - alarmLeadTime;
+			Toast.makeText(getActivity(), "interval is " + String.valueOf(interval), Toast.LENGTH_SHORT).show();
+			if (interval > 0) {
+				onetimeTimer( Integer.valueOf(interval.intValue()) );	
+				
+			}			
+		} else if (propertyName == PrimexModel.TOTAL_SHEET_COUNT_CHANGE_EVENT) {
+			
+		} else if (propertyName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
+			this.mTxt_timePerSkid.setText(HelperFunction
+					.formatMinutesAsHours((Long)newProperty));
 		}
 	}
 }

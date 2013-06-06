@@ -38,7 +38,7 @@
 	                android:text="Sheets per minute" />
 
 	            <EditText
-	                android:id="@+id/sheets_per_minute"
+	                android:id="@+id/edit_products_per_minute"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_gravity="right"
