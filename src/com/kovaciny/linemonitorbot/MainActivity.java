@@ -164,6 +164,7 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
+		SkidTimesFragment skidTimesFrag = (SkidTimesFragment) this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
 		
 		if (eventName == PrimexModel.LINE_SPEED_CHANGE_EVENT) {
 			//TODO
@@ -195,8 +196,9 @@ public class MainActivity extends FragmentActivity implements
 			mJobPicker.getSubMenu().add(JOB_LIST_MENU_GROUP, newWonum, Menu.FLAG_APPEND_TO_GROUP, newTitle);
 			//invalidateOptionsMenu(); //so it refreshes	TODO: try clearing the submenu instead		
 		} else if (eventName == PrimexModel.PRODUCT_CHANGE_EVENT) {
-			SkidTimesFragment stfrg = (SkidTimesFragment) this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
-    		stfrg.modelPropertyChange(event);
+			skidTimesFrag.modelPropertyChange(event);
+		} else if (eventName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {
+			skidTimesFrag.modelPropertyChange(event);
 		}
 	}
 

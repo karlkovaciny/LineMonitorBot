@@ -30,7 +30,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	private static final String REAL_TYPE = " REAL";
 		
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 24;
+    public static final int DATABASE_VERSION = 25;
     public static final String DATABASE_NAME = "Primex.db";
     
     private static final String SQL_CREATE_PRODUCTION_LINES =
@@ -40,6 +40,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LENGTH + INTEGER_TYPE + COMMA_SEP +
     	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH + INTEGER_TYPE + COMMA_SEP +
     	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE + TEXT_TYPE + COMMA_SEP +
+    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
     	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE + TEXT_TYPE +
     	    " )";
     
@@ -217,8 +218,11 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	    	int dw = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH));
 	    	String sct = resultCursor.getString(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE));
 	    	String tet = resultCursor.getString(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE));
+	    	double sp = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT));
 	    	
-	    	return new ProductionLine(ln,ll,dw,sct,tet);
+	    	ProductionLine newLine = new ProductionLine(ln,ll,dw,sct,tet);
+	    	newLine.setLineSpeedSetpoint(sp);
+	    	return newLine;
 	    } finally {
 	    	if (resultCursor != null) resultCursor.close();
     	}    	
@@ -513,4 +517,20 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		return p;
 	}
 	
+	public int updateColumn(String tableName, String columnName, String where, String[] whereArgs, String newValue){
+		SQLiteDatabase db = getReadableDatabase();
+		
+		ContentValues values = new ContentValues();
+
+		values.put(columnName, newValue);
+		
+		int numAffectedRows = db.update(
+				tableName,
+				values, 
+				where,
+				whereArgs
+				);
+				
+		return numAffectedRows;	    
+	}
 }

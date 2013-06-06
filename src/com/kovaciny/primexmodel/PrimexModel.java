@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 import android.content.Context;
 import android.util.Log;
 
+import com.kovaciny.database.PrimexDatabaseSchema;
 import com.kovaciny.database.PrimexSQLiteOpenHelper;
 
 
@@ -112,6 +113,11 @@ public class PrimexModel {
 		
 		double oldsetpoint = mSelectedLine.getLineSpeedSetpoint();
 		mSelectedLine.setLineSpeedSetpoint(setpoint);
+		mDbHelper.updateColumn(PrimexDatabaseSchema.ProductionLines.TABLE_NAME,
+				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT,
+				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + "=?",
+				new String[]{String.valueOf(mSelectedLine.getLineNumber())},
+				String.valueOf(setpoint));
 		propChangeSupport.firePropertyChange(LINE_SPEED_CHANGE_EVENT, oldsetpoint, setpoint);
 	}
 	
