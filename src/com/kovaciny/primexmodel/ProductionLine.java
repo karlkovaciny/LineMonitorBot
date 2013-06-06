@@ -4,14 +4,17 @@ public class ProductionLine {
 	private int mLineNumber;
 	private int mLineLength; //in feet
 	private int mDieWidth; //in inches
-	private double mProductsPerMinute; //there is no setter, change line speed or length 
 	private double mNetRate; //in lbs/hr
 	private double mGrossRate; //in lbs/hr
 	private double mSpeedFactor;
 	private double mLineSpeedSetpoint;
+	private double mPullRollSetpoint;
 	private String mSpeedControllerType;
 	private String mTakeoffEquipmentType;
 	private Product mProduct = null;
+	
+	public static final String SPEED_CONTROLLER_TYPE_DIRECT = "Direct";
+	public static final String SPEED_CONTROLLER_TYPE_GEARED = "Geared";
 	
 	public ProductionLine(int lineNumber, int lineLength, int dieWidth, String speedControllerType, String takeoffEquipmentType) {
 		setLineNumber(lineNumber);
@@ -19,18 +22,10 @@ public class ProductionLine {
 		setDieWidth(dieWidth);
 		setSpeedControllerType(speedControllerType);
 		setTakeoffEquipmentType(takeoffEquipmentType);
+		//TODO default settingS
+		mPullRollSetpoint = 1.0;
+		mSpeedFactor = 1.0;
 	}
-	
-
-
-	public double getProductsPerMinute(){
-		if (this.mSpeedControllerType == "Direct") {
-			//TODO do something
-		}
-		mProductsPerMinute = 12 / mProduct.getLength() * this.mLineSpeedSetpoint * this.mSpeedFactor; 
-		return mProductsPerMinute;
-	}
-	
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -46,6 +41,16 @@ public class ProductionLine {
 	}
 	
 
+	public double getLineSpeed() {
+		if (mSpeedControllerType.equals(SPEED_CONTROLLER_TYPE_DIRECT)) {
+			return mLineSpeedSetpoint * mSpeedFactor; 
+		} else if (mSpeedControllerType.equals(SPEED_CONTROLLER_TYPE_GEARED)){
+			return mLineSpeedSetpoint * mPullRollSetpoint * mSpeedFactor;
+		} else {
+			throw new RuntimeException ("speed controller type unknown");
+		}
+		
+	}
 	
 	/*
 	 * Boilerplate from here on down

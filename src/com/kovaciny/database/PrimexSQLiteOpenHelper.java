@@ -1,6 +1,7 @@
 package com.kovaciny.database;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -88,14 +89,19 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_PRODUCTION_LINES);
         //Batch insert to SQLite database on Android
         try {
-        	Integer[] lineNumbers = {1,6,7,9,10,11,12,13,14,15,16,17,18};
+        	List<Integer> lineNumbers = Arrays.asList(1,6,7,9,10,11,12,13,14,15,16,17,18);
+        	List<Integer> linesWithGearedSpeedControl = Arrays.asList(6,9,17);
 	        db.beginTransaction();
-	        for (int i = 0; i < lineNumbers.length; i++) {
+	        for (Integer lineNum : lineNumbers) {
 	        	ContentValues values = new ContentValues();
-	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, lineNumbers[i]);
+	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, lineNum);
 	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LENGTH, 0);
 	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH, 0);
-	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE, "Direct");
+	        	if (linesWithGearedSpeedControl.contains(lineNum)) {
+	        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE, ProductionLine.SPEED_CONTROLLER_TYPE_GEARED);
+	        	} else {
+	        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE, ProductionLine.SPEED_CONTROLLER_TYPE_DIRECT);
+	        	}
 	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE, "Maxson");
 	        	
 	        	long rowId = db.insertOrThrow(

@@ -31,6 +31,9 @@ public class PrimexModel {
 	public static final String SELECTED_WO_CHANGE_EVENT = "PrimexModel.WO_CHANGE";
 	public static final String NEW_WORK_ORDER_CHANGE_EVENT = "PrimexModel.NEW_WORK_ORDER"; 
 	public static final String PRODUCT_CHANGE_EVENT = "PrimexModel.NEW_PRODUCT"; 
+	public static final String PRODUCTS_PER_MINUTE_CHANGE_EVENT = "PrimexModel.PPM_CHANGE"; 
+	
+	public static final double INCHES_PER_FOOT = 12.0; 
 		
 	// Create PropertyChangeSupport to manage listeners and fire events.
 	private final PropertyChangeSupport propChangeSupport = new PropertyChangeSupport(this);
@@ -56,6 +59,9 @@ public class PrimexModel {
 	private Skid mSelectedSkid;
 	private Product mSelectedProduct;
 	private PrimexSQLiteOpenHelper mDbHelper;
+	private double mProductsPerMinute;
+	private double mNetRate;
+	private double mGrossRate;
 	
 	/*
 	 * also selects product currently
@@ -135,6 +141,7 @@ public class PrimexModel {
 		mDbHelper.insertOrReplaceProduct(newProduct, getSelectedLine().getLineNumber());
 		mSelectedLine.setProduct(newProduct);
 		mSelectedProduct.setLineNumber(mSelectedLine.getLineNumber());
+		calculateProductsPerMinute();
 		this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, oldProduct, newProduct);
 	}
 	
@@ -145,7 +152,36 @@ public class PrimexModel {
 			setSelectedProduct(p.getType(), p.getGauge(), p.getWidth(), p.getLength());
 		}
 	}
-	 
+	
+	/*
+	 * This function is called whenever relevant properties change.
+	 */
+	protected void calculateProductsPerMinute() {
+		setProductsPerMinute(INCHES_PER_FOOT / mSelectedProduct.getLength() * mSelectedLine.getLineSpeed());
+	}
+	
+	public void setProductsPerMinute(double spm) {
+		double oldSpm = mProductsPerMinute;
+		mProductsPerMinute = spm; //TODO validity checking
+		calculateRates();
+		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldSpm, spm);
+	}
+	
+	public double getProductsPerMinute() {
+		return mProductsPerMinute;
+	}
+	
+	/*
+	 * This function is called whenever relevant properties change.
+	 */
+	protected void calculateRates() {
+		if (hasSelectedProduct()) {
+			mNetRate = mProductsPerMinute * mSelectedProduct.getWeight();
+			//TODO gross rate
+		}
+		
+	}
+	
 	public void setSelectedProductByLineNumber(int lineNumber) {
 		Product newProduct = mDbHelper.getProduct(lineNumber);
 		setSelectedProduct(newProduct);		

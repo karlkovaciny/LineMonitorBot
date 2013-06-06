@@ -29,7 +29,6 @@ import com.kovaciny.primexmodel.Skid;
 public class SkidTimesFragment extends SectionFragment implements
 		OnClickListener, OnEditorActionListener, ViewEventResponder {
 	private SkidFinishedBroadcastReceiver mAlarmReceiver;
-	private double mSheetsPerMinute;
 	private List<Skid<Product>> mSkidList;
 	private ImageButton mImageBtn_calcSheetsPerMinute;
 
@@ -144,14 +143,6 @@ public class SkidTimesFragment extends SectionFragment implements
 	public void hideAll() {
 		
 	}
-	public double getSheetsPerMinute() {
-		return mSheetsPerMinute;
-	}
-
-	public void setSheetsPerMinute(double mSheetsPerMinute) {
-		this.mSheetsPerMinute = mSheetsPerMinute;
-		this.mEdit_sheetsPerMinute.setText(String.valueOf(mSheetsPerMinute));
-	}
 
 	public List<Skid<Product>> getSkidList() {
 		return mSkidList;
@@ -212,19 +203,16 @@ public class SkidTimesFragment extends SectionFragment implements
 
 	public void modelPropertyChange (PropertyChangeEvent event) {
 		String propertyName = event.getPropertyName();
-		Object oldProperty = event.getOldValue();
 		Object newProperty = event.getNewValue();
 		
 		if (propertyName == PrimexModel.PRODUCT_CHANGE_EVENT) {
-			if (newProperty == null) {
-				mLbl_productsPerMinute.setText("no product"); //debug
-			} else {
-				String units = ((Product)newProperty).getUnits();
-				StringBuilder capUnits = new StringBuilder(units);
-				capUnits.setCharAt(0, Character.toUpperCase(units.charAt(0)));
-				this.mLbl_productsPerMinute.setText(capUnits.toString() + " per minute");
-				this.mLbl_totalProducts.setText("Total\n" + units);
-			}
+			String units = ((Product)newProperty).getUnits();
+			StringBuilder capUnits = new StringBuilder(units);
+			capUnits.setCharAt(0, Character.toUpperCase(units.charAt(0)));
+			this.mLbl_productsPerMinute.setText(capUnits.toString() + " per minute");
+			this.mLbl_totalProducts.setText("Total\n" + units);
+		} else if (propertyName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {
+			this.mEdit_sheetsPerMinute.setText(String.valueOf(newProperty));
 		}
 	}
 }

@@ -107,6 +107,9 @@ public class MainActivity extends FragmentActivity implements
 
 	//implementing interface
 	public void onSheetsPerMinuteChanged(double sheetsPerMin){
+		//User directly entered a sheets per minute value, so we must not calculate one.
+		//well, if we have a product, we could adjust the speed factor.
+		
 		//TODO this function is NOT compatible with rotating the screen
 		//tell model of change
 		//mModel.setCurrentLineSpeedSetpoint(sheetsPerMin);
@@ -152,10 +155,6 @@ public class MainActivity extends FragmentActivity implements
     		Product crntprod = mModel.getSelectedProduct();
     		crntprod.setLineNumber(curntline);
     		Toast.makeText(this, "and the new product's sheet state is " + crntprod.getType(), Toast.LENGTH_SHORT).show();
-    		
-    		//TODO get fragment and tell it to update its sheets per minute value, its time done, and whatever else
-    		SkidTimesFragment stfrg = (SkidTimesFragment) this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
-    		stfrg.setSheetsPerMinute(mModel.getSelectedLine().getProductsPerMinute());
     	}
     	
     }	
