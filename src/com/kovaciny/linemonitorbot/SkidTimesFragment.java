@@ -103,10 +103,6 @@ public class SkidTimesFragment extends SectionFragment implements
 				.findViewById(R.id.lbl_products_per_minute);
 		mLbl_totalProducts = (TextView) rootView.findViewById(R.id.lbl_total_products);
 
-		Button btnSetAlarm = (Button) rootView
-				.findViewById(R.id.btn_set_alarm);
-		btnSetAlarm.setOnClickListener(this);
-
 		mImageBtn_calcSheetsPerMinute = (ImageButton) rootView
 				.findViewById(R.id.calc_sheets_per_minute);
 		mImageBtn_calcSheetsPerMinute.setOnClickListener(this);
@@ -189,10 +185,6 @@ public class SkidTimesFragment extends SectionFragment implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case (R.id.btn_set_alarm):
-			showTimePickerDialog(v);
-			// onetimeTimer(v, 60*60*1000);
-			break;
 		case (R.id.calc_sheets_per_minute):
 			((MainActivity)getActivity()).showSheetsPerMinuteDialog();
 			break;
@@ -207,11 +199,6 @@ public class SkidTimesFragment extends SectionFragment implements
 		} else {
 			Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
 		}
-	}
-
-	public void showTimePickerDialog(View v) {
-		DialogFragment newFragment = new TimePickerFragment();
-		newFragment.show(getActivity().getFragmentManager(), "timePicker");
 	}
 
 	public void modelPropertyChange (PropertyChangeEvent event) {

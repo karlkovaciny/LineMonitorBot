@@ -271,17 +271,6 @@
 	            android:textSize="40sp" />
 
 	    </RelativeLayout>
-
-	    <Button
-	        android:id="@+id/btn_set_alarm"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="Set Alarm" />
-
-	    <TimePicker
-	        android:id="@+id/skid_finished_alarm"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" />
 	</LinearLayout>
 
 </ScrollView>
