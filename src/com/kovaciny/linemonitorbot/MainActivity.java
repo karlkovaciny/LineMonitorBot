@@ -269,6 +269,7 @@ public class MainActivity extends FragmentActivity implements
 //				Toast.makeText(this, "has selected product now = " + String.valueOf(mModel.hasSelectedProduct()), Toast.LENGTH_SHORT).show();	
 			}
 		} else {
+			mModel.setSelectedLine(1); //TODO this oK?
 			//TODO requestSelectLine();
 		}
 		int selectedWO = settings.getInt("selectedWorkOrder", -1);

@@ -24,7 +24,6 @@ public class PrimexModel {
 			throw new RuntimeException("database didn't find any lines");
 		}
 		mSelectedSkid = new Skid<Sheet>(); //TODO
-		setSelectedLine(mLineNumbersList.get(0));
 		mWoNumbersList = mDbHelper.getWoNumbers();		
 	}
 	/*
@@ -87,6 +86,7 @@ public class PrimexModel {
 			Integer newLine = mSelectedLine.getLineNumber();
 			
 			setSelectedProductByLineNumber(lineNumber);
+			
 			propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLine, newLine);
 		
 			
@@ -162,7 +162,8 @@ public class PrimexModel {
 		mDbHelper.insertOrReplaceProduct(newProduct, getSelectedLine().getLineNumber());
 		mSelectedLine.setProduct(newProduct);
 		mSelectedProduct.setLineNumber(mSelectedLine.getLineNumber());
-		calculateProductsPerMinute();
+		calculateRates();
+		calculateTimes();
 		this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, oldProduct, newProduct);
 	}
 	
@@ -174,16 +175,16 @@ public class PrimexModel {
 		}
 	}
 	
-	/*
-	 * This function is called whenever relevant properties change.
-	 */
-	protected void calculateProductsPerMinute() {
-		setProductsPerMinute(INCHES_PER_FOOT / mSelectedProduct.getLength() * mSelectedLine.getLineSpeed());
+	public void setSelectedProductByLineNumber(int lineNumber) {
+		Product newProduct = mDbHelper.getProduct(lineNumber);
+		setSelectedProduct(newProduct);	
 	}
+	
+
 	
 	public void setProductsPerMinute(double spm) {
 		Double oldSpm = mProductsPerMinute;
-		mProductsPerMinute = spm; //TODO validity checking
+		mProductsPerMinute = spm; //TODO this function shouldnt' be allowed! also validity checking. Also this maybe should be for direct setting only?
 		calculateRates();
 		calculateTimes();
 		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldSpm, spm);
@@ -198,6 +199,10 @@ public class PrimexModel {
 	 */
 	protected void calculateRates() {
 		if (hasSelectedProduct()) {
+			Double oldPpm = mProductsPerMinute; 
+			mProductsPerMinute = INCHES_PER_FOOT / mSelectedProduct.getLength() * mSelectedLine.getLineSpeed();
+			propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldPpm, mProductsPerMinute);
+			
 			mNetRate = mProductsPerMinute * mSelectedProduct.getWeight();
 			//TODO gross rate
 		}		
@@ -218,6 +223,7 @@ public class PrimexModel {
 	}
 	
 	public void calculateTimes() {
+		if (mSelectedSkid == null) throw new RuntimeException("Can't calc times without a skid");
 		Integer totalItems = mSelectedSkid.getTotalItems();
 		Integer currentItems = mSelectedSkid.getCurrentItems();
 		if ( (totalItems != null) && (mProductsPerMinute != null) && (mProductsPerMinute != 0)) {
@@ -246,12 +252,7 @@ public class PrimexModel {
 		}
 		//TODO calc job finish times
 	}
-	
-	public void setSelectedProductByLineNumber(int lineNumber) {
-		Product newProduct = mDbHelper.getProduct(lineNumber);
-		setSelectedProduct(newProduct);		
-	}
-	
+
 	public Product getSelectedProduct() {
 		return mSelectedProduct;
 	}

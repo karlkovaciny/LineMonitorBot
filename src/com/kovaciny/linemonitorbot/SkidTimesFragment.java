@@ -9,7 +9,9 @@ import java.util.List;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,6 +95,10 @@ public class SkidTimesFragment extends SectionFragment implements
 
 		this.mTxt_timePerSkid = (TextView) rootView
 				.findViewById(R.id.txt_time_per_skid);
+		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+		String label = settings.getString("timePerSkid","");
+		mTxt_timePerSkid.setText(label);
+		
 		mLbl_productsPerMinute = (TextView) rootView
 				.findViewById(R.id.lbl_products_per_minute);
 		mLbl_totalProducts = (TextView) rootView.findViewById(R.id.lbl_total_products);
@@ -256,5 +262,19 @@ public class SkidTimesFragment extends SectionFragment implements
 			this.mTxt_timePerSkid.setText(HelperFunction
 					.formatMinutesAsHours((Long)newProperty));
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.Fragment#onPause()
+	 */
+	@Override
+	public void onPause() {
+		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+	    SharedPreferences.Editor editor = settings.edit();
+	    editor.putString("timePerSkid", mTxt_timePerSkid.getText().toString());
+	    
+	    // Commit the edits!
+	    editor.commit();
+		super.onPause();
 	}
 }
