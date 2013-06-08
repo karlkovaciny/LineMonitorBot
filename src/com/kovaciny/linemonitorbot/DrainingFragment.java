@@ -1,6 +1,8 @@
 package com.kovaciny.linemonitorbot;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,8 +34,8 @@ public class DrainingFragment extends SectionFragment {
 		*/
 		
 		mDbViewer = new DatabaseViewer(getActivity());
-		String[] toShow = new String[]{PrimexDatabaseSchema.ProductTypes.TABLE_NAME, 
-				PrimexDatabaseSchema.ProductionLines.TABLE_NAME
+		
+		String[] toShow = new String[]{	PrimexDatabaseSchema.ProductionLines.TABLE_NAME
 		};
 		displayTables(toShow);
 		/*ArrayList<ArrayList<String>> abcd = mDbViewer.selectRecordsFromDBList(PrimexDatabaseSchema.Products.TABLE_NAME, new String[]{"*"}, null, null, null, null, null);
@@ -77,12 +79,22 @@ public class DrainingFragment extends SectionFragment {
 		ArrayList<String> results = new ArrayList<String>();
 		
 		for (String tableName : tableNames) {
+			List<String> columnNames = mDbViewer.getColumnNames(PrimexDatabaseSchema.ProductionLines.TABLE_NAME);
+			
+			
 			ArrayList<ArrayList<String>> records =	
 					mDbViewer.selectRecordsFromDBList(tableName, new String[]{"*"}, null, null, null, null, null);
 			
+			
 			for (ArrayList<String> record : records) {
-				results.add(tableName);
-				results.addAll(record);
+				results.add(tableName.toUpperCase());
+				Iterator<String> columnNamesItr = columnNames.iterator();
+				Iterator<String> recordItr = record.iterator();
+				while (columnNamesItr.hasNext()) {
+					results.add(columnNamesItr.next());
+					results.add(recordItr.next());
+				}
+				//results.addAll(record);
 			}
 		}
 			

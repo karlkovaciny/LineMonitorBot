@@ -1,6 +1,9 @@
 package com.kovaciny.database;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import com.kovaciny.primexmodel.WorkOrder;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -68,6 +71,20 @@ public ArrayList<ArrayList<String>> selectRecordsFromDBList(String tableName, St
       }
       return retList;
 
+}
+
+public List<String> getColumnNames(String tablename) {
+	SQLiteDatabase db = getReadableDatabase();
+	Cursor resultCursor = db.rawQuery("PRAGMA table_info(" + tablename + ")", null);
+	List<String> colnames = new ArrayList<String>();
+	try {
+		while (resultCursor.moveToNext()) {
+	    	colnames.add(resultCursor.getString(1));
+	 	}
+    	return colnames;
+    } finally {
+    	if (resultCursor != null) resultCursor.close();
+	}
 }
 
 /* (non-Javadoc)
