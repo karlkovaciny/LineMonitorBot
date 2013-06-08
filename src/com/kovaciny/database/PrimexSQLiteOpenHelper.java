@@ -2,6 +2,7 @@ package com.kovaciny.database;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -15,6 +16,7 @@ import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.ProductionLine;
 import com.kovaciny.primexmodel.Roll;
 import com.kovaciny.primexmodel.Sheet;
+import com.kovaciny.primexmodel.SpeedValues;
 import com.kovaciny.primexmodel.WorkOrder;
 
 public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
@@ -30,7 +32,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	private static final String REAL_TYPE = " REAL";
 		
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 25;
+    public static final int DATABASE_VERSION = 34;
     public static final String DATABASE_NAME = "Primex.db";
     
     private static final String SQL_CREATE_PRODUCTION_LINES =
@@ -41,6 +43,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH + INTEGER_TYPE + COMMA_SEP +
     	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE + TEXT_TYPE + COMMA_SEP +
     	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
+    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
+    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR + DOUBLE_TYPE + COMMA_SEP +
     	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE + TEXT_TYPE +
     	    " )";
     
@@ -90,14 +94,25 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_PRODUCTION_LINES);
         //Batch insert to SQLite database on Android
         try {
-        	List<Integer> lineNumbers = Arrays.asList(1,6,7,9,10,11,12,13,14,15,16,17,18);
-        	List<Integer> linesWithGearedSpeedControl = Arrays.asList(6,9,17);
+        	List<Integer> lineNumbers = Arrays.asList(1,6,7,9,10,  11,12,13,14,15,  16,17,18); //13 lines
+        	List<Integer> linesWithGearedSpeedControl = Arrays.asList(6,9,12,16,17); //TODO remove this and speed controller type
+        	Double speedFactors[] = new Double[] {1d,.0769,1d,.99,1.015,  1d,0.00009917,.98,1d,1.01, 1d,.0347,.987};
+        	List<Double> speedFactorsList = Arrays.asList(speedFactors);
+        	Iterator<Double> speedFactorsIterator2 = speedFactorsList.iterator();
+        	List<Double> newList = new ArrayList<Double> ();
+        	while (speedFactorsIterator2.hasNext()) {
+        		newList.add(speedFactorsIterator2.next());
+        	}
+        	Iterator<Double> speedFactorsIterator = speedFactorsList.iterator();
 	        db.beginTransaction();
 	        for (Integer lineNum : lineNumbers) {
 	        	ContentValues values = new ContentValues();
 	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, lineNum);
 	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LENGTH, 0);
 	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH, 0);
+	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT, 0);
+	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT, 0);
+	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR, speedFactorsIterator.next());
 	        	if (linesWithGearedSpeedControl.contains(lineNum)) {
 	        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE, ProductionLine.SPEED_CONTROLLER_TYPE_GEARED);
 	        	} else {
@@ -219,9 +234,12 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	    	String sct = resultCursor.getString(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE));
 	    	String tet = resultCursor.getString(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE));
 	    	double sp = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT));
+	    	double diff = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT));
+	    	double sf = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR));
 	    	
 	    	ProductionLine newLine = new ProductionLine(ln,ll,dw,sct,tet);
-	    	newLine.setLineSpeedSetpoint(sp);
+	    	SpeedValues sv = new SpeedValues(sp,diff,sf);
+	    	newLine.setSpeedValues(sv);
 	    	return newLine;
 	    } finally {
 	    	if (resultCursor != null) resultCursor.close();
@@ -509,7 +527,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				} else throw new IllegalArgumentException("not a sheet or roll!");
 				p.setLineNumber(lineNumber);
 			} else {
-				Log.e("error", "database query returned no results");
+				Log.e("error", "getProduct database query returned no results");
 			}
 		} finally {
 			if (resultCursor != null) {resultCursor.close();}

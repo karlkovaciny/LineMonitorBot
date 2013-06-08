@@ -35,6 +35,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
   	EditText mEdit_sheetWidth;
   	EditText mEdit_sheetLength;
   	EditText mEdit_lineSpeed;
+  	EditText mEdit_differentialSpeed;
   	EditText mEdit_speedFactor;
   	ImageButton mImgbtnSheetsOrRolls;
   	private String mSheetsOrRollsState = SHEETS_MODE;
@@ -73,23 +74,27 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		mEdit_sheetWidth = (EditText) rootView.findViewById(R.id.edit_sheet_width);
 		mEdit_sheetLength = (EditText) rootView.findViewById(R.id.edit_sheet_length);
 		mEdit_lineSpeed = (EditText) rootView.findViewById(R.id.edit_line_speed);
+		mEdit_differentialSpeed = (EditText) rootView.findViewById(R.id.edit_differential_speed);
 		mEdit_speedFactor = (EditText) rootView.findViewById(R.id.edit_speed_factor);
 		mImgbtnSheetsOrRolls = (ImageButton) rootView.findViewById(R.id.imgbtn_sheets_or_rolls);
 	  	
 		if (getArguments() != null) {
-			mEdit_gauge.setText(String.valueOf(getArguments().getDouble("Gauge")));
-			
-			mEdit_sheetWidth.setText(String.valueOf(getArguments().getDouble("SheetWidth")));
-			
-			mEdit_sheetLength.setText(String.valueOf(getArguments().getDouble("SheetLength")));
-		  	
-			mEdit_lineSpeed.setText(String.valueOf(getArguments().getDouble("LineSpeed")));
-			
+			if(getArguments().getDouble("Gauge") != 0) {
+				mEdit_gauge.setText(String.valueOf(getArguments().getDouble("Gauge")));
+				
+				mEdit_sheetWidth.setText(String.valueOf(getArguments().getDouble("SheetWidth")));
+				
+				mEdit_sheetLength.setText(String.valueOf(getArguments().getDouble("SheetLength")));
+			  	
+				mEdit_lineSpeed.setText(String.valueOf(getArguments().getDouble("LineSpeed")));
+				
+				mEdit_differentialSpeed.setText(String.valueOf(getArguments().getDouble("DifferentialSpeed")));
+				mSheetsOrRollsState = getArguments().getString("ProductType");
+			  	setSheetsOrRollsState(mSheetsOrRollsState);
+//			  	Toast.makeText(getActivity(), "setting sheets or rolls state to " + mSheetsOrRollsState, Toast.LENGTH_SHORT).show();
+			}
 		  	mEdit_speedFactor.setText(String.valueOf(getArguments().getDouble("SpeedFactor")));
-		  	
-		  	mSheetsOrRollsState = getArguments().getString("ProductType");
-		  	setSheetsOrRollsState(mSheetsOrRollsState);
-//		  	Toast.makeText(getActivity(), "setting sheets or rolls state to " + mSheetsOrRollsState, Toast.LENGTH_SHORT).show();
+		  	  	
 		}
 		
 		mImgbtnSheetsOrRolls.setOnClickListener(this);
@@ -155,6 +160,9 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 	}
 	public double getSheetLengthValue() {
 		return Double.valueOf(mEdit_sheetLength.getText().toString());
+	}
+	public double getDifferentialSpeedValue() {
+		return Double.valueOf(mEdit_differentialSpeed.getText().toString());
 	}
 	public double getSpeedFactorValue() {
 		return Double.valueOf(mEdit_speedFactor.getText().toString());

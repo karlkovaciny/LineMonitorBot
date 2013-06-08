@@ -10,9 +10,11 @@ public class PrimexDatabaseSchema {
 	    public static final String TABLE_NAME = "production_lines";
 	    public static final String COLUMN_NAME_LINE_NUMBER = "line_number";
 	    public static final String COLUMN_NAME_LENGTH = "length";
+	    public static final String COLUMN_NAME_DIE_WIDTH = "die_width";
 	    public static final String COLUMN_NAME_SPEED_CONTROLLER_TYPE = "speed_controller_type";
 	    public static final String COLUMN_NAME_SPEED_SETPOINT = "speed_setpoint";
-	    public static final String COLUMN_NAME_DIE_WIDTH = "die_width";
+	    public static final String COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT = "differential_speed";
+	    public static final String COLUMN_NAME_SPEED_FACTOR = "speed_factor";
 	    public static final String COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE = "takeoff_equipment_type";
 	}
 	

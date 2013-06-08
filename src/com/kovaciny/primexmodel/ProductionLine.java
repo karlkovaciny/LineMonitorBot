@@ -6,9 +6,7 @@ public class ProductionLine {
 	private int mDieWidth; //in inches
 	private double mNetRate; //in lbs/hr
 	private double mGrossRate; //in lbs/hr
-	private double mSpeedFactor;
-	private double mLineSpeedSetpoint;
-	private double mPullRollSetpoint;
+	private SpeedValues mSpeedValues;
 	private String mSpeedControllerType;
 	private String mTakeoffEquipmentType;
 	private Product mProduct = null;
@@ -22,9 +20,8 @@ public class ProductionLine {
 		setDieWidth(dieWidth);
 		setSpeedControllerType(speedControllerType);
 		setTakeoffEquipmentType(takeoffEquipmentType);
-		//TODO default settingS
-		mPullRollSetpoint = 1.0;
-		mSpeedFactor = 1.0;
+		//TODO default settings
+		mSpeedValues = new SpeedValues(0,1,1);
 	}
 	
 	/* (non-Javadoc)
@@ -42,14 +39,7 @@ public class ProductionLine {
 	
 
 	public double getLineSpeed() {
-		if (mSpeedControllerType.equals(SPEED_CONTROLLER_TYPE_DIRECT)) {
-			return mLineSpeedSetpoint * mSpeedFactor; 
-		} else if (mSpeedControllerType.equals(SPEED_CONTROLLER_TYPE_GEARED)){
-			return mLineSpeedSetpoint * mPullRollSetpoint * mSpeedFactor;
-		} else {
-			throw new RuntimeException ("speed controller type unknown");
-		}
-		
+		return mSpeedValues.getProduct();		
 	}
 	
 	/*
@@ -70,17 +60,11 @@ public class ProductionLine {
 	public int getLineLength() {
 		return mLineLength;
 	}
-	public void setSpeedFactor(double fudgeFactor){
-		mSpeedFactor = fudgeFactor;
+	public SpeedValues getSpeedValues() {
+		return mSpeedValues;
 	}
-	public double getSpeedFactor() {
-		return this.mSpeedFactor;
-	}
-	public void setLineSpeedSetpoint(double setpoint) {
-		this.mLineSpeedSetpoint = setpoint;
-	}
-	public double getLineSpeedSetpoint() {
-		return this.mLineSpeedSetpoint;
+	public void setSpeedValues(SpeedValues sv) {
+		mSpeedValues = sv;
 	}
 	public void setLineLength(int mLineLength) {
 		this.mLineLength = mLineLength;

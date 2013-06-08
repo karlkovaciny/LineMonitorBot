@@ -118,30 +118,34 @@ public class PrimexModel {
 			return true;
 		} else return false;
 	}
-	
-	public void setCurrentLineSpeedSetpoint(double setpoint){
-		if (setpoint < 0) {throw new IllegalArgumentException("Line speed setpoint less than zero");}
 		
-		double oldsetpoint = mSelectedLine.getLineSpeedSetpoint();
-		mSelectedLine.setLineSpeedSetpoint(setpoint);
-		mDbHelper.updateColumn(PrimexDatabaseSchema.ProductionLines.TABLE_NAME,
-				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT,
-				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + "=?",
-				new String[]{String.valueOf(mSelectedLine.getLineNumber())},
-				String.valueOf(setpoint));
-		propChangeSupport.firePropertyChange(LINE_SPEED_CHANGE_EVENT, oldsetpoint, setpoint);
-	}
-	
 	public void setCurrentProductLength(double length) {
 		double oldLength = mSelectedLine.getProduct().getLength();
 		mSelectedLine.getProduct().setLength(length);
 		//TODO? propChangeSupport.firePropertyChange(PRODUCT_LENGTH_CHANGE_EVENT, oldLength, length);
 	}
 	
-	public void setCurrentSpeedFactor (double speedFactor) {
-		double oldFactor = mSelectedLine.getSpeedFactor();
-		mSelectedLine.setSpeedFactor(speedFactor);
-		//TODO propChange
+	public void setCurrentSpeed (SpeedValues values) { 
+		SpeedValues oldValues = mSelectedLine.getSpeedValues();
+		mSelectedLine.setSpeedValues(values);
+		String[] lineNum = new String[]{String.valueOf(mSelectedLine.getLineNumber())};
+		mDbHelper.updateColumn(PrimexDatabaseSchema.ProductionLines.TABLE_NAME,
+				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT,
+				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + "=?",
+				lineNum,
+				String.valueOf(values.lineSpeedSetpoint));
+		mDbHelper.updateColumn(PrimexDatabaseSchema.ProductionLines.TABLE_NAME,
+				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT,
+				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + "=?",
+				lineNum,
+				String.valueOf(values.differentialSpeed));
+		mDbHelper.updateColumn(PrimexDatabaseSchema.ProductionLines.TABLE_NAME,
+				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR,
+				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + "=?",
+				lineNum,
+				String.valueOf(values.speedFactor));
+		//TODO don't use three calls
+		propChangeSupport.firePropertyChange(LINE_SPEED_CHANGE_EVENT, oldValues, values);
 	}
  
 	public void setSelectedProduct(String type, double gauge, double width, double length) {
@@ -254,9 +258,6 @@ public class PrimexModel {
 	
 	public void closeDb() {
 		mDbHelper.close();
-	}
-	public double getCurrentLineSpeedSetpoint(){
-		return mSelectedLine.getLineSpeedSetpoint();
 	}
 	public boolean hasSelectedLine() {
 		if (mSelectedLine != null) {

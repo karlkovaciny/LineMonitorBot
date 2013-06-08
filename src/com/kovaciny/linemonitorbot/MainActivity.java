@@ -21,11 +21,10 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
+import com.kovaciny.primexmodel.SpeedValues;
 import com.kovaciny.primexmodel.WorkOrder;
 
 public class MainActivity extends FragmentActivity implements
@@ -133,16 +132,18 @@ public class MainActivity extends FragmentActivity implements
 		// Create the fragment and show it as a dialog.
 		SheetsPerMinuteDialogFragment newFragment = new SheetsPerMinuteDialogFragment();
 		Product currentProd = mModel.getSelectedProduct();
+		SpeedValues curSpeed = mModel.getSelectedLine().getSpeedValues();
+		Bundle args = new Bundle();
+		args.putDouble("SpeedFactor", curSpeed.speedFactor);
 		if (currentProd != null) {
-			Bundle args = new Bundle();
 			args.putDouble("Gauge", currentProd.getGauge());
 			args.putDouble("SheetWidth", currentProd.getWidth());
 			args.putDouble("SheetLength", currentProd.getLength());
-			args.putDouble("LineSpeed", mModel.getSelectedLine().getLineSpeedSetpoint());
-			args.putDouble("SpeedFactor", mModel.getSelectedLine().getSpeedFactor());
+			args.putDouble("LineSpeed", curSpeed.lineSpeedSetpoint);
+			args.putDouble("DifferentialSpeed", curSpeed.differentialSpeed);
 			args.putString("ProductType", currentProd.getType());
-			newFragment.setArguments(args);
 		}
+		newFragment.setArguments(args);
 		newFragment.show(this.getFragmentManager(),
 				"SheetsPerMinuteDialog");
 	}
@@ -151,9 +152,8 @@ public class MainActivity extends FragmentActivity implements
     	if (d.getTag() == "SheetsPerMinuteDialog") {
     		SheetsPerMinuteDialogFragment spmd = (SheetsPerMinuteDialogFragment)d;
     		//TODO error checking
-    		mModel.setCurrentLineSpeedSetpoint(spmd.getLineSpeedValue());
-    		mModel.setCurrentSpeedFactor(spmd.getSpeedFactorValue());
-    		
+    		SpeedValues sv = new SpeedValues(spmd.getLineSpeedValue(), spmd.getDifferentialSpeedValue(), spmd.getSpeedFactorValue());
+    		mModel.setCurrentSpeed(sv);
     		String prodtype;
     		String mode = spmd.getSheetsOrRollsState();
     		if (mode.equals(SheetsPerMinuteDialogFragment.SHEETS_MODE)) {
