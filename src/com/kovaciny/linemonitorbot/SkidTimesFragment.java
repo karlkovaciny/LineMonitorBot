@@ -223,7 +223,7 @@ public class SkidTimesFragment extends SectionFragment implements
 			mEdit_skidFinishTime.setText(formattedTime);
 			
 			//set alarm 
-			long alarmLeadTime = 3 * HelperFunction.ONE_MINUTE_IN_MILLIS; //TODO
+			long alarmLeadTime = 2 * HelperFunction.ONE_MINUTE_IN_MILLIS; //TODO
 			Date curDate = new Date();
 			long timeNow = curDate.getTime();
 			String formattedTimeNow = formatter.format(timeNow);
