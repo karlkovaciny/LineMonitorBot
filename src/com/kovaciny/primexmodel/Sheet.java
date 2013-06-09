@@ -6,8 +6,8 @@ public class Sheet implements Product {
 	private double mWidth; //traverse direction in inches
 	private double mLength; //machine direction in inches
 	private double mDensity;
-	private String mUnitSingular = "Sheet";
-	private String mUnitPlural = "Sheets";
+	private String mUnitSingular = "sheet";
+	private String mUnitPlural = "sheets";
 	public int mLineNumber;
 	
 	public int getLineNumber() {
