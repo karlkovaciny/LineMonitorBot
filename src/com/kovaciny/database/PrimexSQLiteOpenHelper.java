@@ -306,12 +306,15 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		
 		ContentValues values = new ContentValues();
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, newWO.getWoNumber());
-		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED, newWO.getTotalProductsOrdered());
+		double tpo = newWO.getTotalProductsOrdered();
+		tpo = -69; //debug
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED, tpo);
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NUMBER_OF_SKIDS, newWO.getNumberOfSkids());
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT, newWO.getMaximumStackHeight());
 		if ( newWO.hasSelectedSkid()) {
-			values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_ID, newWO.getSelectedSkid().getSkidNumber());	
-		}
+			//TODO look up skid in skids table
+			//values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_ID, newWO.getSelectedSkid().getSkidNumber());	
+		} else values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_ID, -69); 
 		
 		long rowId = db.insertWithOnConflict(
 				PrimexDatabaseSchema.WorkOrders.TABLE_NAME, 
@@ -320,7 +323,15 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				SQLiteDatabase.CONFLICT_IGNORE);
 		
 		if (newWO.hasProduct()) {
-			insertOrReplaceProduct(newWO.getProduct(), newWO.getWoNumber());			
+			long aRowId = insertOrReplaceProduct(newWO.getProduct(), newWO.getWoNumber());
+			String query = "SELECT " + aRowId + "FROM " + PrimexDatabaseSchema.Products.TABLE_NAME + 
+					"order by " + aRowId + "DESC limit 1";
+			Cursor c = db.rawQuery(query, null);
+			long lastRowId = 0;
+			if (c != null && c.moveToFirst()) {
+			    lastRowId = c.getLong(0); //The 0 is the column index, we only have 1 column, so the index is 0
+			}
+			values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_ID, lastRowId);
 		}
 		return rowId;
 	}
@@ -339,12 +350,12 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				null,
 				null
 				);*/
-		int wonum = 0;
-		int prod_id = 0;
-		double ordered = 0d;
-		int skids = 0;
-		int selected = 0;
-		double height = 0d;
+		int wonum = -1;
+		int prod_id = -1;
+		double ordered = -1d;
+		int skids = -1;
+		int selected = -1;
+		double height = -1d;
 		try {
 			if (resultCursor.moveToFirst()) {
 		    	wonum = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER));
@@ -355,12 +366,12 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		    	height = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT));
 		    	}
 			WorkOrder wo = new WorkOrder(wonum);
-			if (prod_id != 0) {
+			if (prod_id != -1) {
 				wo.setProduct(getProduct(wonum));
 			}
 			wo.setTotalProductsOrdered(ordered);
 			wo.setNumberOfSkids(skids);
-			if (selected != 0) {
+			if (selected != -1) {
 				//TODO wo.setSelectedSkid(selected);
 			}
 			wo.setMaximumStackHeight(height);
