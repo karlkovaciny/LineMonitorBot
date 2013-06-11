@@ -53,7 +53,7 @@
 	        </LinearLayout>
 
 	        <ImageButton
-	            android:id="@+id/calc_sheets_per_minute"
+	            android:id="@+id/imgBtn_sheets_per_minute"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:src="@drawable/calculator" />
@@ -261,7 +261,7 @@
 	        </LinearLayout>
 
 	        <Button
-	            android:id="@+id/start_new_skid"
+	            android:id="@+id/btn_new_skid"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentRight="true"
