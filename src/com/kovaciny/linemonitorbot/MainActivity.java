@@ -268,11 +268,12 @@ public class MainActivity extends FragmentActivity implements
 				}
 			} else {
 				int newWoNumber = mModel.getHighestWoNumber() + 1;
+				mModel.addWorkOrder(new WorkOrder(newWoNumber));
 				mModel.setSelectedWorkOrder(newWoNumber);	
 			}
 		} else {
 			mModel.setSelectedLine(7);
-			mModel.addWorkOrder(new WorkOrder(7));
+			mModel.addWorkOrder(new WorkOrder(7)); //TODO there are three places this code is reused
 			mModel.setSelectedWorkOrder(7);
 		}
 		return true;
@@ -292,6 +293,7 @@ public class MainActivity extends FragmentActivity implements
 		case R.id.new_wo:
 			//increment highest WO
 			int newWoNumber = mModel.getHighestWoNumber() + 1;
+			mModel.addWorkOrder(new WorkOrder(newWoNumber));
 			mModel.setSelectedWorkOrder(newWoNumber);	
 	        break;
 		case R.id.clear_wos:
@@ -305,7 +307,12 @@ public class MainActivity extends FragmentActivity implements
 			mModel.clearWoNumbers();
 			
 			//clear the shared preferences
-			updateSharedPreferences();			
+			updateSharedPreferences();
+			
+			//make sure a new WO always exists
+			int aWoNumber = mModel.getHighestWoNumber() + 1;
+			mModel.addWorkOrder(new WorkOrder(aWoNumber));
+			mModel.setSelectedWorkOrder(aWoNumber);
 			break;
 	    default:
 	    }
