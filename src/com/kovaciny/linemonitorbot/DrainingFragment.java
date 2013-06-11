@@ -35,7 +35,7 @@ public class DrainingFragment extends SectionFragment {
 		
 		mDbViewer = new DatabaseViewer(getActivity());
 		
-		String[] toShow = new String[]{	PrimexDatabaseSchema.ProductionLines.TABLE_NAME
+		String[] toShow = new String[]{	PrimexDatabaseSchema.WorkOrders.TABLE_NAME
 		};
 		displayTables(toShow);
 		/*ArrayList<ArrayList<String>> abcd = mDbViewer.selectRecordsFromDBList(PrimexDatabaseSchema.Products.TABLE_NAME, new String[]{"*"}, null, null, null, null, null);
@@ -79,7 +79,7 @@ public class DrainingFragment extends SectionFragment {
 		ArrayList<String> results = new ArrayList<String>();
 		
 		for (String tableName : tableNames) {
-			List<String> columnNames = mDbViewer.getColumnNames(PrimexDatabaseSchema.ProductionLines.TABLE_NAME);
+			List<String> columnNames = mDbViewer.getColumnNames(tableName);
 			
 			
 			ArrayList<ArrayList<String>> records =	
