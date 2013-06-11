@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 
 import android.app.ActionBar;
 import android.app.DialogFragment;
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -344,20 +344,27 @@ public class MainActivity extends FragmentActivity implements
  */
 	@Override
 	public void onTabSelected(ActionBar.Tab tab,
-			FragmentTransaction fragmentTransaction) {
+		android.app.FragmentTransaction fragmentTransaction) {
 		// When the given tab is selected, switch to the corresponding page in
 		// the ViewPager.
-		mViewPager.setCurrentItem(tab.getPosition());
+		int pos = tab.getPosition();
+		FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+		if (pos == 1) {
+			ft.hide(findFragmentByPosition(pos));
+		} else {
+			mViewPager.setCurrentItem(pos);
+		}
+		ft.commit();
 	}
 
 	@Override
 	public void onTabUnselected(ActionBar.Tab tab,
-			FragmentTransaction fragmentTransaction) {
+			android.app.FragmentTransaction fragmentTransaction) {
 	}
 
 	@Override
 	public void onTabReselected(ActionBar.Tab tab,
-			FragmentTransaction fragmentTransaction) {
+			android.app.FragmentTransaction fragmentTransaction) {
 	}
 
 	/**
