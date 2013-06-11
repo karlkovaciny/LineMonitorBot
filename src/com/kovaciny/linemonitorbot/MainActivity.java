@@ -5,11 +5,9 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.NoSuchElementException;
 
 import android.app.ActionBar;
 import android.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,7 +16,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -161,14 +158,8 @@ public class MainActivity extends FragmentActivity implements
     		} else if (mode.equals(SheetsPerMinuteDialogFragment.ROLLS_MODE)) {
     			prodtype = Product.ROLLS_TYPE;
     		} else throw new RuntimeException ("unknown product type"); //debug
-//    		Toast.makeText(this, "going to set product with sheets or rolls state of " + prodtype, Toast.LENGTH_SHORT).show();
     		mModel.setSelectedProduct(prodtype, spmd.getGauge(), spmd.getSheetWidthValue(), spmd.getSheetLengthValue());
-    		int curntline = mModel.getSelectedLine().getLineNumber();
-    		Product crntprod = mModel.getSelectedProduct();
-    		crntprod.setLineNumber(curntline);
-//    		Toast.makeText(this, "and the new product's sheet state is " + crntprod.getType(), Toast.LENGTH_SHORT).show();
     	}
-    	
     }	
 	/* (non-Javadoc)
 	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
@@ -257,35 +248,33 @@ public class MainActivity extends FragmentActivity implements
 		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.new_wo, Menu.FLAG_APPEND_TO_GROUP, "+ New");
 		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.clear_wos, Menu.FLAG_APPEND_TO_GROUP, "Clear");
 		
-		//Select the line and job that we used last time
+		//Select the line and job that we used last time, provided the database was not cleared by an update.
+		//Make sure you select some line and job so things don't break.
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
-		int selectedLine = settings.getInt("selectedLine", -1);
-		if ( selectedLine != -1) {
-			mModel.setSelectedLine( selectedLine );
-			boolean hadProduct = settings.getBoolean("hasSelectedProduct", false);
-			if (hadProduct) {
-				mModel.setSelectedProductByLineNumber(selectedLine);
-//				Toast.makeText(this, "looking up product for line number" + String.valueOf(selectedLine), Toast.LENGTH_SHORT).show();
-//				Toast.makeText(this, "has selected product now = " + String.valueOf(mModel.hasSelectedProduct()), Toast.LENGTH_SHORT).show();	
+		if (mModel.getDatabaseVersion() == settings.getInt("databaseVersion", -1)) {
+			int selectedLine = settings.getInt("selectedLine", -1);
+			if ( selectedLine != -1) {
+				mModel.setSelectedLine( selectedLine );
+			} else {
+				mModel.setSelectedLine(1); //TODO this oK?
+				//TODO requestSelectLine();
+			}
+			int selectedWO = settings.getInt("selectedWorkOrder", -1);
+			if ( selectedWO != -1) {
+				mModel.setSelectedWorkOrder( selectedWO );
+				boolean hadProduct = settings.getBoolean("hasSelectedProduct", false);
+				if (hadProduct) {
+					mModel.setSelectedProductByWoNumber(selectedWO);	
+				}
+			} else {
+				int newWoNumber = mModel.getHighestWoNumber() + 1;
+				mModel.setSelectedWorkOrder(newWoNumber);	
 			}
 		} else {
-			mModel.setSelectedLine(1); //TODO this oK?
-			//TODO requestSelectLine();
+			mModel.setSelectedLine(7);
+			mModel.addWorkOrder(new WorkOrder(7));
+			mModel.setSelectedWorkOrder(7);
 		}
-		int selectedWO = settings.getInt("selectedWorkOrder", -1);
-		if ( selectedWO != -1) {
-			try {
-				mModel.setSelectedWorkOrder( selectedWO ); 
-			} catch (NoSuchElementException e) {
-				System.out.println("Restoring the WO selection failed (database deleted?)");
-				Log.e("problemtag", "Restoring the Wo selection " + String.valueOf(selectedWO) + " failed (database deleted)?");
-				mJobPicker.setTitle("Debug");
-				mModel.setSelectedWorkOrder( null );				
-			}
-		} else {
-			//TODO requestSelectWo();
-		}
-		
 		return true;
 	}
 
@@ -303,11 +292,7 @@ public class MainActivity extends FragmentActivity implements
 		case R.id.new_wo:
 			//increment highest WO
 			int newWoNumber = mModel.getHighestWoNumber() + 1;
-			if (mModel.addWorkOrder(new WorkOrder(newWoNumber, 0))) {
-				mModel.setSelectedWorkOrder(newWoNumber);	
-			} else {
-				throw new RuntimeException("addWorkOrder failed");
-			}
+			mModel.setSelectedWorkOrder(newWoNumber);	
 	        break;
 		case R.id.clear_wos:
 			//clear the menu
@@ -498,12 +483,8 @@ public class MainActivity extends FragmentActivity implements
 	    	editor.remove("selectedWorkOrder");
 	    }
 	    editor.putBoolean("hasSelectedProduct", mModel.hasSelectedProduct());
-//	    Toast.makeText(this, "saving, has selected product = " + String.valueOf(mModel.hasSelectedProduct()), Toast.LENGTH_SHORT).show();
-	    
-	    Product selectedProd = mModel.getSelectedLine().getProduct();
-	    if (selectedProd != null) {
-	    	//TODO needed?
-	    }
+	    	
+	    editor.putInt("databaseVersion", mModel.getDatabaseVersion());
 	    // Commit the edits!
 	    editor.commit();
 	}

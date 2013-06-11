@@ -10,6 +10,7 @@ public class Skid<E extends Product> {
 	double mPackagingWeight;
 	double mFinishedNetWeight;
 	double mFinishedGrossWeight;
+	int mSkidNumber;
 	int mNumberOfStacks;
 	Date mStartTime;
 	Date mFinishTime;
@@ -84,5 +85,13 @@ public class Skid<E extends Product> {
 
 	public void setPackagingWeight(double packagingWeight) {
 		this.mPackagingWeight = packagingWeight;
+	}
+
+	public int getSkidNumber() {
+		return mSkidNumber;
+	}
+
+	public void setSkidNumber(int skidNumber) {
+		this.mSkidNumber = skidNumber;
 	}
 }

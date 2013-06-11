@@ -85,9 +85,7 @@ public class PrimexModel {
 			mSelectedLine = mDbHelper.getLine(lineNumber);
 			Integer newLine = mSelectedLine.getLineNumber();
 			
-			setSelectedProductByLineNumber(lineNumber);
-			
-			propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLine, newLine);
+						propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLine, newLine);
 		
 			
 		} else if (lineNumber == null) {
@@ -104,11 +102,14 @@ public class PrimexModel {
 			}
 			mSelectedWorkOrder = mDbHelper.getWorkOrder(woNumber);
 			Integer newSelection = mSelectedWorkOrder.getWoNumber();
+			
+			setSelectedProductByWoNumber(woNumber);
+			
 			propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldSelection, newSelection);
 		} else if (woNumber == null) {
 			mSelectedWorkOrder = null;
 			propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldSelection, null);
-		} else throw new NoSuchElementException("Work order number not in the list of work orders");
+		} else throw new NoSuchElementException("Work order number not in the list of work orders, need to add it");
 	}
 
 	public boolean addWorkOrder(WorkOrder newWo) {
@@ -120,8 +121,8 @@ public class PrimexModel {
 	}
 		
 	public void setCurrentProductLength(double length) {
-		double oldLength = mSelectedLine.getProduct().getLength();
-		mSelectedLine.getProduct().setLength(length);
+		double oldLength = mSelectedWorkOrder.getProduct().getLength();
+		mSelectedWorkOrder.getProduct().setLength(length);
 		//TODO? propChangeSupport.firePropertyChange(PRODUCT_LENGTH_CHANGE_EVENT, oldLength, length);
 	}
 	
@@ -150,8 +151,7 @@ public class PrimexModel {
  
 	public void setSelectedProduct(String type, double gauge, double width, double length) {
 		//this function creates a new product of the specified dimensions and type. Then it updates the
-		//database with that product and the current line number. blah blah debug
-		Log.v("verbose", "setSelectedProduct is running");
+		//database with that product and the current line number. blah blah debug TODO
 		Product oldProduct = mSelectedProduct;
 		if (type.equals(Product.SHEETS_TYPE)) {
 			mSelectedProduct = new Sheet(gauge, width, length);
@@ -159,9 +159,8 @@ public class PrimexModel {
 			mSelectedProduct = new Roll(gauge, width, 0);
 		} else throw new IllegalArgumentException("not a valid product type");
 		Product newProduct = mSelectedProduct;
-		mDbHelper.insertOrReplaceProduct(newProduct, getSelectedLine().getLineNumber());
-		mSelectedLine.setProduct(newProduct);
-		mSelectedProduct.setLineNumber(mSelectedLine.getLineNumber());
+		mDbHelper.insertOrReplaceProduct(newProduct, getSelectedWorkOrder().getWoNumber());
+		mSelectedWorkOrder.setProduct(newProduct);
 		calculateRates();
 		calculateTimes();
 		this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, oldProduct, newProduct);
@@ -174,13 +173,11 @@ public class PrimexModel {
 			setSelectedProduct(p.getType(), p.getGauge(), p.getWidth(), p.getLength());
 		}
 	}
-	
-	public void setSelectedProductByLineNumber(int lineNumber) {
-		Product newProduct = mDbHelper.getProduct(lineNumber);
+		
+	public void setSelectedProductByWoNumber(int woNumber) {
+		Product newProduct = mDbHelper.getProduct(woNumber);
 		setSelectedProduct(newProduct);	
 	}
-	
-
 	
 	public void setProductsPerMinute(double spm) {
 		Double oldSpm = mProductsPerMinute;
@@ -253,6 +250,9 @@ public class PrimexModel {
 		//TODO calc job finish times
 	}
 
+	public int getDatabaseVersion() {
+		return mDbHelper.DATABASE_VERSION;
+	}
 	public Product getSelectedProduct() {
 		return mSelectedProduct;
 	}

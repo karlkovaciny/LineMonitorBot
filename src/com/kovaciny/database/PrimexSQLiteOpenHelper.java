@@ -32,7 +32,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	private static final String REAL_TYPE = " REAL";
 		
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 34;
+    public static final int DATABASE_VERSION = 35;
     public static final String DATABASE_NAME = "Primex.db";
     
     private static final String SQL_CREATE_PRODUCTION_LINES =
@@ -52,8 +52,13 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	    "CREATE TABLE " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + " (" +
     	    PrimexDatabaseSchema.WorkOrders._ID + " INTEGER PRIMARY KEY," +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + INTEGER_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_PRODUCTS_LIST_POINTER + INTEGER_TYPE + 
-    	    " )";
+	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_PRODUCT_ID + INTEGER_TYPE + COMMA_SEP +
+	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED + DOUBLE_TYPE + COMMA_SEP +
+	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NUMBER_OF_SKIDS + INTEGER_TYPE + COMMA_SEP +
+	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_ID + INTEGER_TYPE + COMMA_SEP +
+	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT + DOUBLE_TYPE + COMMA_SEP +
+	    	" UNIQUE (" + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + ")" +
+	    	" )";
 
     private static final String SQL_CREATE_PRODUCTS = 
     		"CREATE TABLE " + PrimexDatabaseSchema.Products.TABLE_NAME + " (" +
@@ -62,8 +67,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     		PrimexDatabaseSchema.Products.COLUMN_NAME_WIDTH + REAL_TYPE + COMMA_SEP +
     		PrimexDatabaseSchema.Products.COLUMN_NAME_LENGTH + REAL_TYPE + COMMA_SEP +
     		PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE + INTEGER_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.Products.COLUMN_NAME_LINE + INTEGER_TYPE + COMMA_SEP +
-    		" UNIQUE ("  + PrimexDatabaseSchema.Products.COLUMN_NAME_LINE + ")" +
+    		PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + INTEGER_TYPE + COMMA_SEP +
+    		" UNIQUE ("  + PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + ")" +
     		" )";
     
     private static final String SQL_CREATE_PRODUCT_TYPES = 
@@ -290,9 +295,23 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	public long addWorkOrder(WorkOrder newWO) {
 		SQLiteDatabase db = getWritableDatabase();
 		
+		/*String sql = "INSERT INTO " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + " (" +
+				PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + COMMA_SEP + 
+				PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_PRODUCT_ID + " )"	
+				"SELECT " + newWO.getWoNumber() + COMMA_SEP + 
+				PrimexDatabaseSchema.Products._ID + 
+				" WHERE " PrimexDatabaseSchema.Products.COLUMN_NAME_WO_ID " = " + newWO.getProduct()
+				;*/
+		
+		
 		ContentValues values = new ContentValues();
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, newWO.getWoNumber());
-		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_PRODUCTS_LIST_POINTER, newWO.getProductsListPointer());
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED, newWO.getTotalProductsOrdered());
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NUMBER_OF_SKIDS, newWO.getNumberOfSkids());
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT, newWO.getMaximumStackHeight());
+		if ( newWO.hasSelectedSkid()) {
+			values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_ID, newWO.getSelectedSkid().getSkidNumber());	
+		}
 		
 		long rowId = db.insertWithOnConflict(
 				PrimexDatabaseSchema.WorkOrders.TABLE_NAME, 
@@ -300,6 +319,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				values,
 				SQLiteDatabase.CONFLICT_IGNORE);
 		
+		if (newWO.hasProduct()) {
+			insertOrReplaceProduct(newWO.getProduct(), newWO.getWoNumber());			
+		}
 		return rowId;
 	}
 	
@@ -317,38 +339,36 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				null,
 				null
 				);*/
-		
 		int wonum = 0;
-		int prodlist = 0; 
+		int prod_id = 0;
+		double ordered = 0d;
+		int skids = 0;
+		int selected = 0;
+		double height = 0d;
 		try {
 			if (resultCursor.moveToFirst()) {
 		    	wonum = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER));
-		    	prodlist = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_PRODUCTS_LIST_POINTER));
+		    	prod_id = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_PRODUCT_ID));
+		    	ordered = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED));
+		    	skids = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NUMBER_OF_SKIDS));
+		    	selected = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_ID));
+		    	height = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT));
+		    	}
+			WorkOrder wo = new WorkOrder(wonum);
+			if (prod_id != 0) {
+				wo.setProduct(getProduct(wonum));
 			}
-	    	return new WorkOrder(wonum, prodlist);
+			wo.setTotalProductsOrdered(ordered);
+			wo.setNumberOfSkids(skids);
+			if (selected != 0) {
+				//TODO wo.setSelectedSkid(selected);
+			}
+			wo.setMaximumStackHeight(height);
+	    	return wo;
 	    } finally {
 	    	if (resultCursor != null) resultCursor.close();
 		}    	
 	}
-	
-	
-	public int updateWorkOrder(WorkOrder changedWO){
-		SQLiteDatabase db = getReadableDatabase();
-		
-		ContentValues values = new ContentValues();
-		// don't change WO number, duh values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, changedWO.getWoNumber());
-		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_PRODUCTS_LIST_POINTER, changedWO.getProductsListPointer());
-		
-		int numAffectedRows = db.update(
-				PrimexDatabaseSchema.WorkOrders.TABLE_NAME,
-				values, 
-				PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + "=?",
-				new String[] {String.valueOf(changedWO.getWoNumber())}
-				);
-				
-		return numAffectedRows;	    
-	}
-	
 	
 	public int getHighestWoNumber() {
 		SQLiteDatabase db = getReadableDatabase();
@@ -461,7 +481,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	
 	
 	
-	public long insertOrReplaceProduct(Product newProduct, int lineNumber) {
+	public long insertOrReplaceProduct(Product newProduct, int woNumber) {
 		SQLiteDatabase db = getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
@@ -471,8 +491,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		String type = newProduct.getType();
 		int foreignKey = getProductTypeId(type);
 		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE, foreignKey);
-		int otherForeign = lineNumber;
-		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_LINE, otherForeign);
+		int otherForeign = woNumber;
+		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER, otherForeign);
 		
 		long rowId = db.insertWithOnConflict(
 				PrimexDatabaseSchema.Products.TABLE_NAME, 
@@ -488,25 +508,25 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		return rowId;
 	}
 	
-	public Product getProduct(int lineNumber) {
+	public Product getProduct(int woNumber) {
 		SQLiteDatabase db = getReadableDatabase();
 		
 		String sql = "SELECT * FROM " +
-				PrimexDatabaseSchema.Products.TABLE_NAME + " JOIN " +
-				PrimexDatabaseSchema.ProductTypes.TABLE_NAME + " ON " + 
-				PrimexDatabaseSchema.ProductTypes.TABLE_NAME + "." +
-				PrimexDatabaseSchema.ProductTypes._ID + "=" +
-				PrimexDatabaseSchema.Products.TABLE_NAME + "." +
-				PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE + " WHERE " +
-				PrimexDatabaseSchema.Products.COLUMN_NAME_LINE + "=?";
-		String[] whereargs = new String[]{String.valueOf(lineNumber)};
-		Cursor resultCursor = db.rawQuery(sql, whereargs);
+				PrimexDatabaseSchema.Products.TABLE_NAME + 
+				" JOIN " + PrimexDatabaseSchema.ProductTypes.TABLE_NAME + 
+				" ON " + PrimexDatabaseSchema.ProductTypes.TABLE_NAME + "." + PrimexDatabaseSchema.ProductTypes._ID +  
+				"=" + PrimexDatabaseSchema.Products.TABLE_NAME + "." + PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE + 
+				" JOIN " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + 
+				" ON " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + "." + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER +
+				"=" + woNumber;
+		//String[] whereargs = new String[]{String.valueOf(lineNumber)};
+		Cursor resultCursor = db.rawQuery(sql, null);
 
 		Product p = null;
 		
 		try {
 			if (resultCursor.getCount() > 1) {
-				Log.e("ERROR","You are not looking up a unique record for line number " + String.valueOf(lineNumber) +
+				Log.e("ERROR","You are not looking up a unique record for wo number " + String.valueOf(woNumber) +
 						"and are going to get errors");
 			}
 			if (resultCursor.moveToFirst()) {
@@ -525,7 +545,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 							0
 						);					
 				} else throw new IllegalArgumentException("not a sheet or roll!");
-				p.setLineNumber(lineNumber);
 			} else {
 				Log.e("error", "getProduct database query returned no results");
 			}

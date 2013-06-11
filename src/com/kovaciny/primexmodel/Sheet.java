@@ -10,13 +10,7 @@ public class Sheet implements Product {
 	private String mUnitPlural = "sheets";
 	public int mLineNumber;
 	
-	public int getLineNumber() {
-		return mLineNumber; //debug TODO
-	}
-	public void setLineNumber(int ln) {
-		mLineNumber = ln;
-	}
-	public Sheet(double gauge, double width, double length) {
+		public Sheet(double gauge, double width, double length) {
 		if (!areValidDimensions(gauge, width, length)) {
 			throw new IllegalArgumentException("invalid dimensions");
 		}
