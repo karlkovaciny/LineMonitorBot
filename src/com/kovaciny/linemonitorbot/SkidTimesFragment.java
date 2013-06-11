@@ -34,7 +34,8 @@ public class SkidTimesFragment extends SectionFragment implements
 		OnClickListener, OnEditorActionListener, View.OnFocusChangeListener, ViewEventResponder {
 	private SkidFinishedBroadcastReceiver mAlarmReceiver;
 	private List<Skid<Product>> mSkidList;
-	private ImageButton mImageBtn_calcSheetsPerMinute;
+	private ImageButton mImgBtn_calcSheetsPerMinute;
+	private Button mBtn_newSkid;
 
 	private List<View> mEditTextList;
 	private EditText mEdit_sheetsPerMinute;
@@ -103,10 +104,13 @@ public class SkidTimesFragment extends SectionFragment implements
 				.findViewById(R.id.lbl_products_per_minute);
 		mLbl_totalProducts = (TextView) rootView.findViewById(R.id.lbl_total_products);
 
-		mImageBtn_calcSheetsPerMinute = (ImageButton) rootView
-				.findViewById(R.id.calc_sheets_per_minute);
-		mImageBtn_calcSheetsPerMinute.setOnClickListener(this);
-
+		mImgBtn_calcSheetsPerMinute = (ImageButton) rootView
+				.findViewById(R.id.imgBtn_sheets_per_minute);
+		mImgBtn_calcSheetsPerMinute.setOnClickListener(this);
+		
+		mBtn_newSkid = (Button) rootView.findViewById(R.id.btn_new_skid);
+		mBtn_newSkid.setOnClickListener(this);
+		
 		return rootView;
 	}
 
@@ -185,8 +189,10 @@ public class SkidTimesFragment extends SectionFragment implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case (R.id.calc_sheets_per_minute):
+		case (R.id.imgBtn_sheets_per_minute):
 			((MainActivity)getActivity()).showSheetsPerMinuteDialog();
+			break;
+		case (R.id.btn_new_skid) :
 			break;
 		}
 	}
