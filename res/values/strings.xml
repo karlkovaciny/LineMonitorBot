@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">LineMonitorBot</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_section1">Skid Times</string>
+    <string name="title_section2">Rates</string>
+    <string name="title_section3">Draining</string>
+    <string name="action_pick_line_title">Pick Line</string>
+    <string name="action_pick_job_title">Pick Job</string>
+    <string-array name="line_list">
+        <item >Line 1</item>
+        <item >Line 6</item>
+        <item >Line 7</item>
+        <item >Line 9</item>
+        <item >Line 10</item>
+        <item >Line 11</item>
+        <item >Line 12</item>
+        <item >Line 13</item>
+        <item >Line 14</item>
+        <item >Line 15</item>
+        <item >Line 16</item>
+        <item >Line 17</item>
+        <item >Line 18</item>        
+    </string-array>
+    <string-array name="jobs_list">
+        <item >W0 #1</item>
+        <item >+ New&#160;</item>
+    </string-array>
+	<string name="new_wo">+ New</string>
+	<string name="ok">OK</string>
+	<string name="cancel">Cancel</string>
+	<string name="clear_wos">Clear</string>
+	<string name="switch_sheets">Sheet</string>
+	<string name="switch_rolls">Roll</string>
+	<string name="placeholder">&#8230;</string>
+	<string name="debug_display">Debug</string>
+	<string name="calculate">Calculate</string>
+	<string name="title_activity_alarm_manager">Skid Finished Alarm Manager</string>
+</resources>

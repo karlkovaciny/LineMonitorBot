@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/skid_times_fragment_container">
+
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:divider="?android:attr/dividerHorizontal"
+	    android:dividerPadding="@dimen/fragment_divider_padding"
+	    android:orientation="vertical"
+	    android:paddingBottom="@dimen/fragment_vertical_margin"
+	    android:paddingLeft="@dimen/fragment_horizontal_margin"
+	    android:paddingRight="@dimen/fragment_vertical_margin"
+	    android:paddingTop="@dimen/fragment_horizontal_margin"
+	    android:focusable="true"
+        android:focusableInTouchMode="true"
+	    android:showDividers="middle" >
+
+	    <LinearLayout
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="right"
+	        android:layout_marginBottom="@dimen/fragment_vertical_margin"
+	        android:orientation="horizontal" >
+
+	        <LinearLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:orientation="vertical" >
+
+	            <TextView
+	                android:id="@+id/lbl_products_per_minute"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1"
+	                android:text="Sheets per minute" />
+
+	            <EditText
+	                android:id="@+id/edit_products_per_minute"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="right"
+	                android:layout_weight="1"
+	                android:gravity="center_vertical|right"
+	                android:inputType="numberDecimal"
+	                android:maxEms="3"
+	                android:maxLength="4"
+	                android:minEms="3"
+	                android:selectAllOnFocus="true"
+	                android:imeOptions="actionDone" />
+	        </LinearLayout>
+
+	        <ImageButton
+	            android:id="@+id/calc_sheets_per_minute"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/calculator" />
+	    </LinearLayout>
+
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="0dip"
+	        android:layout_weight="1" >
+
+	        <TableLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:divider="?android:attr/dividerHorizontal"
+	            android:dividerPadding="0dp"
+	            android:showDividers="beginning|middle|end" >
+
+	            <TableRow
+	                android:id="@+id/tableRow1"
+	                android:divider="?android:attr/dividerVertical"
+	                android:dividerPadding="0dp"
+	                android:gravity="center_horizontal"
+	                android:showDividers="beginning|middle|end" >
+
+	                <TextView
+	                    android:id="@+id/textView2"
+	                    android:layout_width="0dip"
+	                    android:layout_weight="0.7"
+	                    android:gravity="center_horizontal"
+	                    android:text="Skid #" />
+
+	                <TextView
+	                    android:id="@+id/textView3"
+	                    android:layout_width="0dip"
+	                    android:layout_weight="1"
+	                    android:gravity="center_horizontal"
+	                    android:text="Current\ncount" />
+
+	                <TextView
+	                    android:id="@+id/lbl_total_products"
+	                    android:layout_width="0dip"
+	                    android:layout_weight="1"
+	                    android:gravity="center_horizontal"
+	                    android:text="Total\nsheets" />
+
+	                <TextView
+	                    android:id="@+id/textView5"
+	                    android:layout_width="0dip"
+	                    android:layout_weight="1"
+	                    android:gravity="center_horizontal"
+	                    android:text="Start\ntime" />
+
+	                <TextView
+	                    android:id="@+id/textView6"
+	                    android:layout_width="0dip"
+	                    android:layout_weight="1"
+	                    android:gravity="center_horizontal"
+	                    android:text="Finish\ntime" />
+	            </TableRow>
+
+	            <TableRow
+	                android:id="@+id/tableRow2"
+	                android:divider="?android:attr/dividerVertical"
+	                android:dividerPadding="0dp"
+	                android:gravity="center_horizontal"
+	                android:showDividers="beginning|middle|end" >
+
+	                <EditText
+	                    android:id="@+id/edit_skid_number"
+	                    android:layout_width="0dip"
+	                    android:layout_weight="0.7"
+	                    android:gravity="center_horizontal"
+	                    android:inputType="number"
+	                    android:maxEms="3"
+	                    android:maxLength="4"
+	                    android:minEms="3"
+	                    android:selectAllOnFocus="true"
+	                    android:text="1">
+	                </EditText>
+
+	                <EditText
+	                    android:id="@+id/edit_current_count"
+	                    android:layout_weight="1"
+	                    android:layout_width="0dip"
+	                    android:gravity="center_horizontal"
+	                    android:inputType="number"
+	                    android:maxLength="4"
+	                    android:selectAllOnFocus="true"/>
+
+	                <EditText
+	                    android:id="@+id/edit_total_sheets_per_skid"
+	                    android:layout_weight="1"
+	                    android:layout_width="0dip"
+	                    android:gravity="center_horizontal"
+	                    android:inputType="number"
+	                    android:maxLength="4"
+	                    android:selectAllOnFocus="true"/>
+
+	                <EditText
+	                    android:id="@+id/edit_skid_start_time"
+	                    android:layout_weight="1"
+	                    android:layout_width="0dip"
+	                    android:gravity="center_horizontal"
+	                    android:inputType="time"
+	                    android:maxLength="5"/>
+
+	                <EditText
+	                    android:id="@+id/edit_skid_finish_time"
+	                    android:layout_weight="1"
+	                    android:layout_width="0dip"
+	                    android:gravity="center_horizontal"
+	                    android:inputType="time"
+	                    android:maxLength="5"/>
+	            </TableRow>
+
+	            <TableRow
+	                android:id="@+id/tableRow3"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:divider="?android:attr/dividerVertical"
+	                android:dividerPadding="0dp"
+	                android:showDividers="beginning|middle|end" >
+	            </TableRow>
+
+	            <TableRow
+	                android:id="@+id/tableRow4"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:divider="?android:attr/dividerVertical"
+	                android:dividerPadding="0dp"
+	                android:showDividers="beginning|middle|end" >
+	            </TableRow>
+	        </TableLayout>
+	    </LinearLayout>
+
+	    <RelativeLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" >
+
+	        <LinearLayout
+	            android:id="@+id/relative_layout_anchor"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content" >
+
+	            <TextView
+	                android:id="@+id/textView8"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Number of skids in job: " />
+
+	            <EditText
+	                android:id="@+id/edit_num_skids_in_job"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:inputType="number"
+	                android:maxLength="4" />
+	        </LinearLayout>
+
+	        <LinearLayout
+	            android:id="@+id/linearLayout7"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content" 
+	            android:layout_below="@id/relative_layout_anchor">
+
+	            <TextView
+	                android:id="@+id/lbl_time_per_skid"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Time per Skid: " />
+
+	            <TextView
+	                android:id="@+id/txt_time_per_skid"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_toRightOf="@id/lbl_time_per_skid"
+	                android:text="0:00" />
+	        </LinearLayout>
+
+	        <LinearLayout
+	            android:id="@+id/linearLayout9"
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:layout_below="@id/linearLayout7"
+	            android:layout_weight="1"
+	            android:orientation="vertical" >
+	        </LinearLayout>
+
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content" 
+	            android:layout_below="@id/linearLayout9">
+
+	            <TextView
+	                android:id="@+id/textView11"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Job finish time: " />
+
+	            <TextView
+	                android:id="@+id/textView11"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="0:00 PM" />
+	        </LinearLayout>
+
+	        <Button
+	            android:id="@+id/start_new_skid"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:layout_alignParentTop="true"
+	            android:drawableRight="@drawable/skid"
+	            android:text="+"
+	            android:textSize="40sp" />
+
+	    </RelativeLayout>
+	</LinearLayout>
+
+</ScrollView>
