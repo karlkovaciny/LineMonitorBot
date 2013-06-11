@@ -9,7 +9,6 @@ public class ProductionLine {
 	private SpeedValues mSpeedValues;
 	private String mSpeedControllerType;
 	private String mTakeoffEquipmentType;
-	private Product mProduct = null;
 	
 	public static final String SPEED_CONTROLLER_TYPE_DIRECT = "Direct";
 	public static final String SPEED_CONTROLLER_TYPE_GEARED = "Geared";
@@ -45,12 +44,7 @@ public class ProductionLine {
 	/*
 	 * Boilerplate from here on down
 	 */
-	public void setProduct(Product product) {
-		this.mProduct = product;
-	}
-	public Product getProduct() {
-		return mProduct;
-	}
+	
 	public int getLineNumber() {
 		return mLineNumber;
 	}

@@ -20,8 +20,12 @@ public class PrimexDatabaseSchema {
 	
 	public static abstract class WorkOrders implements BaseColumns {
 		public static final String TABLE_NAME = "work_orders";
-		public static final String COLUMN_NAME_WO_NUMBER = "WO_number";
-		public static final String COLUMN_NAME_PRODUCTS_LIST_POINTER = "products_list";		
+		public static final String COLUMN_NAME_WO_NUMBER = "WO_number";	
+		public static final String COLUMN_NAME_SELECTED_PRODUCT_ID = "product_id";
+		public static final String COLUMN_NAME_TOTAL_PRODUCTS_ORDERED = "products_ordered";	
+		public static final String COLUMN_NAME_NUMBER_OF_SKIDS = "num_skids";	
+		public static final String COLUMN_NAME_SELECTED_SKID_ID = "skid_id";	
+		public static final String COLUMN_NAME_MAXIMUM_STACK_HEIGHT = "max_stack_height";
 	}
 	
 	public static abstract class Products implements BaseColumns {
@@ -30,7 +34,7 @@ public class PrimexDatabaseSchema {
 		public static final String COLUMN_NAME_WIDTH = "width";
 		public static final String COLUMN_NAME_LENGTH = "length";
 		public static final String COLUMN_NAME_TYPE = "type";
-		public static final String COLUMN_NAME_LINE = "line";
+		public static final String COLUMN_NAME_WO_NUMBER = "wo_number";
 	}
 	
 	public static abstract class ProductTypes implements BaseColumns {

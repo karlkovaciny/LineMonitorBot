@@ -11,12 +11,6 @@ public class Roll implements Product {
 	private String mUnitPlural = "feet";
 	public int mLineNumber;
 	
-	public int getLineNumber() {
-		return mLineNumber; //debug TODO
-	}
-	public void setLineNumber(int ln) {
-		mLineNumber = ln;
-	}
 	public Roll(double gauge, double width, int linearFeet) {
 		if ( (gauge < 0 || width < 0) ) {
 			throw new IllegalArgumentException();

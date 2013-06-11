@@ -12,10 +12,7 @@ public interface Product {
 	boolean setMaterialType();
 	String getUnit(); //singular
 	String getUnits(); //plural
-	String getType(); //TODO hope this is not bad polymorphism
-	int getLineNumber(); //TODO this shouldn't be part of this object
-	void setLineNumber(int ln); //TODO this shouldn't be part of this object
-	
+	String getType(); //TODO hope this is not bad polymorphism	
 	
 	public static String SHEETS_TYPE="Sheet";
 	public static String ROLLS_TYPE="Roll";
