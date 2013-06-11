@@ -348,13 +348,7 @@ public class MainActivity extends FragmentActivity implements
 		// When the given tab is selected, switch to the corresponding page in
 		// the ViewPager.
 		int pos = tab.getPosition();
-		FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
-		if (pos == 1) {
-			ft.hide(findFragmentByPosition(pos));
-		} else {
-			mViewPager.setCurrentItem(pos);
-		}
-		ft.commit();
+		mViewPager.setCurrentItem(pos);
 	}
 
 	@Override
