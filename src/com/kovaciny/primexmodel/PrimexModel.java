@@ -100,7 +100,11 @@ public class PrimexModel {
 			if (mSelectedWorkOrder != null) {
 				oldSelection = mSelectedWorkOrder.getWoNumber();
 			}
-			mSelectedWorkOrder = mDbHelper.getWorkOrder(woNumber);
+			
+			WorkOrder lookedUpWo = mDbHelper.getWorkOrder(woNumber);
+			if (lookedUpWo == null) throw new RuntimeException("WorkOrder not found even though it is in woNumbersList");
+			
+			mSelectedWorkOrder = lookedUpWo;
 			Integer newSelection = mSelectedWorkOrder.getWoNumber();
 			
 			setSelectedProductByWoNumber(woNumber);
