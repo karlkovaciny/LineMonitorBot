@@ -45,7 +45,7 @@ public class SkidFinishedBroadcastReceiver extends BroadcastReceiver {
 		 
 		         Toast.makeText(context, msgStr, Toast.LENGTH_LONG).show();
 //		         long[] offOnPattern = {0, 5000, 500, 3000, 300, 300, 300, 300, 300, 300, 300, 3000};
-		         long[] offOnPattern = {0, 300, 300, 300, 300, 2500, 300, 300, 300, 2500, 300, 300, 300, 2500, 300, 300, 300, 2500};
+		         long[] offOnPattern = {0, 300, 300, 300, 300, 2500, 300, 300, 300, 2500, 300, 300, 300, 2500, 300, 300, 300, 2500, 300, 300, 300, 2500};
 		         vibe.vibrate(offOnPattern, -1);
 		         
 		     } finally {

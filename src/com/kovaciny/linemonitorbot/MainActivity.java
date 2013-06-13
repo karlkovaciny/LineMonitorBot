@@ -417,7 +417,13 @@ public class MainActivity extends FragmentActivity implements
 			}
 			return null;
 		}
-	}
+	} //end SectionsPagerAdapter class
+	
+	
+	
+	
+	
+	
 	
 	public Fragment findFragmentByPosition(int pos) {
 		String tag = "android:switcher:" + mViewPager.getId() + ":" + pos;
