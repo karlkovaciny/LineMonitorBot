@@ -40,6 +40,7 @@ public class PrimexModel {
 	public static final String SKID_FINISH_TIME_CHANGE_EVENT = "PrimexModel.FINISH_TIME_CHANGE"; 
 	public static final String SKID_START_TIME_CHANGE_EVENT = "PrimexModel.START_TIME_CHANGE"; 
 	public static final String MINUTES_PER_SKID_CHANGE_EVENT = "PrimexModel.SKID_TIME_CHANGE"; 
+	public static final String NUMBER_OF_SKIDS_CHANGE_EVENT = "PrimexModel.NUMBER_OF_SKIDS_CHANGE"; 
 	 
 	
 	public static final double INCHES_PER_FOOT = 12.0; 
@@ -72,7 +73,7 @@ public class PrimexModel {
 	private double mNetRate;
 	private double mGrossRate;
 	private long mMinutesPerSkid;
-	
+	private int mSkidsInJob;
 	/*
 	 * also selects product currently
 	 */
@@ -253,6 +254,15 @@ public class PrimexModel {
 		//TODO calc job finish times
 	}
 
+	public void setNumSkidsDebug(int num) {
+		int oldNum = mSkidsInJob;
+		mSkidsInJob = num;
+		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, oldNum, num);
+		
+	}
+	public int getNumSkidsDebug() {
+		return mSkidsInJob;
+	}
 	public Product getSelectedProduct() {
 		return mSelectedProduct;
 	}

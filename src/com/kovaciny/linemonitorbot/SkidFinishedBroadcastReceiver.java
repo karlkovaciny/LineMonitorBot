@@ -16,6 +16,7 @@ import android.widget.Toast;
 public class SkidFinishedBroadcastReceiver extends BroadcastReceiver {
 
 	final public static String ONE_TIME = "onetime";
+	final public static String REPEATING = "repeating";
 	
 	@Override
 	 public void onReceive(Context context, Intent intent) {
@@ -36,10 +37,13 @@ public class SkidFinishedBroadcastReceiver extends BroadcastReceiver {
 		         StringBuilder msgStr = new StringBuilder();
 		          
 		         if (extras != null && extras.getBoolean(ONE_TIME, Boolean.FALSE)) {
-			          //Make sure this intent has been sent by the one-time timer button.
+			          //See if this intent has been sent by the one-time timer button.
 			          msgStr.append("One time Timer : ");
 		         }
-		         
+		         if (extras != null && extras.getBoolean(REPEATING, Boolean.FALSE)) {
+			          //See if this intent has been sent by the repeating timer button.
+			          msgStr.append("Repeating Timer : ");
+		         }
 		         SimpleDateFormat formatter = new SimpleDateFormat("hh:mm:ss a");
 		         msgStr.append(formatter.format(new Date()));
 		 
@@ -59,5 +63,13 @@ public class SkidFinishedBroadcastReceiver extends BroadcastReceiver {
            intent.putExtra(ONE_TIME, Boolean.TRUE);
            PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
            am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+ interval, pi);
+       }
+    
+    public void setRepeatingTimer(Context context, long trigger, long interval){
+        AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+           Intent intent = new Intent(context, SkidFinishedBroadcastReceiver.class);
+           intent.putExtra(REPEATING, Boolean.TRUE);
+           PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
+           am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+ trigger, interval, pi);
        }
 }

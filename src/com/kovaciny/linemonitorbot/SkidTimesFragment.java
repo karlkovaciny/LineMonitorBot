@@ -7,11 +7,11 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.DialogFragment;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +35,8 @@ public class SkidTimesFragment extends SectionFragment implements
 	private SkidFinishedBroadcastReceiver mAlarmReceiver;
 	private List<Skid<Product>> mSkidList;
 	private ImageButton mImageBtn_calcSheetsPerMinute;
-
+	private Button mBtn_cancelAlarm;
+	
 	private List<View> mEditTextList;
 	private EditText mEdit_sheetsPerMinute;
 	private EditText mEdit_skidNumber;
@@ -48,7 +49,12 @@ public class SkidTimesFragment extends SectionFragment implements
 	private TextView mTxt_timePerSkid;
 	private TextView mLbl_productsPerMinute;
 	private TextView mLbl_totalProducts;
+	private TextView mTxt_jobFinishTime;
+	private TextView mLbl_jobFinishTime;
 
+	private long mMillisPerSkid;
+	private String mJobFinishText;
+	
 	OnViewChangeListener mCallback;
 
 	// Container Activity must implement this interface
@@ -95,18 +101,29 @@ public class SkidTimesFragment extends SectionFragment implements
 
 		this.mTxt_timePerSkid = (TextView) rootView
 				.findViewById(R.id.txt_time_per_skid);
-		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
-		String label = settings.getString("timePerSkid","");
-		mTxt_timePerSkid.setText(label);
+		if (mMillisPerSkid > 0) {
+			this.mTxt_timePerSkid.setText(HelperFunction
+					.formatMinutesAsHours(mMillisPerSkid / HelperFunction.ONE_MINUTE_IN_MILLIS));	
+		}
 		
 		mLbl_productsPerMinute = (TextView) rootView
 				.findViewById(R.id.lbl_products_per_minute);
 		mLbl_totalProducts = (TextView) rootView.findViewById(R.id.lbl_total_products);
 
+		mTxt_jobFinishTime = (TextView) rootView.findViewById(R.id.txt_job_finish_time);
+		if (mJobFinishText != null) {
+			mTxt_jobFinishTime.setText(mJobFinishText);
+		}
+		
+		mLbl_jobFinishTime = (TextView) rootView.findViewById(R.id.lbl_job_finish_time);
+		
 		mImageBtn_calcSheetsPerMinute = (ImageButton) rootView
 				.findViewById(R.id.calc_sheets_per_minute);
 		mImageBtn_calcSheetsPerMinute.setOnClickListener(this);
 
+		mBtn_cancelAlarm = (Button) rootView.findViewById(R.id.btn_cancel_alarm);
+		mBtn_cancelAlarm.setOnClickListener(this);
+		
 		return rootView;
 	}
 
@@ -166,6 +183,10 @@ public class SkidTimesFragment extends SectionFragment implements
 		super.onCreate(savedInstanceState);
 
 		mAlarmReceiver = new SkidFinishedBroadcastReceiver();
+		
+		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+		mMillisPerSkid = settings.getLong("millisPerSkid", 0);
+		mJobFinishText = settings.getString("jobFinishText","");
 	}
 
 	@Override
@@ -188,6 +209,10 @@ public class SkidTimesFragment extends SectionFragment implements
 		case (R.id.calc_sheets_per_minute):
 			((MainActivity)getActivity()).showSheetsPerMinuteDialog();
 			break;
+		case (R.id.btn_cancel_alarm):
+		Intent intent = new Intent(getActivity(), SkidFinishedBroadcastReceiver.class);
+        PendingIntent pi = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
+        pi.cancel();
 		}
 	}
 
@@ -196,6 +221,16 @@ public class SkidTimesFragment extends SectionFragment implements
 		Context context = getActivity();
 		if (mAlarmReceiver != null) {
 			mAlarmReceiver.setOnetimeTimer(context, interval);
+		} else {
+			Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	public void repeatingTimer(View v, long trigger, long interval) {
+
+		Context context = getActivity();
+		if (mAlarmReceiver != null) {
+			mAlarmReceiver.setRepeatingTimer(context, trigger, interval);
 		} else {
 			Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
 		}
@@ -226,17 +261,17 @@ public class SkidTimesFragment extends SectionFragment implements
 			long alarmLeadTime = (long) (1.5 * HelperFunction.ONE_MINUTE_IN_MILLIS); //TODO
 			Date curDate = new Date();
 			long timeNow = curDate.getTime();
-			String formattedTimeNow = formatter.format(timeNow);
+//			String formattedTimeNow = formatter.format(timeNow);
 			//Toast.makeText(getActivity(), "time now is " + formattedTimeNow + String.valueOf(timeNow), Toast.LENGTH_SHORT).show();
 			long timeThen = ((Date)newProperty).getTime();
-			String formattedTimeThen = formatter.format(timeThen);
+//			String formattedTimeThen = formatter.format(timeThen);
 			//Toast.makeText(getActivity(), "time then is " + formattedTimeThen + String.valueOf(timeThen), Toast.LENGTH_SHORT).show();
-			Long timeBetweenMinutes = (timeThen - timeNow) / HelperFunction.ONE_MINUTE_IN_MILLIS; 
-			Long interval = timeThen - timeNow - alarmLeadTime;
+//			Long timeBetweenMinutes = (timeThen - timeNow) / HelperFunction.ONE_MINUTE_IN_MILLIS; 
+			Long triggerAtMillis = timeThen - timeNow - alarmLeadTime;
 //			Toast.makeText(getActivity(), "interval is " + String.valueOf(interval), Toast.LENGTH_SHORT).show();
-			if (interval > 0) {
-				onetimeTimer( mEdit_skidFinishTime, Integer.valueOf(interval.intValue()) );	
-				
+			if (triggerAtMillis > 0) {
+//				onetimeTimer( mEdit_skidFinishTime, Integer.valueOf(interval.intValue()) );
+				repeatingTimer( mEdit_skidFinishTime, triggerAtMillis, mMillisPerSkid );				
 			}			
 		} else if (propertyName == PrimexModel.SKID_START_TIME_CHANGE_EVENT) {
 			SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
@@ -248,6 +283,17 @@ public class SkidTimesFragment extends SectionFragment implements
 		} else if (propertyName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
 			this.mTxt_timePerSkid.setText(HelperFunction
 					.formatMinutesAsHours((Long)newProperty));
+			mMillisPerSkid = (Long)newProperty * HelperFunction.ONE_MINUTE_IN_MILLIS;			
+		} else if (propertyName == PrimexModel.NUMBER_OF_SKIDS_CHANGE_EVENT) {
+			//TODO need finish time, number of current skid, yadayada
+			int forCasting = (Integer)newProperty;
+			long finishInterval = mMillisPerSkid * (long)forCasting;
+			Date currentDate = new Date(); 
+			Date dateDone = new Date(currentDate.getTime() + finishInterval);
+			SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
+			String formattedTime = formatter.format(dateDone);
+			mLbl_jobFinishTime.setText("Time " + newProperty.toString() + " skids will be done:");
+			mTxt_jobFinishTime.setText(formattedTime);
 		}
 	}
 
@@ -258,7 +304,8 @@ public class SkidTimesFragment extends SectionFragment implements
 	public void onPause() {
 		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
 	    SharedPreferences.Editor editor = settings.edit();
-	    editor.putString("timePerSkid", mTxt_timePerSkid.getText().toString());
+	    editor.putLong("millisPerSkid", mMillisPerSkid);
+	    editor.putString("jobFinishText", mJobFinishText);
 	    
 	    // Commit the edits!
 	    editor.commit();
