@@ -42,7 +42,6 @@ public class PrimexModel {
 	public static final String MINUTES_PER_SKID_CHANGE_EVENT = "PrimexModel.SKID_TIME_CHANGE"; 
 	public static final String NUMBER_OF_SKIDS_CHANGE_EVENT = "PrimexModel.NUMBER_OF_SKIDS_CHANGE"; 
 	 
-	
 	public static final double INCHES_PER_FOOT = 12.0; 
 		
 	// Create PropertyChangeSupport to manage listeners and fire events.
@@ -116,7 +115,13 @@ public class PrimexModel {
 			propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldSelection, null);
 		} else throw new NoSuchElementException("Work order number not in the list of work orders, need to add it");
 	}
-
+//TODO make it so there's not an "add product, add pallet, etc"
+//imagine a delete work order, a list of work orders and you are at one index of it
+//don't have a selected skid, it's just your place in the list of skids.
+//
+	public boolean addProduct(Product p) {
+		mDbHelper.insertOrReplaceProduct(p, woNumber)
+	}
 	public boolean addWorkOrder(WorkOrder newWo) {
 		if (mDbHelper.addWorkOrder(newWo) != -1l) {
 			mWoNumbersList.add(newWo.getWoNumber());
@@ -125,12 +130,6 @@ public class PrimexModel {
 		} else return false;
 	}
 		
-	public void setCurrentProductLength(double length) {
-		double oldLength = mSelectedWorkOrder.getProduct().getLength();
-		mSelectedWorkOrder.getProduct().setLength(length);
-		//TODO? propChangeSupport.firePropertyChange(PRODUCT_LENGTH_CHANGE_EVENT, oldLength, length);
-	}
-	
 	public void setCurrentSpeed (SpeedValues values) { 
 		SpeedValues oldValues = mSelectedLine.getSpeedValues();
 		mSelectedLine.setSpeedValues(values);
@@ -154,8 +153,11 @@ public class PrimexModel {
 		propChangeSupport.firePropertyChange(LINE_SPEED_CHANGE_EVENT, oldValues, values);
 	}
  
+	/*
+	 * 
+	 */
 	public void setSelectedProduct(String type, double gauge, double width, double length) {
-		//this function creates a new product of the specified dimensions and type. Then it updates the
+		//Creates a new product of the specified dimensions and type. Then it updates the
 		//database with that product and the current line number. blah blah debug TODO
 		Product oldProduct = mSelectedProduct;
 		if (type.equals(Product.SHEETS_TYPE)) {
@@ -172,6 +174,8 @@ public class PrimexModel {
 	}
 	
 	public void setSelectedProduct(Product p) {
+		Product oldProduct = mSelectedProduct;
+		mDbHelper.insertOrReplaceProduct(newProduct, getSelectedWorkOrder().getWoNumber());
 		if (p == null) {
 			mSelectedProduct = null;
 		} else {
