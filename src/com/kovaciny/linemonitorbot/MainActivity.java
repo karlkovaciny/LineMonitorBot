@@ -112,7 +112,10 @@ public class MainActivity extends FragmentActivity implements
 			break;
 		case(R.id.edit_total_sheets_per_skid):
 			mModel.setTotalCount(Integer.valueOf(userEntry));
-			break;		
+			break;	
+		case(R.id.edit_num_skids_in_job):
+			mModel.setNumSkidsDebug(Integer.valueOf(userEntry));
+			break;
 		default:
 		}
 		//User directly entered a sheets per minute value, so we must not calculate one.
@@ -213,7 +216,9 @@ public class MainActivity extends FragmentActivity implements
 			skidTimesFrag.modelPropertyChange(event);
 		} else if (eventName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);
-		}  
+		} else if (eventName == PrimexModel.NUMBER_OF_SKIDS_CHANGE_EVENT){
+			skidTimesFrag.modelPropertyChange(event);
+		}
 	}
 
 	@Override
@@ -410,7 +415,13 @@ public class MainActivity extends FragmentActivity implements
 			}
 			return null;
 		}
-	}
+	} //end SectionsPagerAdapter class
+	
+	
+	
+	
+	
+	
 	
 	public Fragment findFragmentByPosition(int pos) {
 		String tag = "android:switcher:" + mViewPager.getId() + ":" + pos;
