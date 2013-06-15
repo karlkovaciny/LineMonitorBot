@@ -248,13 +248,13 @@
 	            android:layout_below="@id/linearLayout9">
 
 	            <TextView
-	                android:id="@+id/textView11"
+	                android:id="@+id/lbl_job_finish_time"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:text="Job finish time: " />
 
 	            <TextView
-	                android:id="@+id/textView11"
+	                android:id="@+id/txt_job_finish_time"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:text="0:00 PM" />
@@ -271,6 +271,14 @@
 	            android:textSize="40sp" />
 
 	    </RelativeLayout>
+
+	    <Button
+	        android:id="@+id/btn_cancel_alarm"
+	        style="?android:attr/buttonStyleSmall"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Cancel recurring alarm" />
+
 	</LinearLayout>
 
 </ScrollView>
