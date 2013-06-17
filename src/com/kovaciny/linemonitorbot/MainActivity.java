@@ -21,6 +21,7 @@ import android.view.MenuItem;
 
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
+import com.kovaciny.primexmodel.Products;
 import com.kovaciny.primexmodel.SpeedValues;
 import com.kovaciny.primexmodel.WorkOrder;
 
@@ -161,7 +162,8 @@ public class MainActivity extends FragmentActivity implements
     		} else if (mode.equals(SheetsPerMinuteDialogFragment.ROLLS_MODE)) {
     			prodtype = Product.ROLLS_TYPE;
     		} else throw new RuntimeException ("unknown product type"); //debug
-    		mModel.setSelectedProduct(prodtype, spmd.getGauge(), spmd.getSheetWidthValue(), spmd.getSheetLengthValue());
+    		Product p = Products.makeProduct(prodtype, spmd.getGauge(), spmd.getSheetWidthValue(), spmd.getSheetLengthValue());
+    		mModel.changeProduct(p);
     	}
     }	
 	/* (non-Javadoc)
@@ -253,34 +255,8 @@ public class MainActivity extends FragmentActivity implements
 		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.new_wo, Menu.FLAG_APPEND_TO_GROUP, "+ New");
 		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.clear_wos, Menu.FLAG_APPEND_TO_GROUP, "Clear");
 		
-		//Select the line and job that we used last time, provided the database was not cleared by an update.
-		//Make sure you select some line and job so things don't break.
-		SharedPreferences settings = getPreferences(MODE_PRIVATE);
-		if (mModel.getDatabaseVersion() == settings.getInt("databaseVersion", -1)) {
-			int selectedLine = settings.getInt("selectedLine", -1);
-			if ( selectedLine != -1) {
-				mModel.setSelectedLine( selectedLine );
-			} else {
-				mModel.setSelectedLine(1); //TODO this oK?
-				//TODO requestSelectLine();
-			}
-			int selectedWO = settings.getInt("selectedWorkOrder", -1);
-			if ( selectedWO != -1) {
-				mModel.setSelectedWorkOrder( selectedWO );
-				boolean hadProduct = settings.getBoolean("hasSelectedProduct", false);
-				if (hadProduct) {
-					mModel.setSelectedProductByWoNumber(selectedWO);	
-				}
-			} else {
-				int newWoNumber = mModel.getHighestWoNumber() + 1;
-				mModel.addWorkOrder(new WorkOrder(newWoNumber));
-				mModel.setSelectedWorkOrder(newWoNumber);	
-			}
-		} else {
-			mModel.setSelectedLine(7);
-			mModel.addWorkOrder(new WorkOrder(7)); //TODO there are three places this code is reused
-			mModel.setSelectedWorkOrder(7);
-		}
+		//Select the line and job that we used last time
+		mModel.loadState();
 		return true;
 	}
 
@@ -310,9 +286,6 @@ public class MainActivity extends FragmentActivity implements
 			
 			//clear the database
 			mModel.clearWoNumbers();
-			
-			//clear the shared preferences
-			updateSharedPreferences();
 			
 			//make sure a new WO always exists
 			int aWoNumber = mModel.getHighestWoNumber() + 1;
@@ -480,33 +453,17 @@ public class MainActivity extends FragmentActivity implements
 	protected void onPause() {
 		super.onPause();
 		//store persistent data
-		updateSharedPreferences();
-		
-	    //Release the database?
-	    //mModel.closeDb(); TODO, cause lag
-
-	}
-	
-	protected void updateSharedPreferences(){
 		SharedPreferences settings = getPreferences(MODE_PRIVATE);
 	    SharedPreferences.Editor editor = settings.edit();
-	    if (mModel.hasSelectedLine()) {
-	    	editor.putInt("selectedLine", mModel.getSelectedLine().getLineNumber());
-	    } else {
-	    	editor.remove("selectedLine");
-	    }
-	    if (mModel.hasSelectedWorkOrder()) {
-	    	editor.putInt("selectedWorkOrder", mModel.getSelectedWorkOrder().getWoNumber());
-	    } else {
-	    	editor.remove("selectedWorkOrder");
-	    }
-	    editor.putBoolean("hasSelectedProduct", mModel.hasSelectedProduct());
-	    	
+	    
 	    editor.putInt("databaseVersion", mModel.getDatabaseVersion());
+
 	    // Commit the edits!
 	    editor.commit();
+
+	    //Release the database?
+	    //mModel.closeDb(); TODO, cause lag
 	}
-	
 	
 	void showDummyDialog(String text) {
 	    // Create the fragment and show it as a dialog.
