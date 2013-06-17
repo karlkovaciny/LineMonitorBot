@@ -32,6 +32,7 @@ public class Novatec implements Hopper {
 		mRate = mControllerSetpoint * mScrewSize * mContents.getDensity()/mReferenceMaterial.getDensity();
 	}
 	public double getRate(){
+		updateRate();
 		return mRate;
 	}
 	
