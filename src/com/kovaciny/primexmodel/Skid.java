@@ -2,32 +2,33 @@ package com.kovaciny.primexmodel;
 
 import java.util.Date;
 
+import com.kovaciny.helperfunctions.HelperFunction;
+
 public class Skid<E extends Product> {
 	Pallet mPallet;
-	E mProductUnit;
-	Integer mCurrentItems = null;
+	Product mProductUnit;
+	Integer mCurrentItems = 0;
 	Integer mTotalItems = null;
 	double mPackagingWeight;
 	double mFinishedNetWeight;
 	double mFinishedGrossWeight;
+	long mMinutesPerSkid;
 	int mSkidNumber;
 	int mNumberOfStacks;
 	Date mStartTime;
 	Date mFinishTime;
 
 	public Skid(Pallet p, int totalItems, double packagingWeight,
-			int numStacks, Date start, E product) {
+			int numStacks, Date start, Product product) {
 		mPallet = p;
 		mProductUnit = product;
-		mCurrentItems = 0;
 		mTotalItems = totalItems;
-		mPackagingWeight = 0; // unimportant for now
-		mFinishedNetWeight = getFinishedNetWeight();
-		mFinishedGrossWeight = getFinishedGrossWeight();
+		mPackagingWeight = 0; // unimportant for now;
 		mNumberOfStacks = numStacks;
 	}
 
-	public Skid() {
+	public Skid(int totalItems, Product product) {
+		this(new Pallet(), totalItems, 0d, 1, new Date(), product);
 	}
 
 	public double getStackHeight() {
@@ -75,14 +76,61 @@ public class Skid<E extends Product> {
 		this.mStartTime = startTime;
 	}
 
-	public Date getFinishTime() {
-		return mFinishTime;
+	public Date calculateStartTime(double productsPerMinute) {
+		double minutesElapsed = mCurrentItems / productsPerMinute;
+		long millisElapsed = (long) (minutesElapsed * HelperFunction.ONE_MINUTE_IN_MILLIS);
+		long timeNow = new Date().getTime();
+		mStartTime = new Date( timeNow - millisElapsed);
+		return mStartTime;
+	}
+	
+	/*
+	 * This version of the function is for a skid that's currently being produced.
+	 */
+	public Date calculateFinishTimeWhileRunning(double productsPerMinute) {
+		if ( mTotalItems == null) {
+			throw new IllegalStateException("total items not set");
+		} else {
+			double minutesLeft = (mTotalItems - mCurrentItems ) / productsPerMinute;
+			long millisLeft = (long) (minutesLeft * HelperFunction.ONE_MINUTE_IN_MILLIS);
+			Date currentDate = new Date();
+			long timeNow = currentDate.getTime();
+			mFinishTime = new Date( timeNow + millisLeft);
+			return mFinishTime;
+		}
+	}
+	
+	/*
+	 * This version of the function is for a skid that hasn't started yet.
+	 */
+	public Date calculateFinishTime(double productsPerMinute, Date startTime) {
+		calculateMinutesPerSkid(productsPerMinute); //TODO maybe I shouldn't be able to use mMinutesPerSkid when it must have this called first
+		long millisPerSkid = mMinutesPerSkid * HelperFunction.ONE_MINUTE_IN_MILLIS;
+		Date finishTime = new Date(startTime.getTime() + millisPerSkid);
+		return finishTime;
+	}
+	
+	public long calculateMinutesPerSkid(double productsPerMinute) {
+		if (productsPerMinute <= 0) throw new IllegalArgumentException("products per minute not positive number");
+		if ( mTotalItems == null) {
+			throw new IllegalStateException("total items not set");
+		}
+		mMinutesPerSkid = Math.round(mTotalItems / productsPerMinute);
+		return mMinutesPerSkid;
+	}
+	
+	public long getMinutesPerSkid() {
+		return mMinutesPerSkid;
 	}
 
 	public void setFinishTime(Date finishTime) {
 		this.mFinishTime = finishTime;
 	}
 
+	public Date getFinishTime() {
+		return mFinishTime;
+	}
+	
 	public void setPackagingWeight(double packagingWeight) {
 		this.mPackagingWeight = packagingWeight;
 	}

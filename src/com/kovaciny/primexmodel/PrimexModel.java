@@ -22,7 +22,6 @@ public class PrimexModel {
 		if (mLineNumbersList.size() == 0) {
 			throw new RuntimeException("database didn't find any lines");
 		}
-		mSelectedSkid = new Skid<Sheet>(); //TODO
 		mWoNumbersList = mDbHelper.getWoNumbers();		
 	}
 	/*
@@ -36,10 +35,11 @@ public class PrimexModel {
 	public static final String PRODUCTS_PER_MINUTE_CHANGE_EVENT = "PrimexModel.PPM_CHANGE"; 
 	public static final String CURRENT_SHEET_COUNT_CHANGE_EVENT = "PrimexModel.SHEET_COUNT_CHANGE"; 
 	public static final String TOTAL_SHEET_COUNT_CHANGE_EVENT = "PrimexModel.TOTAL_COUNT_CHANGE";
-	public static final String SKID_FINISH_TIME_CHANGE_EVENT = "PrimexModel.FINISH_TIME_CHANGE"; 
-	public static final String SKID_START_TIME_CHANGE_EVENT = "PrimexModel.START_TIME_CHANGE"; 
+	public static final String CURRENT_SKID_FINISH_TIME_CHANGE_EVENT = "PrimexModel.FINISH_TIME_CHANGE"; 
+	public static final String CURRENT_SKID_START_TIME_CHANGE_EVENT = "PrimexModel.START_TIME_CHANGE"; 
 	public static final String MINUTES_PER_SKID_CHANGE_EVENT = "PrimexModel.SKID_TIME_CHANGE"; 
 	public static final String NUMBER_OF_SKIDS_CHANGE_EVENT = "PrimexModel.NUMBER_OF_SKIDS_CHANGE"; 
+	public static final String JOB_FINISH_TIME_CHANGE_EVENT = "PrimexModel.JOB_FINISH_TIME_CHANGE"; 
 	 
 	public static final double INCHES_PER_FOOT = 12.0; 
 		
@@ -63,14 +63,13 @@ public class PrimexModel {
 	private List<Integer> mWoNumbersList;
 	private ProductionLine mSelectedLine;
 	private WorkOrder mSelectedWorkOrder;
-	private List<Skid<? extends Product>> skidsList;
 	private Skid<? extends Product> mSelectedSkid;
 	private PrimexSQLiteOpenHelper mDbHelper;
 	private Double mProductsPerMinute;
 	private double mNetRate;
 	private double mGrossRate;
 	private long mMinutesPerSkid;
-	private int mSkidsInJob;
+
 	/*
 	 * also selects product currently
 	 */
@@ -107,7 +106,8 @@ public class PrimexModel {
 			
 			Product p = mDbHelper.getProduct(woNumber);
 			mSelectedWorkOrder.setProduct(p);
-			
+		
+			mSelectedSkid = mSelectedWorkOrder.getSelectedSkid();
 			propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldSelection, newSelection);
 		} else if (woNumber == null) {
 			mSelectedWorkOrder = null;
@@ -123,7 +123,7 @@ public class PrimexModel {
 	}
 	
 	public boolean addWorkOrder(WorkOrder newWo) {
-		if (mDbHelper.addWorkOrder(newWo) != -1l) {
+		if (mDbHelper.insertOrReplaceWorkOrder(newWo) != -1l) {
 			mWoNumbersList.add(newWo.getWoNumber());
 			propChangeSupport.firePropertyChange(NEW_WORK_ORDER_CHANGE_EVENT, null, newWo);
 			return true;
@@ -248,46 +248,38 @@ public class PrimexModel {
 	
 	public void calculateTimes() {
 		if (mSelectedSkid == null) throw new RuntimeException("Can't calc times without a skid");
-		Integer totalItems = mSelectedSkid.getTotalItems();
-		Integer currentItems = mSelectedSkid.getCurrentItems();
-		if ( (totalItems != null) && (mProductsPerMinute != null) && (mProductsPerMinute != 0)) {
+		if ( (mProductsPerMinute != null) && (mProductsPerMinute != 0) && (mSelectedSkid.getTotalItems() != null) ) {
 			//calculate total time per skid. 
-			long oldMinutes = mMinutesPerSkid;
-			mMinutesPerSkid = Math.round(totalItems / mProductsPerMinute);
-			propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, oldMinutes, mMinutesPerSkid);
+			long oldMinutes = mSelectedSkid.getMinutesPerSkid();
+			long newMinutes = mSelectedSkid.calculateMinutesPerSkid(mProductsPerMinute);
+			propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, oldMinutes, newMinutes);
 			
-			if (currentItems != null) { 
-				//calculate skid start and finish time
-				double minutesLeft = (totalItems - currentItems ) / mProductsPerMinute;
-				double minutesElapsed = currentItems / mProductsPerMinute;
-				long millisLeft = (long) (minutesLeft * HelperFunction.ONE_MINUTE_IN_MILLIS);
-				long millisElapsed = (long) (minutesElapsed * HelperFunction.ONE_MINUTE_IN_MILLIS);
-				Date currentDate = new Date();
-				long t = currentDate.getTime();
-				Date oldFinishTime = mSelectedSkid.getFinishTime();
-				Date oldStartTime = mSelectedSkid.getStartTime();
-				Date finishTime = new Date( t + (millisLeft));
-				Date startTime = new Date( t - (millisElapsed));
-				mSelectedSkid.setFinishTime( finishTime );
-				mSelectedSkid.setStartTime( startTime );
-				propChangeSupport.firePropertyChange(SKID_FINISH_TIME_CHANGE_EVENT, oldFinishTime, mSelectedSkid.getFinishTime());	
-				propChangeSupport.firePropertyChange(SKID_START_TIME_CHANGE_EVENT, oldStartTime, mSelectedSkid.getStartTime());	
-			}			
-		}
-		//TODO calc job finish times
+			//calculate skid start and finish time
+			Date oldStartTime = mSelectedSkid.getStartTime();
+			Date newStartTime = mSelectedSkid.calculateStartTime(mProductsPerMinute);
+			Date oldFinishTime = mSelectedSkid.getFinishTime();
+			Date newFinishTime = mSelectedSkid.calculateFinishTimeWhileRunning(mProductsPerMinute);				
+			propChangeSupport.firePropertyChange(CURRENT_SKID_START_TIME_CHANGE_EVENT, oldStartTime, newStartTime);
+			propChangeSupport.firePropertyChange(CURRENT_SKID_FINISH_TIME_CHANGE_EVENT, oldFinishTime, newFinishTime);
+			
+			//calculate job finish times
+			Date oldJobFinishTime = mSelectedWorkOrder.getFinishTime();
+			Date newJobFinishTime = mSelectedWorkOrder.calculateFinishTimes(mProductsPerMinute);
+			propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, oldJobFinishTime, newJobFinishTime);
+		}		
+
 	}
 
 	public int getDatabaseVersion() {
 		return PrimexSQLiteOpenHelper.DATABASE_VERSION;
 	}
-	public void setNumSkidsDebug(int num) {
-		int oldNum = mSkidsInJob;
-		mSkidsInJob = num;
-		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, oldNum, num);
-		
-	}
-	public int getNumSkidsDebug() {
-		return mSkidsInJob;
+	public void changeNumberOfSkids(int num) {
+		int oldNum = mSelectedWorkOrder.getNumberOfSkids();
+		while (mSelectedWorkOrder.getNumberOfSkids() < num) {
+			mSelectedWorkOrder.addSkid();
+		}
+		calculateTimes(); //TODO necessary?
+		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, oldNum, mSelectedWorkOrder.getNumberOfSkids());		
 	}
 	
 	public void closeDb() {
