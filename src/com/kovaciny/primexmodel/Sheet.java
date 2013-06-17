@@ -10,6 +10,9 @@ public class Sheet implements Product {
 	private String mUnitPlural = "sheets";
 	public int mLineNumber;
 	
+	/*
+	 * 
+	 */
 		public Sheet(double gauge, double width, double length) {
 		if (!areValidDimensions(gauge, width, length)) {
 			throw new IllegalArgumentException("invalid dimensions");

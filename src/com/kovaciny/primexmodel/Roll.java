@@ -11,9 +11,12 @@ public class Roll implements Product {
 	private String mUnitPlural = "feet";
 	public int mLineNumber;
 	
+	/*
+	 * 
+	 */
 	public Roll(double gauge, double width, int linearFeet) {
 		if ( (gauge < 0 || width < 0) ) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("invalid dimensions");
 		}
 		mGauge = gauge;
 		mWidth = width;
@@ -46,6 +49,14 @@ public class Roll implements Product {
 			throw new IllegalArgumentException("Sheet length for rolls must always be 12");
 		}
 	}
+	public int getLinearFeet() {
+		return mLinearFeet;
+	}
+
+	public void setLinearFeet(int linearFeet) {
+		this.mLinearFeet = linearFeet;
+	}
+
 	public double getWidth() {
 		return mWidth;
 	}
