@@ -70,8 +70,7 @@
                 android:layout_weight="2.5"
                 android:inputType="numberDecimal"
                 android:maxLength="5"
-                android:selectAllOnFocus="true"
-                android:text="40" >
+                android:selectAllOnFocus="true" >
 
                 <requestFocus />
             </EditText>

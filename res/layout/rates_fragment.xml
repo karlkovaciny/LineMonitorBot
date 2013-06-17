@@ -15,14 +15,14 @@
             android:layout_height="match_parent" >
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/lbl_gross_width"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Gross Width: "
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
-                android:id="@+id/editText1"
+                android:id="@+id/edit_gross_width"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -37,10 +37,10 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/lbl_edge_trim_percent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Edge trim %"
+                android:text="Edge trim: "
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/lbl_sheet_weight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sheet Weight:"
@@ -77,14 +77,14 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/lbl_net_pph"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Net pounds per hour:"
+                android:text="Net pounds per hour: "
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
-                android:id="@+id/lbl_skid_finish_time"
+                android:id="@+id/txt_net_pph"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -96,10 +96,10 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/TextView01"
+                android:id="@+id/lbl_gross_pph"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gross pounds per hour:"
+                android:text="Gross pounds per hour: "
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
@@ -116,42 +116,34 @@
             android:focusable="true"
             android:focusableInTouchMode="true" >
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/lbl_novatec_setpoint"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical" >
+                android:layout_height="wrap_content"
+                android:text="Nova setpt" />
 
-                <TextView
-                    android:id="@+id/dummy_dialog_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Nova setpt" />
-
-                <EditText
-                    android:id="@+id/skid_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:selectAllOnFocus="true" >
-
-                    <requestFocus />
-                </EditText>
-            </LinearLayout>
+            <EditText
+                android:id="@+id/edit_novatec_setpoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="4"
+                android:inputType="numberDecimal"
+                android:selectAllOnFocus="true" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/txt_color_percent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="800" />
-
-            <Button
-                android:id="@+id/buttonCalculateColorPercent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Calculate Color %" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </LinearLayout>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_calculate_rates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Calculate Rates" />
         
 </LinearLayout>

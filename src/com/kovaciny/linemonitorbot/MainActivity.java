@@ -298,6 +298,9 @@ public class MainActivity extends FragmentActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 	
+	public PrimexModel getModelDebug() { //TODO delete
+		return mModel;
+	}
 	
 /*
  * ---------------------------------------------------------
