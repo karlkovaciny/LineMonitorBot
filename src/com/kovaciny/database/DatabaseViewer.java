@@ -87,6 +87,19 @@ public List<String> getColumnNames(String tablename) {
 	}
 }
 
+public List<String> getTableNames() {
+	SQLiteDatabase db = getReadableDatabase();
+	Cursor resultCursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type=?", new String[] {"table"});
+	List<String> tableNames = new ArrayList<String>();
+	try {
+		while (resultCursor.moveToNext()) {
+	    	tableNames.add(resultCursor.getString(0));
+	 	}
+    	return tableNames;
+    } finally {
+    	if (resultCursor != null) resultCursor.close();
+	}	
+}
 /* (non-Javadoc)
  * @see android.database.sqlite.SQLiteOpenHelper#onCreate(android.database.sqlite.SQLiteDatabase)
  */
