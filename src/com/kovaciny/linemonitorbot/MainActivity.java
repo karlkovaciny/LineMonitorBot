@@ -132,7 +132,7 @@ public class MainActivity extends FragmentActivity implements
 	public void showSheetsPerMinuteDialog() {
 		// Create the fragment and show it as a dialog.
 		SheetsPerMinuteDialogFragment newFragment = new SheetsPerMinuteDialogFragment();
-		Product currentProd = mModel.getSelectedProduct();
+		Product currentProd = mModel.getSelectedWorkOrder().getProduct();
 		SpeedValues curSpeed = mModel.getSelectedLine().getSpeedValues();
 		Bundle args = new Bundle();
 		args.putDouble("SpeedFactor", curSpeed.speedFactor);
