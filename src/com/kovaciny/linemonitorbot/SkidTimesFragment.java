@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -216,9 +217,17 @@ public class SkidTimesFragment extends SectionFragment implements
 		case (R.id.btn_new_skid) :
 			break;
 		case (R.id.btn_cancel_alarm):
-		Intent intent = new Intent(getActivity(), SkidFinishedBroadcastReceiver.class);
-        PendingIntent pi = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
-        pi.cancel();
+			Context context = getActivity();
+			
+			Vibrator vib = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+			vib.vibrate(new long[]{0,10},-1);
+			vib.cancel();
+			
+			
+			Intent intent = new Intent(context, SkidFinishedBroadcastReceiver.class);
+	        PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
+	        pi.cancel();
+	        break;
 		}
 	}
 

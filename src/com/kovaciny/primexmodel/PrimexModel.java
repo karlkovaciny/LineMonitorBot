@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.kovaciny.database.PrimexDatabaseSchema;
 import com.kovaciny.database.PrimexSQLiteOpenHelper;
@@ -66,7 +65,6 @@ public class PrimexModel {
 	private WorkOrder mSelectedWorkOrder;
 	private List<Skid<? extends Product>> skidsList;
 	private Skid<? extends Product> mSelectedSkid;
-	private Product mSelectedProduct;
 	private PrimexSQLiteOpenHelper mDbHelper;
 	private Double mProductsPerMinute;
 	private double mNetRate;
@@ -185,7 +183,7 @@ public class PrimexModel {
 		}
 		
 		if (hasSelectedProduct()){
-			saveProduct(mSelectedProduct);
+			saveProduct(mSelectedWorkOrder.getProduct());
 		}
 	}
 
@@ -226,10 +224,10 @@ public class PrimexModel {
 	protected void calculateRates() {
 		if (hasSelectedProduct()) {
 			Double oldPpm = mProductsPerMinute; 
-			mProductsPerMinute = INCHES_PER_FOOT / mSelectedProduct.getLength() * mSelectedLine.getLineSpeed();
+			mProductsPerMinute = INCHES_PER_FOOT / mSelectedWorkOrder.getProduct().getLength() * mSelectedLine.getLineSpeed();
 			propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldPpm, mProductsPerMinute);
 			
-			mNetRate = mProductsPerMinute * mSelectedProduct.getWeight();
+			mNetRate = mProductsPerMinute * mSelectedWorkOrder.getProduct().getWeight();
 			//TODO gross rate
 		}		
 	}
@@ -291,9 +289,6 @@ public class PrimexModel {
 	public int getNumSkidsDebug() {
 		return mSkidsInJob;
 	}
-	public Product getSelectedProduct() {
-		return mSelectedProduct;
-	}
 	
 	public void closeDb() {
 		mDbHelper.close();
@@ -309,9 +304,7 @@ public class PrimexModel {
 		} else return false;		
 	}
 	public boolean hasSelectedProduct() {
-		if (mSelectedProduct != null) {
-			return true;
-		} else return false;
+		return mSelectedWorkOrder.hasProduct();
 	}
 	public ProductionLine getSelectedLine() {
 		return mSelectedLine;
