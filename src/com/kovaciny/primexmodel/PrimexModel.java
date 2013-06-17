@@ -64,8 +64,8 @@ public class PrimexModel {
 	private List<Integer> mWoNumbersList;
 	private ProductionLine mSelectedLine;
 	private WorkOrder mSelectedWorkOrder;
-	private List<Skid> skidsList;
-	private Skid mSelectedSkid;
+	private List<Skid<? extends Product>> skidsList;
+	private Skid<? extends Product> mSelectedSkid;
 	private Product mSelectedProduct;
 	private PrimexSQLiteOpenHelper mDbHelper;
 	private Double mProductsPerMinute;
@@ -107,7 +107,8 @@ public class PrimexModel {
 			mSelectedWorkOrder = lookedUpWo;
 			Integer newSelection = mSelectedWorkOrder.getWoNumber();
 			
-			setSelectedProductByWoNumber(woNumber);
+			Product p = mDbHelper.getProduct(woNumber);
+			mSelectedWorkOrder.setProduct(p);
 			
 			propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldSelection, newSelection);
 		} else if (woNumber == null) {
@@ -119,9 +120,10 @@ public class PrimexModel {
 //imagine a delete work order, a list of work orders and you are at one index of it
 //don't have a selected skid, it's just your place in the list of skids.
 //
-	public boolean addProduct(Product p) {
-		mDbHelper.insertOrReplaceProduct(p, woNumber)
+	protected void addProduct(Product p) {
+		mDbHelper.insertOrReplaceProduct(p, mSelectedWorkOrder.getWoNumber());
 	}
+	
 	public boolean addWorkOrder(WorkOrder newWo) {
 		if (mDbHelper.addWorkOrder(newWo) != -1l) {
 			mWoNumbersList.add(newWo.getWoNumber());
@@ -153,39 +155,57 @@ public class PrimexModel {
 		propChangeSupport.firePropertyChange(LINE_SPEED_CHANGE_EVENT, oldValues, values);
 	}
  
-	/*
-	 * 
-	 */
-	public void setSelectedProduct(String type, double gauge, double width, double length) {
-		//Creates a new product of the specified dimensions and type. Then it updates the
-		//database with that product and the current line number. blah blah debug TODO
-		Product oldProduct = mSelectedProduct;
-		if (type.equals(Product.SHEETS_TYPE)) {
-			mSelectedProduct = new Sheet(gauge, width, length);
-		} else if (type.equals(Product.ROLLS_TYPE)) {
-			mSelectedProduct = new Roll(gauge, width, 0);
-		} else throw new IllegalArgumentException("not a valid product type");
-		Product newProduct = mSelectedProduct;
-		mDbHelper.insertOrReplaceProduct(newProduct, getSelectedWorkOrder().getWoNumber());
-		mSelectedWorkOrder.setProduct(newProduct);
+	public void changeProduct (Product p) {
+		Product oldProduct = mSelectedWorkOrder.getProduct();
+		mSelectedWorkOrder.setProduct(p);
+		addProduct(p);
 		calculateRates();
 		calculateTimes();
-		this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, oldProduct, newProduct);
+		this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, oldProduct, p);
 	}
 	
-	public void setSelectedProduct(Product p) {
-		Product oldProduct = mSelectedProduct;
-		mDbHelper.insertOrReplaceProduct(newProduct, getSelectedWorkOrder().getWoNumber());
-		if (p == null) {
-			mSelectedProduct = null;
+	public void saveProduct(Product p) {
+		mDbHelper.insertOrReplaceProduct(p, getSelectedWorkOrder().getWoNumber());
+	}
+	
+	/*
+	 * Saves the selected line number and work order number.
+	 */
+	public void saveState() {
+		if (hasSelectedLine()) {
+			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, null, null, String.valueOf(getSelectedLine().getLineNumber()));
 		} else {
-			setSelectedProduct(p.getType(), p.getGauge(), p.getWidth(), p.getLength());
+			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, null, null, null);
+		}
+		
+		if (hasSelectedWorkOrder()) {
+			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, null, null, String.valueOf(getSelectedWorkOrder().getWoNumber()));
+		} else {
+			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, null, null, null);
+		}
+		
+		if (hasSelectedProduct()){
+			saveProduct(mSelectedProduct);
 		}
 	}
+
+	public void loadState() {
+		String lineNum = mDbHelper.getString(PrimexDatabaseSchema.ModelState.TABLE_NAME, PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, null);
+		String woNum = mDbHelper.getString(PrimexDatabaseSchema.ModelState.TABLE_NAME, PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, null);
+		try {
+			if ( (lineNum == null) || (woNum == null) ) {
+				throw new IllegalStateException("either line number or WO number is null");
+			}
+		} catch (IllegalStateException e) { 
+			setSelectedLine(18);
+			addWorkOrder(new WorkOrder(18));
+			setSelectedWorkOrder(18);
+		}
 		
-	public void setSelectedProductByWoNumber(int woNumber) {
-		Product newProduct = mDbHelper.getProduct(woNumber);
-		setSelectedProduct(newProduct);	
+		setSelectedLine(Integer.valueOf(lineNum));
+		Integer woNumber = Integer.valueOf(woNum); 
+		addWorkOrder(new WorkOrder(woNumber));
+		setSelectedWorkOrder(woNumber);
 	}
 	
 	public void setProductsPerMinute(double spm) {
@@ -260,7 +280,7 @@ public class PrimexModel {
 	}
 
 	public int getDatabaseVersion() {
-		return mDbHelper.DATABASE_VERSION;
+		return PrimexSQLiteOpenHelper.DATABASE_VERSION;
 	}
 	public void setNumSkidsDebug(int num) {
 		int oldNum = mSkidsInJob;

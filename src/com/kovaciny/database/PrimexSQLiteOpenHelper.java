@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.junit.runners.ParentRunner;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -32,7 +34,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	private static final String REAL_TYPE = " REAL";
 		
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 36;
+    public static final int DATABASE_VERSION = 40;
     public static final String DATABASE_NAME = "Primex.db";
     
     private static final String SQL_CREATE_PRODUCTION_LINES =
@@ -79,12 +81,20 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     		//"FOREIGN KEY(" + PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES + ") REFERENCES +" +
     		//		PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES +
     		" )";
-    	
+    
+    private static final String SQL_CREATE_MODEL_STATE = 
+    		"CREATE TABLE " + PrimexDatabaseSchema.ModelState.TABLE_NAME + " (" +
+    		PrimexDatabaseSchema.ModelState._ID + " INTEGER PRIMARY KEY," +
+    		PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE + INTEGER_TYPE + COMMA_SEP +
+    		PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER + INTEGER_TYPE +
+    		" )";
+    
 	//list "child" tables, which have a foreign key, before their parent, so drop table works
     private static final String TABLE_NAME_PRODUCT_TYPES = PrimexDatabaseSchema.ProductTypes.TABLE_NAME;
     private static final String TABLE_NAME_PRODUCTS = PrimexDatabaseSchema.Products.TABLE_NAME;
     private static final String TABLE_NAME_WORK_ORDERS = PrimexDatabaseSchema.WorkOrders.TABLE_NAME;
     private static final String TABLE_NAME_PRODUCTION_LINES = PrimexDatabaseSchema.ProductionLines.TABLE_NAME;
+    private static final String TABLE_NAME_MODEL_STATE = PrimexDatabaseSchema.ModelState.TABLE_NAME;
 
     private static final String SQL_DELETE_PRODUCT_TYPES =
 			"DROP TABLE IF EXISTS " + TABLE_NAME_PRODUCT_TYPES;
@@ -94,7 +104,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			"DROP TABLE IF EXISTS " + TABLE_NAME_PRODUCTION_LINES;
 	private static final String SQL_DELETE_WORK_ORDERS =
 			"DROP TABLE IF EXISTS " + TABLE_NAME_WORK_ORDERS;
-    	 
+	private static final String SQL_DELETE_MODEL_STATE =
+			"DROP TABLE IF EXISTS " + TABLE_NAME_MODEL_STATE;
+	
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_PRODUCTION_LINES);
         //Batch insert to SQLite database on Android
@@ -153,7 +165,25 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         }
         
         db.execSQL(SQL_CREATE_PRODUCTS);
+        db.execSQL(SQL_CREATE_MODEL_STATE);
+        try {
+        	db.beginTransaction();
+        	Integer lineNum = 12;
+        	Integer woNum = 123;
+        	ContentValues modvalues = new ContentValues();
+        	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, lineNum);
+        	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, woNum);
+        	
+        	long rowId = db.insertOrThrow(PrimexDatabaseSchema.ModelState.TABLE_NAME, null, modvalues);
+        	
+	        db.setTransactionSuccessful();
+        } finally {
+        	db.endTransaction();
+        }
+        
+
     }
+    
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
@@ -161,8 +191,10 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_DELETE_WORK_ORDERS);
         db.execSQL(SQL_DELETE_PRODUCT_TYPES);
         db.execSQL(SQL_DELETE_PRODUCTS);
+        db.execSQL(SQL_DELETE_MODEL_STATE);
         onCreate(db);
     }
+    
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
@@ -197,7 +229,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
      * Just Ctrl+F for the name of the class
      */
     
-    
+    public void saveState() {
+    	
+    }
     
     public long addLine(ProductionLine newLine) {
     	SQLiteDatabase db = getWritableDatabase();
@@ -497,7 +531,23 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	
+	public String getString(String tableName, String columnName, String[] whereArgs){
+		SQLiteDatabase db = getReadableDatabase();
+		
+		String sql = "SELECT " + columnName + " FROM " + tableName;
+		Cursor resultCursor = db.rawQuery(sql, whereArgs);
+		
+		String value = null;
+		try {
+			if (resultCursor.moveToFirst()) {
+		    	int index = resultCursor.getColumnIndexOrThrow(columnName);
+				value = resultCursor.getString(index);
+			} else Log.e("error", "you didn't match any darn rows");
+	    	return value;
+	    } finally {
+	    	if (resultCursor != null) resultCursor.close();
+		}
+	}
 	
 	
 	

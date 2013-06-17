@@ -41,4 +41,11 @@ public class PrimexDatabaseSchema {
 		public static final String TABLE_NAME = "product_types";
 		public static final String COLUMN_NAME_TYPES = "types";		
 	}
+	
+	public static abstract class ModelState implements BaseColumns {
+		public static final String TABLE_NAME = "model_state";
+		public static final String COLUMN_NAME_SELECTED_LINE = "selected_line";
+		public static final String COLUMN_NAME_SELECTED_WORK_ORDER = "selected_wo";
+		
+	}
 }
