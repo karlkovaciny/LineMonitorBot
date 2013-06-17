@@ -326,7 +326,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	
 	
 	
-	public long addWorkOrder(WorkOrder newWO) {
+	public long insertOrReplaceWorkOrder(WorkOrder newWO) {
 		SQLiteDatabase db = getWritableDatabase();
 		
 		/*String sql = "INSERT INTO " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + " (" +
@@ -370,8 +370,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				PrimexDatabaseSchema.WorkOrders.TABLE_NAME, 
 				null, 
 				values,
-				SQLiteDatabase.CONFLICT_IGNORE);
-		
+				SQLiteDatabase.CONFLICT_REPLACE);
 		
 		return rowId;
 	}

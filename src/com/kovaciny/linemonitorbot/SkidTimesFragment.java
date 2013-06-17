@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -267,8 +268,9 @@ public class SkidTimesFragment extends SectionFragment implements
 			
 		} else if (propertyName == PrimexModel.CURRENT_SHEET_COUNT_CHANGE_EVENT) {
 			
-		} else if (propertyName == PrimexModel.SKID_FINISH_TIME_CHANGE_EVENT) {
-			SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
+		} else if (propertyName == PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE_EVENT) {
+			//update finish time for this skid
+			SimpleDateFormat formatter = new SimpleDateFormat("hh:mm", Locale.US);
 			String formattedTime = formatter.format((Date)newProperty);
 			mEdit_skidFinishTime.setText(formattedTime);
 			
@@ -276,20 +278,13 @@ public class SkidTimesFragment extends SectionFragment implements
 			long alarmLeadTime = (long) (1.5 * HelperFunction.ONE_MINUTE_IN_MILLIS); //TODO
 			Date curDate = new Date();
 			long timeNow = curDate.getTime();
-//			String formattedTimeNow = formatter.format(timeNow);
-			//Toast.makeText(getActivity(), "time now is " + formattedTimeNow + String.valueOf(timeNow), Toast.LENGTH_SHORT).show();
 			long timeThen = ((Date)newProperty).getTime();
-//			String formattedTimeThen = formatter.format(timeThen);
-			//Toast.makeText(getActivity(), "time then is " + formattedTimeThen + String.valueOf(timeThen), Toast.LENGTH_SHORT).show();
-//			Long timeBetweenMinutes = (timeThen - timeNow) / HelperFunction.ONE_MINUTE_IN_MILLIS; 
 			Long triggerAtMillis = timeThen - timeNow - alarmLeadTime;
-//			Toast.makeText(getActivity(), "interval is " + String.valueOf(interval), Toast.LENGTH_SHORT).show();
 			if (triggerAtMillis > 0) {
-//				onetimeTimer( mEdit_skidFinishTime, Integer.valueOf(interval.intValue()) );
 				repeatingTimer( mEdit_skidFinishTime, triggerAtMillis, mMillisPerSkid );				
 			}			
-		} else if (propertyName == PrimexModel.SKID_START_TIME_CHANGE_EVENT) {
-			SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
+		} else if (propertyName == PrimexModel.CURRENT_SKID_START_TIME_CHANGE_EVENT) {
+			SimpleDateFormat formatter = new SimpleDateFormat("hh:mm", Locale.US);
 			String formattedTime = formatter.format((Date)newProperty);
 			mEdit_skidStartTime.setText(formattedTime);
 			
@@ -300,14 +295,13 @@ public class SkidTimesFragment extends SectionFragment implements
 					.formatMinutesAsHours((Long)newProperty));
 			mMillisPerSkid = (Long)newProperty * HelperFunction.ONE_MINUTE_IN_MILLIS;			
 		} else if (propertyName == PrimexModel.NUMBER_OF_SKIDS_CHANGE_EVENT) {
-			//TODO need finish time, number of current skid, yadayada
-			int forCasting = (Integer)newProperty;
-			long finishInterval = mMillisPerSkid * (long)forCasting;
-			Date currentDate = new Date(); 
-			Date dateDone = new Date(currentDate.getTime() + finishInterval);
-			SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
-			String formattedTime = formatter.format(dateDone);
-			mLbl_jobFinishTime.setText("Time " + newProperty.toString() + " skids will be done:");
+			Integer numSkids = (Integer)newProperty;
+			mLbl_jobFinishTime.setText("Time " + numSkids.toString() + " skids will be done: ");
+			
+		} else if (propertyName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) {
+			Date finishTime = (Date)newProperty;
+			SimpleDateFormat formatter = new SimpleDateFormat("h:mm", Locale.US);
+			String formattedTime = formatter.format(finishTime);
 			mTxt_jobFinishTime.setText(formattedTime);
 		}
 	}

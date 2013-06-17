@@ -115,7 +115,7 @@ public class MainActivity extends FragmentActivity implements
 			mModel.setTotalCount(Integer.valueOf(userEntry));
 			break;	
 		case(R.id.edit_num_skids_in_job):
-			mModel.setNumSkidsDebug(Integer.valueOf(userEntry));
+			mModel.changeNumberOfSkids(Integer.valueOf(userEntry));
 			break;
 		default:
 		}
@@ -210,9 +210,10 @@ public class MainActivity extends FragmentActivity implements
 		} else if (eventName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);
 			
-		} else if (eventName == PrimexModel.SKID_FINISH_TIME_CHANGE_EVENT) {
+		} else if ((eventName == PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE_EVENT) ||
+				(eventName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT)) {
 			skidTimesFrag.modelPropertyChange(event);
-		} else if (eventName == PrimexModel.SKID_START_TIME_CHANGE_EVENT) {
+		} else if (eventName == PrimexModel.CURRENT_SKID_START_TIME_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);
 		} else if (eventName == PrimexModel.TOTAL_SHEET_COUNT_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);
