@@ -133,9 +133,10 @@ public class WorkOrder {
 		return mSkidsList.get(mSelectedSkidPosition);
 	}
 
-	public void selectSkid(Integer skidNumber) {
+	public Skid<Product> selectSkid(Integer skidNumber) {
 		if (skidNumber < 0) throw new RuntimeException ("negative skid number");
-		mSelectedSkidPosition = skidNumber;
+		mSelectedSkidPosition = skidNumber - 1; //because we're storing this in an array... for now.
+		return mSkidsList.get(mSelectedSkidPosition);
 	}
 	
 	public void setProduct(Product product) {

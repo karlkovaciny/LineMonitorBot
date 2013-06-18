@@ -40,6 +40,7 @@ public class PrimexModel {
 	public static final String MINUTES_PER_SKID_CHANGE_EVENT = "PrimexModel.SKID_TIME_CHANGE"; 
 	public static final String NUMBER_OF_SKIDS_CHANGE_EVENT = "PrimexModel.NUMBER_OF_SKIDS_CHANGE"; 
 	public static final String JOB_FINISH_TIME_CHANGE_EVENT = "PrimexModel.JOB_FINISH_TIME_CHANGE"; 
+	public static final String SKID_CHANGE_EVENT = "PrimexModel.SKID_CHANGE"; 
 	 
 	public static final double INCHES_PER_FOOT = 12.0; 
 		
@@ -63,7 +64,7 @@ public class PrimexModel {
 	private List<Integer> mWoNumbersList;
 	private ProductionLine mSelectedLine;
 	private WorkOrder mSelectedWorkOrder;
-	private Skid<? extends Product> mSelectedSkid;
+	private Skid<Product> mSelectedSkid;
 	private PrimexSQLiteOpenHelper mDbHelper;
 	private Double mProductsPerMinute;
 	private double mNetRate;
@@ -161,7 +162,19 @@ public class PrimexModel {
 		calculateTimes();
 		this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, oldProduct, p);
 	}
-	
+
+	public void changeSkid(Integer skidNumber) {
+		Skid<Product> oldSkid = mSelectedSkid;
+		if ( skidNumber > oldSkid.getSkidNumber()) {
+			mSelectedSkid = getSelectedWorkOrder().selectSkid(skidNumber);
+			propChangeSupport.firePropertyChange(CURRENT_SHEET_COUNT_CHANGE_EVENT, oldSkid.getCurrentItems(), mSelectedSkid.getCurrentItems());
+			setTotalCount(oldSkid.getTotalItems()); //TODO this looks like a job for a makeskid() function.
+		} else {
+			getSelectedWorkOrder().selectSkid(skidNumber);	
+		}
+		propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, oldSkid, mSelectedSkid);
+		calculateTimes();		
+	}
 	public void saveProduct(Product p) {
 		mDbHelper.insertOrReplaceProduct(p, getSelectedWorkOrder().getWoNumber());
 	}
