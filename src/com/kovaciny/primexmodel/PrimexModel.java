@@ -248,7 +248,7 @@ public class PrimexModel {
 	
 	public void calculateTimes() {
 		if (mSelectedSkid == null) throw new RuntimeException("Can't calc times without a skid");
-		if ( (mProductsPerMinute != null) && (mProductsPerMinute != 0) && (mSelectedSkid.getTotalItems() != null) ) {
+		if ( (mProductsPerMinute > 0) && (mSelectedSkid.getTotalItems() > 0) ) {
 			//calculate total time per skid. 
 			long oldMinutes = mSelectedSkid.getMinutesPerSkid();
 			long newMinutes = mSelectedSkid.calculateMinutesPerSkid(mProductsPerMinute);
@@ -275,9 +275,7 @@ public class PrimexModel {
 	}
 	public void changeNumberOfSkids(int num) {
 		int oldNum = mSelectedWorkOrder.getNumberOfSkids();
-		while (mSelectedWorkOrder.getNumberOfSkids() < num) {
-			mSelectedWorkOrder.addSkid();
-		}
+		mSelectedWorkOrder.setNumberOfSkids(num);
 		calculateTimes(); //TODO necessary?
 		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, oldNum, mSelectedWorkOrder.getNumberOfSkids());		
 	}
