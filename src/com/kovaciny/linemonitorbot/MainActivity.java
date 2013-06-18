@@ -105,6 +105,9 @@ public class MainActivity extends FragmentActivity implements
 	//implementing interface
 	public void onViewChange(int viewId, String userEntry){
 		switch(viewId) {
+		case(R.id.edit_skid_number):
+			mModel.changeSkid(Integer.valueOf(userEntry));
+			break;
 		case(R.id.edit_products_per_minute):
 			mModel.setProductsPerMinute(Double.valueOf(userEntry));
 			break;
@@ -211,7 +214,8 @@ public class MainActivity extends FragmentActivity implements
 			skidTimesFrag.modelPropertyChange(event);
 			
 		} else if ((eventName == PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE_EVENT) ||
-				(eventName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT)) {
+				(eventName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT || 
+				(eventName == PrimexModel.SKID_CHANGE_EVENT))) {
 			skidTimesFrag.modelPropertyChange(event);
 		} else if (eventName == PrimexModel.CURRENT_SKID_START_TIME_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);

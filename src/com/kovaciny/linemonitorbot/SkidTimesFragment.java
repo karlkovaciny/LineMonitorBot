@@ -267,6 +267,7 @@ public class SkidTimesFragment extends SectionFragment implements
 			this.mEdit_sheetsPerMinute.setText(String.valueOf(newProperty));
 			
 		} else if (propertyName == PrimexModel.CURRENT_SHEET_COUNT_CHANGE_EVENT) {
+			this.mEdit_currentCount.setText(String.valueOf(newProperty));
 			
 		} else if (propertyName == PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE_EVENT) {
 			//update finish time for this skid
@@ -293,16 +294,17 @@ public class SkidTimesFragment extends SectionFragment implements
 		} else if (propertyName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
 			this.mTxt_timePerSkid.setText(HelperFunction
 					.formatMinutesAsHours((Long)newProperty));
-			mMillisPerSkid = (Long)newProperty * HelperFunction.ONE_MINUTE_IN_MILLIS;			
+			mMillisPerSkid = (Long)newProperty * HelperFunction.ONE_MINUTE_IN_MILLIS;
+			
 		} else if (propertyName == PrimexModel.NUMBER_OF_SKIDS_CHANGE_EVENT) {
-			Integer numSkids = (Integer)newProperty;
-			mLbl_jobFinishTime.setText("Time " + numSkids.toString() + " skids will be done: ");
 			
 		} else if (propertyName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) {
 			Date finishTime = (Date)newProperty;
-			SimpleDateFormat formatter = new SimpleDateFormat("h:mm", Locale.US);
+			SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US);
 			String formattedTime = formatter.format(finishTime);
 			mTxt_jobFinishTime.setText(formattedTime);
+		} else if (propertyName == PrimexModel.SKID_CHANGE_EVENT) {
+			
 		}
 	}
 
