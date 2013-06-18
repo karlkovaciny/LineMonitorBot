@@ -2,7 +2,6 @@ package com.kovaciny.primexmodel;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 public class WorkOrder {
@@ -46,6 +45,7 @@ public class WorkOrder {
 		} else {
 			Skid<Product> currentSkid = mSkidsList.get(mSelectedSkidPosition);
 			Date currentFinishTime = currentSkid.calculateFinishTimeWhileRunning(productsPerMinute);
+			
 			for (int i = mSelectedSkidPosition + 1; i < mSkidsList.size(); i++) {
 				currentFinishTime = mSkidsList.get(i).calculateFinishTime(productsPerMinute, currentFinishTime);
 			}
@@ -121,7 +121,7 @@ public class WorkOrder {
 
 	public void setNumberOfSkids(int num) {
 		if (num < 0) throw new RuntimeException ("Negative number of skids");
-		while ( num > getNumberOfSkids()) {
+		while ( getNumberOfSkids() > num) {
 			removeSkid();
 		}
 		while (getNumberOfSkids() < num) {
@@ -133,8 +133,9 @@ public class WorkOrder {
 		return mSkidsList.get(mSelectedSkidPosition);
 	}
 
-	public void setSelectedSkid(Skid<Product> skid) {
-		mSkidsList.set(mSelectedSkidPosition, skid);
+	public void selectSkid(Integer skidNumber) {
+		if (skidNumber < 0) throw new RuntimeException ("negative skid number");
+		mSelectedSkidPosition = skidNumber;
 	}
 	
 	public void setProduct(Product product) {
