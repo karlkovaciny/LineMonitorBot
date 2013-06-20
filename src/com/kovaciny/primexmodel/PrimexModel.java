@@ -30,7 +30,7 @@ public class PrimexModel {
 	public static final String LINE_SPEED_CHANGE_EVENT = "PrimexModel.SPEED_CHANGE";
 	public static final String SELECTED_LINE_CHANGE_EVENT = "PrimexModel.LINE_CHANGE";
 	public static final String SELECTED_WO_CHANGE_EVENT = "PrimexModel.WO_CHANGE";
-	public static final String NEW_WORK_ORDER_CHANGE_EVENT = "PrimexModel.NEW_WORK_ORDER"; 
+	public static final String NEW_WORK_ORDER_EVENT = "PrimexModel.NEW_WORK_ORDER"; 
 	public static final String PRODUCT_CHANGE_EVENT = "PrimexModel.NEW_PRODUCT"; 
 	public static final String PRODUCTS_PER_MINUTE_CHANGE_EVENT = "PrimexModel.PPM_CHANGE"; 
 	public static final String CURRENT_SHEET_COUNT_CHANGE_EVENT = "PrimexModel.SHEET_COUNT_CHANGE"; 
@@ -126,7 +126,7 @@ public class PrimexModel {
 	public boolean addWorkOrder(WorkOrder newWo) {
 		if (mDbHelper.insertOrReplaceWorkOrder(newWo) != -1l) {
 			mWoNumbersList.add(newWo.getWoNumber());
-			propChangeSupport.firePropertyChange(NEW_WORK_ORDER_CHANGE_EVENT, null, newWo);
+			propChangeSupport.firePropertyChange(NEW_WORK_ORDER_EVENT, null, newWo);
 			return true;
 		} else return false;
 	}
@@ -164,9 +164,11 @@ public class PrimexModel {
 	}
 
 	public void changeSkid(Integer skidNumber) {
+		//TODO this function fires twice in a row
 		Skid<Product> oldSkid = mSelectedSkid;
 		if ( skidNumber > oldSkid.getSkidNumber()) {
 			mSelectedSkid = getSelectedWorkOrder().selectSkid(skidNumber);
+		
 			propChangeSupport.firePropertyChange(CURRENT_SHEET_COUNT_CHANGE_EVENT, oldSkid.getCurrentItems(), mSelectedSkid.getCurrentItems());
 			setTotalCount(oldSkid.getTotalItems()); //TODO this looks like a job for a makeskid() function.
 		} else {
@@ -215,7 +217,6 @@ public class PrimexModel {
 		
 		setSelectedLine(Integer.valueOf(lineNum));
 		Integer woNumber = Integer.valueOf(woNum); 
-		addWorkOrder(new WorkOrder(woNumber));
 		setSelectedWorkOrder(woNumber);
 	}
 	

@@ -175,13 +175,14 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		String eventName = event.getPropertyName();
+		Object newProperty = event.getNewValue();
 		SkidTimesFragment skidTimesFrag = (SkidTimesFragment) this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
 		
 		if (eventName == PrimexModel.LINE_SPEED_CHANGE_EVENT) {
 			//TODO
 			
 		} else if (eventName == PrimexModel.SELECTED_LINE_CHANGE_EVENT) {
-			if (event.getNewValue() == null) {
+			if (newProperty == null) {
 				//mLinePicker.setTitle(R.string.action_pick_line_title);
 				throw new RuntimeException("cannot change to no line");
 			} else {
@@ -194,18 +195,18 @@ public class MainActivity extends FragmentActivity implements
 			}
 			
 		} else if (eventName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
-			if (event.getNewValue() == null) {
+			if (newProperty == null) {
 				mJobPicker.setTitle(R.string.action_pick_job_title);
 			} else {
 				CharSequence woTitle = "WO #" + String.valueOf(event.getNewValue());
 				mJobPicker.setTitle(woTitle);
 			}
 			
-		} else if (eventName == PrimexModel.NEW_WORK_ORDER_CHANGE_EVENT) { //not safe to fire without a selected WO
-			int newWonum = ((WorkOrder)event.getNewValue()).getWoNumber();
+		} else if (eventName == PrimexModel.NEW_WORK_ORDER_EVENT) { //not safe to fire without a selected WO
+			int newWonum = ((WorkOrder)newProperty).getWoNumber();
 			String newTitle = "WO #" + String.valueOf(newWonum);
 			mJobPicker.getSubMenu().add(JOB_LIST_MENU_GROUP, newWonum, Menu.FLAG_APPEND_TO_GROUP, newTitle);
-			//invalidateOptionsMenu(); //so it refreshes	TODO: try clearing the submenu instead
+			invalidateOptionsMenu();
 			
 		} else if (eventName == PrimexModel.PRODUCT_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);
