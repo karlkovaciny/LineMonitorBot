@@ -34,6 +34,7 @@
 
 	            <EditText
 	                android:id="@+id/edit_products_per_minute"
+	                style="@style/EditText"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_gravity="right"
@@ -124,6 +125,7 @@
 
 	                <EditText
 	                    android:id="@+id/edit_skid_number"
+	                    style="@style/EditText"
 	                    android:layout_width="0dip"
 	                    android:layout_weight="0.7"
 	                    android:gravity="center_horizontal"
@@ -137,6 +139,7 @@
 
 	                <EditText
 	                    android:id="@+id/edit_current_count"
+	                    style="@style/EditText"
 	                    android:layout_weight="1"
 	                    android:layout_width="0dip"
 	                    android:gravity="center_horizontal"
@@ -146,6 +149,7 @@
 
 	                <EditText
 	                    android:id="@+id/edit_total_sheets_per_skid"
+	                    style="@style/EditText"
 	                    android:layout_weight="1"
 	                    android:layout_width="0dip"
 	                    android:gravity="center_horizontal"
@@ -155,6 +159,7 @@
 
 	                <EditText
 	                    android:id="@+id/edit_skid_start_time"
+	                    style="@style/EditText"
 	                    android:layout_weight="1"
 	                    android:layout_width="0dip"
 	                    android:gravity="center_horizontal"
@@ -163,6 +168,7 @@
 
 	                <EditText
 	                    android:id="@+id/edit_skid_finish_time"
+	                    style="@style/EditText"
 	                    android:layout_weight="1"
 	                    android:layout_width="0dip"
 	                    android:gravity="center_horizontal"
@@ -208,6 +214,7 @@
 
 	            <EditText
 	                android:id="@+id/edit_num_skids_in_job"
+	                style="@style/EditText"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:inputType="number"
@@ -226,10 +233,11 @@
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                style="@style/Label"
-	                android:text="Time per Skid: " />
+	                android:text="Time per skid: " />
 
 	            <TextView
 	                android:id="@+id/txt_time_per_skid"
+	                style="@style/Label"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_toRightOf="@id/lbl_time_per_skid"
@@ -259,6 +267,7 @@
 
 	            <TextView
 	                android:id="@+id/txt_job_finish_time"
+	                style="@style/Label"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:text="0:00 PM" />
@@ -292,7 +301,7 @@
 	            style="@style/Label"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:text="Time from die to Maxson: "
+	            android:text="Die to Maxson: "
 	            android:textAppearance="?android:attr/textAppearanceMedium" />
 
 	        <TextView
