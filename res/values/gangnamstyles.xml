@@ -14,7 +14,7 @@
    <style name="Label.Small" parent="@android:style/TextAppearance.Small">
    </style>
    <style name="EditText" parent="@android:style/TextAppearance.Medium">
-       <item name="android:textColor">@color/DarkKhaki</item>
+       <item name="android:textColor">@color/Sienna</item>
    </style>
    <style name="ParentFragment">
        <item name="android:paddingTop">@dimen/fragment_vertical_margin</item>

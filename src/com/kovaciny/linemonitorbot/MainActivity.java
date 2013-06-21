@@ -139,12 +139,12 @@ public class MainActivity extends FragmentActivity implements
 		SpeedValues curSpeed = mModel.getSelectedLine().getSpeedValues();
 		Bundle args = new Bundle();
 		args.putDouble("SpeedFactor", curSpeed.speedFactor);
+		args.putDouble("LineSpeed", curSpeed.lineSpeedSetpoint);
+		args.putDouble("DifferentialSpeed", curSpeed.differentialSpeed);
 		if (currentProd != null) {
 			args.putDouble("Gauge", currentProd.getGauge());
 			args.putDouble("SheetWidth", currentProd.getWidth());
-			args.putDouble("SheetLength", currentProd.getLength());
-			args.putDouble("LineSpeed", curSpeed.lineSpeedSetpoint);
-			args.putDouble("DifferentialSpeed", curSpeed.differentialSpeed);
+			args.putDouble("SheetLength", currentProd.getLength());			
 			args.putString("ProductType", currentProd.getType());
 		}
 		newFragment.setArguments(args);
@@ -155,17 +155,28 @@ public class MainActivity extends FragmentActivity implements
     public void onClickPositiveButton(DialogFragment d) {
     	if (d.getTag() == "SheetsPerMinuteDialog") {
     		SheetsPerMinuteDialogFragment spmd = (SheetsPerMinuteDialogFragment)d;
-    		//TODO error checking
-    		SpeedValues sv = new SpeedValues(spmd.getLineSpeedValue(), spmd.getDifferentialSpeedValue(), spmd.getSpeedFactorValue());
+    		//kind of redundant error checking with the dialog's return functions
+    		double lineSpeed = spmd.getLineSpeedValue();
+    		double diffSpeed = spmd.getDifferentialSpeedValue();
+    		double speedFactor = spmd.getSpeedFactorValue();
+    		if ( !(lineSpeed > 0) ) lineSpeed = 0;
+    		if ( !(diffSpeed > 0) ) diffSpeed = 0;
+    		if ( !(speedFactor > 0) ) speedFactor = 0;
+    		SpeedValues sv = new SpeedValues(lineSpeed, diffSpeed, speedFactor);
     		mModel.setCurrentSpeed(sv);
     		String prodtype;
-    		String mode = spmd.getSheetsOrRollsState();
-    		if (mode.equals(SheetsPerMinuteDialogFragment.SHEETS_MODE)) {
-    			prodtype = Product.SHEETS_TYPE;  
-    		} else if (mode.equals(SheetsPerMinuteDialogFragment.ROLLS_MODE)) {
+    		if (spmd.getSheetsOrRollsState().equals(SheetsPerMinuteDialogFragment.ROLLS_MODE)) {
     			prodtype = Product.ROLLS_TYPE;
-    		} else throw new RuntimeException ("unknown product type"); //debug
-    		Product p = Products.makeProduct(prodtype, spmd.getGauge(), spmd.getSheetWidthValue(), spmd.getSheetLengthValue());
+    		} else {
+    			prodtype = Product.SHEETS_TYPE;
+    		}
+    		double gauge = spmd.getGauge();
+    		double width = spmd.getSheetWidthValue();
+    		double length = spmd.getSheetLengthValue();
+    		if ( !(gauge > 0)) gauge = 0;
+    		if ( !(width > 0)) width = 0;
+    		if ( !(length > 0)) length = 0;
+    		Product p = Products.makeProduct(prodtype, gauge, width, length);
     		mModel.changeProduct(p);
     	}
     }	
