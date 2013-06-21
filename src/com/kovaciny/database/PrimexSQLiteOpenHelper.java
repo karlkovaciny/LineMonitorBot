@@ -28,7 +28,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 53;
+    public static final int DATABASE_VERSION = 54;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -125,19 +125,18 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         //Batch insert to SQLite database on Android
         try {
         	List<Integer> linesWithGearedSpeedControl = Arrays.asList(6,9,12,16,17); //TODO remove this and speed controller type
+        	Double lengths[] = new Double[] {99.0d, 51.5d, 34.2d, 46.0d, 44.7d,  45.7d,56.7d,56.3d,64.3d,46.5d, 45.0d,61.9d, 71d};    
+        	List<Double> lengthsList = Arrays.asList(lengths);
+        	Iterator<Double> lengthsIterator = lengthsList.iterator();
+        	
         	Double speedFactors[] = new Double[] {1d,.0769,1d,.99,1.015,  1d,0.00009917,.98,1d,1.01, 1d,.0347,.987};
-        	List<Double> speedFactorsList = Arrays.asList(speedFactors);
-        	Iterator<Double> speedFactorsIterator2 = speedFactorsList.iterator();
-        	List<Double> newList = new ArrayList<Double> ();
-        	while (speedFactorsIterator2.hasNext()) {
-        		newList.add(speedFactorsIterator2.next());
-        	}
+        	List<Double> speedFactorsList = Arrays.asList(speedFactors);        	
         	Iterator<Double> speedFactorsIterator = speedFactorsList.iterator();
 	        db.beginTransaction();
 	        for (Integer lineNum : lineNumbers) {
 	        	ContentValues values = new ContentValues();
 	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, lineNum);
-	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LENGTH, 0);
+	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LENGTH, lengthsIterator.next());
 	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH, 0);
 	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT, 0);
 	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT, 0);

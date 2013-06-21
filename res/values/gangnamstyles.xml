@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-   <style name="user_entered">
+   <style name="UserEntered">
        <item name="android:textColor">@color/win8_green</item>
    </style>
-   <style name="calculated">
+   <style name="ProgramCalculated">
        <item name="android:textColor">@color/DodgerBlue</item>
    </style>  
-   <style name="guess">
+   <style name="ProgramGuessed">
        <item name="android:textColor">@color/win8_orange</item>
    </style> 
-   <style name="label" parent="@android:style/TextAppearance.Small">
-       <item name="android:textColor">@color/DodgerBlue</item>
+   <style name="Label" parent="@android:style/TextAppearance.Medium">
+       
    </style>
+   <style name="ParentFragment">
+       <item name="android:paddingTop">@dimen/fragment_vertical_margin</item>
+       <item name="android:paddingBottom">@dimen/fragment_vertical_margin</item>
+       <item name="android:paddingLeft">@dimen/fragment_horizontal_margin</item>
+       <item name="android:paddingRight">@dimen/fragment_horizontal_margin</item>       
+   </style>
+   <style name="ParentFragment.HorizontallyDivided">
+       <item name="android:divider">?android:attr/dividerHorizontal</item>
+       <item name="android:dividerPadding">@dimen/fragment_divider_padding</item>
+       <item name="android:showDividers">middle</item> 
+   </style>
+   <style name="Label.TableHeader">
+      
+   </style>
+      
 </resources>
