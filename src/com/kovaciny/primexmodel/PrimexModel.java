@@ -40,6 +40,7 @@ public class PrimexModel {
 	public static final String NUMBER_OF_SKIDS_CHANGE_EVENT = "PrimexModel.NUMBER_OF_SKIDS_CHANGE"; 
 	public static final String JOB_FINISH_TIME_CHANGE_EVENT = "PrimexModel.JOB_FINISH_TIME_CHANGE"; 
 	public static final String SKID_CHANGE_EVENT = "PrimexModel.SKID_CHANGE"; 
+	public static final String TIME_TO_MAXSON_CHANGE_EVENT = "PrimexModel.TIME_TO_MAXSON_CHANGE"; 
 	 
 	public static final double INCHES_PER_FOOT = 12.0; 
 		
@@ -66,6 +67,7 @@ public class PrimexModel {
 	private Skid<Product> mSelectedSkid;
 	private PrimexSQLiteOpenHelper mDbHelper;
 	private Double mProductsPerMinute;
+	private double mMillisToMaxson;
 	private double mNetRate;
 	private double mGrossRate;
 	private long mMinutesPerSkid;
@@ -270,8 +272,10 @@ public class PrimexModel {
 			Date oldJobFinishTime = mSelectedWorkOrder.getFinishTime();
 			Date newJobFinishTime = mSelectedWorkOrder.calculateFinishTimes(mProductsPerMinute);
 			propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, oldJobFinishTime, newJobFinishTime);
-		}		
-
+		}
+		double oldMillisToMaxson = mMillisToMaxson;
+		mMillisToMaxson = getSelectedLine().getLineLength() / getSelectedLine().getLineSpeed() * HelperFunction.ONE_MINUTE_IN_MILLIS;
+		propChangeSupport.firePropertyChange(TIME_TO_MAXSON_CHANGE_EVENT, oldMillisToMaxson, mMillisToMaxson);
 	}
 
 	public int getDatabaseVersion() {

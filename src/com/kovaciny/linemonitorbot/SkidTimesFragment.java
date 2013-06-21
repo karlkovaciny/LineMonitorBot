@@ -54,15 +54,30 @@ public class SkidTimesFragment extends SectionFragment implements
 	private TextView mLbl_totalProducts;
 	private TextView mTxt_jobFinishTime;
 	private TextView mLbl_jobFinishTime;
+	private TextView mLbl_timeToMaxson;
+	private TextView mTxt_timeToMaxson;
 
 	private long mMillisPerSkid;
 	private String mJobFinishText;
+	private String mTimeToMaxsonText;
 	
 	OnViewChangeListener mCallback;
 
 	// Container Activity must implement this interface
 	public interface OnViewChangeListener {
 		public void onViewChange (int viewId, String userEntry);
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		mAlarmReceiver = new SkidFinishedBroadcastReceiver();
+		
+		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+		mMillisPerSkid = settings.getLong("millisPerSkid", 0);
+		mJobFinishText = settings.getString("jobFinishText","");
+		mTimeToMaxsonText = settings.getString("timeToMaxsonText", "");
 	}
 
 	@Override
@@ -95,14 +110,14 @@ public class SkidTimesFragment extends SectionFragment implements
 		mEdit_numSkidsInJob = (EditText) rootView
 				.findViewById(R.id.edit_num_skids_in_job);
 		mEditTextList.add(mEdit_numSkidsInJob);
-
+		
 		for (View v : mEditTextList) {
 			EditText etv = (EditText) v;
 			etv.setOnEditorActionListener(this);
 			etv.setOnFocusChangeListener(this);
 		}
 
-		this.mTxt_timePerSkid = (TextView) rootView
+		mTxt_timePerSkid = (TextView) rootView
 				.findViewById(R.id.txt_time_per_skid);
 		if (mMillisPerSkid > 0) {
 			this.mTxt_timePerSkid.setText(HelperFunction
@@ -124,9 +139,13 @@ public class SkidTimesFragment extends SectionFragment implements
 			mTxt_jobFinishTime.setText(mJobFinishText);
 		}
 		
+		mTxt_timeToMaxson = (TextView) rootView.findViewById(R.id.txt_time_to_maxson);
+		if (mTimeToMaxsonText != null) {
+			mTxt_timeToMaxson.setText(mTimeToMaxsonText);
+		}
+		
 		mLbl_jobFinishTime = (TextView) rootView.findViewById(R.id.lbl_job_finish_time);
-		
-		
+				
 		mBtn_cancelAlarm = (Button) rootView.findViewById(R.id.btn_cancel_alarm);
 		mBtn_cancelAlarm.setOnClickListener(this);
 		
@@ -182,17 +201,6 @@ public class SkidTimesFragment extends SectionFragment implements
 
 	public void setSkidList(List<Skid<Product>> skidList) {
 		this.mSkidList = skidList;
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		mAlarmReceiver = new SkidFinishedBroadcastReceiver();
-		
-		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
-		mMillisPerSkid = settings.getLong("millisPerSkid", 0);
-		mJobFinishText = settings.getString("jobFinishText","");
 	}
 
 	@Override
@@ -301,10 +309,14 @@ public class SkidTimesFragment extends SectionFragment implements
 		} else if (propertyName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) {
 			Date finishTime = (Date)newProperty;
 			SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US);
-			String formattedTime = formatter.format(finishTime);
-			mTxt_jobFinishTime.setText(formattedTime);
+			mJobFinishText = formatter.format(finishTime);
+			mTxt_jobFinishTime.setText(mJobFinishText);
 		} else if (propertyName == PrimexModel.SKID_CHANGE_EVENT) {
 			
+		} else if (propertyName == PrimexModel.TIME_TO_MAXSON_CHANGE_EVENT) {
+			Double timeToMaxson = (Double)newProperty;
+			mTimeToMaxsonText = Math.round(timeToMaxson / HelperFunction.ONE_SECOND_IN_MILLIS) + " seconds";
+			mTxt_timeToMaxson.setText(mTimeToMaxsonText);
 		}
 	}
 
@@ -317,6 +329,7 @@ public class SkidTimesFragment extends SectionFragment implements
 	    SharedPreferences.Editor editor = settings.edit();
 	    editor.putLong("millisPerSkid", mMillisPerSkid);
 	    editor.putString("jobFinishText", mJobFinishText);
+	    editor.putString("timeToMaxsonText", mTimeToMaxsonText);
 	    
 	    // Commit the edits!
 	    editor.commit();
