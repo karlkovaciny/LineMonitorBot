@@ -198,7 +198,7 @@ public class MainActivity extends FragmentActivity implements
 			if (newProperty == null) {
 				mJobPicker.setTitle(R.string.action_pick_job_title);
 			} else {
-				CharSequence woTitle = "WO #" + String.valueOf(event.getNewValue());
+				CharSequence woTitle = "WO #" + String.valueOf(newProperty);
 				mJobPicker.setTitle(woTitle);
 			}
 			
@@ -260,9 +260,14 @@ public class MainActivity extends FragmentActivity implements
 		}
 		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.new_wo, Menu.FLAG_APPEND_TO_GROUP, "+ New");
 		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.clear_wos, Menu.FLAG_APPEND_TO_GROUP, "Clear");
+
+		if (!mModel.hasSelectedLine()) {
+			mModel.loadState();	
+		}
 		
-		//Select the line and job that we used last time
-		mModel.loadState();
+		//refresh the line picker text from its default reinflated value
+		CharSequence lineTitle = "Line " + String.valueOf(mModel.getSelectedLine().getLineNumber());
+		mLinePicker.setTitle(lineTitle);
 		return true;
 	}
 

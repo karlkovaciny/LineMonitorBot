@@ -17,12 +17,11 @@ public class PrimexModel {
 	
 	public PrimexModel(Context context) {
 		mDbHelper = new PrimexSQLiteOpenHelper(context);
-		mDbHelper.getWritableDatabase();
 		mLineNumbersList = mDbHelper.getLineNumbers();
 		if (mLineNumbersList.size() == 0) {
 			throw new RuntimeException("database didn't find any lines");
 		}
-		mWoNumbersList = mDbHelper.getWoNumbers();		
+		mWoNumbersList = mDbHelper.getWoNumbers();
 	}
 	/*
 	 * This section sets up notifying observers about changes.
@@ -71,49 +70,44 @@ public class PrimexModel {
 	private double mGrossRate;
 	private long mMinutesPerSkid;
 
-	/*
-	 * also selects product currently
-	 */
 	public void setSelectedLine (Integer lineNumber) {
-		Integer oldLine = -1;
-		if (mLineNumbersList.contains(lineNumber)) {
-			if (mSelectedLine != null) {
-				oldLine = mSelectedLine.getLineNumber();
-			}
-			mSelectedLine = mDbHelper.getLine(lineNumber);
-			Integer newLine = mSelectedLine.getLineNumber();
-			
-						propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLine, newLine);
+		if (lineNumber == null) throw new NullPointerException("need to select a line");
+		if (!mLineNumbersList.contains(lineNumber)) throw new NoSuchElementException("Line number not in the list of lines");;
 		
-			
-		} else if (lineNumber == null) {
-			mSelectedLine = null;
-			propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLine, null);
-		} else throw new NoSuchElementException("Line number not in the list of lines");
+		int oldLineNumber = hasSelectedLine() ? mSelectedLine.getLineNumber() : -1;
+		if (lineNumber != oldLineNumber) {
+			mSelectedLine = mDbHelper.getLine(lineNumber);
+			int associatedWoNumber = mDbHelper.getWoNumberByLine(lineNumber);
+			if (associatedWoNumber > 0) {
+				setSelectedWorkOrder(associatedWoNumber);	
+			} else { //make sure a work order is selected
+				int newWoNumber = mDbHelper.getHighestWoNumber() + 1;
+				addWorkOrder(new WorkOrder(newWoNumber));
+				setSelectedWorkOrder(newWoNumber);
+			}
+			propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLineNumber, mSelectedLine.getLineNumber());	
+		}
 	}
 	
-	public void setSelectedWorkOrder(Integer woNumber) {
-		Integer oldSelection = -1;
-		if (mWoNumbersList.contains(woNumber)) {
-			if (mSelectedWorkOrder != null) {
-				oldSelection = mSelectedWorkOrder.getWoNumber();
-			}
-			
+	public void setSelectedWorkOrder(int woNumber) {
+		if (!mWoNumbersList.contains(woNumber)) {
+			throw new NoSuchElementException("Work order number not in the list of work orders, need to add it");
+		}
+		if (woNumber > 0) {
+			int oldWoNumber = (mSelectedWorkOrder == null) ? 0 : mSelectedWorkOrder.getWoNumber();
+					
 			WorkOrder lookedUpWo = mDbHelper.getWorkOrder(woNumber);
 			if (lookedUpWo == null) throw new RuntimeException("WorkOrder not found even though it is in woNumbersList");
 			
 			mSelectedWorkOrder = lookedUpWo;
-			Integer newSelection = mSelectedWorkOrder.getWoNumber();
+			mDbHelper.updateLineWorkOrderLink(mSelectedLine.getLineNumber(), woNumber);
+			mSelectedSkid = mSelectedWorkOrder.getSelectedSkid();
 			
 			Product p = mDbHelper.getProduct(woNumber);
 			mSelectedWorkOrder.setProduct(p);
 		
-			mSelectedSkid = mSelectedWorkOrder.getSelectedSkid();
-			propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldSelection, newSelection);
-		} else if (woNumber == null) {
-			mSelectedWorkOrder = null;
-			propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldSelection, null);
-		} else throw new NoSuchElementException("Work order number not in the list of work orders, need to add it");
+			propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldWoNumber, mSelectedWorkOrder.getWoNumber());
+		} else throw new IllegalArgumentException("Work order number must be positive");
 	}
 //TODO make it so there's not an "add product, add pallet, etc"
 //imagine a delete work order, a list of work orders and you are at one index of it
@@ -203,21 +197,17 @@ public class PrimexModel {
 	}
 
 	public void loadState() {
-		String lineNum = mDbHelper.getString(PrimexDatabaseSchema.ModelState.TABLE_NAME, PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, null);
-		String woNum = mDbHelper.getString(PrimexDatabaseSchema.ModelState.TABLE_NAME, PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, null);
+		String lineNum = mDbHelper.getFieldAsString(PrimexDatabaseSchema.ModelState.TABLE_NAME, PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, null);
 		try {
-			if ( (lineNum == null) || (woNum == null) ) {
-				throw new IllegalStateException("either line number or WO number is null");
+			if ( (lineNum == null)) {
+				throw new IllegalStateException("line number is null");
 			}
 		} catch (IllegalStateException e) { 
 			setSelectedLine(18);
 			addWorkOrder(new WorkOrder(18));
 			setSelectedWorkOrder(18);
 		}
-		
 		setSelectedLine(Integer.valueOf(lineNum));
-		Integer woNumber = Integer.valueOf(woNum); 
-		setSelectedWorkOrder(woNumber);
 	}
 	
 	public void setProductsPerMinute(double spm) {
@@ -331,7 +321,6 @@ public class PrimexModel {
 	}
 	
 	public void clearWoNumbers() {
-		mDbHelper.clearWoNumbers();
-		setSelectedWorkOrder(null);
+		mDbHelper.clearWoNumbers();		
 	}
 }
