@@ -321,6 +321,6 @@ public class PrimexModel {
 	}
 	
 	public void clearWoNumbers() {
-		mDbHelper.clearWoNumbers();		
+		mDbHelper.clearWorkOrders();		
 	}
 }
