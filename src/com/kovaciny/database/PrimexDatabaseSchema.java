@@ -28,6 +28,12 @@ public class PrimexDatabaseSchema {
 		public static final String COLUMN_NAME_MAXIMUM_STACK_HEIGHT = "max_stack_height";
 	}
 	
+	public static abstract class LineWorkOrderLink implements BaseColumns {
+		public static final String TABLE_NAME = "line_work_order_link";
+		public static final String COLUMN_NAME_LINE_ID = "line_id";
+		public static final String COLUMN_NAME_WO_ID = "wo_id";
+	}
+	
 	public static abstract class Products implements BaseColumns {
 		public static final String TABLE_NAME = "products";
 		public static final String COLUMN_NAME_GAUGE = "gauge";

@@ -27,17 +27,17 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 	
+	// If you change the database schema, you must increment the database version.
+    public static final int DATABASE_VERSION = 53;
+    public static final String DATABASE_NAME = "Primex.db";
+    
 	private static final String TEXT_TYPE = " TEXT";
 	private static final String DOUBLE_TYPE = " DOUBLE";
 	private static final String INTEGER_TYPE = " INTEGER";
 	private static final String COMMA_SEP = ",";
 	private static final String REAL_TYPE = " REAL";
 		
-	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 40;
-    public static final String DATABASE_NAME = "Primex.db";
-    
-    private static final String SQL_CREATE_PRODUCTION_LINES =
+	private static final String SQL_CREATE_PRODUCTION_LINES =
     	    "CREATE TABLE " + PrimexDatabaseSchema.ProductionLines.TABLE_NAME + " (" +
     	    PrimexDatabaseSchema.ProductionLines._ID + " INTEGER PRIMARY KEY," +
     	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + INTEGER_TYPE + COMMA_SEP +
@@ -61,6 +61,15 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT + DOUBLE_TYPE + COMMA_SEP +
 	    	" UNIQUE (" + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + ")" +
 	    	" )";
+    
+    private static final String SQL_CREATE_LINE_WORK_ORDER_LINK = 
+    		"CREATE TABLE " + PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME + " (" +
+    		PrimexDatabaseSchema.LineWorkOrderLink._ID + " INTEGER PRIMARY KEY, " + 
+    		PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID + INTEGER_TYPE + COMMA_SEP + 
+    		PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID + INTEGER_TYPE + COMMA_SEP +
+    		" UNIQUE (" + PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID + ")" +
+    		")";
+    		
 
     private static final String SQL_CREATE_PRODUCTS = 
     		"CREATE TABLE " + PrimexDatabaseSchema.Products.TABLE_NAME + " (" +
@@ -90,12 +99,15 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     		" )";
     
 	//list "child" tables, which have a foreign key, before their parent, so drop table works
+    private static final String TABLE_NAME_LINE_WORK_ORDER_LINK = PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME;
     private static final String TABLE_NAME_PRODUCT_TYPES = PrimexDatabaseSchema.ProductTypes.TABLE_NAME;
     private static final String TABLE_NAME_PRODUCTS = PrimexDatabaseSchema.Products.TABLE_NAME;
     private static final String TABLE_NAME_WORK_ORDERS = PrimexDatabaseSchema.WorkOrders.TABLE_NAME;
     private static final String TABLE_NAME_PRODUCTION_LINES = PrimexDatabaseSchema.ProductionLines.TABLE_NAME;
     private static final String TABLE_NAME_MODEL_STATE = PrimexDatabaseSchema.ModelState.TABLE_NAME;
 
+    private static final String SQL_DELETE_LINE_WORK_ORDER_LINK = 
+    		"DROP TABLE IF EXISTS " + TABLE_NAME_LINE_WORK_ORDER_LINK;
     private static final String SQL_DELETE_PRODUCT_TYPES =
 			"DROP TABLE IF EXISTS " + TABLE_NAME_PRODUCT_TYPES;
 	private static final String SQL_DELETE_PRODUCTS =
@@ -108,10 +120,10 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			"DROP TABLE IF EXISTS " + TABLE_NAME_MODEL_STATE;
 	
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_PRODUCTION_LINES);
+    	final List<Integer> lineNumbers = Arrays.asList(1,6,7,9,10,  11,12,13,14,15,  16,17,18); //13 lines
+    	db.execSQL(SQL_CREATE_PRODUCTION_LINES);
         //Batch insert to SQLite database on Android
         try {
-        	List<Integer> lineNumbers = Arrays.asList(1,6,7,9,10,  11,12,13,14,15,  16,17,18); //13 lines
         	List<Integer> linesWithGearedSpeedControl = Arrays.asList(6,9,12,16,17); //TODO remove this and speed controller type
         	Double speedFactors[] = new Double[] {1d,.0769,1d,.99,1.015,  1d,0.00009917,.98,1d,1.01, 1d,.0347,.987};
         	List<Double> speedFactorsList = Arrays.asList(speedFactors);
@@ -149,6 +161,31 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         }
         
         db.execSQL(SQL_CREATE_WORK_ORDERS);
+        try {
+        	db.beginTransaction();
+        	ContentValues values = new ContentValues();
+        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER,123);
+        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED,69);
+        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NUMBER_OF_SKIDS,1);
+        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT,0);
+        	
+        	db.insertOrThrow(PrimexDatabaseSchema.WorkOrders.TABLE_NAME, null, values);
+        	db.setTransactionSuccessful();
+        } finally {
+        	db.endTransaction();
+        }
+
+        db.execSQL(SQL_CREATE_LINE_WORK_ORDER_LINK);
+        try {
+        	db.beginTransaction();
+        	ContentValues values = new ContentValues();
+        	values.put(PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID, 7);
+        	values.put(PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID, 1);
+        	db.insertOrThrow(PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME, null, values);
+        	db.setTransactionSuccessful();
+        } finally {
+        	db.endTransaction();
+        }
         db.execSQL(SQL_CREATE_PRODUCT_TYPES);
         try {
         	db.beginTransaction();
@@ -187,7 +224,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
-        db.execSQL(SQL_DELETE_PRODUCTION_LINES);
+        db.execSQL(SQL_DELETE_LINE_WORK_ORDER_LINK);
+    	db.execSQL(SQL_DELETE_PRODUCTION_LINES);
         db.execSQL(SQL_DELETE_WORK_ORDERS);
         db.execSQL(SQL_DELETE_PRODUCT_TYPES);
         db.execSQL(SQL_DELETE_PRODUCTS);
@@ -344,7 +382,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			if (c != null && c.moveToFirst()) {
 			    productId = c.getInt(0); //The 0 is the column index, we only have 1 column, so the index is 0
 			}
-			//debug
+			//debug TODO
 			String sqll = "SELECT * FROM " + PrimexDatabaseSchema.Products.TABLE_NAME + " WHERE " + 
 			PrimexDatabaseSchema.Products._ID + "=?";
 			Cursor cc = db.rawQuery(sqll, new String[]{String.valueOf(productId)});
@@ -530,10 +568,13 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public String getString(String tableName, String columnName, String[] whereArgs){
+	public String getFieldAsString(String tableName, String columnName, String[] whereArgs){
 		SQLiteDatabase db = getReadableDatabase();
 		
 		String sql = "SELECT " + columnName + " FROM " + tableName;
+		if (whereArgs != null) {
+			sql += " WHERE " + columnName + "=?";
+		}
 		Cursor resultCursor = db.rawQuery(sql, whereArgs);
 		
 		String value = null;
@@ -548,6 +589,28 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		}
 	}
 	
+	public int getIdOfValue (String tableName, String columnName, Object value) {
+		SQLiteDatabase db = getReadableDatabase();
+		String sql = "SELECT _id" +
+				" FROM " + tableName + 
+				" WHERE " + columnName + 
+				"=?";
+		Cursor resultsCursor = db.rawQuery(sql, new String[]{String.valueOf(value)});
+		int columnId = -1;
+		try {
+			if (resultsCursor.getCount() > 1) {
+				Log.e("ERROR", "shouldn't get more than one result");
+			}
+			if (resultsCursor.moveToFirst()){
+				columnId = resultsCursor.getInt(0);
+			}
+			return columnId;
+		} finally {
+			if (resultsCursor != null) {
+				resultsCursor.close();
+			}
+		}		
+	}
 	
 	
 	
@@ -625,7 +688,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	}
 	
 	public int updateColumn(String tableName, String columnName, String where, String[] whereArgs, String newValue){
-		SQLiteDatabase db = getReadableDatabase();
+		SQLiteDatabase db = getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
 
@@ -639,5 +702,56 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				);
 				
 		return numAffectedRows;	    
+	}
+	
+	public long updateLineWorkOrderLink(int lineNumber, int woNumber) {
+		SQLiteDatabase db = getWritableDatabase();
+		int lineId = getIdOfValue(
+				PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
+				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, 
+				lineNumber);
+		int woId = getIdOfValue(
+				PrimexDatabaseSchema.WorkOrders.TABLE_NAME, 
+				PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER,
+				woNumber);
+		ContentValues values = new ContentValues();
+		values.put (PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID, lineId);
+		values.put (PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID, woId);
+		long rowId = db.replace(PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME, null, values);
+		return rowId;	
+	}
+	
+	/*
+	 * Returns 0 if work order not found.
+	 */
+	public int getWoNumberByLine(int lineNumber) {
+		SQLiteDatabase db = getReadableDatabase();
+		String sql = "SELECT " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + "." + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + 
+				" FROM " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME +  
+				" JOIN " + PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME + 
+				" ON " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + "." + PrimexDatabaseSchema.WorkOrders._ID + 
+				"=" + PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME + "." + PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID +
+				" JOIN " + PrimexDatabaseSchema.ProductionLines.TABLE_NAME +
+				" ON " + PrimexDatabaseSchema.ProductionLines.TABLE_NAME + "." + PrimexDatabaseSchema.ProductionLines._ID + 
+				"=" + PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME + "." + PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID +
+				" AND " + PrimexDatabaseSchema.ProductionLines.TABLE_NAME + "." + PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + 
+				"=" + lineNumber;
+		
+		Cursor resultCursor = db.rawQuery(sql, null);
+		if (resultCursor.getCount() > 1) {
+			Log.e("ERROR", "More than one work order for this query, you will get errors");
+		}
+		int woNumber = 0;
+		try {
+			if (resultCursor.moveToFirst()) {
+				int columnIndex = resultCursor.getColumnIndex(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER);
+				woNumber = resultCursor.getInt(columnIndex);
+			}
+			return woNumber;
+		} finally {
+			if (resultCursor != null) {
+				resultCursor.close();
+			}
+		}
 	}
 }
