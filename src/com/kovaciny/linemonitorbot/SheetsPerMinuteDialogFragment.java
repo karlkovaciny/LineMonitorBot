@@ -147,25 +147,40 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 	}
 
 	public double getLineSpeedValue() {
-		String s = mEdit_lineSpeed.getText().toString();
+		String s = mEdit_lineSpeed.getText().toString().trim();
 		if (s.length() > 0) {	
 			return Double.valueOf(s);
 		} else return 0f;
 	}
 	public double getGauge() {
-		return Double.valueOf(mEdit_gauge.getText().toString());
+		String gauge = mEdit_gauge.getText().toString().trim();
+		if (gauge.equals("")) {
+			return 0;
+		} else return Double.valueOf(gauge);
 	}
 	public double getSheetWidthValue() {
-		return Double.valueOf(mEdit_sheetWidth.getText().toString());
+		String width = mEdit_sheetWidth.getText().toString().trim();
+		if (width.equals("")) {
+			return 0;
+		} else return Double.valueOf(width);
 	}
 	public double getSheetLengthValue() {
-		return Double.valueOf(mEdit_sheetLength.getText().toString());
-	}
+		String length = mEdit_sheetLength.getText().toString().trim();
+		if (length.equals("")) {
+			return 0;
+		} else return Double.valueOf(length);}
+	
 	public double getDifferentialSpeedValue() {
-		return Double.valueOf(mEdit_differentialSpeed.getText().toString());
+		String diff = mEdit_differentialSpeed.getText().toString().trim();
+		if (diff.equals("")){
+			return 0;
+		} else return Double.valueOf(diff);
 	}
 	public double getSpeedFactorValue() {
-		return Double.valueOf(mEdit_speedFactor.getText().toString());
+		String factor = mEdit_speedFactor.getText().toString().trim();
+		if (factor.equals("")) {
+			return 0;
+		} else return Double.valueOf(factor);
 	}
 	public String getSheetsOrRollsState() {
 		return mSheetsOrRollsState;
