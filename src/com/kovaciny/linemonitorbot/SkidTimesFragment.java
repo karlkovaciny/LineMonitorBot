@@ -4,6 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,7 +41,10 @@ public class SkidTimesFragment extends SectionFragment implements
 	private Button mBtn_cancelAlarm;
 	private Button mBtn_newSkid;
 	
-	private List<View> mEditTextList;
+	private List<View> mEditableGroup;
+	private List<View> mTimeInputGroup;
+	private List<View> mJobTimeInputGroup;
+	
 	private EditText mEdit_sheetsPerMinute;
 	private EditText mEdit_skidNumber;
 	private EditText mEdit_currentCount;
@@ -87,31 +91,47 @@ public class SkidTimesFragment extends SectionFragment implements
 		View rootView = inflater.inflate(R.layout.skid_times_fragment, container,
 				false);
 
-		mEditTextList = new ArrayList<View>();
-
+		mEditableGroup = new ArrayList<View>();
+		
 		mEdit_sheetsPerMinute = (EditText) rootView
 				.findViewById(R.id.edit_products_per_minute);
-		mEditTextList.add(mEdit_sheetsPerMinute);
+		mEditableGroup.add(mEdit_sheetsPerMinute);
+		
 		mEdit_skidNumber = (EditText) rootView
 				.findViewById(R.id.edit_skid_number);
-		mEditTextList.add(mEdit_skidNumber);
+		mEditableGroup.add(mEdit_skidNumber);
+		
 		mEdit_currentCount = (EditText) rootView
 				.findViewById(R.id.edit_current_count);
-		mEditTextList.add(mEdit_currentCount);
+		mEditableGroup.add(mEdit_currentCount);
+		
 		mEdit_totalSheetsPerSkid = (EditText) rootView
 				.findViewById(R.id.edit_total_sheets_per_skid);
-		mEditTextList.add(mEdit_totalSheetsPerSkid);
+		mEditableGroup.add(mEdit_totalSheetsPerSkid);
+		
 		mEdit_skidStartTime = (EditText) rootView
 				.findViewById(R.id.edit_skid_start_time);
-		mEditTextList.add(mEdit_skidStartTime);
+		mEditableGroup.add(mEdit_skidStartTime);
+		
 		mEdit_skidFinishTime = (EditText) rootView
 				.findViewById(R.id.edit_skid_finish_time);
-		mEditTextList.add(mEdit_skidFinishTime);
+		mEditableGroup.add(mEdit_skidFinishTime);
+		
 		mEdit_numSkidsInJob = (EditText) rootView
 				.findViewById(R.id.edit_num_skids_in_job);
-		mEditTextList.add(mEdit_numSkidsInJob);
+		mEditableGroup.add(mEdit_numSkidsInJob);
 		
-		for (View v : mEditTextList) {
+		mTimeInputGroup = new ArrayList<View>();
+		mTimeInputGroup.add(mEdit_sheetsPerMinute);
+		mTimeInputGroup.add(mEdit_currentCount);
+		mTimeInputGroup.add(mEdit_totalSheetsPerSkid);
+		
+		mJobTimeInputGroup = new ArrayList<View>();		
+		mJobTimeInputGroup.addAll(mTimeInputGroup);
+		mJobTimeInputGroup.add(mEdit_numSkidsInJob);
+		mJobTimeInputGroup.add(mEdit_skidNumber);
+		
+		for (View v : mEditableGroup) {
 			EditText etv = (EditText) v;
 			etv.setOnEditorActionListener(this);
 			etv.setOnFocusChangeListener(this);
@@ -176,7 +196,7 @@ public class SkidTimesFragment extends SectionFragment implements
 	public void onFocusChange(View v, boolean hasFocus) {
 		if (!hasFocus) {
 			EditText etv = (EditText)v;
-			if ( mEditTextList.contains(etv) ) {
+			if ( mEditableGroup.contains(etv) ) {
 				processUserTextEntry(etv);
 			}
 		}
@@ -185,8 +205,23 @@ public class SkidTimesFragment extends SectionFragment implements
 	public void processUserTextEntry(TextView tv) {
 		tv.setTextAppearance(getActivity(), R.style.UserEntered);
 		String userEntry = tv.getText().toString();
-		//TODO: data validation
-		if (userEntry.length() != 0) {
+		List<View> containingGroup = new ArrayList<View>();
+		if (mTimeInputGroup.contains(tv)) {
+			containingGroup = mTimeInputGroup;
+		} else if (mJobTimeInputGroup.contains(tv)) { //ie, it is one of the views in this group but not the former
+			containingGroup = mJobTimeInputGroup;
+		}
+		boolean allValidData = true;
+		if (userEntry.length() == 0) allValidData = false;
+		Iterator<View> itr = containingGroup.iterator();
+		while (itr.hasNext()) {
+			EditText et = (EditText)itr.next();
+			if ( et.getText().toString().trim().equals("") ) {
+				allValidData = false;
+			}
+		}
+		if (allValidData) {
+			Toast.makeText(getActivity(), "calling activity", Toast.LENGTH_SHORT).show();
 			mCallback.onViewChange(tv.getId(), userEntry);
 		}
 	}

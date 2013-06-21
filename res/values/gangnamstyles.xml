@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
    <style name="UserEntered">
        <item name="android:textColor">@color/win8_green</item>
    </style>
@@ -10,7 +10,11 @@
        <item name="android:textColor">@color/win8_orange</item>
    </style> 
    <style name="Label" parent="@android:style/TextAppearance.Medium">
-       
+   </style>
+   <style name="Label.Small" parent="@android:style/TextAppearance.Small">
+   </style>
+   <style name="EditText" parent="@android:style/TextAppearance.Medium">
+       <item name="android:textColor">@color/DarkKhaki</item>
    </style>
    <style name="ParentFragment">
        <item name="android:paddingTop">@dimen/fragment_vertical_margin</item>

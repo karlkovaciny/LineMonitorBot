@@ -28,7 +28,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 56;
+    public static final int DATABASE_VERSION = 57;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -125,12 +125,11 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         //Batch insert to SQLite database on Android
         try {
         	List<Integer> linesWithGearedSpeedControl = Arrays.asList(6,9,12,16,17); //TODO remove this and speed controller type
-        	Double lengths[] = new Double[] {99.0d, 51.5d, 34.2d, 46.0d, 44.7d,  45.7d,56.7d,56.3d,64.3d,46.5d, 45.0d,61.9d, 71d};    
-        	List<Double> lengthsList = Arrays.asList(lengths);
+        	List<Double> lengthsList = 
+        			Arrays.asList(new Double[] {99.0d, 51.5d, 34.2d, 46.0d, 44.7d,  45.7d,56.7d,56.3d,64.3d,46.5d, 45.0d,61.9d, 71d});
         	Iterator<Double> lengthsIterator = lengthsList.iterator();
         	
-        	Double speedFactors[] = new Double[] {1d,.0769d,1d,.99d,1.015d,  1d,9.917d,.98d,1d,1.01d, 1d,.0347d,.987d};
-        	List<Double> speedFactorsList = Arrays.asList(speedFactors);        	
+        	List<Double> speedFactorsList = Arrays.asList(new Double[]{1d,.0769d,1d,.99d,1.015d,  1d,0.9917d,.98d,1d,1.01d, 1d,.0347d,.987d});        	
         	Iterator<Double> speedFactorsIterator = speedFactorsList.iterator();
 	        db.beginTransaction();
 	        for (Integer lineNum : lineNumbers) {

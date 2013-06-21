@@ -67,7 +67,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		// Set other dialog properties
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View rootView = inflater.inflate(R.layout.calculate_sheets_per_minute_dialog, null);
+		View rootView = inflater.inflate(R.layout.sheets_per_minute_dialog, null);
 		builder.setView(rootView);
 
 		mEdit_gauge = (EditText) rootView.findViewById(R.id.edit_gauge);
