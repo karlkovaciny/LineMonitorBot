@@ -509,9 +509,10 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		return workOrders;
 	}
 	
-	public void clearWoNumbers() {
+	public void clearWorkOrders() {
 		SQLiteDatabase db = getWritableDatabase();
-			
+		db.execSQL(SQL_DELETE_LINE_WORK_ORDER_LINK);
+		db.execSQL(SQL_CREATE_LINE_WORK_ORDER_LINK);
 		db.execSQL(SQL_DELETE_WORK_ORDERS);
 		db.execSQL(SQL_CREATE_WORK_ORDERS);
 	}
