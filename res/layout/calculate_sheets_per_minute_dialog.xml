@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ParentFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -28,7 +29,7 @@
 
             <TextView
                 android:id="@+id/lbl_gauge"
-                style="@style/label"
+                style="@style/Label"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
@@ -55,7 +56,7 @@
 
             <TextView
                 android:id="@+id/lbl_sheet_width"
-                style="@style/label"
+                style="@style/Label"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
@@ -83,7 +84,7 @@
 
             <TextView
                 android:id="@+id/lbl_sheet_length"
-                style="@style/label"
+                style="@style/Label"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
@@ -109,7 +110,7 @@
 
             <TextView
                 android:id="@+id/lbl_line_speed"
-                style="@style/label"
+                style="@style/Label"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
@@ -135,7 +136,7 @@
 
             <TextView
                 android:id="@+id/lbl_differential_speed"
-                style="@style/label"
+                style="@style/Label"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
@@ -159,7 +160,7 @@
 
             <TextView
                 android:id="@+id/lbl_speed_factor"
-                style="@style/label"
+                style="@style/Label"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"

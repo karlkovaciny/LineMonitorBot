@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ParentFragment.HorizontallyDivided"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -7,7 +8,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="?android:attr/dividerHorizontal"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -18,8 +18,8 @@
                 android:id="@+id/lbl_gross_width"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gross Width: "
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                style="@style/Label"
+                android:text="Gross Width: "/>
 
             <EditText
                 android:id="@+id/edit_gross_width"
@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Edge trim: "
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                style="@style/Label" />
 
             <TextView
                 android:id="@+id/txt_edge_trim_percent"
@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sheet Weight:"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                style="@style/Label" />
 
             <EditText
                 android:id="@+id/edit_sheet_weight"
@@ -81,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Net pounds per hour: "
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                style="@style/Label"/>
 
             <TextView
                 android:id="@+id/txt_net_pph"
@@ -100,7 +100,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Gross pounds per hour: "
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                style="@style/Label" />
 
             <TextView
                 android:id="@+id/txt_gross_pph"
@@ -120,6 +120,7 @@
                 android:id="@+id/lbl_novatec_setpoint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/Label"
                 android:text="Nova setpt" />
 
             <EditText

@@ -164,7 +164,7 @@ public class SkidTimesFragment extends SectionFragment implements
 	}
 	
 	public void processUserTextEntry(TextView tv) {
-		tv.setTextAppearance(getActivity(), R.style.user_entered);
+		tv.setTextAppearance(getActivity(), R.style.UserEntered);
 		String userEntry = tv.getText().toString();
 		//TODO: data validation
 		if (userEntry.length() != 0) {
