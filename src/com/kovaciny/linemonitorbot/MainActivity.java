@@ -178,10 +178,7 @@ public class MainActivity extends FragmentActivity implements
 		Object newProperty = event.getNewValue();
 		SkidTimesFragment skidTimesFrag = (SkidTimesFragment) this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
 		
-		if (eventName == PrimexModel.LINE_SPEED_CHANGE_EVENT) {
-			//TODO
-			
-		} else if (eventName == PrimexModel.SELECTED_LINE_CHANGE_EVENT) {
+		if (eventName == PrimexModel.SELECTED_LINE_CHANGE_EVENT) {
 			if (newProperty == null) {
 				//mLinePicker.setTitle(R.string.action_pick_line_title);
 				throw new RuntimeException("cannot change to no line");
@@ -215,8 +212,10 @@ public class MainActivity extends FragmentActivity implements
 			skidTimesFrag.modelPropertyChange(event);
 			
 		} else if ((eventName == PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE_EVENT) ||
-				(eventName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT || 
-				(eventName == PrimexModel.SKID_CHANGE_EVENT))) {
+				(eventName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) ||
+				(eventName == PrimexModel.LINE_SPEED_CHANGE_EVENT) ||
+				(eventName == PrimexModel.TIME_TO_MAXSON_CHANGE_EVENT) ||
+				(eventName == PrimexModel.SKID_CHANGE_EVENT)) {
 			skidTimesFrag.modelPropertyChange(event);
 		} else if (eventName == PrimexModel.CURRENT_SKID_START_TIME_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);
