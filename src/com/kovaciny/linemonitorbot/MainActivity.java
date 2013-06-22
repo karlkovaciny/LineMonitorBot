@@ -18,6 +18,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
@@ -131,7 +133,7 @@ public class MainActivity extends FragmentActivity implements
 		//ask model for updates
 		//tell views to change
 	}
-	
+
 	public void showSheetsPerMinuteDialog() {
 		// Create the fragment and show it as a dialog.
 		SheetsPerMinuteDialogFragment newFragment = new SheetsPerMinuteDialogFragment();

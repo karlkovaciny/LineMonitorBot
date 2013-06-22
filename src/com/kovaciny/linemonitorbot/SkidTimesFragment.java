@@ -91,6 +91,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		View rootView = inflater.inflate(R.layout.skid_times_fragment, container,
 				false);
 
+		//set up edittexts
 		mEditableGroup = new ArrayList<View>();
 		
 		mEdit_sheetsPerMinute = (EditText) rootView
@@ -137,6 +138,18 @@ public class SkidTimesFragment extends SectionFragment implements
 			etv.setOnFocusChangeListener(this);
 		}
 
+		//set up buttons
+		mImgBtn_calcSheetsPerMinute = (ImageButton) rootView
+				.findViewById(R.id.imgBtn_sheets_per_minute);
+		mImgBtn_calcSheetsPerMinute.setOnClickListener(this);
+		
+		mBtn_newSkid = (Button) rootView.findViewById(R.id.btn_new_skid);
+		mBtn_newSkid.setOnClickListener(this);
+		
+		mBtn_cancelAlarm = (Button) rootView.findViewById(R.id.btn_cancel_alarm);
+		mBtn_cancelAlarm.setOnClickListener(this);
+		
+		//set up textviews
 		mTxt_timePerSkid = (TextView) rootView
 				.findViewById(R.id.txt_time_per_skid);
 		if (mMillisPerSkid > 0) {
@@ -148,12 +161,8 @@ public class SkidTimesFragment extends SectionFragment implements
 				.findViewById(R.id.lbl_products_per_minute);
 		mLbl_totalProducts = (TextView) rootView.findViewById(R.id.lbl_total_products);
 
-		mImgBtn_calcSheetsPerMinute = (ImageButton) rootView
-				.findViewById(R.id.imgBtn_sheets_per_minute);
-		mImgBtn_calcSheetsPerMinute.setOnClickListener(this);
+
 		
-		mBtn_newSkid = (Button) rootView.findViewById(R.id.btn_new_skid);
-		mBtn_newSkid.setOnClickListener(this);
 		mTxt_jobFinishTime = (TextView) rootView.findViewById(R.id.txt_job_finish_time);
 		if (mJobFinishText != null) {
 			mTxt_jobFinishTime.setText(mJobFinishText);
@@ -165,10 +174,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		}
 		
 		mLbl_jobFinishTime = (TextView) rootView.findViewById(R.id.lbl_job_finish_time);
-				
-		mBtn_cancelAlarm = (Button) rootView.findViewById(R.id.btn_cancel_alarm);
-		mBtn_cancelAlarm.setOnClickListener(this);
-		
+			
 		return rootView;
 	}
 
@@ -181,10 +187,6 @@ public class SkidTimesFragment extends SectionFragment implements
 	 */
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent arg2) {
-		if ((actionId == EditorInfo.IME_ACTION_DONE)
-				|| (actionId == EditorInfo.IME_ACTION_NEXT)) {
-			processUserTextEntry(v);
-		}
 		return false;
 	}
 
@@ -194,12 +196,7 @@ public class SkidTimesFragment extends SectionFragment implements
 	 */
 	@Override
 	public void onFocusChange(View v, boolean hasFocus) {
-		if (!hasFocus) {
-			EditText etv = (EditText)v;
-			if ( mEditableGroup.contains(etv) ) {
-				processUserTextEntry(etv);
-			}
-		}
+		
 	}
 	
 	public void processUserTextEntry(TextView tv) {
@@ -221,7 +218,6 @@ public class SkidTimesFragment extends SectionFragment implements
 			}
 		}
 		if (allValidData) {
-			Toast.makeText(getActivity(), "calling activity", Toast.LENGTH_SHORT).show();
 			mCallback.onViewChange(tv.getId(), userEntry);
 		}
 	}
@@ -258,7 +254,11 @@ public class SkidTimesFragment extends SectionFragment implements
 		case (R.id.imgBtn_sheets_per_minute):
 			((MainActivity)getActivity()).showSheetsPerMinuteDialog();
 			break;
-		case (R.id.btn_new_skid) :
+		case (R.id.btn_new_skid) : //TODO This violates all I hold dear about the model and view. :(
+			Iterator<View> edits = mEditableGroup.iterator();
+			while (edits.hasNext()) {
+				processUserTextEntry((TextView)edits.next());
+			}
 			break;
 		case (R.id.btn_cancel_alarm):
 			Context context = getActivity();
