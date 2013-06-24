@@ -2,22 +2,24 @@ package com.kovaciny.database;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
-import org.junit.runners.ParentRunner;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 import android.util.Log;
 
+import com.kovaciny.primexmodel.Pallet;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.ProductionLine;
 import com.kovaciny.primexmodel.Roll;
 import com.kovaciny.primexmodel.Sheet;
+import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.SpeedValues;
 import com.kovaciny.primexmodel.WorkOrder;
 
@@ -28,7 +30,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 57;
+    public static final int DATABASE_VERSION = 61;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -82,6 +84,19 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     		" UNIQUE ("  + PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + ")" +
     		" )";
     
+    private static final String SQL_CREATE_SKIDS = 
+    		"CREATE TABLE " + PrimexDatabaseSchema.Skids.TABLE_NAME + " (" +
+    		PrimexDatabaseSchema.Skids._ID + " INTEGER PRIMARY KEY," +
+    		PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER + INTEGER_TYPE + COMMA_SEP +
+    		PrimexDatabaseSchema.Skids.COLUMN_NAME_CURRENT_ITEMS + INTEGER_TYPE + COMMA_SEP +
+    		PrimexDatabaseSchema.Skids.COLUMN_NAME_TOTAL_ITEMS + INTEGER_TYPE + COMMA_SEP +
+    		PrimexDatabaseSchema.Skids.COLUMN_NAME_STACKS + INTEGER_TYPE + COMMA_SEP +
+    		PrimexDatabaseSchema.Skids.COLUMN_NAME_START_DATE + INTEGER_TYPE + COMMA_SEP +
+    		PrimexDatabaseSchema.Skids.COLUMN_NAME_FINISH_DATE + INTEGER_TYPE + COMMA_SEP +
+    		PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID + INTEGER_TYPE + COMMA_SEP +
+    		" UNIQUE (" + PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER + ", " + PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID + ")" +
+    		" )";
+    
     private static final String SQL_CREATE_PRODUCT_TYPES = 
     		"CREATE TABLE " + PrimexDatabaseSchema.ProductTypes.TABLE_NAME + " (" +
     		PrimexDatabaseSchema.ProductTypes._ID + " INTEGER PRIMARY KEY," +
@@ -99,6 +114,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     		" )";
     
 	//list "child" tables, which have a foreign key, before their parent, so drop table works
+    private static final String TABLE_NAME_SKIDS = PrimexDatabaseSchema.Skids.TABLE_NAME;
     private static final String TABLE_NAME_LINE_WORK_ORDER_LINK = PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME;
     private static final String TABLE_NAME_PRODUCT_TYPES = PrimexDatabaseSchema.ProductTypes.TABLE_NAME;
     private static final String TABLE_NAME_PRODUCTS = PrimexDatabaseSchema.Products.TABLE_NAME;
@@ -106,7 +122,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String TABLE_NAME_PRODUCTION_LINES = PrimexDatabaseSchema.ProductionLines.TABLE_NAME;
     private static final String TABLE_NAME_MODEL_STATE = PrimexDatabaseSchema.ModelState.TABLE_NAME;
 
-    private static final String SQL_DELETE_LINE_WORK_ORDER_LINK = 
+    private static final String SQL_DELETE_SKIDS = 
+    		"DROP TABLE IF EXISTS " + TABLE_NAME_SKIDS;
+    private static final String SQL_DELETE_LINE_WORK_ORDER_LINK =    		
     		"DROP TABLE IF EXISTS " + TABLE_NAME_LINE_WORK_ORDER_LINK;
     private static final String SQL_DELETE_PRODUCT_TYPES =
 			"DROP TABLE IF EXISTS " + TABLE_NAME_PRODUCT_TYPES;
@@ -200,6 +218,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         }
         
         db.execSQL(SQL_CREATE_PRODUCTS);
+        db.execSQL(SQL_CREATE_SKIDS);
         db.execSQL(SQL_CREATE_MODEL_STATE);
         try {
         	db.beginTransaction();
@@ -215,13 +234,12 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         } finally {
         	db.endTransaction();
         }
-        
-
     }
     
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // This database is only a cache for online data, so its upgrade policy is
+        // TODO: upgrade policy is
         // to simply to discard the data and start over
+        db.execSQL(SQL_DELETE_SKIDS);
         db.execSQL(SQL_DELETE_LINE_WORK_ORDER_LINK);
     	db.execSQL(SQL_DELETE_PRODUCTION_LINES);
         db.execSQL(SQL_DELETE_WORK_ORDERS);
@@ -684,6 +702,69 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			if (resultCursor != null) {resultCursor.close();}
 		}	
 		return p;
+	}
+
+	public List<Skid<Product>> getSkidList(int woNumber) {
+		SQLiteDatabase db = getReadableDatabase();
+		
+		String sql = "SELECT * FROM " + PrimexDatabaseSchema.Skids.TABLE_NAME +
+				" WHERE " + PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID + 
+				"=?";
+		Cursor resultCursor = db.rawQuery(sql, new String[]{String.valueOf(woNumber)});
+		List<Skid<Product>> skidList = new ArrayList<Skid<Product>>();
+		try {
+			while (resultCursor.moveToNext()){
+				Skid<Product> skid = new Skid<Product>(
+						new Pallet(), 
+						resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_TOTAL_ITEMS)),
+						0.0d, 
+						resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_STACKS)),
+						new Date(resultCursor.getLong(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_START_DATE))),
+						getProduct(woNumber)
+						);
+				int currentItems = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_CURRENT_ITEMS));
+				skid.setCurrentItems(currentItems);
+				Date finishTime = new Date(resultCursor.getLong(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_FINISH_DATE)));
+				skid.setFinishTime(finishTime);
+				skidList.add(skid);
+			}
+			return skidList;
+		} finally {
+			if (resultCursor != null) {
+				resultCursor.close();
+			}
+		}	
+	}
+	
+	public long insertOrReplaceSkid(Skid<Product> skid, int woNumber) {
+		SQLiteDatabase db = getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER, skid.getSkidNumber());
+		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_CURRENT_ITEMS, skid.getCurrentItems());
+		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_TOTAL_ITEMS, skid.getTotalItems());
+		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_STACKS, skid.getmNumberOfStacks());
+		if (skid.getStartTime() != null) {
+			values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_START_DATE, skid.getStartTime().getTime());	
+		}
+		if (skid.getFinishTime() != null) {
+			values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_FINISH_DATE, skid.getFinishTime().getTime());
+		}
+		int woId = getIdOfValue(PrimexDatabaseSchema.WorkOrders.TABLE_NAME, PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, woNumber);
+		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID, woId);
+		
+		long rowId = db.insertWithOnConflict(
+				PrimexDatabaseSchema.Skids.TABLE_NAME, 
+				null, 
+				values,
+				SQLiteDatabase.CONFLICT_REPLACE);
+		
+		if (rowId == -1) {
+			Log.v("verbose", "insert error code -1");
+		} else {
+			Log.v("verbose", "insert row ID " + String.valueOf(rowId));
+		}
+		return rowId;
 	}
 	
 	public int updateColumn(String tableName, String columnName, String where, String[] whereArgs, String newValue){

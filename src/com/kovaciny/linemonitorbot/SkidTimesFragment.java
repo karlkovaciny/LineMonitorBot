@@ -254,7 +254,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		case (R.id.imgBtn_sheets_per_minute):
 			((MainActivity)getActivity()).showSheetsPerMinuteDialog();
 			break;
-		case (R.id.btn_new_skid) : //TODO This violates all I hold dear about the model and view. :(
+		case (R.id.btn_new_skid):
 			Iterator<View> edits = mEditableGroup.iterator();
 			while (edits.hasNext()) {
 				processUserTextEntry((TextView)edits.next());

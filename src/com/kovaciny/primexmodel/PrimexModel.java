@@ -2,7 +2,9 @@ package com.kovaciny.primexmodel;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -103,7 +105,10 @@ public class PrimexModel {
 			
 			mSelectedWorkOrder = lookedUpWo;
 			mDbHelper.updateLineWorkOrderLink(mSelectedLine.getLineNumber(), woNumber);
-			mSelectedSkid = mSelectedWorkOrder.getSelectedSkid();
+			List<Skid<Product>> skidList = new ArrayList<Skid<Product>>();
+			skidList.addAll(mDbHelper.getSkidList(woNumber));
+			if (!skidList.isEmpty()) mSelectedWorkOrder.setSkidsList(skidList); //this preserves the single-skid list we initialized with
+			changeSkid(mSelectedWorkOrder.getSkidsList().get(0).getSkidNumber());
 			
 			Product p = mDbHelper.getProduct(woNumber);
 			mSelectedWorkOrder.setProduct(p);
@@ -161,15 +166,12 @@ public class PrimexModel {
 
 	public void changeSkid(Integer skidNumber) {
 		//TODO this function fires twice in a row
+		if (!mSelectedWorkOrder.getSkidsList().contains(skidNumber)) throw new IllegalArgumentException("skid number does not exist");
 		Skid<Product> oldSkid = mSelectedSkid;
-		if ( skidNumber > oldSkid.getSkidNumber()) {
-			mSelectedSkid = getSelectedWorkOrder().selectSkid(skidNumber);
-		
-			propChangeSupport.firePropertyChange(CURRENT_SHEET_COUNT_CHANGE_EVENT, oldSkid.getCurrentItems(), mSelectedSkid.getCurrentItems());
-			setTotalCount(oldSkid.getTotalItems()); //TODO this looks like a job for a makeskid() function.
-		} else {
-			getSelectedWorkOrder().selectSkid(skidNumber);	
-		}
+		mSelectedSkid = getSelectedWorkOrder().selectSkid(skidNumber);
+		setCurrentCount(mSelectedSkid.getCurrentItems());
+		setTotalCount(mSelectedSkid.getTotalItems());
+		mDbHelper.insertOrReplaceSkid(mSelectedSkid, mSelectedWorkOrder.getWoNumber());
 		propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, oldSkid, mSelectedSkid);
 		calculateTimes();		
 	}
@@ -254,7 +256,7 @@ public class PrimexModel {
 	
 	public void calculateTimes() {
 		if (mSelectedSkid == null) throw new RuntimeException("Can't calc times without a skid");
-		if ( (mProductsPerMinute > 0) && (mSelectedSkid.getTotalItems() > 0) ) {
+		if ( (mProductsPerMinute != null) && (mSelectedSkid.getTotalItems() > 0) ) { //TODO this function gets called way too much			
 			//calculate total time per skid. 
 			long oldMinutes = mSelectedSkid.getMinutesPerSkid();
 			long newMinutes = mSelectedSkid.calculateMinutesPerSkid(mProductsPerMinute);
@@ -273,9 +275,11 @@ public class PrimexModel {
 			Date newJobFinishTime = mSelectedWorkOrder.calculateFinishTimes(mProductsPerMinute);
 			propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, oldJobFinishTime, newJobFinishTime);
 		}
-		double oldMillisToMaxson = mMillisToMaxson;
-		mMillisToMaxson = getSelectedLine().getLineLength() / getSelectedLine().getLineSpeed() * HelperFunction.ONE_MINUTE_IN_MILLIS;
-		propChangeSupport.firePropertyChange(TIME_TO_MAXSON_CHANGE_EVENT, oldMillisToMaxson, mMillisToMaxson);
+		if (mSelectedLine.getLineSpeed() > 0) {
+			double oldMillisToMaxson = mMillisToMaxson;
+			mMillisToMaxson = mSelectedLine.getLineLength() / mSelectedLine.getLineSpeed() * HelperFunction.ONE_MINUTE_IN_MILLIS;
+			propChangeSupport.firePropertyChange(TIME_TO_MAXSON_CHANGE_EVENT, oldMillisToMaxson, mMillisToMaxson);
+		}
 	}
 
 	public int getDatabaseVersion() {
@@ -283,7 +287,7 @@ public class PrimexModel {
 	}
 	public void changeNumberOfSkids(int num) {
 		int oldNum = mSelectedWorkOrder.getNumberOfSkids();
-		mSelectedWorkOrder.setNumberOfSkids(num);
+		mSelectedWorkOrder.setNumberOfSkids(num);	
 		calculateTimes(); //TODO necessary?
 		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, oldNum, mSelectedWorkOrder.getNumberOfSkids());		
 	}

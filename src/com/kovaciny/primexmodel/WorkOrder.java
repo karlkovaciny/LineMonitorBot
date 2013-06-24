@@ -20,7 +20,7 @@ public class WorkOrder {
 	public WorkOrder(int woNumber){
 		setWoNumber(woNumber);
 		mSkidsList = new ArrayList<Skid<Product>>();
-		addSkid();
+		addSkid(null);
 		mSelectedSkidPosition = 0;
 	}
 	
@@ -55,18 +55,22 @@ public class WorkOrder {
 	}
 	
 	/*
-	 * Appends a skid to the end of the list with start time equal to the last skid's finish time (now if none) 
-	 * and returns the skid's position. Sets the skid's sheet count equal to the last one TODO
+	 * Appends a skid to the end of the list, changing its skid number.. If the skid is null, set start time equal to the last skid's finish time (now if none)
+	 * and set the skid's sheet count equal to the last one TODO
+	 * Return the skid's position.
 	 */
-	public int addSkid () {
-		int productsPerSkid = 0;
-		if (hasSelectedSkid()) {
-			productsPerSkid = mSkidsList.get(mSelectedSkidPosition).getTotalItems();
+	public int addSkid (Skid<Product> newSkid) {
+		if (newSkid == null) {
+			int productsPerSkid = 0;
+			if (hasSelectedSkid()) {
+				productsPerSkid = mSkidsList.get(mSelectedSkidPosition).getTotalItems();
+			}
+			newSkid = new Skid<Product>(productsPerSkid, mProduct);
+			Date currentFinishTime = getFinishTime();
+			newSkid.setStartTime(currentFinishTime);	
 		}
-		Skid<Product> newSkid = new Skid<Product>(productsPerSkid, mProduct);
-		Date currentFinishTime = getFinishTime();
-		newSkid.setStartTime(currentFinishTime);
 		mSkidsList.add(newSkid);
+		newSkid.setSkidNumber(mSkidsList.size());
 		return mSkidsList.size() - 1;
 	}
 	
@@ -93,8 +97,12 @@ public class WorkOrder {
 		return mWoNumber;
 	}
 	
-	public List<Skid<Product>> getProductsList() {
+	public List<Skid<Product>> getSkidsList() {
 		return mSkidsList;
+	}
+	
+	public void setSkidsList(List<Skid<Product>> list) {
+		mSkidsList = list;
 	}
 
 	public double getTotalProductsOrdered() {
@@ -125,7 +133,7 @@ public class WorkOrder {
 			removeSkid();
 		}
 		while (getNumberOfSkids() < num) {
-			addSkid();
+			addSkid(null);
 		}
 	}
 
@@ -134,7 +142,9 @@ public class WorkOrder {
 	}
 
 	public Skid<Product> selectSkid(Integer skidNumber) {
-		if (skidNumber < 0) throw new RuntimeException ("negative skid number");
+		if ( (skidNumber > getNumberOfSkids()) || !(skidNumber > 0) ) {
+			throw new IllegalArgumentException("tried to change to a skid number outside the range of skids -- " + String.valueOf(skidNumber));
+		}
 		mSelectedSkidPosition = skidNumber - 1; //because we're storing this in an array... for now.
 		return mSkidsList.get(mSelectedSkidPosition);
 	}
