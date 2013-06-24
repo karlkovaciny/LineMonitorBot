@@ -108,6 +108,9 @@ public class MainActivity extends FragmentActivity implements
 	public void onViewChange(int viewId, String userEntry){
 		switch(viewId) {
 		case(R.id.edit_skid_number):
+			if (mModel.getSelectedWorkOrder().getNumberOfSkids() < Integer.valueOf(userEntry)) {
+				mModel.changeNumberOfSkids(Integer.valueOf(userEntry));
+			}
 			mModel.changeSkid(Integer.valueOf(userEntry));
 			break;
 		case(R.id.edit_products_per_minute):

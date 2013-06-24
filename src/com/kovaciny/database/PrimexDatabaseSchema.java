@@ -1,5 +1,10 @@
 package com.kovaciny.database;
 
+import java.util.Date;
+
+import com.kovaciny.primexmodel.Pallet;
+import com.kovaciny.primexmodel.Product;
+
 import android.provider.BaseColumns;
 
 public class PrimexDatabaseSchema {
@@ -41,6 +46,17 @@ public class PrimexDatabaseSchema {
 		public static final String COLUMN_NAME_LENGTH = "length";
 		public static final String COLUMN_NAME_TYPE = "type";
 		public static final String COLUMN_NAME_WO_NUMBER = "wo_number";
+	}
+	
+	public static abstract class Skids implements BaseColumns {
+		public static final String TABLE_NAME = "skids";
+		public static final String COLUMN_NAME_SKID_NUMBER= "skid_number";
+		public static final String COLUMN_NAME_CURRENT_ITEMS = "current_items";
+		public static final String COLUMN_NAME_TOTAL_ITEMS = "total_items";
+		public static final String COLUMN_NAME_STACKS = "stacks";
+		public static final String COLUMN_NAME_START_DATE = "start_time";
+		public static final String COLUMN_NAME_FINISH_DATE = "finish_time";
+		public static final String COLUMN_NAME_WO_ID = "wo_id";
 	}
 	
 	public static abstract class ProductTypes implements BaseColumns {

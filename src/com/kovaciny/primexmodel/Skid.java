@@ -18,6 +18,9 @@ public class Skid<E extends Product> {
 	Date mStartTime;
 	Date mFinishTime;
 
+	/*
+	 * 
+	 */
 	public Skid(Pallet p, int totalItems, double packagingWeight,
 			int numStacks, Date start, Product product) {
 		mPallet = p;
