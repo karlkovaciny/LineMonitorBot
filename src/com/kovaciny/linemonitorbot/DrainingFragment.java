@@ -72,7 +72,11 @@ public class DrainingFragment extends SectionFragment implements OnItemSelectedL
 			Iterator<String> recordItr = record.iterator();
 			while (columnNamesItr.hasNext()) {
 				results.add(columnNamesItr.next());
-				results.add(recordItr.next());
+				String next = recordItr.next();
+				if (next == null) results.add("null");
+				else {
+					results.add(next);	
+				}				
 			}
 		}
 					
