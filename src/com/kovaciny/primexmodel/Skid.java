@@ -24,10 +24,10 @@ public class Skid<E extends Product> {
 	public Skid(Pallet p, int totalItems, double packagingWeight,
 			int numStacks, Date start, Product product) {
 		mPallet = p;
-		mProductUnit = product;
 		mTotalItems = totalItems;
 		mPackagingWeight = 0; // unimportant for now;
 		mNumberOfStacks = numStacks;
+		mProductUnit = product;
 	}
 
 	public Skid(int totalItems, Product product) {

@@ -63,13 +63,6 @@ public class SkidTimesFragment extends SectionFragment implements
 	private String mJobFinishText;
 	private String mTimeToMaxsonText;
 	
-	OnViewChangeListener mCallback;
-
-	// Container Activity must implement this interface
-	public interface OnViewChangeListener {
-		public void onViewChange (int viewId, String userEntry);
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -185,12 +178,6 @@ public class SkidTimesFragment extends SectionFragment implements
 		
 	}
 	
-	public void processUserTextEntry(TextView tv) {
-		tv.setTextAppearance(getActivity(), R.style.UserEntered);
-		String userEntry = tv.getText().toString();
-		mCallback.onViewChange(tv.getId(), userEntry);
-	}
-
 	public void hideAll() {
 		
 	}
@@ -206,15 +193,6 @@ public class SkidTimesFragment extends SectionFragment implements
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-
-		// This makes sure that the container activity has implemented
-		// the callback interface. If not, it throws an exception
-		try {
-			mCallback = (OnViewChangeListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnHeadlineSelectedListener");
-		}
 	}
 
 	@Override
@@ -235,16 +213,27 @@ public class SkidTimesFragment extends SectionFragment implements
 			boolean calculatable = true;
 			while (itr.hasNext()) {
 				EditText et = (EditText)itr.next();
+				et.setTextAppearance(getActivity(), R.style.UserEntered);
 				if ( et.getText().toString().trim().equals("") ) {
 					et.setError(getString(R.string.error_empty_field));
 					calculatable = false;
 				}
 			}
-			if (calculatable) { 
-				Iterator<View> itr2 = mEditableGroup.iterator();
-				while (itr2.hasNext()) {
-					processUserTextEntry((TextView)itr2.next());			
-				}
+			if (calculatable) {
+				Skid<Product> skid = new Skid<Product>(
+						null, 
+						Integer.valueOf(mEdit_totalSheetsPerSkid.getText().toString()), 
+						0.0d, 
+						1, 
+						null, 
+						null);
+				skid.setCurrentItems(Integer.valueOf(mEdit_currentCount.getText().toString()));
+				skid.setSkidNumber(Integer.valueOf(mEdit_skidNumber.getText().toString()));
+				PrimexModel modelDebug =((MainActivity)getActivity()).getModelDebug(); 
+				modelDebug.saveSkid(skid);
+				modelDebug.changeNumberOfSkids(Integer.valueOf(mEdit_numSkidsInJob.getText().toString()));
+				modelDebug.changeSkid(skid.getSkidNumber());
+				modelDebug.setProductsPerMinute(Double.valueOf(mEdit_sheetsPerMinute.getText().toString()));
 			}
 			break;
 		case (R.id.btn_cancel_alarm):
@@ -296,9 +285,6 @@ public class SkidTimesFragment extends SectionFragment implements
 		} else if (propertyName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {
 			this.mEdit_sheetsPerMinute.setText(String.valueOf(newProperty));
 			
-		} else if (propertyName == PrimexModel.CURRENT_SHEET_COUNT_CHANGE_EVENT) {
-			this.mEdit_currentCount.setText(String.valueOf(newProperty));
-			
 		} else if (propertyName == PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE_EVENT) {
 			//update finish time for this skid
 			SimpleDateFormat formatter = new SimpleDateFormat("hh:mm", Locale.US);
@@ -319,28 +305,31 @@ public class SkidTimesFragment extends SectionFragment implements
 			String formattedTime = formatter.format((Date)newProperty);
 			mEdit_skidStartTime.setText(formattedTime);
 			
-		} else if (propertyName == PrimexModel.TOTAL_SHEET_COUNT_CHANGE_EVENT) {
-			mEdit_totalSheetsPerSkid.setText(String.valueOf(newProperty));
-			
 		} else if (propertyName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
 			this.mTxt_timePerSkid.setText(HelperFunction
 					.formatMinutesAsHours((Long)newProperty));
 			mMillisPerSkid = (Long)newProperty * HelperFunction.ONE_MINUTE_IN_MILLIS;
 			
 		} else if (propertyName == PrimexModel.NUMBER_OF_SKIDS_CHANGE_EVENT) {
+			mEdit_numSkidsInJob.setText(String.valueOf(newProperty));
 			
 		} else if (propertyName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) {
 			Date finishTime = (Date)newProperty;
 			SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US);
 			mJobFinishText = formatter.format(finishTime);
 			mTxt_jobFinishTime.setText(mJobFinishText);
+			
 		} else if (propertyName == PrimexModel.SKID_CHANGE_EVENT) {
 			Skid<Product> skid = (Skid<Product>)newProperty;
 			mEdit_skidNumber.setText(String.valueOf(skid.getSkidNumber()));
+			mEdit_currentCount.setText(String.valueOf(skid.getCurrentItems()));
+			mEdit_totalSheetsPerSkid.setText(String.valueOf(skid.getTotalItems()));
+			
 		} else if (propertyName == PrimexModel.TIME_TO_MAXSON_CHANGE_EVENT) {
 			Double timeToMaxson = (Double)newProperty;
 			mTimeToMaxsonText = Math.round(timeToMaxson / HelperFunction.ONE_SECOND_IN_MILLIS) + " seconds";
 			mTxt_timeToMaxson.setText(mTimeToMaxsonText);
+			
 		} else if (propertyName == PrimexModel.NEW_WORK_ORDER_EVENT) {
 			
 		}
