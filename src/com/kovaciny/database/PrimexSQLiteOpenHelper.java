@@ -30,7 +30,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 61;
+    public static final int DATABASE_VERSION = 62;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -147,14 +147,18 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         			Arrays.asList(new Double[] {99.0d, 51.5d, 34.2d, 46.0d, 44.7d,  45.7d,56.7d,56.3d,64.3d,46.5d, 45.0d,61.9d, 71d});
         	Iterator<Double> lengthsIterator = lengthsList.iterator();
         	
+        	List<Double> dieWidthsList = Arrays.asList(new Double[]{1000d,58d,53d,58d,64d, 64d,78d,75d,75d,64d, 64d, 58.5d, 53d});
+        	Iterator<Double> dieWidthsIterator = dieWidthsList.iterator();
+        	
         	List<Double> speedFactorsList = Arrays.asList(new Double[]{1d,.0769d,1d,.99d,1.015d,  1d,0.9917d,.98d,1d,1.01d, 1d,.0347d,.987d});        	
         	Iterator<Double> speedFactorsIterator = speedFactorsList.iterator();
+        	
 	        db.beginTransaction();
 	        for (Integer lineNum : lineNumbers) {
 	        	ContentValues values = new ContentValues();
 	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, lineNum);
 	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LENGTH, lengthsIterator.next());
-	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH, 0);
+	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH, dieWidthsIterator.next());
 	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT, 0);
 	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT, 0);
 	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR, speedFactorsIterator.next());
