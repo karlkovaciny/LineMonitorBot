@@ -165,8 +165,7 @@ public class PrimexModel {
 	}
 
 	public void changeSkid(Integer skidNumber) {
-		//TODO this function fires twice in a row
-		if (!mSelectedWorkOrder.getSkidsList().contains(skidNumber)) throw new IllegalArgumentException("skid number does not exist");
+		//TODO this function fires twice in a row. Catch index out of bounds exceptions.
 		Skid<Product> oldSkid = mSelectedSkid;
 		mSelectedSkid = getSelectedWorkOrder().selectSkid(skidNumber);
 		setCurrentCount(mSelectedSkid.getCurrentItems());
