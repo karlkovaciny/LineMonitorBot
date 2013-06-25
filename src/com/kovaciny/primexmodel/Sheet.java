@@ -8,7 +8,6 @@ public class Sheet implements Product {
 	private double mDensity;
 	private String mUnitSingular = "sheet";
 	private String mUnitPlural = "sheets";
-	public int mLineNumber;
 	
 	/*
 	 * 
