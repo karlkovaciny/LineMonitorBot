@@ -34,8 +34,6 @@ public class PrimexModel {
 	public static final String NEW_WORK_ORDER_EVENT = "PrimexModel.NEW_WORK_ORDER"; 
 	public static final String PRODUCT_CHANGE_EVENT = "PrimexModel.NEW_PRODUCT"; 
 	public static final String PRODUCTS_PER_MINUTE_CHANGE_EVENT = "PrimexModel.PPM_CHANGE"; 
-	public static final String CURRENT_SHEET_COUNT_CHANGE_EVENT = "PrimexModel.SHEET_COUNT_CHANGE"; 
-	public static final String TOTAL_SHEET_COUNT_CHANGE_EVENT = "PrimexModel.TOTAL_COUNT_CHANGE";
 	public static final String CURRENT_SKID_FINISH_TIME_CHANGE_EVENT = "PrimexModel.FINISH_TIME_CHANGE"; 
 	public static final String CURRENT_SKID_START_TIME_CHANGE_EVENT = "PrimexModel.START_TIME_CHANGE"; 
 	public static final String MINUTES_PER_SKID_CHANGE_EVENT = "PrimexModel.SKID_TIME_CHANGE"; 
@@ -167,16 +165,20 @@ public class PrimexModel {
 	public void changeSkid(Integer skidNumber) {
 		//TODO this function fires twice in a row. Catch index out of bounds exceptions.
 		Skid<Product> oldSkid = mSelectedSkid;
-		mSelectedSkid = getSelectedWorkOrder().selectSkid(skidNumber);
-		setCurrentCount(mSelectedSkid.getCurrentItems());
-		setTotalCount(mSelectedSkid.getTotalItems());
-		mDbHelper.insertOrReplaceSkid(mSelectedSkid, mSelectedWorkOrder.getWoNumber());
+		mSelectedWorkOrder.setSkidsList( mDbHelper.getSkidList(mSelectedWorkOrder.getWoNumber())); //to fetch saved values -- TODO sync the class and db
+		mSelectedSkid = mSelectedWorkOrder.selectSkid(skidNumber);
 		propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, oldSkid, mSelectedSkid);
 		calculateTimes();		
 	}
+	
 	public void saveProduct(Product p) {
 		mDbHelper.insertOrReplaceProduct(p, getSelectedWorkOrder().getWoNumber());
 	}
+	
+	public void saveSkid(Skid<Product> s) {
+		mDbHelper.insertOrReplaceSkid(s, mSelectedWorkOrder.getWoNumber());
+	}
+	
 	
 	/*
 	 * Saves the selected line number and work order number.
@@ -237,20 +239,6 @@ public class PrimexModel {
 			mNetRate = mProductsPerMinute * mSelectedWorkOrder.getProduct().getWeight();
 			//TODO gross rate
 		}		
-	}
-	
-	public void setCurrentCount (Integer currentCount) {
-		Integer oldCount = mSelectedSkid.getCurrentItems();
-		mSelectedSkid.setCurrentItems(currentCount);
-		calculateTimes();
-		propChangeSupport.firePropertyChange(CURRENT_SHEET_COUNT_CHANGE_EVENT, oldCount, currentCount);
-	}
-	
-	public void setTotalCount (Integer totalCount) {
-		Integer oldCount = mSelectedSkid.getTotalItems();
-		mSelectedSkid.setTotalItems(totalCount);
-		calculateTimes();
-		propChangeSupport.firePropertyChange(TOTAL_SHEET_COUNT_CHANGE_EVENT, oldCount, totalCount);
 	}
 	
 	public void calculateTimes() {

@@ -16,7 +16,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -27,7 +26,7 @@ import com.kovaciny.primexmodel.SpeedValues;
 import com.kovaciny.primexmodel.WorkOrder;
 
 public class MainActivity extends FragmentActivity implements
-		ActionBar.TabListener, SkidTimesFragment.OnViewChangeListener, PropertyChangeListener,
+		ActionBar.TabListener, PropertyChangeListener,
 		SheetsPerMinuteDialogFragment.SheetsPerMinuteDialogListener {
 
 	private static final int LINE_LIST_MENU_GROUP = 1111;
@@ -101,36 +100,6 @@ public class MainActivity extends FragmentActivity implements
 		
 		this.mModel = new PrimexModel(MainActivity.this);
 		mModel.addPropertyChangeListener(this);
-	}
-
-	//implementing interface
-	public void onViewChange(int viewId, String userEntry){
-		switch(viewId) {
-		case(R.id.edit_skid_number):
-			mModel.changeSkid(Integer.valueOf(userEntry));
-			break;
-		case(R.id.edit_products_per_minute):
-			mModel.setProductsPerMinute(Double.valueOf(userEntry));
-			break;
-		case(R.id.edit_current_count):
-			mModel.setCurrentCount(Integer.valueOf(userEntry));
-			break;
-		case(R.id.edit_total_sheets_per_skid):
-			mModel.setTotalCount(Integer.valueOf(userEntry));
-			break;	
-		case(R.id.edit_num_skids_in_job):
-			mModel.changeNumberOfSkids(Integer.valueOf(userEntry));
-			break;
-		default:
-		}
-		//User directly entered a sheets per minute value, so we must not calculate one.
-		//well, if we have a product, we could adjust the speed factor.
-		
-		//TODO this function is NOT compatible with rotating the screen
-		//tell model of change
-		//mModel.setCurrentLineSpeedSetpoint(sheetsPerMin);
-		//ask model for updates
-		//tell views to change
 	}
 
 	public void showSheetsPerMinuteDialog() {
@@ -230,8 +199,6 @@ public class MainActivity extends FragmentActivity implements
 				(eventName == PrimexModel.SKID_CHANGE_EVENT)) {
 			skidTimesFrag.modelPropertyChange(event);
 		} else if (eventName == PrimexModel.CURRENT_SKID_START_TIME_CHANGE_EVENT) {
-			skidTimesFrag.modelPropertyChange(event);
-		} else if (eventName == PrimexModel.TOTAL_SHEET_COUNT_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);
 		} else if (eventName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);

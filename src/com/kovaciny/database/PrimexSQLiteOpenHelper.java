@@ -30,7 +30,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 62;
+    public static final int DATABASE_VERSION = 63;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -715,7 +715,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		String sql = "SELECT * FROM " + PrimexDatabaseSchema.Skids.TABLE_NAME +
 				" WHERE " + PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID + 
 				"=?";
-		Cursor resultCursor = db.rawQuery(sql, new String[]{String.valueOf(woNumber)});
+		int woId = getIdOfValue(PrimexDatabaseSchema.WorkOrders.TABLE_NAME, PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, woNumber);
+		Cursor resultCursor = db.rawQuery(sql, new String[]{String.valueOf(woId)});
 		List<Skid<Product>> skidList = new ArrayList<Skid<Product>>();
 		try {
 			while (resultCursor.moveToNext()){
@@ -727,6 +728,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 						new Date(resultCursor.getLong(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_START_DATE))),
 						getProduct(woNumber)
 						);
+				int skidNumber = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER));
+				skid.setSkidNumber(skidNumber);
 				int currentItems = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_CURRENT_ITEMS));
 				skid.setCurrentItems(currentItems);
 				Date finishTime = new Date(resultCursor.getLong(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_FINISH_DATE)));
