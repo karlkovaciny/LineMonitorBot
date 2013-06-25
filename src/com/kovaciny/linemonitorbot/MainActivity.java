@@ -16,10 +16,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
@@ -108,9 +107,6 @@ public class MainActivity extends FragmentActivity implements
 	public void onViewChange(int viewId, String userEntry){
 		switch(viewId) {
 		case(R.id.edit_skid_number):
-			if (mModel.getSelectedWorkOrder().getNumberOfSkids() < Integer.valueOf(userEntry)) {
-				mModel.changeNumberOfSkids(Integer.valueOf(userEntry));
-			}
 			mModel.changeSkid(Integer.valueOf(userEntry));
 			break;
 		case(R.id.edit_products_per_minute):
@@ -220,7 +216,7 @@ public class MainActivity extends FragmentActivity implements
 			String newTitle = "WO #" + String.valueOf(newWonum);
 			mJobPicker.getSubMenu().add(JOB_LIST_MENU_GROUP, newWonum, Menu.FLAG_APPEND_TO_GROUP, newTitle);
 			invalidateOptionsMenu();
-			
+			skidTimesFrag.modelPropertyChange(event);
 		} else if (eventName == PrimexModel.PRODUCT_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);
 			

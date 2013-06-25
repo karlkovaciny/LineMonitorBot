@@ -15,12 +15,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -42,8 +42,6 @@ public class SkidTimesFragment extends SectionFragment implements
 	private Button mBtn_newSkid;
 	
 	private List<View> mEditableGroup;
-	private List<View> mTimeInputGroup;
-	private List<View> mJobTimeInputGroup;
 	
 	private EditText mEdit_sheetsPerMinute;
 	private EditText mEdit_skidNumber;
@@ -91,16 +89,16 @@ public class SkidTimesFragment extends SectionFragment implements
 		View rootView = inflater.inflate(R.layout.skid_times_fragment, container,
 				false);
 
-		//set up edittexts
-		mEditableGroup = new ArrayList<View>();
+		//set up editTexts
+		mEditableGroup = new ArrayList<View>(); //TODO make the finish times noneditable since they're not in the group.
 		
 		mEdit_sheetsPerMinute = (EditText) rootView
 				.findViewById(R.id.edit_products_per_minute);
 		mEditableGroup.add(mEdit_sheetsPerMinute);
 		
-		mEdit_skidNumber = (EditText) rootView
-				.findViewById(R.id.edit_skid_number);
-		mEditableGroup.add(mEdit_skidNumber);
+		mEdit_numSkidsInJob = (EditText) rootView
+				.findViewById(R.id.edit_num_skids_in_job);
+		mEditableGroup.add(mEdit_numSkidsInJob); //needs to be added before skid number so skid number will be in range when checked
 		
 		mEdit_currentCount = (EditText) rootView
 				.findViewById(R.id.edit_current_count);
@@ -110,27 +108,15 @@ public class SkidTimesFragment extends SectionFragment implements
 				.findViewById(R.id.edit_total_sheets_per_skid);
 		mEditableGroup.add(mEdit_totalSheetsPerSkid);
 		
+		mEdit_skidNumber = (EditText) rootView
+				.findViewById(R.id.edit_skid_number);
+		mEditableGroup.add(mEdit_skidNumber);
+		
 		mEdit_skidStartTime = (EditText) rootView
 				.findViewById(R.id.edit_skid_start_time);
-		mEditableGroup.add(mEdit_skidStartTime);
 		
 		mEdit_skidFinishTime = (EditText) rootView
 				.findViewById(R.id.edit_skid_finish_time);
-		mEditableGroup.add(mEdit_skidFinishTime);
-		
-		mEdit_numSkidsInJob = (EditText) rootView
-				.findViewById(R.id.edit_num_skids_in_job);
-		mEditableGroup.add(mEdit_numSkidsInJob);
-		
-		mTimeInputGroup = new ArrayList<View>();
-		mTimeInputGroup.add(mEdit_sheetsPerMinute);
-		mTimeInputGroup.add(mEdit_currentCount);
-		mTimeInputGroup.add(mEdit_totalSheetsPerSkid);
-		
-		mJobTimeInputGroup = new ArrayList<View>();		
-		mJobTimeInputGroup.addAll(mTimeInputGroup);
-		mJobTimeInputGroup.add(mEdit_numSkidsInJob);
-		mJobTimeInputGroup.add(mEdit_skidNumber);
 		
 		for (View v : mEditableGroup) {
 			EditText etv = (EditText) v;
@@ -202,24 +188,7 @@ public class SkidTimesFragment extends SectionFragment implements
 	public void processUserTextEntry(TextView tv) {
 		tv.setTextAppearance(getActivity(), R.style.UserEntered);
 		String userEntry = tv.getText().toString();
-		List<View> containingGroup = new ArrayList<View>();
-		if (mTimeInputGroup.contains(tv)) {
-			containingGroup = mTimeInputGroup;
-		} else if (mJobTimeInputGroup.contains(tv)) { //ie, it is one of the views in this group but not the former
-			containingGroup = mJobTimeInputGroup;
-		}
-		boolean allValidData = true;
-		if (userEntry.length() == 0) allValidData = false;
-		Iterator<View> itr = containingGroup.iterator();
-		while (itr.hasNext()) {
-			EditText et = (EditText)itr.next();
-			if ( et.getText().toString().trim().equals("") ) {
-				allValidData = false;
-			}
-		}
-		if (allValidData) {
-			mCallback.onViewChange(tv.getId(), userEntry);
-		}
+		mCallback.onViewChange(tv.getId(), userEntry);
 	}
 
 	public void hideAll() {
@@ -255,9 +224,27 @@ public class SkidTimesFragment extends SectionFragment implements
 			((MainActivity)getActivity()).showSheetsPerMinuteDialog();
 			break;
 		case (R.id.btn_new_skid):
-			Iterator<View> edits = mEditableGroup.iterator();
-			while (edits.hasNext()) {
-				processUserTextEntry((TextView)edits.next());
+			//supply default values and validate entries
+			String numSkids = mEdit_numSkidsInJob.getText().toString();
+			String skidNumber = mEdit_skidNumber.getText().toString();
+			if ( numSkids.equals("") || ( Integer.valueOf(skidNumber) > Integer.valueOf(numSkids)) ) {
+				mEdit_numSkidsInJob.setText(skidNumber);
+			}
+			//Process the entries only if all the necessary ones are filled.
+			Iterator<View> itr = mEditableGroup.iterator();
+			boolean calculatable = true;
+			while (itr.hasNext()) {
+				EditText et = (EditText)itr.next();
+				if ( et.getText().toString().trim().equals("") ) {
+					et.setError(getString(R.string.error_empty_field));
+					calculatable = false;
+				}
+			}
+			if (calculatable) { 
+				Iterator<View> itr2 = mEditableGroup.iterator();
+				while (itr2.hasNext()) {
+					processUserTextEntry((TextView)itr2.next());			
+				}
 			}
 			break;
 		case (R.id.btn_cancel_alarm):
@@ -333,6 +320,7 @@ public class SkidTimesFragment extends SectionFragment implements
 			mEdit_skidStartTime.setText(formattedTime);
 			
 		} else if (propertyName == PrimexModel.TOTAL_SHEET_COUNT_CHANGE_EVENT) {
+			mEdit_totalSheetsPerSkid.setText(String.valueOf(newProperty));
 			
 		} else if (propertyName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
 			this.mTxt_timePerSkid.setText(HelperFunction
@@ -347,11 +335,14 @@ public class SkidTimesFragment extends SectionFragment implements
 			mJobFinishText = formatter.format(finishTime);
 			mTxt_jobFinishTime.setText(mJobFinishText);
 		} else if (propertyName == PrimexModel.SKID_CHANGE_EVENT) {
-			
+			Skid<Product> skid = (Skid<Product>)newProperty;
+			mEdit_skidNumber.setText(String.valueOf(skid.getSkidNumber()));
 		} else if (propertyName == PrimexModel.TIME_TO_MAXSON_CHANGE_EVENT) {
 			Double timeToMaxson = (Double)newProperty;
 			mTimeToMaxsonText = Math.round(timeToMaxson / HelperFunction.ONE_SECOND_IN_MILLIS) + " seconds";
 			mTxt_timeToMaxson.setText(mTimeToMaxsonText);
+		} else if (propertyName == PrimexModel.NEW_WORK_ORDER_EVENT) {
+			
 		}
 	}
 
