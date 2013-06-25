@@ -668,9 +668,10 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				"=" + PrimexDatabaseSchema.Products.TABLE_NAME + "." + PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE + 
 				" JOIN " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + 
 				" ON " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + "." + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER +
-				"=" + woNumber;
-		//String[] whereargs = new String[]{String.valueOf(lineNumber)};
-		Cursor resultCursor = db.rawQuery(sql, null);
+				"=" + woNumber +
+				" WHERE " + PrimexDatabaseSchema.Products.TABLE_NAME + "." + PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + "=?";
+		String[] whereargs = new String[]{String.valueOf(woNumber)};
+		Cursor resultCursor = db.rawQuery(sql, whereargs);
 
 		Product p = null;
 		
