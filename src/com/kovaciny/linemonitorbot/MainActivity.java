@@ -220,7 +220,8 @@ public class MainActivity extends FragmentActivity implements
 			if (newProperty == null) {
 				mJobPicker.setTitle(R.string.action_pick_job_title);
 			} else {
-				CharSequence woTitle = "WO #" + String.valueOf(newProperty);
+				WorkOrder newWo = (WorkOrder)newProperty; 
+				CharSequence woTitle = "WO #" + String.valueOf(newWo.getWoNumber());
 				mJobPicker.setTitle(woTitle);
 			}
 			skidTimesFrag.modelPropertyChange(event);

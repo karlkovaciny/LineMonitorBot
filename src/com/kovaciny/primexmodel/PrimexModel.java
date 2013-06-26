@@ -96,7 +96,7 @@ public class PrimexModel {
 			throw new NoSuchElementException("Work order number not in the list of work orders, need to add it");
 		}
 		if (woNumber > 0) {
-			int oldWoNumber = (mSelectedWorkOrder == null) ? 0 : mSelectedWorkOrder.getWoNumber();
+			WorkOrder oldWo = mSelectedWorkOrder;
 					
 			WorkOrder lookedUpWo = mDbHelper.getWorkOrder(woNumber);
 			if (lookedUpWo == null) throw new RuntimeException("WorkOrder not found even though it is in woNumbersList");
@@ -108,7 +108,7 @@ public class PrimexModel {
 			Product p = mDbHelper.getProduct(woNumber);
 			mSelectedWorkOrder.setProduct(p);
 		
-			propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldWoNumber, mSelectedWorkOrder.getWoNumber());
+			propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldWo, mSelectedWorkOrder);
 		} else throw new IllegalArgumentException("Work order number must be positive");
 	}
 //TODO make it so there's not an "add product, add pallet, etc"
