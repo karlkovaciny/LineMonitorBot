@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.kovaciny.helperfunctions.HelperFunction;
 
-public class Skid<E extends Product> {
+public class Skid<E extends Product> implements Comparable<Skid>{
 	Pallet mPallet;
 	Product mProductUnit;
 	Integer mCurrentItems = 0;
@@ -21,13 +21,25 @@ public class Skid<E extends Product> {
 	/*
 	 * 
 	 */
-	public Skid(Pallet p, int totalItems, double packagingWeight,
+	public Skid (Pallet p, int totalItems, double packagingWeight,
 			int numStacks, Date start, Product product) {
 		mPallet = p;
 		mTotalItems = totalItems;
 		mPackagingWeight = 0; // unimportant for now;
 		mNumberOfStacks = numStacks;
 		mProductUnit = product;
+	}
+	
+	/*
+	 * to see parameters
+	 */
+	public Skid(int skidNumber, int currentItems, int totalItems, int numStacks) {
+		this.mSkidNumber = skidNumber;
+		this.mCurrentItems = currentItems;
+		this.mTotalItems = totalItems;
+		mPallet = null;
+		mPackagingWeight = 0;
+		mNumberOfStacks = numStacks;
 	}
 
 	public Skid(int totalItems, Product product) {
@@ -145,5 +157,10 @@ public class Skid<E extends Product> {
 	public void setSkidNumber(int skidNumber) {
 		if (!(skidNumber > 0)) throw new RuntimeException ("Should never assign a skid number " + String.valueOf(skidNumber) + "!");
 		this.mSkidNumber = skidNumber;
+	}
+
+	@Override
+	public int compareTo(Skid arg0) {
+		return this.mSkidNumber - arg0.getSkidNumber();
 	}
 }

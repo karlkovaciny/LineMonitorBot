@@ -30,7 +30,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 74;
+    public static final int DATABASE_VERSION = 75;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -727,6 +727,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				skid.setFinishTime(finishTime);
 				skidList.add(skid);
 			}
+			Collections.sort(skidList);
 			return skidList;
 		} finally {
 			if (resultCursor != null) {

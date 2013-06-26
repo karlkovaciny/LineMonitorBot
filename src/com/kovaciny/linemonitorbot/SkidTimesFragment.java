@@ -34,7 +34,6 @@ import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Skid;
-import com.kovaciny.primexmodel.WorkOrder;
 
 public class SkidTimesFragment extends SectionFragment implements
 		OnClickListener, OnEditorActionListener, View.OnFocusChangeListener, ViewEventResponder,
@@ -42,6 +41,7 @@ public class SkidTimesFragment extends SectionFragment implements
 	private SkidFinishedBroadcastReceiver mAlarmReceiver;
 	private List<Skid<Product>> mSkidList;
 	private List<Integer> mSkidNumbersList;
+	private ArrayAdapter<Integer> mSkidNumbersAdapter;
 	private ImageButton mImgBtn_calcSheetsPerMinute;
 	private Button mBtn_cancelAlarm;
 	private Button mBtn_newSkid;
@@ -66,7 +66,7 @@ public class SkidTimesFragment extends SectionFragment implements
 	private TextView mTxt_timeToMaxson;
 
 	private long mMillisPerSkid;
-	private int mSkidNumber;
+	private int mSelectedSkidNumber;
 	private String mJobFinishText;
 	private String mTimeToMaxsonText;
 	
@@ -90,6 +90,11 @@ public class SkidTimesFragment extends SectionFragment implements
 				false);
 
 		mSpin_skidNumber = (Spinner) rootView.findViewById(R.id.spinner_skid_number);
+	    mSkidNumbersList = new ArrayList<Integer> ();
+		mSkidNumbersAdapter = new ArrayAdapter<Integer>(getActivity(), android.R.layout.simple_spinner_item, mSkidNumbersList);
+		mSkidNumbersAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mSpin_skidNumber.setAdapter(mSkidNumbersAdapter);
+		populateSpinner();
 		mSpin_skidNumber.setOnItemSelectedListener(this);
 		
 		//set up editTexts
@@ -204,7 +209,9 @@ public class SkidTimesFragment extends SectionFragment implements
 			long arg3) {
 		String skidNumber = String.valueOf(parent.getItemAtPosition(pos));
 		if ( (Integer.valueOf(skidNumber) - 1) != pos ) throw new RuntimeException("i just don't get it");
-		((MainActivity)getActivity()).getModelDebug().changeSkid(Integer.valueOf(skidNumber));
+		saveSkidData();
+		mSelectedSkidNumber = Integer.valueOf(skidNumber);
+		((MainActivity)getActivity()).getModelDebug().changeSkid(mSelectedSkidNumber);
 	}
 
 	@Override
@@ -236,16 +243,19 @@ public class SkidTimesFragment extends SectionFragment implements
 				}
 			}
 			if (calculatable) {
-				submitSkidData();
+				((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(Double.valueOf(mEdit_sheetsPerMinute.getText().toString()));				
+				saveSkidData();
 			}
 			break;
 		case (R.id.btn_new_skid):
+			saveSkidData();
 			int oldNumSkids = ((MainActivity)getActivity()).getModelDebug().getSelectedWorkOrder().getSkidsList().size();
 			((MainActivity)getActivity()).getModelDebug().getSelectedWorkOrder().setNumberOfSkids(oldNumSkids + 1);
 			Skid<Product> terrible = new Skid<Product> (null, Integer.valueOf(mEdit_totalSheetsPerSkid.getText().toString()), 0.0d, 1, null, null);
 			terrible.setSkidNumber(oldNumSkids + 1);
 			((MainActivity)getActivity()).getModelDebug().saveSkid(terrible);
 			((MainActivity)getActivity()).getModelDebug().changeSkid(oldNumSkids + 1);
+			mSelectedSkidNumber = oldNumSkids + 1;
 			populateSpinner();
 			break;
 		case (R.id.btn_cancel_alarm):
@@ -263,22 +273,19 @@ public class SkidTimesFragment extends SectionFragment implements
 		}
 	}
 
-	private void submitSkidData() {
+	private void saveSkidData() {
+		//save current skid before they select a new one
+		Toast.makeText(getActivity(), "saving current skid", Toast.LENGTH_SHORT).show();
 		Skid<Product> skid = new Skid<Product>(
-				null, 
-				Integer.valueOf(mEdit_totalSheetsPerSkid.getText().toString()), 
-				0.0d, 
-				1, 
-				null, 
-				null);
-		skid.setCurrentItems(Integer.valueOf(mEdit_currentCount.getText().toString()));
-		skid.setSkidNumber(Integer.valueOf(mSpin_skidNumber.getSelectedItem().toString()));
-		PrimexModel modelDebug =((MainActivity)getActivity()).getModelDebug(); 
-		modelDebug.saveSkid(skid);
-		modelDebug.changeNumberOfSkids(Integer.valueOf(mEdit_numSkidsInJob.getText().toString()));
-		modelDebug.changeSkid(skid.getSkidNumber());
-		modelDebug.setProductsPerMinute(Double.valueOf(mEdit_sheetsPerMinute.getText().toString()));
+				mSelectedSkidNumber, 
+				Integer.valueOf(mEdit_currentCount.getText().toString()), 
+				Integer.valueOf(mEdit_totalSheetsPerSkid.getText().toString()),
+				1);
+		((MainActivity)getActivity()).getModelDebug().saveSkid(skid);
+	
 	}
+	
+	
 	public void onetimeTimer(View v, Integer interval) {
 
 		Context context = getActivity();
@@ -350,9 +357,10 @@ public class SkidTimesFragment extends SectionFragment implements
 			
 		} else if (propertyName == PrimexModel.SKID_CHANGE_EVENT) {
 			Skid<Product> skid = (Skid<Product>)newProperty;
-			mSpin_skidNumber.setSelection(skid.getSkidNumber() - 1);
+			mSelectedSkidNumber = skid.getSkidNumber();
+			mSpin_skidNumber.setSelection(mSelectedSkidNumber - 1);
 			mEdit_currentCount.setText(String.valueOf(skid.getCurrentItems()));
-			mEdit_totalSheetsPerSkid.setText(String.valueOf(skid.getTotalItems()));	
+			mEdit_totalSheetsPerSkid.setText(String.valueOf(skid.getTotalItems()));
 			
 		} else if (propertyName == PrimexModel.TIME_TO_MAXSON_CHANGE_EVENT) {
 			Double timeToMaxson = (Double)newProperty;
@@ -362,20 +370,19 @@ public class SkidTimesFragment extends SectionFragment implements
 		} else if (propertyName == PrimexModel.NEW_WORK_ORDER_EVENT) {
 			
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
+			//TODO mSelectedSkidNumber =  ((WorkOrder)newProperty).getSelectedSkid().getSkidNumber();
+			mSelectedSkidNumber = 1;
 			populateSpinner();
 		}
 	}
 
 	private void populateSpinner() {
-		List<Integer> skidNumbers = new ArrayList<Integer> ();
-		skidNumbers =((MainActivity)getActivity()).getSkidNumbersDebug();
-		if (!skidNumbers.equals(mSkidNumbersList)) {
-			//prevents infinite refreshing when you set the adapter
-			ArrayAdapter<Integer> skidNumAdapter = new ArrayAdapter<Integer>(getActivity(), android.R.layout.simple_spinner_item, skidNumbers);
-			skidNumAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			mSpin_skidNumber.setAdapter(skidNumAdapter);	
+		mSkidNumbersList = ((MainActivity)getActivity()).getSkidNumbersDebug();
+		if (mSkidNumbersList != null) {
+			mSkidNumbersAdapter.clear();
+			mSkidNumbersAdapter.addAll(mSkidNumbersList);
+			mSkidNumbersAdapter.notifyDataSetChanged();
 		}
-		
 	}
 	
 	/* (non-Javadoc)
