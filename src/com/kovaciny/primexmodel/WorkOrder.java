@@ -1,6 +1,7 @@
 package com.kovaciny.primexmodel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -20,8 +21,7 @@ public class WorkOrder {
 	public WorkOrder(int woNumber){
 		setWoNumber(woNumber);
 		mSkidsList = new ArrayList<Skid<Product>>();
-		addSkid(null);
-		mSelectedSkidPosition = 0;
+		mSelectedSkidPosition = -1;
 	}
 	
 	public void setWoNumber(int woNumber) {
@@ -67,7 +67,7 @@ public class WorkOrder {
 			}
 			newSkid = new Skid<Product>(productsPerSkid, mProduct);
 			Date currentFinishTime = getFinishTime();
-			newSkid.setStartTime(currentFinishTime);	
+			newSkid.setStartTime(currentFinishTime);
 		}
 		mSkidsList.add(newSkid);
 		newSkid.setSkidNumber(mSkidsList.size());
@@ -123,6 +123,14 @@ public class WorkOrder {
 		this.mMaximumStackHeight = max;
 	}
 
+	public List<Integer> getSkidNumbers() {
+		List<Integer> numbers = new ArrayList<Integer>();
+		for (Skid<Product> skid : mSkidsList) {
+			numbers.add(skid.getSkidNumber());
+		}
+		Collections.sort(numbers);
+		return numbers;
+	}
 	public int getNumberOfSkids() {
 		return mSkidsList.size();
 	}

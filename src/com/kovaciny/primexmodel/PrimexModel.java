@@ -104,8 +104,14 @@ public class PrimexModel {
 			mSelectedWorkOrder = lookedUpWo;
 			mDbHelper.updateLineWorkOrderLink(mSelectedLine.getLineNumber(), woNumber);
 			List<Skid<Product>> skidList = new ArrayList<Skid<Product>>();
-			skidList.addAll(mDbHelper.getSkidList(woNumber));
-			if (!skidList.isEmpty()) mSelectedWorkOrder.setSkidsList(skidList); //this preserves the single-skid list we initialized with
+			skidList.addAll(mDbHelper.getSkidList(woNumber)); //TODO these are redundant with the getWorkOrder function
+			mSelectedWorkOrder.setSkidsList(skidList);
+			if (skidList.isEmpty()) {
+				Skid<Product> defaultSkid = new Skid<Product>(1000, null);
+				mSelectedWorkOrder.addSkid(defaultSkid);
+				saveSkid(defaultSkid);
+				mSelectedWorkOrder.selectSkid(defaultSkid.getSkidNumber());
+			}			
 			changeSkid(mSelectedWorkOrder.getSkidsList().get(0).getSkidNumber());
 			
 			Product p = mDbHelper.getProduct(woNumber);
@@ -164,8 +170,12 @@ public class PrimexModel {
 
 	public void changeSkid(Integer skidNumber) {
 		//TODO this function fires twice in a row. Catch index out of bounds exceptions.
+		//maybe this should call changeNumber of skids to make sure the skid exists you're changing to?
 		Skid<Product> oldSkid = mSelectedSkid;
-		mSelectedWorkOrder.setSkidsList( mDbHelper.getSkidList(mSelectedWorkOrder.getWoNumber())); //to fetch saved values -- TODO sync the class and db
+		List<Skid<Product>> savedSkids = mDbHelper.getSkidList(mSelectedWorkOrder.getWoNumber());
+		if (!savedSkids.isEmpty()) {
+			mSelectedWorkOrder.setSkidsList( savedSkids ); //TODO sync the class and db
+		}
 		mSelectedSkid = mSelectedWorkOrder.selectSkid(skidNumber);
 		propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, oldSkid, mSelectedSkid);
 		calculateTimes();		
@@ -174,6 +184,7 @@ public class PrimexModel {
 	public void saveProduct(Product p) {
 		mDbHelper.insertOrReplaceProduct(p, getSelectedWorkOrder().getWoNumber());
 	}
+	
 	
 	public void saveSkid(Skid<Product> s) {
 		mDbHelper.insertOrReplaceSkid(s, mSelectedWorkOrder.getWoNumber());

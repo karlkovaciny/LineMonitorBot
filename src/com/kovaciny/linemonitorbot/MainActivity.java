@@ -101,6 +101,48 @@ public class MainActivity extends FragmentActivity implements
 		this.mModel = new PrimexModel(MainActivity.this);
 		mModel.addPropertyChangeListener(this);
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		mJobPicker = (MenuItem) menu.findItem(R.id.action_pick_job);
+		mLinePicker = (MenuItem) menu.findItem(R.id.action_pick_line);
+		
+		//populate the line picker with line numbers from the database
+		List<Integer> lineNumberList = new ArrayList<Integer>();
+		lineNumberList = mModel.getLineNumbers();
+				
+		Menu pickLineSubMenu = mLinePicker.getSubMenu();
+		pickLineSubMenu.clear();
+				
+		for (int i=0; i<lineNumberList.size(); i++) {
+			//don't have access to View.generateViewId(), so fake a random ID
+			pickLineSubMenu.add(LINE_LIST_MENU_GROUP, (lineNumberList.get(i) + LINE_LIST_ID_RANDOMIZER), Menu.FLAG_APPEND_TO_GROUP, String.valueOf(lineNumberList.get(i)));
+		}
+		
+		//populate the job picker with jobs
+		Menu pickJobSubMenu = mJobPicker.getSubMenu();
+		pickJobSubMenu.clear();
+		List<Integer> jobList = new ArrayList<Integer>(); 
+		jobList = mModel.getWoNumbers();
+		
+		for (int i=0; i<jobList.size(); i++) {
+			String title = "WO #" + String.valueOf(jobList.get(i));
+			pickJobSubMenu.add(JOB_LIST_MENU_GROUP, jobList.get(i), Menu.FLAG_APPEND_TO_GROUP, title);
+		}
+		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.new_wo, Menu.FLAG_APPEND_TO_GROUP, "+ New");
+		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.clear_wos, Menu.FLAG_APPEND_TO_GROUP, "Clear");
+
+		if (!mModel.hasSelectedLine()) {
+			mModel.loadState();	
+		}
+		
+		//refresh the line picker text from its default reinflated value
+		CharSequence lineTitle = "Line " + String.valueOf(mModel.getSelectedLine().getLineNumber());
+		mLinePicker.setTitle(lineTitle);
+		return true;
+	}
 
 	public void showSheetsPerMinuteDialog() {
 		// Create the fragment and show it as a dialog.
@@ -179,6 +221,7 @@ public class MainActivity extends FragmentActivity implements
 				CharSequence woTitle = "WO #" + String.valueOf(newProperty);
 				mJobPicker.setTitle(woTitle);
 			}
+			skidTimesFrag.modelPropertyChange(event);
 			
 		} else if (eventName == PrimexModel.NEW_WORK_ORDER_EVENT) { //not safe to fire without a selected WO
 			int newWonum = ((WorkOrder)newProperty).getWoNumber();
@@ -205,48 +248,6 @@ public class MainActivity extends FragmentActivity implements
 		} else if (eventName == PrimexModel.NUMBER_OF_SKIDS_CHANGE_EVENT){
 			skidTimesFrag.modelPropertyChange(event);
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		mJobPicker = (MenuItem) menu.findItem(R.id.action_pick_job);
-		mLinePicker = (MenuItem) menu.findItem(R.id.action_pick_line);
-		
-		//populate the line picker with line numbers from the database
-		List<Integer> lineNumberList = new ArrayList<Integer>();
-		lineNumberList = mModel.getLineNumbers();
-				
-		Menu pickLineSubMenu = mLinePicker.getSubMenu();
-		pickLineSubMenu.clear();
-				
-		for (int i=0; i<lineNumberList.size(); i++) {
-			//don't have access to View.generateViewId(), so fake a random ID
-			pickLineSubMenu.add(LINE_LIST_MENU_GROUP, (lineNumberList.get(i) + LINE_LIST_ID_RANDOMIZER), Menu.FLAG_APPEND_TO_GROUP, String.valueOf(lineNumberList.get(i)));
-		}
-		
-		//populate the job picker with jobs
-		Menu pickJobSubMenu = mJobPicker.getSubMenu();
-		pickJobSubMenu.clear();
-		List<Integer> jobList = new ArrayList<Integer>(); 
-		jobList = mModel.getWoNumbers();
-		
-		for (int i=0; i<jobList.size(); i++) {
-			String title = "WO #" + String.valueOf(jobList.get(i));
-			pickJobSubMenu.add(JOB_LIST_MENU_GROUP, jobList.get(i), Menu.FLAG_APPEND_TO_GROUP, title);
-		}
-		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.new_wo, Menu.FLAG_APPEND_TO_GROUP, "+ New");
-		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.clear_wos, Menu.FLAG_APPEND_TO_GROUP, "Clear");
-
-		if (!mModel.hasSelectedLine()) {
-			mModel.loadState();	
-		}
-		
-		//refresh the line picker text from its default reinflated value
-		CharSequence lineTitle = "Line " + String.valueOf(mModel.getSelectedLine().getLineNumber());
-		mLinePicker.setTitle(lineTitle);
-		return true;
 	}
 
 	@Override
@@ -288,6 +289,10 @@ public class MainActivity extends FragmentActivity implements
 	
 	public PrimexModel getModelDebug() { //TODO delete
 		return mModel;
+	}
+	
+	public List<Integer> getSkidNumbersDebug() {
+		return mModel.getSelectedWorkOrder().getSkidNumbers();
 	}
 	
 /*
