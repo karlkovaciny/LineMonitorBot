@@ -34,6 +34,7 @@ import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Skid;
+import com.kovaciny.primexmodel.WorkOrder;
 
 public class SkidTimesFragment extends SectionFragment implements
 		OnClickListener, OnEditorActionListener, View.OnFocusChangeListener, ViewEventResponder,
@@ -91,8 +92,8 @@ public class SkidTimesFragment extends SectionFragment implements
 
 		mSpin_skidNumber = (Spinner) rootView.findViewById(R.id.spinner_skid_number);
 	    mSkidNumbersList = new ArrayList<Integer> ();
-		mSkidNumbersAdapter = new ArrayAdapter<Integer>(getActivity(), android.R.layout.simple_spinner_item, mSkidNumbersList);
-		mSkidNumbersAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mSkidNumbersAdapter = new ArrayAdapter<Integer>(getActivity(), R.layout.spinnerriffic_textview, mSkidNumbersList);
+		mSkidNumbersAdapter.setDropDownViewResource(R.layout.spinnerriffic_textview);
 		mSpin_skidNumber.setAdapter(mSkidNumbersAdapter);
 		populateSpinner();
 		mSpin_skidNumber.setOnItemSelectedListener(this);
@@ -189,11 +190,13 @@ public class SkidTimesFragment extends SectionFragment implements
 	 */
 	@Override
 	public void onFocusChange(View v, boolean hasFocus) {
-		
+		if ( !hasFocus && mEditableGroup.contains(v)) {
+			hideTimes();
+		}
 	}
 	
-	public void hideAll() {
-		
+	public void hideTimes() {
+		mTxt_timeToMaxson.setVisibility(TextView.GONE);
 	}
 
 	public List<Skid<Product>> getSkidList() {
@@ -245,6 +248,7 @@ public class SkidTimesFragment extends SectionFragment implements
 			if (calculatable) {
 				((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(Double.valueOf(mEdit_sheetsPerMinute.getText().toString()));				
 				saveSkidData();
+				((MainActivity)getActivity()).getModelDebug().calculateTimes();
 			}
 			break;
 		case (R.id.btn_new_skid):
@@ -318,6 +322,7 @@ public class SkidTimesFragment extends SectionFragment implements
 			
 		} else if (propertyName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {
 			this.mEdit_sheetsPerMinute.setText(String.valueOf(newProperty));
+			hideTimes();
 			
 		} else if (propertyName == PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE_EVENT) {
 			//update finish time for this skid
@@ -342,6 +347,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		} else if (propertyName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
 			this.mTxt_timePerSkid.setText(HelperFunction
 					.formatMinutesAsHours((Long)newProperty));
+			mTxt_timePerSkid.setVisibility(TextView.VISIBLE);
 			mMillisPerSkid = (Long)newProperty * HelperFunction.ONE_MINUTE_IN_MILLIS;
 			
 		} else if (propertyName == PrimexModel.NUMBER_OF_SKIDS_CHANGE_EVENT) {
@@ -353,6 +359,7 @@ public class SkidTimesFragment extends SectionFragment implements
 			SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US);
 			mJobFinishText = formatter.format(finishTime);
 			mTxt_jobFinishTime.setText(mJobFinishText);
+			mTxt_jobFinishTime.setVisibility(TextView.VISIBLE);
 			
 		} else if (propertyName == PrimexModel.SKID_CHANGE_EVENT) {
 			Skid<Product> skid = (Skid<Product>)newProperty;
@@ -365,13 +372,14 @@ public class SkidTimesFragment extends SectionFragment implements
 			Double timeToMaxson = (Double)newProperty;
 			mTimeToMaxsonText = Math.round(timeToMaxson / HelperFunction.ONE_SECOND_IN_MILLIS) + " seconds";
 			mTxt_timeToMaxson.setText(mTimeToMaxsonText);
+			mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
 			
 		} else if (propertyName == PrimexModel.NEW_WORK_ORDER_EVENT) {
 			
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
-			//TODO mSelectedSkidNumber =  ((WorkOrder)newProperty).getSelectedSkid().getSkidNumber();
-			mSelectedSkidNumber = 1;
+			mSelectedSkidNumber =  ((WorkOrder)newProperty).getSelectedSkid().getSkidNumber();
 			populateSpinner();
+			hideTimes();
 		}
 	}
 

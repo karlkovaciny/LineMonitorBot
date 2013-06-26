@@ -27,6 +27,11 @@
        <item name="android:dividerPadding">@dimen/fragment_divider_padding</item>
        <item name="android:showDividers">middle</item> 
    </style>
+   <style name="Spinner" parent="@android:attr/spinnerItemStyle">
+       <item name="android:gravity">center</item>
+       <item name="android:textColor">@color/Sienna</item>
+       <item name="android:layout_weight">0.4</item>
+   </style>
    <style name="Label.TableHeader">
       
    </style>

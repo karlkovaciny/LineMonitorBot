@@ -66,20 +66,20 @@
 	            android:layout_weight="1"
 	            android:divider="?android:attr/dividerHorizontal"
 	            android:dividerPadding="0dp"
-	            android:showDividers="beginning|middle|end" >
+	            android:showDividers="beginning|end" >
 
 	            <TableRow
 	                android:id="@+id/tableRow1"
 	                android:divider="?android:attr/dividerVertical"
 	                android:dividerPadding="0dp"
 	                android:gravity="center_horizontal"
-	                android:showDividers="beginning|middle|end" >
+	                android:showDividers="beginning|end" >
 
 	                <TextView
 	                    android:id="@+id/lbl_skid_number"
 	                    style="@style/Label.TableHeader"
 	                    android:layout_width="0dip"
-	                    android:layout_weight="0.7"
+	                    android:layout_weight="1.1"
 	                    android:gravity="center_horizontal"
 	                    android:text="Skid\n#" />
 
@@ -121,14 +121,14 @@
 	                android:divider="?android:attr/dividerVertical"
 	                android:dividerPadding="0dp"
 	                android:gravity="center_horizontal"
-	                android:showDividers="beginning|middle|end" >
+	                android:showDividers="beginning|end" >
 
 	                <Spinner
 	                    android:id="@+id/spinner_skid_number"
-	                    android:layout_width="0dip"
 	                    android:layout_height="wrap_content"
 	                    android:layout_weight="0.7"
-	                    android:entries="@array/line_list" />
+	                    android:entries="@array/line_list"
+	                    android:gravity="center_horizontal" />
 
 	                <EditText
 	                    android:id="@+id/edit_current_count"
