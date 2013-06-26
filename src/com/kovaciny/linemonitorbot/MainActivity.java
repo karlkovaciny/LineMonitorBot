@@ -67,6 +67,10 @@ public class MainActivity extends FragmentActivity implements
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
+		//Create the model here so the fragments will have access to it when created.
+		this.mModel = new PrimexModel(MainActivity.this);
+		mModel.addPropertyChangeListener(this);
+
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
@@ -98,8 +102,6 @@ public class MainActivity extends FragmentActivity implements
 					.setTabListener(this));
 		}
 		
-		this.mModel = new PrimexModel(MainActivity.this);
-		mModel.addPropertyChangeListener(this);
 	}
 	
 	@Override
@@ -292,7 +294,9 @@ public class MainActivity extends FragmentActivity implements
 	}
 	
 	public List<Integer> getSkidNumbersDebug() {
-		return mModel.getSelectedWorkOrder().getSkidNumbers();
+		if (mModel.hasSelectedWorkOrder()) {
+			return mModel.getSelectedWorkOrder().getSkidNumbers();	
+		} else return null;
 	}
 	
 /*

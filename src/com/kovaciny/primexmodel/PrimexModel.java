@@ -188,6 +188,8 @@ public class PrimexModel {
 	
 	public void saveSkid(Skid<Product> s) {
 		mDbHelper.insertOrReplaceSkid(s, mSelectedWorkOrder.getWoNumber());
+		mSelectedWorkOrder.getSkidsList().remove(s.getSkidNumber() - 1);
+		mSelectedWorkOrder.getSkidsList().add(s.getSkidNumber() - 1, s);
 	}
 	
 	
