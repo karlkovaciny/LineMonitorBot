@@ -28,8 +28,7 @@ public class PrimexDatabaseSchema {
 		public static final String COLUMN_NAME_WO_NUMBER = "WO_number";	
 		public static final String COLUMN_NAME_SELECTED_PRODUCT_ID = "product_id";
 		public static final String COLUMN_NAME_TOTAL_PRODUCTS_ORDERED = "products_ordered";	
-		public static final String COLUMN_NAME_NUMBER_OF_SKIDS = "num_skids";	
-		public static final String COLUMN_NAME_SELECTED_SKID_ID = "skid_id";	
+		public static final String COLUMN_NAME_SELECTED_SKID_NUMBER = "skid_number";	
 		public static final String COLUMN_NAME_MAXIMUM_STACK_HEIGHT = "max_stack_height";
 	}
 	

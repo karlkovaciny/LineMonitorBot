@@ -275,7 +275,6 @@ public class SkidTimesFragment extends SectionFragment implements
 
 	private void saveSkidData() {
 		//save current skid before they select a new one
-		Toast.makeText(getActivity(), "saving current skid", Toast.LENGTH_SHORT).show();
 		Skid<Product> skid = new Skid<Product>(
 				mSelectedSkidNumber, 
 				Integer.valueOf(mEdit_currentCount.getText().toString()), 
