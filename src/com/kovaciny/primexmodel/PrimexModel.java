@@ -103,15 +103,6 @@ public class PrimexModel {
 			
 			mSelectedWorkOrder = lookedUpWo;
 			mDbHelper.updateLineWorkOrderLink(mSelectedLine.getLineNumber(), woNumber);
-			List<Skid<Product>> skidList = new ArrayList<Skid<Product>>();
-			skidList.addAll(mDbHelper.getSkidList(woNumber)); //TODO these are redundant with the getWorkOrder function
-			mSelectedWorkOrder.setSkidsList(skidList);
-			if (skidList.isEmpty()) {
-				Skid<Product> defaultSkid = new Skid<Product>(1000, null);
-				mSelectedWorkOrder.addSkid(defaultSkid);
-				saveSkid(defaultSkid);
-				mSelectedWorkOrder.selectSkid(defaultSkid.getSkidNumber());
-			}			
 			changeSkid(mSelectedWorkOrder.getSkidsList().get(0).getSkidNumber());
 			
 			Product p = mDbHelper.getProduct(woNumber);
@@ -129,8 +120,15 @@ public class PrimexModel {
 	}
 	
 	public boolean addWorkOrder(WorkOrder newWo) {
-		if (mDbHelper.insertOrReplaceWorkOrder(newWo) != -1l) {
+		if (mDbHelper.insertOrUpdateWorkOrder(newWo) != -1l) {
 			mWoNumbersList.add(newWo.getWoNumber());
+			if (newWo.getSkidsList().isEmpty()) { //Doing this after inserting the WO so that the WO will be in the table so I can look up its id. TODO stop exposing the skids list.
+				Skid<Product> defaultSkid = new Skid<Product>(1000, null);
+				newWo.addSkid(defaultSkid);
+				mDbHelper.insertOrReplaceSkid(defaultSkid, newWo.getWoNumber());
+				newWo.selectSkid(defaultSkid.getSkidNumber());
+				mDbHelper.insertOrUpdateWorkOrder(newWo); //doing it twice to get the selection in there.
+			}
 			propChangeSupport.firePropertyChange(NEW_WORK_ORDER_EVENT, null, newWo);
 			return true;
 		} else return false;
@@ -185,7 +183,9 @@ public class PrimexModel {
 		mDbHelper.insertOrReplaceProduct(p, getSelectedWorkOrder().getWoNumber());
 	}
 	
-	
+	/*
+	 * Convenience method for saving a skid from the currently selected work order.
+	 */
 	public void saveSkid(Skid<Product> s) {
 		mDbHelper.insertOrReplaceSkid(s, mSelectedWorkOrder.getWoNumber());
 		mSelectedWorkOrder.getSkidsList().remove(s.getSkidNumber() - 1);

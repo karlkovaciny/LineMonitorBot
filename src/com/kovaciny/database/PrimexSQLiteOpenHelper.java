@@ -10,6 +10,7 @@ import java.util.List;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -30,7 +31,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 75;
+    public static final int DATABASE_VERSION = 83;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -58,8 +59,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + INTEGER_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_PRODUCT_ID + INTEGER_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED + DOUBLE_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NUMBER_OF_SKIDS + INTEGER_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_ID + INTEGER_TYPE + COMMA_SEP +
+	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER + INTEGER_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT + DOUBLE_TYPE + COMMA_SEP +
 	    	" UNIQUE (" + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + ")" +
 	    	" )";
@@ -186,8 +186,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         	ContentValues values = new ContentValues();
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER,123);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED,69);
-        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NUMBER_OF_SKIDS,1);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT,0);
+        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER,1);
         	
         	db.insertOrThrow(PrimexDatabaseSchema.WorkOrders.TABLE_NAME, null, values);
         	db.setTransactionSuccessful();
@@ -223,6 +223,16 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         
         db.execSQL(SQL_CREATE_PRODUCTS);
         db.execSQL(SQL_CREATE_SKIDS);
+        try {
+        	db.beginTransaction();
+        	ContentValues values = new ContentValues();
+        	values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER, 1);
+        	values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID, 1);
+        	db.insertOrThrow(PrimexDatabaseSchema.Skids.TABLE_NAME, null, values);
+        	db.setTransactionSuccessful();
+        } finally {
+        	db.endTransaction();
+        }
         db.execSQL(SQL_CREATE_MODEL_STATE);
         try {
         	db.beginTransaction();
@@ -384,52 +394,52 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	
 	
 	
-	public long insertOrReplaceWorkOrder(WorkOrder newWO) {
+	public long insertOrUpdateWorkOrder(WorkOrder newWo) {
 		SQLiteDatabase db = getWritableDatabase();
 		
-		/*String sql = "INSERT INTO " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + " (" +
-				PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + COMMA_SEP + 
-				PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_PRODUCT_ID + " )"	
-				"SELECT " + newWO.getWoNumber() + COMMA_SEP + 
-				PrimexDatabaseSchema.Products._ID + 
-				" WHERE " PrimexDatabaseSchema.Products.COLUMN_NAME_WO_ID " = " + newWO.getProduct()
-				;*/
-		if (newWO.hasProduct()) {
-			insertOrReplaceProduct(newWO.getProduct(), newWO.getWoNumber());
+		if (newWo.hasProduct()) {
+			insertOrReplaceProduct(newWo.getProduct(), newWo.getWoNumber());
 			String query = "SELECT last_insert_rowid() FROM " + PrimexDatabaseSchema.Products.TABLE_NAME;
 			Cursor c = db.rawQuery(query, null);
 			int productId = 0;
 			if (c != null && c.moveToFirst()) {
 			    productId = c.getInt(0); //The 0 is the column index, we only have 1 column, so the index is 0
 			}
-			//debug TODO
+			//debug TODO use getIdOfValue
 			String sqll = "SELECT * FROM " + PrimexDatabaseSchema.Products.TABLE_NAME + " WHERE " + 
 			PrimexDatabaseSchema.Products._ID + "=?";
 			Cursor cc = db.rawQuery(sqll, new String[]{String.valueOf(productId)});
 			if (cc != null && cc.moveToFirst()) {
-			    String pproductId = cc.getString(1); //The 0 is the column index, we only have 1 column, so the index is 0
+			    String pproductId = cc.getString(1);
 			}
 //			values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_ID, lastRowId);
 		}
 		
 		ContentValues values = new ContentValues();
-		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, newWO.getWoNumber());
-		double tpo = newWO.getTotalProductsOrdered();
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, newWo.getWoNumber());
+		double tpo = newWo.getTotalProductsOrdered();
 		tpo = 69; //debug
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED, tpo);
-		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NUMBER_OF_SKIDS, newWO.getNumberOfSkids());
-		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT, newWO.getMaximumStackHeight());
-		if ( newWO.hasSelectedSkid()) {
-			//TODO look up skid in skids table
-			//values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_ID, newWO.getSelectedSkid().getSkidNumber());	
-		} else values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_ID, 69); 
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT, newWo.getMaximumStackHeight());
+		if ( newWo.hasSelectedSkid()) {
+			values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER, newWo.getSelectedSkid().getSkidNumber());	
+		} else Log.e("ERROR", String.valueOf(newWo.getWoNumber()) + " doesn't have a selected skid (maybe it's new)"); 
+		long rowId;
+		try {
+			rowId = db.insertWithOnConflict(
 		
-		long rowId = db.insertWithOnConflict(
 				PrimexDatabaseSchema.WorkOrders.TABLE_NAME, 
 				null, 
 				values,
+				SQLiteDatabase.CONFLICT_ABORT);
+		} catch (SQLiteConstraintException sqle) {
+			rowId = db.updateWithOnConflict(
+				PrimexDatabaseSchema.WorkOrders.TABLE_NAME, 
+				values, 
+				PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + "=?", 
+				new String[]{String.valueOf(newWo.getWoNumber())}, 
 				SQLiteDatabase.CONFLICT_REPLACE);
-		
+		}
 		return rowId;
 	}
 	
@@ -441,7 +451,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		int wonum = -1;
 		int prod_id = -1;
 		double ordered = -1d;
-		int skids = -1;
 		int selected = -1;
 		double height = -1d;
 		try {
@@ -449,8 +458,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		    	wonum = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER));
 		    	prod_id = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_PRODUCT_ID));
 		    	ordered = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED));
-		    	skids = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NUMBER_OF_SKIDS));
-		    	selected = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_ID));
+		    	selected = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER));
 		    	height = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT));
 		    	
 				WorkOrder wo = new WorkOrder(wonum);
@@ -461,9 +469,12 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 					wo.setTotalProductsOrdered(ordered);	
 				}
 				
-				wo.setNumberOfSkids(skids);
+				List<Skid<Product>> skidList = getSkidList(wo.getWoNumber());
+				if (skidList.isEmpty()) throw new RuntimeException ("No skid list found for workorder " + String.valueOf(wo.getWoNumber()));
+				wo.setSkidsList(skidList);				
+				
 				if (selected != -1) {
-					wo.selectSkid(selected + 1);
+					wo.selectSkid(selected);
 				}
 				wo.setMaximumStackHeight(height);
 		    	return wo;
@@ -562,7 +573,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public int getProductTypeId(String type){
+	public int getProductTypeId(String type){ //TODO replace with getIdOfValue
 		SQLiteDatabase db = getReadableDatabase();
 		
 		String sql = "SELECT * FROM " + PrimexDatabaseSchema.ProductTypes.TABLE_NAME + " WHERE " +
@@ -601,6 +612,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		}
 	}
 	
+	/*
+	 * Returns -1 if the id was not found.
+	 */
 	public int getIdOfValue (String tableName, String columnName, Object value) {
 		SQLiteDatabase db = getReadableDatabase();
 		String sql = "SELECT _id" +
@@ -615,6 +629,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			}
 			if (resultsCursor.moveToFirst()){
 				columnId = resultsCursor.getInt(0);
+			} else {
+				Log.e("ERROR", "could not get an id for the value " + value.toString() + " in the string " + columnName);
+				return -1;
 			}
 			return columnId;
 		} finally {
@@ -707,6 +724,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				" WHERE " + PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID + 
 				"=?";
 		int woId = getIdOfValue(PrimexDatabaseSchema.WorkOrders.TABLE_NAME, PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, woNumber);
+		if (woId == -1) Log.e("ERROR", "Could not find a work order ID for the wo number " + String.valueOf(woNumber));
 		Cursor resultCursor = db.rawQuery(sql, new String[]{String.valueOf(woId)});
 		List<Skid<Product>> skidList = new ArrayList<Skid<Product>>();
 		try {
@@ -752,6 +770,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_FINISH_DATE, skid.getFinishTime().getTime());
 		}
 		int woId = getIdOfValue(PrimexDatabaseSchema.WorkOrders.TABLE_NAME, PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, woNumber);
+		if (woId == -1) Log.e("ERROR", "could not find a WO id for WO#" + String.valueOf(woNumber) + " when inserting skid number " + String.valueOf(skid.getSkidNumber()));
 		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID, woId);
 		
 		long rowId = db.insertWithOnConflict(
