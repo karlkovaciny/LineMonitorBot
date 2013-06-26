@@ -143,6 +143,7 @@ public class Skid<E extends Product> {
 	}
 
 	public void setSkidNumber(int skidNumber) {
+		if (!(skidNumber > 0)) throw new RuntimeException ("Should never assign a skid number " + String.valueOf(skidNumber) + "!");
 		this.mSkidNumber = skidNumber;
 	}
 }

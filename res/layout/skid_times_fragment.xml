@@ -8,9 +8,9 @@
 	    style="@style/ParentFragment.HorizontallyDivided"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
 	    android:focusable="true"
-        android:focusableInTouchMode="true">
+	    android:focusableInTouchMode="true"
+	    android:orientation="vertical" >
 
 	    <LinearLayout
 	        android:layout_width="wrap_content"
@@ -26,10 +26,10 @@
 
 	            <TextView
 	                android:id="@+id/lbl_products_per_minute"
+	                style="@style/Label"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_weight="1"
-	                style="@style/Label"
 	                android:text="Sheets per minute" />
 
 	            <EditText
@@ -40,12 +40,12 @@
 	                android:layout_gravity="right"
 	                android:layout_weight="1"
 	                android:gravity="center_vertical|right"
+	                android:imeOptions="actionDone"
 	                android:inputType="numberDecimal"
 	                android:maxEms="3"
 	                android:maxLength="4"
 	                android:minEms="3"
-	                android:selectAllOnFocus="true"
-	                android:imeOptions="actionDone" />
+	                android:selectAllOnFocus="true" />
 	        </LinearLayout>
 
 	        <ImageButton
@@ -123,57 +123,50 @@
 	                android:gravity="center_horizontal"
 	                android:showDividers="beginning|middle|end" >
 
-	                <EditText
-	                    android:id="@+id/edit_skid_number"
-	                    style="@style/EditText"
+	                <Spinner
+	                    android:id="@+id/spinner_skid_number"
 	                    android:layout_width="0dip"
+	                    android:layout_height="wrap_content"
 	                    android:layout_weight="0.7"
-	                    android:gravity="center_horizontal"
-	                    android:inputType="number"
-	                    android:maxEms="3"
-	                    android:maxLength="4"
-	                    android:minEms="3"
-	                    android:selectAllOnFocus="true"
-	                    android:text="1">
-	                </EditText>
+	                    android:entries="@array/line_list" />
 
 	                <EditText
 	                    android:id="@+id/edit_current_count"
 	                    style="@style/EditText"
-	                    android:layout_weight="1"
 	                    android:layout_width="0dip"
+	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="number"
 	                    android:maxLength="4"
-	                    android:selectAllOnFocus="true"/>
+	                    android:selectAllOnFocus="true" />
 
 	                <EditText
 	                    android:id="@+id/edit_total_sheets_per_skid"
 	                    style="@style/EditText"
-	                    android:layout_weight="1"
 	                    android:layout_width="0dip"
+	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="number"
 	                    android:maxLength="4"
-	                    android:selectAllOnFocus="true"/>
+	                    android:selectAllOnFocus="true" />
 
 	                <EditText
 	                    android:id="@+id/edit_skid_start_time"
 	                    style="@style/EditText"
-	                    android:layout_weight="1"
 	                    android:layout_width="0dip"
+	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="time"
-	                    android:maxLength="5"/>
+	                    android:maxLength="5" />
 
 	                <EditText
 	                    android:id="@+id/edit_skid_finish_time"
 	                    style="@style/EditText"
-	                    android:layout_weight="1"
 	                    android:layout_width="0dip"
+	                    android:layout_weight="1"
 	                    android:gravity="center_horizontal"
 	                    android:inputType="time"
-	                    android:maxLength="5"/>
+	                    android:maxLength="5" />
 	            </TableRow>
 
 	            <TableRow
@@ -207,9 +200,9 @@
 
 	            <TextView
 	                android:id="@+id/lbl_num_skids_in_job"
+	                style="@style/Label"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                style="@style/Label"
 	                android:text="Number of skids in job: " />
 
 	            <EditText
@@ -225,14 +218,14 @@
 	        <LinearLayout
 	            android:id="@+id/linearLayout7"
 	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content" 
-	            android:layout_below="@id/relative_layout_anchor">
+	            android:layout_height="wrap_content"
+	            android:layout_below="@id/relative_layout_anchor" >
 
 	            <TextView
 	                android:id="@+id/lbl_time_per_skid"
+	                style="@style/Label"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                style="@style/Label"
 	                android:text="Time per skid: " />
 
 	            <TextView
@@ -255,14 +248,14 @@
 
 	        <LinearLayout
 	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content" 
-	            android:layout_below="@id/linearLayout9">
+	            android:layout_height="wrap_content"
+	            android:layout_below="@id/linearLayout9" >
 
 	            <TextView
 	                android:id="@+id/lbl_job_finish_time"
+	                style="@style/Label"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                style="@style/Label"
 	                android:text="Job finish time: " />
 
 	            <TextView
@@ -282,7 +275,6 @@
 	            android:drawableRight="@drawable/skid"
 	            android:text="+"
 	            android:textSize="40sp" />
-
 	    </RelativeLayout>
 
 	    <LinearLayout
@@ -301,8 +293,13 @@
 	            android:id="@+id/txt_time_to_maxson"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-				android:layout_weight="1"
+	            android:layout_weight="1"
 	            android:textAppearance="?android:attr/textAppearanceMedium" />
+	    </LinearLayout>
+
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" >
 
 	        <Button
 	            android:id="@+id/btn_cancel_alarm"
@@ -311,6 +308,11 @@
 	            android:layout_height="wrap_content"
 	            android:text="Cancel alarm" />
 
+	        <Button
+	            android:id="@+id/btn_calculate_times"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="Calculate Times" />
 	    </LinearLayout>
 
 	</LinearLayout>

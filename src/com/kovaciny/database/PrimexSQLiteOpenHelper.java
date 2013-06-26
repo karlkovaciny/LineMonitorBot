@@ -2,6 +2,7 @@ package com.kovaciny.database;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -11,7 +12,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.kovaciny.primexmodel.Pallet;
@@ -30,7 +30,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 63;
+    public static final int DATABASE_VERSION = 74;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -438,15 +438,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 
 		Cursor resultCursor = db.rawQuery("SELECT * FROM " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + " WHERE " + 
 				PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + "=?", new String[]{String.valueOf(woNumber)});
-		/*Cursor resultCursor = db.query(
-				PrimexDatabaseSchema.WorkOrders.TABLE_NAME,
-				null, 
-				PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + "=?",
-				new String[] {String.valueOf(woNumber)},
-				null,
-				null,
-				null
-				);*/
 		int wonum = -1;
 		int prod_id = -1;
 		double ordered = -1d;
@@ -472,7 +463,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				
 				wo.setNumberOfSkids(skids);
 				if (selected != -1) {
-					//TODO wo.setSelectedSkid(selected);
+					wo.selectSkid(selected + 1);
 				}
 				wo.setMaximumStackHeight(height);
 		    	return wo;
@@ -701,7 +692,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 						);					
 				} else throw new IllegalArgumentException("not a sheet or roll!");
 			} else {
-				Log.e("error", "getProduct database query returned no results");
+				Log.e("error", "SQLiteOpenHelper::getProduct returned no results");
 			}
 		} finally {
 			if (resultCursor != null) {resultCursor.close();}
@@ -748,6 +739,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
+		if (!(skid.getSkidNumber() > 0) ) throw new RuntimeException("Tried to store invalid skid, number " + String.valueOf(skid.getSkidNumber()));
 		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER, skid.getSkidNumber());
 		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_CURRENT_ITEMS, skid.getCurrentItems());
 		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_TOTAL_ITEMS, skid.getTotalItems());
