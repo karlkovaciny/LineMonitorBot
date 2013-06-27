@@ -12,47 +12,68 @@
 	    android:focusableInTouchMode="true"
 	    android:orientation="vertical" >
 
+		<RelativeLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="match_parent" >
+
+			    <Button
+			        android:id="@+id/btn_cancel_alarm"
+			        style="?android:attr/buttonStyleSmall"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_alignParentLeft="true"
+			        android:layout_toLeftOf="@+id/lbl_products_per_minute"
+			        android:text="Cancel alarm" />
+	
+			<LinearLayout
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical" 
+			    android:layout_toLeftOf="@+id/imgBtn_sheets_per_minute">
+
+			    <TextView
+			        android:id="@id/lbl_products_per_minute"
+			        style="@style/Label"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="1"
+			        android:text="Sheets per minute" />
+
+			    <EditText
+			        android:id="@+id/edit_products_per_minute"
+			        style="@style/EditText"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_gravity="right"
+			        android:layout_weight="1"
+			        android:gravity="center_vertical|right"
+			        android:imeOptions="actionDone"
+			        android:inputType="numberDecimal"
+			        android:maxEms="4"
+			        android:maxLength="5"
+			        android:minEms="4"
+			        android:selectAllOnFocus="true" >
+
+			        <requestFocus />
+			    </EditText>
+			</LinearLayout>
+	        <ImageButton
+	            android:id="@id/imgBtn_sheets_per_minute"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/calculator"
+	            android:layout_alignParentRight="true" />
+		</RelativeLayout>
+
 	    <LinearLayout
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_gravity="right"
 	        android:layout_marginBottom="@dimen/fragment_vertical_margin"
-	        android:orientation="horizontal" >
+	        android:orientation="horizontal"
+	        android:layout_gravity="right" >
 
-	        <LinearLayout
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:orientation="vertical" >
 
-	            <TextView
-	                android:id="@+id/lbl_products_per_minute"
-	                style="@style/Label"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_weight="1"
-	                android:text="Sheets per minute" />
 
-	            <EditText
-	                android:id="@+id/edit_products_per_minute"
-	                style="@style/EditText"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_gravity="right"
-	                android:layout_weight="1"
-	                android:gravity="center_vertical|right"
-	                android:imeOptions="actionDone"
-	                android:inputType="numberDecimal"
-	                android:maxEms="3"
-	                android:maxLength="4"
-	                android:minEms="3"
-	                android:selectAllOnFocus="true" />
-	        </LinearLayout>
-
-	        <ImageButton
-	            android:id="@+id/imgBtn_sheets_per_minute"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:src="@drawable/calculator" />
 	    </LinearLayout>
 
 	    <LinearLayout
@@ -187,6 +208,7 @@
 	                android:showDividers="beginning|middle|end" >
 	            </TableRow>
 	        </TableLayout>
+
 	    </LinearLayout>
 
 	    <RelativeLayout
@@ -295,24 +317,20 @@
 	            android:layout_height="wrap_content"
 	            android:layout_weight="1"
 	            android:textAppearance="?android:attr/textAppearanceMedium" />
-	    </LinearLayout>
 
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content" >
-
-	        <Button
-	            android:id="@+id/btn_cancel_alarm"
-	            style="?android:attr/buttonStyleSmall"
-	            android:layout_width="wrap_content"
+	        <LinearLayout
+	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:text="Cancel alarm" />
+	            android:gravity="right" >
 
-	        <Button
-	            android:id="@+id/btn_calculate_times"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="Calculate Times" />
+	            <Button
+	                android:id="@+id/btn_calculate_times"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Calculate Times" />
+
+	        </LinearLayout>
+
 	    </LinearLayout>
 
 	</LinearLayout>
