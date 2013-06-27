@@ -162,14 +162,13 @@ public class PrimexModel {
 		mSelectedWorkOrder.setProduct(p);
 		addProduct(p);
 		calculateRates();
-		calculateTimes();
 		this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, oldProduct, p);
 	}
 
 	public void changeSkid(Integer skidNumber) {
 		//TODO this function fires twice in a row. Catch index out of bounds exceptions.
 		//maybe this should call changeNumber of skids to make sure the skid exists you're changing to?
-		Skid<Product> oldSkid = mSelectedSkid;
+		Skid<Product> oldSkid = null; //mSelectedSkid;
 		List<Skid<Product>> savedSkids = mDbHelper.getSkidList(mSelectedWorkOrder.getWoNumber());
 		if (!savedSkids.isEmpty()) {
 			mSelectedWorkOrder.setSkidsList( savedSkids ); //TODO sync the class and db
@@ -184,12 +183,13 @@ public class PrimexModel {
 	}
 	
 	/*
-	 * Convenience method for saving a skid from the currently selected work order.
+	 * Convenience method for saving a skid from the currently selected work order. TODO the currently selected skid, in fact.
 	 */
 	public void saveSkid(Skid<Product> s) {
 		mDbHelper.insertOrReplaceSkid(s, mSelectedWorkOrder.getWoNumber());
 		mSelectedWorkOrder.getSkidsList().remove(s.getSkidNumber() - 1);
 		mSelectedWorkOrder.getSkidsList().add(s.getSkidNumber() - 1, s);
+		mSelectedWorkOrder.selectSkid(s.getSkidNumber()); //TODO safe?
 	}
 	
 	
@@ -230,7 +230,7 @@ public class PrimexModel {
 	
 	public void setProductsPerMinute(double spm) {
 		Double oldSpm = mProductsPerMinute;
-		mProductsPerMinute = spm; //TODO this function shouldnt' be allowed! also validity checking. Also this maybe should be for direct setting only?
+		mProductsPerMinute = null; //spm; TODO this function shouldnt' be allowed! also validity checking. Also this maybe should be for direct setting only?
 		calculateRates();
 		calculateTimes();
 		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldSpm, spm);
@@ -242,8 +242,9 @@ public class PrimexModel {
 	
 	/*
 	 * This function is called whenever relevant properties change.
+	 * TODO should not need to remember to call it before times.
 	 */
-	protected void calculateRates() {
+	public void calculateRates() {
 		if (hasSelectedProduct()) {
 			Double oldPpm = mProductsPerMinute; 
 			mProductsPerMinute = INCHES_PER_FOOT / mSelectedWorkOrder.getProduct().getLength() * mSelectedLine.getLineSpeed();
@@ -258,12 +259,12 @@ public class PrimexModel {
 		if (mSelectedSkid == null) throw new RuntimeException("Can't calc times without a skid");
 		if ( (mProductsPerMinute != null) && (mSelectedSkid.getTotalItems() > 0) ) { //TODO this function gets called way too much			
 			//calculate total time per skid. 
-			long oldMinutes = mSelectedSkid.getMinutesPerSkid();
+			Long oldMinutes = null; //mSelectedSkid.getMinutesPerSkid();
 			long newMinutes = mSelectedSkid.calculateMinutesPerSkid(mProductsPerMinute);
 			propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, oldMinutes, newMinutes);
 			
 			//calculate skid start and finish time
-			Date oldStartTime = mSelectedSkid.getStartTime();
+			Date oldStartTime = null; //mSelectedSkid.getStartTime(); 
 			Date newStartTime = mSelectedSkid.calculateStartTime(mProductsPerMinute);
 			Date oldFinishTime = mSelectedSkid.getFinishTime();
 			Date newFinishTime = mSelectedSkid.calculateFinishTimeWhileRunning(mProductsPerMinute);				
@@ -271,7 +272,7 @@ public class PrimexModel {
 			propChangeSupport.firePropertyChange(CURRENT_SKID_FINISH_TIME_CHANGE_EVENT, oldFinishTime, newFinishTime);
 			
 			//calculate job finish times
-			Date oldJobFinishTime = mSelectedWorkOrder.getFinishTime();
+			Date oldJobFinishTime = null; //mSelectedWorkOrder.getFinishTime();
 			Date newJobFinishTime = mSelectedWorkOrder.calculateFinishTimes(mProductsPerMinute);
 			propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, oldJobFinishTime, newJobFinishTime);
 		}

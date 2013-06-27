@@ -139,6 +139,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		
 		mBtn_cancelAlarm = (Button) rootView.findViewById(R.id.btn_cancel_alarm);
 		mBtn_cancelAlarm.setOnClickListener(this);
+		mBtn_cancelAlarm.setVisibility(Button.INVISIBLE);
 		
 		mBtn_calculateTimes = (Button) rootView.findViewById(R.id.btn_calculate_times);
 		mBtn_calculateTimes.setOnClickListener(this);
@@ -239,7 +240,6 @@ public class SkidTimesFragment extends SectionFragment implements
 			boolean calculatable = true;
 			while (itr.hasNext()) {
 				EditText et = (EditText)itr.next();
-				et.setTextAppearance(getActivity(), R.style.UserEntered);
 				if ( et.getText().toString().trim().equals("") ) {
 					et.setError(getString(R.string.error_empty_field));
 					calculatable = false;
@@ -247,20 +247,15 @@ public class SkidTimesFragment extends SectionFragment implements
 			}
 			if (calculatable) {
 				((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(Double.valueOf(mEdit_sheetsPerMinute.getText().toString()));				
+				mSelectedSkidNumber = Integer.valueOf(mSpin_skidNumber.getSelectedItem().toString());
 				saveSkidData();
+				((MainActivity)getActivity()).getModelDebug().changeSkid(mSelectedSkidNumber);
+				((MainActivity)getActivity()).getModelDebug().calculateRates();
 				((MainActivity)getActivity()).getModelDebug().calculateTimes();
+				for (View ett : mEditableGroup) {
+					((EditText)ett).setError(null);
+				}
 			}
-			break;
-		case (R.id.btn_new_skid):
-			saveSkidData();
-			int oldNumSkids = ((MainActivity)getActivity()).getModelDebug().getSelectedWorkOrder().getSkidsList().size();
-			((MainActivity)getActivity()).getModelDebug().getSelectedWorkOrder().setNumberOfSkids(oldNumSkids + 1);
-			Skid<Product> terrible = new Skid<Product> (null, Integer.valueOf(mEdit_totalSheetsPerSkid.getText().toString()), 0.0d, 1, null, null);
-			terrible.setSkidNumber(oldNumSkids + 1);
-			((MainActivity)getActivity()).getModelDebug().saveSkid(terrible);
-			((MainActivity)getActivity()).getModelDebug().changeSkid(oldNumSkids + 1);
-			mSelectedSkidNumber = oldNumSkids + 1;
-			populateSpinner();
 			break;
 		case (R.id.btn_cancel_alarm):
 			Context context = getActivity();
@@ -269,11 +264,27 @@ public class SkidTimesFragment extends SectionFragment implements
 			vib.vibrate(new long[]{0,10},-1);
 			vib.cancel();
 			
-			
 			Intent intent = new Intent(context, SkidFinishedBroadcastReceiver.class);
 	        PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
 	        pi.cancel();
+	        
+	        mBtn_cancelAlarm.setVisibility(Button.INVISIBLE);
 	        break;
+		case (R.id.btn_new_skid):
+			saveSkidData();
+			int oldNumSkids = ((MainActivity)getActivity()).getModelDebug().getSelectedWorkOrder().getSkidsList().size();
+			((MainActivity)getActivity()).getModelDebug().getSelectedWorkOrder().setNumberOfSkids(oldNumSkids + 1);
+			Skid<Product> terrible = new Skid<Product> (null, Integer.valueOf(mEdit_totalSheetsPerSkid.getText().toString()), 0.0d, 1, null, null);
+			terrible.setCurrentItems(Integer.valueOf(mEdit_currentCount.getText().toString()));
+			terrible.setSkidNumber(oldNumSkids + 1);
+			((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(Double.valueOf(mEdit_sheetsPerMinute.getText().toString()));				
+			((MainActivity)getActivity()).getModelDebug().saveSkid(terrible);
+			((MainActivity)getActivity()).getModelDebug().changeSkid(oldNumSkids + 1);
+			((MainActivity)getActivity()).getModelDebug().calculateRates(); //TODO this does nothing and you get wrong rates if no product
+			((MainActivity)getActivity()).getModelDebug().calculateTimes();
+			mSelectedSkidNumber = oldNumSkids + 1;
+			populateSpinner();
+			break;
 		}
 	}
 
@@ -297,6 +308,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		} else {
 			Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
 		}
+		mBtn_cancelAlarm.setVisibility(Button.VISIBLE);
 	}
 	
 	public void repeatingTimer(View v, long trigger, long interval) {
@@ -307,6 +319,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		} else {
 			Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
 		}
+		mBtn_cancelAlarm.setVisibility(Button.VISIBLE);
 	}
 
 	public void modelPropertyChange (PropertyChangeEvent event) {
