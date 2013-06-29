@@ -53,7 +53,7 @@ public class SkidTimesFragment extends SectionFragment implements
 	
 	private EditText mEdit_sheetsPerMinute;
 	private EditText mEdit_currentCount;
-	private EditText mEdit_totalSheetsPerSkid;
+	private EditText mEdit_totalProductsPerSkid;
 	private EditText mEdit_skidStartTime;
 	private EditText mEdit_skidFinishTime;
 	private EditText mEdit_numSkidsInJob;
@@ -113,9 +113,9 @@ public class SkidTimesFragment extends SectionFragment implements
 				.findViewById(R.id.edit_current_count);
 		mEditableGroup.add(mEdit_currentCount);
 		
-		mEdit_totalSheetsPerSkid = (EditText) rootView
+		mEdit_totalProductsPerSkid = (EditText) rootView
 				.findViewById(R.id.edit_total_sheets_per_skid);
-		mEditableGroup.add(mEdit_totalSheetsPerSkid);
+		mEditableGroup.add(mEdit_totalProductsPerSkid);
 		
 		mEdit_skidStartTime = (EditText) rootView
 				.findViewById(R.id.edit_skid_start_time);
@@ -238,12 +238,17 @@ public class SkidTimesFragment extends SectionFragment implements
 			//Process the entries only if all the necessary ones are filled.
 			Iterator<View> itr = mEditableGroup.iterator();
 			boolean calculatable = true;
-			while (itr.hasNext()) {
-				EditText et = (EditText)itr.next();
-				if ( et.getText().toString().trim().equals("") ) {
-					et.setError(getString(R.string.error_empty_field));
-					calculatable = false;
-				}
+			if (mEdit_totalProductsPerSkid.getText().toString().equals("0")) {
+				mEdit_totalProductsPerSkid.setError(getString(R.string.error_need_nonzero));
+				calculatable = false;
+			} else {
+				while (itr.hasNext()) {
+					EditText et = (EditText)itr.next();
+					if ( et.getText().toString().trim().equals("") ) {
+						et.setError(getString(R.string.error_empty_field));
+						calculatable = false;
+					}
+				}	
 			}
 			if (calculatable) {
 				((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(Double.valueOf(mEdit_sheetsPerMinute.getText().toString()));				
@@ -274,7 +279,7 @@ public class SkidTimesFragment extends SectionFragment implements
 			saveSkidData();
 			int oldNumSkids = ((MainActivity)getActivity()).getModelDebug().getSelectedWorkOrder().getSkidsList().size();
 			((MainActivity)getActivity()).getModelDebug().getSelectedWorkOrder().setNumberOfSkids(oldNumSkids + 1);
-			Skid<Product> terrible = new Skid<Product> (null, Integer.valueOf(mEdit_totalSheetsPerSkid.getText().toString()), 0.0d, 1, null, null);
+			Skid<Product> terrible = new Skid<Product> (null, Integer.valueOf(mEdit_totalProductsPerSkid.getText().toString()), 0.0d, 1, null, null);
 			terrible.setCurrentItems(Integer.valueOf(mEdit_currentCount.getText().toString()));
 			terrible.setSkidNumber(oldNumSkids + 1);
 			((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(Double.valueOf(mEdit_sheetsPerMinute.getText().toString()));				
@@ -293,7 +298,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		Skid<Product> skid = new Skid<Product>(
 				mSelectedSkidNumber, 
 				Integer.valueOf(mEdit_currentCount.getText().toString()), 
-				Integer.valueOf(mEdit_totalSheetsPerSkid.getText().toString()),
+				Integer.valueOf(mEdit_totalProductsPerSkid.getText().toString()),
 				1);
 		((MainActivity)getActivity()).getModelDebug().saveSkid(skid);
 	
@@ -379,7 +384,7 @@ public class SkidTimesFragment extends SectionFragment implements
 			mSelectedSkidNumber = skid.getSkidNumber();
 			mSpin_skidNumber.setSelection(mSelectedSkidNumber - 1);
 			mEdit_currentCount.setText(String.valueOf(skid.getCurrentItems()));
-			mEdit_totalSheetsPerSkid.setText(String.valueOf(skid.getTotalItems()));
+			mEdit_totalProductsPerSkid.setText(String.valueOf(skid.getTotalItems()));
 			
 		} else if (propertyName == PrimexModel.TIME_TO_MAXSON_CHANGE_EVENT) {
 			Double timeToMaxson = (Double)newProperty;
