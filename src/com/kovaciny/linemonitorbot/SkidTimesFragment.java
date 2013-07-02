@@ -251,6 +251,7 @@ public class SkidTimesFragment extends SectionFragment implements
 				}	
 			}
 			if (calculatable) {
+				((MainActivity)getActivity()).updateSkidData();
 				((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(Double.valueOf(mEdit_sheetsPerMinute.getText().toString()));				
 				mSelectedSkidNumber = Integer.valueOf(mSpin_skidNumber.getSelectedItem().toString());
 				saveSkidData();
