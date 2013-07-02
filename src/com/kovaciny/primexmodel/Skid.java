@@ -13,7 +13,7 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 	double mFinishedNetWeight;
 	double mFinishedGrossWeight;
 	long mMinutesPerSkid;
-	int mSkidNumber;
+	int mSkidNumber = 0;
 	int mNumberOfStacks;
 	Date mStartTime;
 	Date mFinishTime;
@@ -33,8 +33,8 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 	/*
 	 * to see parameters
 	 */
-	public Skid(int skidNumber, int currentItems, int totalItems, int numStacks) {
-		this.mSkidNumber = skidNumber;
+	public Skid(int currentItems, int totalItems, int numStacks) {
+//		this.mSkidNumber = skidNumber;   The project will assign a skid number.
 		this.mCurrentItems = currentItems;
 		this.mTotalItems = totalItems;
 		mPallet = null;

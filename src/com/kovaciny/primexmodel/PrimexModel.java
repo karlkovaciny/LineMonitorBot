@@ -13,6 +13,7 @@ import android.content.Context;
 import com.kovaciny.database.PrimexDatabaseSchema;
 import com.kovaciny.database.PrimexSQLiteOpenHelper;
 import com.kovaciny.helperfunctions.HelperFunction;
+import com.kovaciny.linemonitorbot.MainActivity;
 
 
 public class PrimexModel {
@@ -111,10 +112,23 @@ public class PrimexModel {
 			propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldWo, mSelectedWorkOrder);
 		} else throw new IllegalArgumentException("Work order number must be positive");
 	}
-//TODO make it so there's not an "add product, add pallet, etc"
-//imagine a delete work order, a list of work orders and you are at one index of it
-//don't have a selected skid, it's just your place in the list of skids.
-//
+
+	/*
+	 * Returns the number of the newly added skid.
+	 */
+	public int addSkid (int currentCount, int totalCount) {
+		int oldNumSkids = getSelectedWorkOrder().getSkidsList().size();
+		getSelectedWorkOrder().setNumberOfSkids(oldNumSkids + 1);
+		Skid<Product> newSkid = new Skid<Product>(currentCount, 
+				totalCount,
+				1);
+		int newSkidNum = getSelectedWorkOrder().addSkid(newSkid);
+		calculateRates(); //TODO this does nothing and you get wrong rates if no product
+		calculateTimes();
+		return newSkidNum;
+	
+	}
+	
 	protected void addProduct(Product p) {
 		mDbHelper.insertOrReplaceProduct(p, mSelectedWorkOrder.getWoNumber());
 	}

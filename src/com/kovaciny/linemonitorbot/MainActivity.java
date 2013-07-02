@@ -22,11 +22,12 @@ import android.view.MenuItem;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Products;
+import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.SpeedValues;
 import com.kovaciny.primexmodel.WorkOrder;
 
 public class MainActivity extends FragmentActivity implements
-		ActionBar.TabListener, PropertyChangeListener,
+		ActionBar.TabListener, PropertyChangeListener, OnViewChangeListener,
 		SheetsPerMinuteDialogFragment.SheetsPerMinuteDialogListener {
 
 	private static final int LINE_LIST_MENU_GROUP = 1111;
@@ -300,6 +301,27 @@ public class MainActivity extends FragmentActivity implements
 		} else return null;
 	}
 	
+	public void updateSkidData(Integer skidNumber, Integer currentCount, Integer totalCount) {
+		mModel.changeSkid(skidNumber);
+		mModel.calculateRates();
+		mModel.calculateTimes();
+		
+		Skid<Product> skid = new Skid<Product>(
+				currentCount, 
+				totalCount,
+				1);
+		mModel.saveSkid(skid);
+		((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(Double.valueOf(mEdit_productsPerMinute.getText().toString()));
+	}
+	
+	public void updateProductData() {
+		
+	}
+	
+	public int createNewSkid(Integer currentCount, Integer totalCount) {
+		int newSkidNum = mModel.addSkid(currentCount, totalCount);
+		return newSkidNum;
+		}
 /*
  * ---------------------------------------------------------
  * start of functions I never change
