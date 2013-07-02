@@ -259,6 +259,7 @@ public class SkidTimesFragment extends SectionFragment implements
 				}	
 			}
 			if (calculatable) {
+				((MainActivity)getActivity()).updateSkidData();
 				mSelectedSkidNumber = Integer.valueOf(mSpin_skidNumber.getSelectedItem().toString());
 				((MainActivity)getActivity()).updateSkidData(
 						mSelectedSkidNumber,
