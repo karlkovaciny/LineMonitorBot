@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+   <style name="UserEntered">
+       <item name="android:textColor">@color/win8_green</item>
+   </style>
+   <style name="ProgramCalculated">
+       <item name="android:textColor">@color/DodgerBlue</item>
+   </style>  
+   <style name="ProgramGuessed">
+       <item name="android:textColor">@color/win8_orange</item>
+   </style> 
+   <style name="Label" parent="@android:style/TextAppearance.Medium">
+   </style>
+   <style name="Label.Small" parent="@android:style/TextAppearance.Small">
+   </style>
+   <style name="EditText" parent="@android:style/TextAppearance.Medium">
+       <item name="android:textColor">@color/Sienna</item>
+   </style>
+   <style name="ParentFragment">
+       <item name="android:paddingTop">@dimen/fragment_vertical_margin</item>
+       <item name="android:paddingBottom">@dimen/fragment_vertical_margin</item>
+       <item name="android:paddingLeft">@dimen/fragment_horizontal_margin</item>
+       <item name="android:paddingRight">@dimen/fragment_horizontal_margin</item>       
+   </style>
+   <style name="ParentFragment.HorizontallyDivided">
+       <item name="android:divider">?android:attr/dividerHorizontal</item>
+       <item name="android:dividerPadding">@dimen/fragment_divider_padding</item>
+       <item name="android:showDividers">middle</item> 
+   </style>
+   <style name="Spinner" parent="@android:attr/spinnerItemStyle">
+       <item name="android:gravity">center</item>
+       <item name="android:textColor">@color/Sienna</item>
+       <item name="android:layout_weight">0.4</item>
+   </style>
+   <style name="Label.TableHeader">
+      
+   </style>
+      
+</resources>
