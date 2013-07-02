@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Products;
+import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.SpeedValues;
 import com.kovaciny.primexmodel.WorkOrder;
 
@@ -300,6 +301,23 @@ public class MainActivity extends FragmentActivity implements
 		} else return null;
 	}
 	
+	public void updateSkidData(Integer skidNumber, Integer currentCount, Integer totalCount) {
+		//Check all relevant views for changes -- view's job
+		//Call all functions required to update model
+		
+		mModel.changeSkid(skidNumber);
+		mModel.calculateRates();
+		mModel.calculateTimes();
+		
+		Skid<Product> skid = new Skid<Product>(
+				skidNumber, 
+				currentCount, 
+				totalCount,
+				1);
+		mModel.saveSkid(skid);
+	
+		//Call all functions required to update views from model if not propchanges.
+	}
 /*
  * ---------------------------------------------------------
  * start of functions I never change
