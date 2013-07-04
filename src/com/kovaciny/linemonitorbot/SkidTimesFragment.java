@@ -14,12 +14,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -282,18 +282,8 @@ public class SkidTimesFragment extends SectionFragment implements
 			}
 			break;
 		case (R.id.btn_cancel_alarm):
-			Context context = getActivity();
-			
-			Vibrator vib = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-			vib.vibrate(new long[]{0,10},-1);
-			vib.cancel();
-			
-			Intent intent = new Intent(context, SkidFinishedBroadcastReceiver.class);
-	        PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
-	        pi.cancel();
-	        
-	        mBtn_cancelAlarm.setVisibility(Button.INVISIBLE);
-	        break;
+			cancelAlarm();
+			break;
 		case (R.id.btn_new_skid):
 			((MainActivity)getActivity()).updateSkidData(
 					mSelectedSkidNumber,
@@ -307,7 +297,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		}
 	}
 
-	public void onetimeTimer(View v, Integer interval) {
+	public void onetimeTimer(View v, long interval) {
 
 		Context context = getActivity();
 		if (mAlarmReceiver != null) {
@@ -329,6 +319,19 @@ public class SkidTimesFragment extends SectionFragment implements
 		mBtn_cancelAlarm.setVisibility(Button.VISIBLE);
 	}
 
+	public void cancelAlarm() {
+		Context context = getActivity();
+		
+		Vibrator vib = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+		vib.vibrate(new long[]{0,10},-1);
+		vib.cancel();
+		
+		Intent intent = new Intent(context, SkidFinishedBroadcastReceiver.class);
+        PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
+        pi.cancel();
+        
+        mBtn_cancelAlarm.setVisibility(Button.INVISIBLE);
+	}
 	public void modelPropertyChange (PropertyChangeEvent event) {
 		String propertyName = event.getPropertyName();
 		Object newProperty = event.getNewValue();
@@ -357,7 +360,14 @@ public class SkidTimesFragment extends SectionFragment implements
 			long timeThen = ((Date)newProperty).getTime();
 			Long triggerAtMillis = timeThen - timeNow - alarmLeadTime;
 			if (triggerAtMillis > 0) {
-				repeatingTimer( mEdit_skidFinishTime, triggerAtMillis, mMillisPerSkid );				
+				SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+				Boolean repeatPref = sharedPref.getBoolean("repeating_timer", false);
+				if (repeatPref) {
+					repeatingTimer( mEdit_skidFinishTime, triggerAtMillis, mMillisPerSkid );	
+				} else {
+					onetimeTimer(mEdit_skidFinishTime, triggerAtMillis);
+				}
+								
 			}			
 		} else if (propertyName == PrimexModel.CURRENT_SKID_START_TIME_CHANGE_EVENT) {
 			SimpleDateFormat formatter = new SimpleDateFormat("hh:mm", Locale.US);

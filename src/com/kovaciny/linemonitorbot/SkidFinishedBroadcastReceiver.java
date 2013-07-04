@@ -47,8 +47,7 @@ public class SkidFinishedBroadcastReceiver extends BroadcastReceiver {
 		         SimpleDateFormat formatter = new SimpleDateFormat("hh:mm:ss a");
 		         msgStr.append(formatter.format(new Date()));
 		 
-		         Toast.makeText(context, msgStr, Toast.LENGTH_LONG).show();
-//		         long[] offOnPattern = {0, 5000, 500, 3000, 300, 300, 300, 300, 300, 300, 300, 3000};
+//		         Toast.makeText(context, msgStr, Toast.LENGTH_LONG).show();
 		         long[] offOnPattern = {0, 300, 300, 300, 300, 2500, 300, 300, 300, 2500, 300, 300, 300, 2500, 300, 300, 300, 2500, 300, 300, 300, 2500,30000,2000};
 		         vibe.vibrate(offOnPattern, -1);
 		         
@@ -57,7 +56,7 @@ public class SkidFinishedBroadcastReceiver extends BroadcastReceiver {
 		         wl.release();
 	         }
 	 }
-    public void setOnetimeTimer(Context context, Integer interval){
+    public void setOnetimeTimer(Context context, long interval){
         AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
            Intent intent = new Intent(context, SkidFinishedBroadcastReceiver.class);
            intent.putExtra(ONE_TIME, Boolean.TRUE);

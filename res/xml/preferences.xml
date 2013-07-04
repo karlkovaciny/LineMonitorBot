@@ -3,18 +3,10 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
   <CheckBoxPreference 
-            android:key="perform_updates"
-            android:summary="Enable or disable data updates"
-            android:title="Enable updates" 
-            android:defaultValue="true"
+            android:key="repeating_timer"
+            android:summary="Reset alarm each skid until cancelled"
+            android:title="Repeating alarm" 
+            android:defaultValue="false"
         />
  
-        <EditTextPreference
-            android:key="welcome_message"
-            android:title="Welcome Message" 
-            android:summary="Define the Welcome message to be shown"
-            android:dialogTitle="Welcome Message"
-            android:dialogMessage="Provide a message"    
-            android:defaultValue="Default welcome message" />
-
 </PreferenceScreen>
