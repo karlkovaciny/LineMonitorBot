@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.WebView.FindListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -192,8 +193,8 @@ public class SkidTimesFragment extends SectionFragment implements
 	@Override
 	public void onFocusChange(View v, boolean hasFocus) {
 		if ( !hasFocus && (v == mEdit_productsPerMinute)) {
-			double newPpmValue = mEdit_productsPerMinute.getText().toString();
-			
+			double newPpmValue = Double.valueOf(mEdit_productsPerMinute.getText().toString());
+			((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(newPpmValue);			
 		}
 		if ( !hasFocus && mEditableGroup.contains(v)) {
 			hideTimes();
@@ -215,15 +216,18 @@ public class SkidTimesFragment extends SectionFragment implements
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View arg1, int pos,
 			long arg3) {
-		String skidNumber = String.valueOf(parent.getItemAtPosition(pos));
-		if ( (Integer.valueOf(skidNumber) - 1) != pos ) throw new RuntimeException("spinner is broken");
-		((MainActivity)getActivity()).updateSkidData(
-				mSelectedSkidNumber,
-				Integer.valueOf(mEdit_currentCount.getText().toString()),
-				Integer.valueOf(mEdit_totalCountPerSkid.getText().toString())
-				);
-		mSelectedSkidNumber = Integer.valueOf(skidNumber);
-		((MainActivity)getActivity()).getModelDebug().changeSkid(mSelectedSkidNumber);
+		if (arg1.getId() == R.id.spinner_skid_number) {
+			String skidNumber = String.valueOf(parent.getItemAtPosition(pos));
+			if ( (Integer.valueOf(skidNumber) - 1) != pos ) throw new RuntimeException("spinner is broken");
+			((MainActivity)getActivity()).updateSkidData(
+					mSelectedSkidNumber,
+					Integer.valueOf(mEdit_currentCount.getText().toString()),
+					Integer.valueOf(mEdit_totalCountPerSkid.getText().toString())
+					);
+			((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(Double.valueOf(mEdit_productsPerMinute.getText().toString()));
+			mSelectedSkidNumber = Integer.valueOf(skidNumber);
+			((MainActivity)getActivity()).getModelDebug().changeSkid(mSelectedSkidNumber);
+		}
 	}
 
 	@Override
@@ -259,7 +263,6 @@ public class SkidTimesFragment extends SectionFragment implements
 				}	
 			}
 			if (calculatable) {
-				((MainActivity)getActivity()).updateSkidData();
 				mSelectedSkidNumber = Integer.valueOf(mSpin_skidNumber.getSelectedItem().toString());
 				((MainActivity)getActivity()).updateSkidData(
 						mSelectedSkidNumber,
@@ -267,6 +270,7 @@ public class SkidTimesFragment extends SectionFragment implements
 						Integer.valueOf(mEdit_totalCountPerSkid.getText().toString())
 						);
 				((MainActivity)getActivity()).getModelDebug().changeSkid(mSelectedSkidNumber);
+				((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(Double.valueOf(mEdit_productsPerMinute.getText().toString()));
 				((MainActivity)getActivity()).getModelDebug().calculateRates();
 				((MainActivity)getActivity()).getModelDebug().calculateTimes();
 				for (View ett : mEditableGroup) {
@@ -293,9 +297,9 @@ public class SkidTimesFragment extends SectionFragment implements
 					Integer.valueOf(mEdit_currentCount.getText().toString()),
 					Integer.valueOf(mEdit_totalCountPerSkid.getText().toString())
 					);
-			((MainActivity)getActivity()).createNewSkid();
-			
-			mSelectedSkidNumber = oldNumSkids + 1;
+			((MainActivity)getActivity()).createNewSkid(0,
+					Integer.valueOf(mEdit_totalCountPerSkid.getText().toString()));
+//			mSelectedSkidNumber = oldNumSkids + 1;
 			populateSpinner();
 			break;
 		}
