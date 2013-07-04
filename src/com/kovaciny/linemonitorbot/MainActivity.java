@@ -8,6 +8,7 @@ import java.util.Locale;
 
 import android.app.ActionBar;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,7 +28,7 @@ import com.kovaciny.primexmodel.SpeedValues;
 import com.kovaciny.primexmodel.WorkOrder;
 
 public class MainActivity extends FragmentActivity implements
-		ActionBar.TabListener, PropertyChangeListener, OnViewChangeListener,
+		ActionBar.TabListener, PropertyChangeListener, 
 		SheetsPerMinuteDialogFragment.SheetsPerMinuteDialogListener {
 
 	private static final int LINE_LIST_MENU_GROUP = 1111;
@@ -102,7 +103,8 @@ public class MainActivity extends FragmentActivity implements
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
-		
+
+ 
 	}
 	
 	@Override
@@ -286,6 +288,10 @@ public class MainActivity extends FragmentActivity implements
 			mModel.addWorkOrder(new WorkOrder(aWoNumber));
 			mModel.setSelectedWorkOrder(aWoNumber);
 			break;
+		case R.id.action_settings:
+			Intent intent = new Intent(this, SettingsActivity.class);
+			this.startActivity(intent);
+			break;
 	    default:
 	    }
 		return super.onOptionsItemSelected(item);
@@ -310,8 +316,8 @@ public class MainActivity extends FragmentActivity implements
 				currentCount, 
 				totalCount,
 				1);
+		skid.setSkidNumber(skidNumber);
 		mModel.saveSkid(skid);
-		((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(Double.valueOf(mEdit_productsPerMinute.getText().toString()));
 	}
 	
 	public void updateProductData() {
