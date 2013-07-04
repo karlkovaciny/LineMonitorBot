@@ -193,8 +193,11 @@ public class SkidTimesFragment extends SectionFragment implements
 	@Override
 	public void onFocusChange(View v, boolean hasFocus) {
 		if ( !hasFocus && (v == mEdit_productsPerMinute)) {
-			double newPpmValue = Double.valueOf(mEdit_productsPerMinute.getText().toString());
-			((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(newPpmValue);			
+			String newPpm = mEdit_productsPerMinute.getText().toString();
+			if (!newPpm.equals("")) {
+				((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(Double.valueOf(newPpm));	
+			}
+						
 		}
 		if ( !hasFocus && mEditableGroup.contains(v)) {
 			hideTimes();
