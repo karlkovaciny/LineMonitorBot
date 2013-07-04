@@ -177,7 +177,7 @@ public class PrimexModel {
 		this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, oldProduct, p);
 	}
 
-	public void changeSkid(Integer skidNumber) {
+	public int changeSkid(Integer skidNumber) {
 		//TODO this function fires twice in a row. Catch index out of bounds exceptions.
 		//maybe this should call changeNumber of skids to make sure the skid exists you're changing to?
 		Skid<Product> oldSkid = null; //mSelectedSkid;
@@ -187,7 +187,8 @@ public class PrimexModel {
 		}
 		mSelectedSkid = mSelectedWorkOrder.selectSkid(skidNumber);
 		propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, oldSkid, mSelectedSkid);
-		calculateTimes();		
+		calculateTimes();
+		return skidNumber;
 	}
 	
 	public void saveProduct(Product p) {

@@ -300,9 +300,8 @@ public class SkidTimesFragment extends SectionFragment implements
 					Integer.valueOf(mEdit_currentCount.getText().toString()),
 					Integer.valueOf(mEdit_totalCountPerSkid.getText().toString())
 					);
-			((MainActivity)getActivity()).createNewSkid(0,
+			mSelectedSkidNumber = ((MainActivity)getActivity()).createNewSkid(0,
 					Integer.valueOf(mEdit_totalCountPerSkid.getText().toString()));
-//			mSelectedSkidNumber = oldNumSkids + 1;
 			populateSpinner();
 			break;
 		}
