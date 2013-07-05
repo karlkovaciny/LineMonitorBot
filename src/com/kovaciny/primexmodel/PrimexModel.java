@@ -183,7 +183,7 @@ public class PrimexModel {
 		Skid<Product> oldSkid = null; //mSelectedSkid;
 		List<Skid<Product>> savedSkids = mDbHelper.getSkidList(mSelectedWorkOrder.getWoNumber());
 		if (!savedSkids.isEmpty()) {
-			mSelectedWorkOrder.setSkidsList( savedSkids ); //TODO sync the class and db
+			mSelectedWorkOrder.setSkidsList( savedSkids ); //TODO sync the class and db, prevent bug where calling this can reset skids list to size 1
 		}
 		mSelectedSkid = mSelectedWorkOrder.selectSkid(skidNumber);
 		propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, oldSkid, mSelectedSkid);
