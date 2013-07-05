@@ -310,7 +310,6 @@ public class MainActivity extends FragmentActivity implements
 	}
 	
 	public void updateSkidData(Integer skidNumber, Integer currentCount, Integer totalCount) {
-		mModel.changeSkid(skidNumber);
 		mModel.calculateRates();
 		mModel.calculateTimes();
 		
@@ -320,6 +319,7 @@ public class MainActivity extends FragmentActivity implements
 				1);
 		skid.setSkidNumber(skidNumber);
 		mModel.saveSkid(skid);
+		mModel.changeSkid(skidNumber);
 	}
 	
 	public void updateProductData() {
