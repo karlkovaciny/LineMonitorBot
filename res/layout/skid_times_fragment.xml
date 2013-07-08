@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<ScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/skid_times_fragment_container">
+    android:id="@+id/skid_times_fragment_container" xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<LinearLayout
 	    style="@style/ParentFragment.HorizontallyDivided"
@@ -12,332 +11,319 @@
 	    android:focusableInTouchMode="true"
 	    android:orientation="vertical" >
 
-		<RelativeLayout
-		    android:layout_width="wrap_content"
-		    android:layout_height="match_parent" >
+		<LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical" >
 
-			    <Button
-			        android:id="@+id/btn_cancel_alarm"
-			        style="?android:attr/buttonStyleSmall"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:layout_alignParentLeft="true"
-			        android:layout_toLeftOf="@+id/lbl_products_per_minute"
-			        android:text="Cancel alarm" />
-	
-			<LinearLayout
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:orientation="vertical" 
-			    android:layout_toLeftOf="@+id/imgBtn_sheets_per_minute">
+			<RelativeLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content" >
 
 			    <TextView
-			        android:id="@id/lbl_products_per_minute"
-			        style="@style/Label"
+			        android:id="@+id/lbl_skid_number"
+			        style="@style/Label.TableHeader"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
-			        android:layout_weight="1"
-			        android:text="Sheets per minute" />
+			        android:gravity="center_horizontal"
+			        android:layout_alignParentLeft="true"
+			        android:text="Skid:" />
 
 			    <EditText
-			        android:id="@+id/edit_products_per_minute"
+			        android:id="@+id/edit_skid_number"
 			        style="@style/EditText"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
-			        android:layout_gravity="right"
-			        android:layout_weight="1"
-			        android:gravity="center_vertical|right"
-			        android:imeOptions="actionDone"
-			        android:inputType="numberDecimal"
-			        android:maxEms="4"
-			        android:maxLength="5"
-			        android:minEms="4"
-			        android:selectAllOnFocus="true" >
-
+			        android:layout_toRightOf="@id/lbl_skid_number"
+			        android:layout_alignBaseline="@id/lbl_skid_number"
+			        android:gravity="center_horizontal"
+			        android:inputType="number"
+			        android:maxLength="4"
+			        android:selectAllOnFocus="true"
+			        android:text="1" >
 			        <requestFocus />
 			    </EditText>
-			</LinearLayout>
-	        <ImageButton
-	            android:id="@id/imgBtn_sheets_per_minute"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:src="@drawable/calculator"
-	            android:layout_alignParentRight="true" />
-		</RelativeLayout>
 
+			    <TextView
+			        android:id="@+id/textView123"
+			        style="@style/Label"
+			        android:layout_height="wrap_content"
+			        android:layout_width="wrap_content"
+			        android:layout_toRightOf="@id/edit_skid_number"
+			        android:text="of" />
+
+			    <EditText
+			        android:id="@+id/edit_num_skids_in_job"
+			        style="@style/EditText"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_toRightOf="@id/textView123"
+			        android:layout_alignBaseline="@id/lbl_skid_number"
+			        android:inputType="number"
+			        android:maxLength="3"
+			        android:minEms="2" />
+
+			    <Button
+			        android:id="@+id/btn_enter_product"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:gravity="right"
+			        android:layout_alignParentRight="true"
+			        android:text="Enter Product" />
+			    
+			    <TextView
+			        android:id="@+id/lbl_products"
+			        style="@style/Label"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_below="@id/btn_enter_product"
+			        android:text="Sheets: " />
+			    
+			    <EditText
+			        android:id="@+id/edit_current_count"
+			        style="@style/EditText"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_below="@id/btn_enter_product"
+			        android:layout_toRightOf="@id/lbl_products"
+			        android:layout_alignBaseline="@id/lbl_products"
+			        android:gravity="center_horizontal"
+			        android:inputType="number"
+			        android:maxLength="4"
+			        android:minEms="3"
+			        android:selectAllOnFocus="true" />
+	
+			    <TextView
+			        android:id="@+id/textView124"
+			        style="@style/Label"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_below="@id/btn_enter_product"
+			        android:layout_toRightOf="@id/edit_current_count"
+			        android:text="of"/>
+	
+			    <EditText
+			        android:id="@+id/edit_total_sheets_per_skid"
+			        style="@style/EditText"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_below="@id/btn_enter_product"
+			        android:layout_toRightOf="@id/textView124"
+			        android:layout_alignBaseline="@id/lbl_products"
+			        android:gravity="center_horizontal"
+			        android:inputType="number"
+			        android:maxLength="4"
+			        android:minEms="3"
+			        android:selectAllOnFocus="true" />
+	
+			    <Button
+			        android:id="@+id/btn_calculate_times"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_below="@id/btn_enter_product"
+			        android:layout_alignParentRight="true"
+			        android:gravity="right"
+			        android:text="Get Times" />
+
+			    			    
+			</RelativeLayout>
+
+		</LinearLayout>
+
+		<TableLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:shrinkColumns="*"
+		    android:stretchColumns="3" >
+
+		    <TableRow
+		        android:id="@+id/tableRow5"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"		         >
+
+		        <TextView
+		            android:id="@+id/lbl_skid_start_time"
+		            style="@style/Label.FirstTableColumn"
+		            android:layout_height="wrap_content"
+		            android:text="Skid start" />
+
+		        <TextView
+		            android:id="@+id/txt_skid_start_time"
+		            style="@style/Label.SecondTableColumn"
+		            android:layout_height="wrap_content" />
+
+		        <TextView
+		            android:id="@+id/textView2"
+		            style="@style/BlankThirdColumn"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+		    </TableRow>
+
+		    <TableRow
+		        android:id="@+id/tableRow6"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" >
+
+		        <TextView
+		            android:id="@+id/lbl_skid_finish_time"
+		            style="@style/Label.FirstTableColumn"
+		            android:layout_height="wrap_content"
+		            android:text="Skid finish" />
+
+		        <TextView
+		            android:id="@+id/txt_skid_finish_time"
+		            style="@style/Label.SecondTableColumn"
+		            android:layout_height="wrap_content"
+		            android:maxLength="5" />
+		        
+				<TextView
+		            android:id="@+id/textView2a"
+		            style="@style/BlankThirdColumn"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textAppearance="?android:attr/textAppearanceMedium" />
+		    </TableRow>
+
+		    <TableRow
+		        android:id="@+id/tableRow7"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" >
+
+		        <TextView
+		            android:id="@+id/lbl_job_finish_time"
+		            style="@style/Label.FirstTableColumn"
+		            android:layout_height="wrap_content"
+		            android:layout_gravity="left"
+		            android:text="Job finish" />
+
+		        <TextView
+		            android:id="@+id/txt_job_finish_time"
+		            style="@style/Label.SecondTableColumn"
+		            android:layout_height="wrap_content"
+		            android:gravity="center_horizontal"
+		            android:layout_gravity="left"
+		            android:text="0:00 PM" />
+
+		        <TextView
+		            android:id="@+id/textView2b"
+		            style="@style/BlankThirdColumn"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textAppearance="?android:attr/textAppearanceMedium" />
+		        
+		    </TableRow>
+
+		</TableLayout>
+
+		<TableLayout
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:shrinkColumns="*"
+		        android:stretchColumns="3" >
+
+		    <TableRow
+		        android:id="@+id/tableRow8"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" >
+
+		        <TextView
+		            android:id="@+id/lbl_products_per_minute"
+		            style="@style/Label.FirstTableColumn"
+		            android:layout_height="wrap_content"
+		            android:layout_gravity="left"
+		            android:text="Sheets per minute" />
+
+		        <TextView
+		            android:id="@+id/txt_products_per_minute"
+		            style="@style/Label.SecondTableColumn"
+		            android:layout_height="wrap_content"
+		            android:gravity="center_horizontal"
+		            android:imeOptions="actionDone"
+		            android:inputType="numberDecimal"
+		            android:maxEms="4"
+		            android:maxLength="5"
+		            android:minEms="4" />
+
+		        <TextView
+		            android:id="@+id/textView2c"
+		            style="@style/BlankThirdColumn"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textAppearance="?android:attr/textAppearanceMedium" />
+		        
+		    </TableRow>
+
+		    <TableRow
+		        android:id="@+id/tableRow9"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" >
+
+		        <TextView
+		            android:id="@+id/lbl_time_per_skid"
+		            style="@style/Label.FirstTableColumn"
+		            android:layout_height="wrap_content"
+		            android:layout_gravity="left"
+		            android:text="Time per skid" />
+
+		        <TextView
+		            android:id="@+id/txt_time_per_skid"
+		            style="@style/Label.SecondTableColumn"
+		            android:layout_height="wrap_content"
+		            android:layout_gravity="left"
+		            android:gravity="center"
+		            android:text="0:00" />
+
+		        <TextView
+		            android:id="@+id/textView2d"
+		            style="@style/BlankThirdColumn"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textAppearance="?android:attr/textAppearanceMedium" />
+		        
+		    </TableRow>
+
+		    <TableRow
+		        android:id="@+id/tableRow10"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" >
+
+		        <TextView
+		            android:id="@+id/lbl_time_to_maxson"
+		            style="@style/Label.FirstTableColumn"
+		            android:layout_height="wrap_content"
+		            android:layout_gravity="left"
+		            android:text="Die to Maxson"
+		            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+		        <TextView
+		            android:id="@+id/txt_time_to_maxson"
+		            style="@style/Label.SecondTableColumn"
+		            android:layout_height="wrap_content"
+		            android:layout_gravity="left"
+		            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+		        <TextView
+		            android:id="@+id/textView2e"
+		            style="@style/BlankThirdColumn"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textAppearance="?android:attr/textAppearanceMedium" />
+		        
+		    </TableRow>
+		    </TableLayout>
 	    <LinearLayout
-	        android:layout_width="wrap_content"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_marginBottom="@dimen/fragment_vertical_margin"
-	        android:orientation="horizontal"
-	        android:layout_gravity="right" >
-
-
-
-	    </LinearLayout>
-
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="0dip"
-	        android:layout_weight="1" >
-
-	        <TableLayout
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:divider="?android:attr/dividerHorizontal"
-	            android:dividerPadding="0dp"
-	            android:showDividers="beginning|middle|end" >
-
-	            <TableRow
-	                android:id="@+id/tableRow1"
-	                android:divider="?android:attr/dividerVertical"
-	                android:dividerPadding="0dp"
-	                android:gravity="center_horizontal"
-	                android:showDividers="beginning|middle|end"  >
-
-	                <TextView
-	                    android:id="@+id/lbl_skid_number"
-	                    style="@style/Label.TableHeader"
-	                    android:layout_width="0dip"
-	                    android:layout_weight="0.7"
-	                    android:gravity="center_horizontal"
-	                    android:text="Skid\n#" />
-
-	                <TextView
-	                    android:id="@+id/lbl_current_count"
-	                    style="@style/Label.TableHeader"
-	                    android:layout_width="0dip"
-	                    android:layout_weight="1"
-	                    android:gravity="center_horizontal"
-	                    android:text="Current\ncount" />
-
-	                <TextView
-	                    android:id="@+id/lbl_total_products"
-	                    style="@style/Label.TableHeader"
-	                    android:layout_width="0dip"
-	                    android:layout_weight="1"
-	                    android:gravity="center_horizontal"
-	                    android:text="Total\nsheets" />
-
-	                <TextView
-	                    android:id="@+id/lbl_skid_start_time"
-	                    style="@style/Label.TableHeader"
-	                    android:layout_width="0dip"
-	                    android:layout_weight="1"
-	                    android:gravity="center_horizontal"
-	                    android:text="Start\ntime" />
-
-	                <TextView
-	                    android:id="@+id/lbl_skid_finish_time"
-	                    style="@style/Label.TableHeader"
-	                    android:layout_width="0dip"
-	                    android:layout_weight="1"
-	                    android:gravity="center_horizontal"
-	                    android:text="Finish\ntime" />
-	            </TableRow>
-
-	            <TableRow
-	                android:id="@+id/tableRow2"
-	                android:divider="?android:attr/dividerVertical"
-	                android:dividerPadding="0dp"
-	                android:gravity="center_horizontal"
-	                android:showDividers="beginning|middle|end"  >
-
-	                <EditText
-	                    android:id="@+id/edit_skid_number"
-	                    style="@style/EditText"
-	                    android:layout_width="0dip"
-	                    android:layout_weight="0.7"
-	                    android:gravity="center_horizontal"
-	                    android:inputType="number"
-	                    android:maxEms="3"
-	                    android:maxLength="4"
-	                    android:minEms="3"
-	                    android:selectAllOnFocus="true"
-	                    android:text="1">
-	                </EditText>
-	                
-	                <EditText
-	                    android:id="@+id/edit_current_count"
-	                    style="@style/EditText"
-	                    android:layout_width="0dip"
-	                    android:layout_weight="1"
-	                    android:gravity="center_horizontal"
-	                    android:inputType="number"
-	                    android:maxLength="4"
-	                    android:selectAllOnFocus="true" />
-
-	                <EditText
-	                    android:id="@+id/edit_total_sheets_per_skid"
-	                    style="@style/EditText"
-	                    android:layout_width="0dip"
-	                    android:layout_weight="1"
-	                    android:gravity="center_horizontal"
-	                    android:inputType="number"
-	                    android:maxLength="4"
-	                    android:selectAllOnFocus="true" />
-
-	                <EditText
-	                    android:id="@+id/edit_skid_start_time"
-	                    style="@style/EditText"
-	                    android:layout_width="0dip"
-	                    android:layout_weight="1"
-	                    android:gravity="center_horizontal"
-	                    android:inputType="time"
-	                    android:maxLength="5" />
-
-	                <EditText
-	                    android:id="@+id/edit_skid_finish_time"
-	                    style="@style/EditText"
-	                    android:layout_width="0dip"
-	                    android:layout_weight="1"
-	                    android:gravity="center_horizontal"
-	                    android:inputType="time"
-	                    android:maxLength="5" />
-	            </TableRow>
-
-	            <TableRow
-	                android:id="@+id/tableRow3"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:divider="?android:attr/dividerVertical"
-	                android:dividerPadding="0dp"
-	                android:showDividers="beginning|middle|end" >
-	            </TableRow>
-
-	            <TableRow
-	                android:id="@+id/tableRow4"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:divider="?android:attr/dividerVertical"
-	                android:dividerPadding="0dp"
-	                android:showDividers="beginning|middle|end" >
-	            </TableRow>
-	        </TableLayout>
-
-	    </LinearLayout>
-
-	    <RelativeLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content" >
-
-	        <LinearLayout
-	            android:id="@+id/relative_layout_anchor"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content" >
-
-	            <TextView
-	                android:id="@+id/lbl_num_skids_in_job"
-	                style="@style/Label"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="Number of skids in job: " />
-
-	            <EditText
-	                android:id="@+id/edit_num_skids_in_job"
-	                style="@style/EditText"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:inputType="number"
-	                android:maxLength="3"
-	                android:minEms="2" />
-	        </LinearLayout>
-
-	        <LinearLayout
-	            android:id="@+id/linearLayout7"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_below="@id/relative_layout_anchor" >
-
-	            <TextView
-	                android:id="@+id/lbl_time_per_skid"
-	                style="@style/Label"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="Time per skid: " />
-
-	            <TextView
-	                android:id="@+id/txt_time_per_skid"
-	                style="@style/Label"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_toRightOf="@id/lbl_time_per_skid"
-	                android:text="0:00" />
-	        </LinearLayout>
-
-	        <LinearLayout
-	            android:id="@+id/linearLayout9"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:layout_below="@id/linearLayout7"
-	            android:layout_weight="1"
-	            android:orientation="vertical" >
-	        </LinearLayout>
-
-	        <LinearLayout
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_below="@id/linearLayout9" >
-
-	            <TextView
-	                android:id="@+id/lbl_job_finish_time"
-	                style="@style/Label"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="Job finish time: " />
-
-	            <TextView
-	                android:id="@+id/txt_job_finish_time"
-	                style="@style/Label"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="0:00 PM" />
-	        </LinearLayout>
+	        android:gravity="center_horizontal" >
 
 	        <Button
-	            android:id="@+id/btn_new_skid"
+	            android:id="@+id/btn_cancel_alarm"
+	            style="?android:attr/buttonStyleSmall"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:layout_alignParentRight="true"
-	            android:layout_alignParentTop="true"
-	            android:drawableRight="@drawable/skid"
-	            android:text="+"
-	            android:textSize="40sp" />
-	    </RelativeLayout>
-
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content" >
-
-	        <TextView
-	            android:id="@+id/lbl_time_to_maxson"
-	            style="@style/Label"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="Die to Maxson: "
-	            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-	        <TextView
-	            android:id="@+id/txt_time_to_maxson"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-	        <LinearLayout
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:gravity="right" >
-
-	            <Button
-	                android:id="@+id/btn_calculate_times"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="Calculate Times" />
-
-	        </LinearLayout>
-
+	            android:text="Cancel alarm" />
 	    </LinearLayout>
 
 	</LinearLayout>
