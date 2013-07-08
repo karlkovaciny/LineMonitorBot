@@ -4,11 +4,10 @@ public class ProductionLine {
 	private int mLineNumber;
 	private int mLineLength; //in feet
 	private int mDieWidth; //in inches
-	private double mNetRate; //in lbs/hr
-	private double mGrossRate; //in lbs/hr
 	private SpeedValues mSpeedValues;
 	private String mSpeedControllerType;
 	private String mTakeoffEquipmentType;
+	private Novatec mNovatec;
 	
 	public static final String SPEED_CONTROLLER_TYPE_DIRECT = "Direct";
 	public static final String SPEED_CONTROLLER_TYPE_GEARED = "Geared";
@@ -21,6 +20,7 @@ public class ProductionLine {
 		setTakeoffEquipmentType(takeoffEquipmentType);
 		//TODO default settings
 		mSpeedValues = new SpeedValues(0,1,1);
+		mNovatec = new Novatec(50,0,1); 
 	}
 	
 	/* (non-Javadoc)
@@ -80,5 +80,11 @@ public class ProductionLine {
 	}
 	public void setTakeoffEquipmentType(String takeOffEquipment) {
 		this.mTakeoffEquipmentType = takeOffEquipment;
-	}	
+	}
+	public Novatec getNovatec() {
+		return mNovatec;
+	}
+	public void setNovatec(Novatec novatec) {
+		this.mNovatec = novatec;
+	}
 }

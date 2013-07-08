@@ -31,7 +31,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 83;
+    public static final int DATABASE_VERSION = 84;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -61,6 +61,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED + DOUBLE_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER + INTEGER_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT + DOUBLE_TYPE + COMMA_SEP +
+	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NOVATEC_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
 	    	" UNIQUE (" + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + ")" +
 	    	" )";
     
@@ -81,7 +82,14 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     		PrimexDatabaseSchema.Products.COLUMN_NAME_LENGTH + REAL_TYPE + COMMA_SEP +
     		PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE + INTEGER_TYPE + COMMA_SEP +
     		PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + INTEGER_TYPE + COMMA_SEP +
+    		PrimexDatabaseSchema.Products.COLUMN_NAME_UNIT_WEIGHT + REAL_TYPE + COMMA_SEP +
     		" UNIQUE ("  + PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + ")" +
+    		" )";
+    
+    private static final String SQL_CREATE_NOVATECS = 
+    		"CREATE TABLE " + PrimexDatabaseSchema.Novatecs.TABLE_NAME + " (" +
+    		PrimexDatabaseSchema.Novatecs._ID + " INTEGER PRIMARY KEY," +
+    		PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT + REAL_TYPE + 
     		" )";
     
     private static final String SQL_CREATE_SKIDS = 
@@ -114,6 +122,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     		" )";
     
 	//list "child" tables, which have a foreign key, before their parent, so drop table works
+    private static final String TABLE_NAME_NOVATECS = PrimexDatabaseSchema.Novatecs.TABLE_NAME;
     private static final String TABLE_NAME_SKIDS = PrimexDatabaseSchema.Skids.TABLE_NAME;
     private static final String TABLE_NAME_LINE_WORK_ORDER_LINK = PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME;
     private static final String TABLE_NAME_PRODUCT_TYPES = PrimexDatabaseSchema.ProductTypes.TABLE_NAME;
@@ -122,6 +131,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String TABLE_NAME_PRODUCTION_LINES = PrimexDatabaseSchema.ProductionLines.TABLE_NAME;
     private static final String TABLE_NAME_MODEL_STATE = PrimexDatabaseSchema.ModelState.TABLE_NAME;
 
+    private static final String SQL_DELETE_NOVATECS =
+    		"DROP TABLE IF EXISTS " + TABLE_NAME_NOVATECS;
     private static final String SQL_DELETE_SKIDS = 
     		"DROP TABLE IF EXISTS " + TABLE_NAME_SKIDS;
     private static final String SQL_DELETE_LINE_WORK_ORDER_LINK =    		
@@ -188,6 +199,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED,69);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT,0);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER,1);
+        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NOVATEC_SETPOINT,0);
         	
         	db.insertOrThrow(PrimexDatabaseSchema.WorkOrders.TABLE_NAME, null, values);
         	db.setTransactionSuccessful();
@@ -217,6 +229,19 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	        	long rowId = db.insertOrThrow(PrimexDatabaseSchema.ProductTypes.TABLE_NAME, null, ptvalues);
         	}
 	        db.setTransactionSuccessful();
+        } finally {
+        	db.endTransaction();
+        }
+        
+        db.execSQL(SQL_CREATE_NOVATECS);
+        try {
+        	db.beginTransaction();
+        	Integer defaultSetpoint = 0;
+        	ContentValues thevalues = new ContentValues();
+        	thevalues.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT, defaultSetpoint);
+        	
+        	long rowId = db.insertOrThrow(PrimexDatabaseSchema.Novatecs.TABLE_NAME, null, thevalues);
+            db.setTransactionSuccessful();
         } finally {
         	db.endTransaction();
         }
@@ -253,7 +278,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO: upgrade policy is
         // to simply to discard the data and start over
-        db.execSQL(SQL_DELETE_SKIDS);
+        db.execSQL(SQL_DELETE_NOVATECS);
+    	db.execSQL(SQL_DELETE_SKIDS);
         db.execSQL(SQL_DELETE_LINE_WORK_ORDER_LINK);
     	db.execSQL(SQL_DELETE_PRODUCTION_LINES);
         db.execSQL(SQL_DELETE_WORK_ORDERS);
@@ -419,11 +445,13 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, newWo.getWoNumber());
 		double tpo = newWo.getTotalProductsOrdered();
 		tpo = 69; //debug
+		double nova = newWo.getNovatecSetpoint();
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED, tpo);
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT, newWo.getMaximumStackHeight());
 		if ( newWo.hasSelectedSkid()) {
 			values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER, newWo.getSelectedSkid().getSkidNumber());	
-		} else Log.e("ERROR", String.valueOf(newWo.getWoNumber()) + " doesn't have a selected skid (maybe it's new)"); 
+		} else Log.e("ERROR", String.valueOf(newWo.getWoNumber()) + " doesn't have a selected skid (maybe it's new)");
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NOVATEC_SETPOINT, nova);
 		long rowId;
 		try {
 			rowId = db.insertWithOnConflict(
@@ -453,6 +481,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		double ordered = -1d;
 		int selected = -1;
 		double height = -1d;
+		double nova = -1d;
 		try {
 			if (resultCursor.moveToFirst()) {
 		    	wonum = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER));
@@ -460,7 +489,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		    	ordered = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED));
 		    	selected = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER));
 		    	height = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT));
-		    	
+		    	nova = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NOVATEC_SETPOINT));
 				WorkOrder wo = new WorkOrder(wonum);
 				if (prod_id != -1) {
 					wo.setProduct(getProduct(wonum));
@@ -477,6 +506,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 					wo.selectSkid(selected);
 				}
 				wo.setMaximumStackHeight(height);
+				wo.setNovatecSetpoint(nova);
 		    	return wo;
 			} else return null;
 	    } finally {
@@ -655,7 +685,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE, foreignKey);
 		int otherForeign = woNumber;
 		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER, otherForeign);
-		
+		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_UNIT_WEIGHT, newProduct.getUnitWeight());
 		long rowId = db.insertWithOnConflict(
 				PrimexDatabaseSchema.Products.TABLE_NAME, 
 				null, 
@@ -708,6 +738,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 							0
 						);					
 				} else throw new IllegalArgumentException("not a sheet or roll!");
+				double unitWeight = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_UNIT_WEIGHT));
+				p.setUnitWeight(unitWeight);
 			} else {
 				Log.e("error", "SQLiteOpenHelper::getProduct returned no results");
 			}

@@ -30,6 +30,7 @@ public class PrimexDatabaseSchema {
 		public static final String COLUMN_NAME_TOTAL_PRODUCTS_ORDERED = "products_ordered";	
 		public static final String COLUMN_NAME_SELECTED_SKID_NUMBER = "skid_number";	
 		public static final String COLUMN_NAME_MAXIMUM_STACK_HEIGHT = "max_stack_height";
+		public static final String COLUMN_NAME_NOVATEC_SETPOINT = "novatec_setpoint";
 	}
 	
 	public static abstract class LineWorkOrderLink implements BaseColumns {
@@ -45,6 +46,12 @@ public class PrimexDatabaseSchema {
 		public static final String COLUMN_NAME_LENGTH = "length";
 		public static final String COLUMN_NAME_TYPE = "type";
 		public static final String COLUMN_NAME_WO_NUMBER = "wo_number";
+		public static final String COLUMN_NAME_UNIT_WEIGHT = "unit_weight";
+	}
+	
+	public static abstract class Novatecs implements BaseColumns {
+		public static final String TABLE_NAME = "novatecs";
+		public static final String COLUMN_NAME_CURRENT_SETPOINT = "current_setpoint";
 	}
 	
 	public static abstract class Skids implements BaseColumns {
@@ -67,6 +74,5 @@ public class PrimexDatabaseSchema {
 		public static final String TABLE_NAME = "model_state";
 		public static final String COLUMN_NAME_SELECTED_LINE = "selected_line";
 		public static final String COLUMN_NAME_SELECTED_WORK_ORDER = "selected_wo";
-		
 	}
 }

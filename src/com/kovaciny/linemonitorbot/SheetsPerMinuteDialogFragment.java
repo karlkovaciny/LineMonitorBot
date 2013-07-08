@@ -114,7 +114,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		// Create the AlertDialog
 		AlertDialog alertDialog = builder.create();
 		alertDialog.show();
-		alertDialog.getWindow().setLayout(450,700);
+		alertDialog.getWindow().setLayout(500,850); //TODO make this expand to fit contents
 		return alertDialog;
 	}
 

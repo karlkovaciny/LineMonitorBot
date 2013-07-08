@@ -11,6 +11,7 @@ public class WorkOrder {
 	private Product mProduct = null;
 	private double mTotalProductsOrdered;
 	private double mMaximumStackHeight; // in inches, not including pallet
+	private double mNovatecSetpoint = 0;
 	private int mSelectedSkidPosition = -1;
 	private Date mFinishTime;
 	
@@ -163,5 +164,10 @@ public class WorkOrder {
 	public Product getProduct() {
 		return mProduct;
 	}	
-	
+	public double getNovatecSetpoint() {
+		return mNovatecSetpoint;
+	}
+	public void setNovatecSetpoint(double novatecSetpoint) {
+		this.mNovatecSetpoint = novatecSetpoint;
+	}	
 }

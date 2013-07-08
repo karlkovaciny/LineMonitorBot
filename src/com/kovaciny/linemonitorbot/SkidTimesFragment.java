@@ -1,6 +1,7 @@
 package com.kovaciny.linemonitorbot;
 
 import java.beans.PropertyChangeEvent;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,7 +27,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -42,31 +42,29 @@ public class SkidTimesFragment extends SectionFragment implements
 		OnItemSelectedListener {
 	private SkidFinishedBroadcastReceiver mAlarmReceiver;
 	private List<Skid<Product>> mSkidList;
-	private List<Integer> mSkidNumbersList;
-	private ArrayAdapter<Integer> mSkidNumbersAdapter;
-	private ImageButton mImgBtn_calcSheetsPerMinute;
+	private Button mBtn_enterProduct;
 	private Button mBtn_cancelAlarm;
-	private Button mBtn_newSkid;
 	private Button mBtn_calculateTimes;
 	
 	private List<View> mEditableGroup;
 	
-	private EditText mEdit_productsPerMinute;
 	private EditText mEdit_currentSkidNumber;
 	private EditText mEdit_currentCount;
 	private EditText mEdit_totalCountPerSkid;
-	private EditText mEdit_skidStartTime;
-	private EditText mEdit_skidFinishTime;
 	private EditText mEdit_numSkidsInJob;
 
 	private TextView mTxt_timePerSkid;
 	private TextView mLbl_productsPerMinute;
+	private TextView mTxt_productsPerMinute;
 	private TextView mLbl_totalProducts;
+	private TextView mLbl_products;
 	private TextView mTxt_jobFinishTime;
 	private TextView mLbl_jobFinishTime;
 	private TextView mLbl_timeToMaxson;
 	private TextView mTxt_timeToMaxson;
-
+	private TextView mTxt_skidStartTime;
+	private TextView mTxt_skidFinishTime;
+	
 	private long mMillisPerSkid;
 	private int mSelectedSkidNumber;
 	private String mJobFinishText;
@@ -94,16 +92,15 @@ public class SkidTimesFragment extends SectionFragment implements
 		//set up editTexts
 		mEditableGroup = new ArrayList<View>(); //TODO make the finish times noneditable since they're not in the group.
 		
-		mEdit_productsPerMinute = (EditText) rootView
-				.findViewById(R.id.edit_products_per_minute);
-		mEditableGroup.add(mEdit_productsPerMinute);
+		mTxt_productsPerMinute = (TextView) rootView
+				.findViewById(R.id.txt_products_per_minute);
 		
 		mEdit_currentSkidNumber = (EditText) rootView.findViewById(R.id.edit_skid_number);
 		mEditableGroup.add(mEdit_currentSkidNumber);
 		
 		mEdit_numSkidsInJob = (EditText) rootView
 				.findViewById(R.id.edit_num_skids_in_job);
-		mEditableGroup.add(mEdit_numSkidsInJob); //needs to be added before skid number so skid number will be in range when checked
+		//needs to be added before skid number so skid number will be in range when checked
 		
 		mEdit_currentCount = (EditText) rootView
 				.findViewById(R.id.edit_current_count);
@@ -113,11 +110,11 @@ public class SkidTimesFragment extends SectionFragment implements
 				.findViewById(R.id.edit_total_sheets_per_skid);
 		mEditableGroup.add(mEdit_totalCountPerSkid);
 		
-		mEdit_skidStartTime = (EditText) rootView
-				.findViewById(R.id.edit_skid_start_time);
+		mTxt_skidStartTime = (TextView) rootView
+				.findViewById(R.id.txt_skid_start_time);
 		
-		mEdit_skidFinishTime = (EditText) rootView
-				.findViewById(R.id.edit_skid_finish_time);
+		mTxt_skidFinishTime = (TextView) rootView
+				.findViewById(R.id.txt_skid_finish_time);
 		
 		for (View v : mEditableGroup) {
 			EditText etv = (EditText) v;
@@ -126,12 +123,9 @@ public class SkidTimesFragment extends SectionFragment implements
 		}
 
 		//set up buttons
-		mImgBtn_calcSheetsPerMinute = (ImageButton) rootView
-				.findViewById(R.id.imgBtn_sheets_per_minute);
-		mImgBtn_calcSheetsPerMinute.setOnClickListener(this);
-		
-		mBtn_newSkid = (Button) rootView.findViewById(R.id.btn_new_skid);
-		mBtn_newSkid.setOnClickListener(this);
+		mBtn_enterProduct = (Button) rootView
+				.findViewById(R.id.btn_enter_product);
+		mBtn_enterProduct.setOnClickListener(this);
 		
 		mBtn_cancelAlarm = (Button) rootView.findViewById(R.id.btn_cancel_alarm);
 		mBtn_cancelAlarm.setOnClickListener(this);
@@ -150,7 +144,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		
 		mLbl_productsPerMinute = (TextView) rootView
 				.findViewById(R.id.lbl_products_per_minute);
-		mLbl_totalProducts = (TextView) rootView.findViewById(R.id.lbl_total_products);
+		mLbl_products = (TextView) rootView.findViewById(R.id.lbl_products);
 
 
 		
@@ -187,15 +181,8 @@ public class SkidTimesFragment extends SectionFragment implements
 	 */
 	@Override
 	public void onFocusChange(View v, boolean hasFocus) {
-		if ( !hasFocus && (v == mEdit_productsPerMinute)) {
-			String newPpm = mEdit_productsPerMinute.getText().toString();
-			if (!newPpm.equals("")) {
-				((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(Double.valueOf(newPpm));	
-			}
-						
-		}
 		if ( !hasFocus && mEditableGroup.contains(v)) {
-			hideTimes();
+//			hideTimes();
 		}
 	}
 	
@@ -223,7 +210,7 @@ public class SkidTimesFragment extends SectionFragment implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case (R.id.imgBtn_sheets_per_minute):
+		case (R.id.btn_enter_product):
 			((MainActivity)getActivity()).showSheetsPerMinuteDialog();
 			break;
 		case (R.id.btn_calculate_times):
@@ -257,7 +244,7 @@ public class SkidTimesFragment extends SectionFragment implements
 						Integer.valueOf(mEdit_totalCountPerSkid.getText().toString())
 						);
 				((MainActivity)getActivity()).getModelDebug().changeSkid(mSelectedSkidNumber);
-				((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(Double.valueOf(mEdit_productsPerMinute.getText().toString()));
+				((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(Double.valueOf(mTxt_productsPerMinute.getText().toString()));
 				((MainActivity)getActivity()).getModelDebug().calculateRates();
 				((MainActivity)getActivity()).getModelDebug().calculateTimes();
 				for (View ett : mEditableGroup) {
@@ -267,15 +254,6 @@ public class SkidTimesFragment extends SectionFragment implements
 			break;
 		case (R.id.btn_cancel_alarm):
 			cancelAlarm();
-			break;
-		case (R.id.btn_new_skid):
-			((MainActivity)getActivity()).updateSkidData(
-					mSelectedSkidNumber,
-					Integer.valueOf(mEdit_currentCount.getText().toString()),
-					Integer.valueOf(mEdit_totalCountPerSkid.getText().toString())
-					);
-			mSelectedSkidNumber = ((MainActivity)getActivity()).createNewSkid(0,
-					Integer.valueOf(mEdit_totalCountPerSkid.getText().toString()));
 			break;
 		}
 	}
@@ -324,17 +302,17 @@ public class SkidTimesFragment extends SectionFragment implements
 			StringBuilder capUnits = new StringBuilder(units);
 			capUnits.setCharAt(0, Character.toUpperCase(units.charAt(0)));
 			this.mLbl_productsPerMinute.setText(capUnits.toString() + " per minute");
-			this.mLbl_totalProducts.setText("Total\n" + units);
+			this.mLbl_products.setText(capUnits.toString() + ":");
 			
 		} else if (propertyName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {
-			this.mEdit_productsPerMinute.setText(String.valueOf(newProperty));
+			this.mTxt_productsPerMinute.setText(String.valueOf(newProperty));
 			hideTimes();
 			
 		} else if (propertyName == PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE_EVENT) {
 			//update finish time for this skid
 			SimpleDateFormat formatter = new SimpleDateFormat("hh:mm", Locale.US);
 			String formattedTime = formatter.format((Date)newProperty);
-			mEdit_skidFinishTime.setText(formattedTime);
+			mTxt_skidFinishTime.setText(formattedTime);
 			
 			//set alarm 
 			long alarmLeadTime = (long) (1.5 * HelperFunction.ONE_MINUTE_IN_MILLIS); //TODO
@@ -346,16 +324,16 @@ public class SkidTimesFragment extends SectionFragment implements
 				SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 				Boolean repeatPref = sharedPref.getBoolean("repeating_timer", false);
 				if (repeatPref) {
-					repeatingTimer( mEdit_skidFinishTime, triggerAtMillis, mMillisPerSkid );	
+					repeatingTimer( mTxt_skidFinishTime, triggerAtMillis, mMillisPerSkid );	
 				} else {
-					onetimeTimer(mEdit_skidFinishTime, triggerAtMillis);
+					onetimeTimer(mTxt_skidFinishTime, triggerAtMillis);
 				}
 								
 			}			
 		} else if (propertyName == PrimexModel.CURRENT_SKID_START_TIME_CHANGE_EVENT) {
-			SimpleDateFormat formatter = new SimpleDateFormat("hh:mm", Locale.US);
-			String formattedTime = formatter.format((Date)newProperty);
-			mEdit_skidStartTime.setText(formattedTime);
+			SimpleDateFormat formatter2 = new SimpleDateFormat("hh:mm", Locale.US);
+			String formattedTime2 = formatter2.format((Date)newProperty);
+			mTxt_skidStartTime.setText(formattedTime2);
 			
 		} else if (propertyName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
 			this.mTxt_timePerSkid.setText(HelperFunction
@@ -368,8 +346,8 @@ public class SkidTimesFragment extends SectionFragment implements
 			
 		} else if (propertyName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) {
 			Date finishTime = (Date)newProperty;
-			SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US);
-			mJobFinishText = formatter.format(finishTime);
+			SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a", Locale.US);
+			mJobFinishText = formatter3.format(finishTime);
 			mTxt_jobFinishTime.setText(mJobFinishText);
 			mTxt_jobFinishTime.setVisibility(TextView.VISIBLE);
 			
@@ -391,7 +369,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
 			mSelectedSkidNumber =  ((WorkOrder)newProperty).getSelectedSkid().getSkidNumber();
 			hideTimes();
-		}
+		} 
 	}
 
 	/* (non-Javadoc)

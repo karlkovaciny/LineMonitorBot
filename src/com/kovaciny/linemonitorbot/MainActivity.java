@@ -2,6 +2,7 @@ package com.kovaciny.linemonitorbot;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -21,6 +22,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kovaciny.primexmodel.Novatec;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Products;
@@ -204,9 +206,13 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
+		if (event == null) {
+			throw new RuntimeException("something threw a null event");
+		}
 		String eventName = event.getPropertyName();
 		Object newProperty = event.getNewValue();
 		SkidTimesFragment skidTimesFrag = (SkidTimesFragment) this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
+		RatesFragment ratesFrag = (RatesFragment) this.findFragmentByPosition(MainActivity.RATES_FRAGMENT_POSITION);
 		
 		if (eventName == PrimexModel.SELECTED_LINE_CHANGE_EVENT) {
 			if (newProperty == null) {
@@ -230,6 +236,7 @@ public class MainActivity extends FragmentActivity implements
 				mJobPicker.setTitle(woTitle);
 			}
 			skidTimesFrag.modelPropertyChange(event);
+			ratesFrag.modelPropertyChange(event);
 			
 		} else if (eventName == PrimexModel.NEW_WORK_ORDER_EVENT) { //not safe to fire without a selected WO
 			int newWonum = ((WorkOrder)newProperty).getWoNumber();
@@ -239,7 +246,7 @@ public class MainActivity extends FragmentActivity implements
 			skidTimesFrag.modelPropertyChange(event);
 		} else if (eventName == PrimexModel.PRODUCT_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);
-			
+			ratesFrag.modelPropertyChange(event);
 		} else if (eventName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);
 			
@@ -255,6 +262,12 @@ public class MainActivity extends FragmentActivity implements
 			skidTimesFrag.modelPropertyChange(event);
 		} else if (eventName == PrimexModel.NUMBER_OF_SKIDS_CHANGE_EVENT){
 			skidTimesFrag.modelPropertyChange(event);
+		} else if ((eventName == PrimexModel.EDGE_TRIM_RATIO_CHANGE_EVENT) ||
+				(eventName == PrimexModel.NET_PPH_CHANGE_EVENT) || 
+				(eventName == PrimexModel.GROSS_PPH_CHANGE_EVENT) || 
+				(eventName == PrimexModel.GROSS_WIDTH_CHANGE_EVENT) || 
+				(eventName == PrimexModel.COLOR_PERCENT_CHANGE_EVENT)) {
+			ratesFrag.modelPropertyChange(event);
 		}
 	}
 
@@ -310,8 +323,10 @@ public class MainActivity extends FragmentActivity implements
 	}
 	
 	public void updateSkidData(Integer skidNumber, Integer currentCount, Integer totalCount) {
-		mModel.calculateRates();
-		mModel.calculateTimes();
+		if (mModel.hasSelectedProduct()) {
+			mModel.calculateRates();
+			mModel.calculateTimes();
+		}
 		
 		Skid<Product> skid = new Skid<Product>(
 				currentCount, 
@@ -324,6 +339,16 @@ public class MainActivity extends FragmentActivity implements
 	
 	public void updateProductData() {
 		
+	}
+	
+	public void updateRatesData(Double grossWidth, Double unitWeight, Double novaSetpoint) {
+		mModel.setGrossWidth(grossWidth);
+		mModel.getSelectedWorkOrder().setNovatecSetpoint(novaSetpoint);
+		mModel.getSelectedLine().getNovatec().setControllerSetpoint(novaSetpoint); //TODO ug...ly.
+		Product p = mModel.getSelectedWorkOrder().getProduct();
+		p.setUnitWeight(unitWeight);
+		mModel.changeProduct(p);
+//		mModel.calculateRates();
 	}
 	
 	public int createNewSkid(Integer currentCount, Integer totalCount) {
