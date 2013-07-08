@@ -37,10 +37,15 @@ public class Roll implements Product {
 	public double getGauge() {
 		return mGauge;
 	}
-	public double getWeight() {
-		return mLinearFootWeight * mLinearFeet;
+	public double getUnitWeight() {
+		return mLinearFootWeight;
 	}
-	
+	public void setUnitWeight(double linearFootWeight) {
+		if (linearFootWeight < 0) {
+			throw new IllegalArgumentException("negative weight");
+		}
+		mLinearFootWeight = linearFootWeight;
+	}	
 	public double getLength() {
 		return 12; //one linear foot
 	}

@@ -36,8 +36,14 @@ public class Sheet implements Product {
 		return mGauge;
 		
 	}
-	public double getWeight(){
+	public double getUnitWeight(){
 		return mSheetWeight;
+	}
+	public void setUnitWeight(double unitWeight) {
+		if (unitWeight < 0) {
+			throw new IllegalArgumentException("negative weight");
+		}
+		mSheetWeight = unitWeight;
 	}
 	
 	public double getLength() {
@@ -61,7 +67,6 @@ public class Sheet implements Product {
 		this.mWidth = width;
 	}
 	
-
 	public double getEstimatedWeight() {
 		return ( mGauge * mWidth * mLength * mDensity );
 	}
@@ -73,10 +78,6 @@ public class Sheet implements Product {
 	public boolean setMaterialType(){
 		//TODO
 		return false;
-	}
-	
-	public void setSheetWeight(double weight){
-		mSheetWeight = Math.max(weight, .001);
 	}
 	
 	public String getUnit() {

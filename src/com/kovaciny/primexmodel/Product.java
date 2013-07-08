@@ -3,7 +3,8 @@ package com.kovaciny.primexmodel;
 public interface Product {
 	double getHeight();
 	double getGauge();
-	double getWeight();
+	double getUnitWeight(); //of one unit of the product (sheet or roll? TODO)
+	void setUnitWeight(double unitWeight);
 	double getWidth(); //in inches
 	double getLength(); // in inches
 	void setLength(double length);

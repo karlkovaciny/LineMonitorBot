@@ -51,11 +51,11 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 	}
 
 	public double getFinishedNetWeight() {
-		return mProductUnit.getWeight() * mTotalItems;
+		return mProductUnit.getUnitWeight() * mTotalItems;
 	}
 
 	public double getFinishedGrossWeight() {
-		return mPallet.getWeight() + mProductUnit.getWeight() * mTotalItems
+		return mPallet.getWeight() + mProductUnit.getUnitWeight() * mTotalItems
 				+ mPackagingWeight;
 	}
 

@@ -2,8 +2,10 @@ package com.kovaciny.primexmodel;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import android.content.Context;
@@ -11,7 +13,6 @@ import android.content.Context;
 import com.kovaciny.database.PrimexDatabaseSchema;
 import com.kovaciny.database.PrimexSQLiteOpenHelper;
 import com.kovaciny.helperfunctions.HelperFunction;
-import com.kovaciny.linemonitorbot.MainActivity;
 
 
 public class PrimexModel {
@@ -40,6 +41,11 @@ public class PrimexModel {
 	public static final String JOB_FINISH_TIME_CHANGE_EVENT = "PrimexModel.JOB_FINISH_TIME_CHANGE"; 
 	public static final String SKID_CHANGE_EVENT = "PrimexModel.SKID_CHANGE"; 
 	public static final String TIME_TO_MAXSON_CHANGE_EVENT = "PrimexModel.TIME_TO_MAXSON_CHANGE"; 
+	public static final String NET_PPH_CHANGE_EVENT = "PrimexModel.NET_PPH_CHANGE"; 
+	public static final String GROSS_PPH_CHANGE_EVENT = "PrimexModel.GROSS_PPH_CHANGE"; 
+	public static final String GROSS_WIDTH_CHANGE_EVENT = "PrimexModel.GROSS_WIDTH_CHANGE"; //TODO not fired 
+	public static final String COLOR_PERCENT_CHANGE_EVENT = "PrimexModel.NOVATEC_LETDOWN_CHANGE"; 
+	public static final String EDGE_TRIM_RATIO_CHANGE_EVENT = "PrimexModel.EDGE_TRIM_PERCENT_CHANGE"; 
 	 
 	public static final double INCHES_PER_FOOT = 12.0; 
 		
@@ -58,7 +64,6 @@ public class PrimexModel {
 	/*
 	 * This section holds the different objects and their relation to each other, getters and setters.
 	 */
-	
 	private List<Integer> mLineNumbersList;
 	private List<Integer> mWoNumbersList;
 	private ProductionLine mSelectedLine;
@@ -67,8 +72,12 @@ public class PrimexModel {
 	private PrimexSQLiteOpenHelper mDbHelper;
 	private Double mProductsPerMinute;
 	private double mMillisToMaxson;
-	private double mNetRate;
-	private double mGrossRate;
+	private double mNetPph; 
+	private double mGrossPph;
+	private double mNetWidth;
+	private double mGrossWidth;
+	private double mEdgeTrimRatio;
+	private double mColorPercent;
 	private long mMinutesPerSkid;
 
 	public void setSelectedLine (Integer lineNumber) {
@@ -80,7 +89,8 @@ public class PrimexModel {
 			mSelectedLine = mDbHelper.getLine(lineNumber);
 			int associatedWoNumber = mDbHelper.getWoNumberByLine(lineNumber);
 			if (associatedWoNumber > 0) {
-				setSelectedWorkOrder(associatedWoNumber);	
+				setSelectedWorkOrder(associatedWoNumber);
+				propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, null, mSelectedWorkOrder.getNumberOfSkids()); //TODO load the whole state not just this
 			} else { //make sure a work order is selected
 				int newWoNumber = mDbHelper.getHighestWoNumber() + 1;
 				addWorkOrder(new WorkOrder(newWoNumber));
@@ -169,10 +179,22 @@ public class PrimexModel {
 		propChangeSupport.firePropertyChange(LINE_SPEED_CHANGE_EVENT, oldValues, values);
 	}
  
+	public void changeNovatecSetpoint (Double setpoint) {
+		Novatec n = mSelectedLine.getNovatec();
+		Double oldSetpoint = n.getControllerSetpoint();
+		n.setControllerSetpoint(setpoint);
+		mDbHelper.updateColumn(PrimexDatabaseSchema.Novatecs.TABLE_NAME, 
+				PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT, 
+				null, 
+				null, 
+				String.valueOf(setpoint));
+		calculateRates();
+	}
 	public void changeProduct (Product p) {
 		Product oldProduct = mSelectedWorkOrder.getProduct();
 		mSelectedWorkOrder.setProduct(p);
 		addProduct(p);
+		mNetWidth = p.getWidth(); //TODO why is this necessary, and not double stack ready
 		calculateRates();
 		this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, oldProduct, p);
 	}
@@ -181,9 +203,11 @@ public class PrimexModel {
 		//TODO this function fires twice in a row. Catch index out of bounds exceptions.
 		//maybe this should call changeNumber of skids to make sure the skid exists you're changing to?
 		Skid<Product> oldSkid = null; //mSelectedSkid;
-		List<Skid<Product>> savedSkids = mDbHelper.getSkidList(mSelectedWorkOrder.getWoNumber());
-		if (!savedSkids.isEmpty()) {
-			mSelectedWorkOrder.setSkidsList( savedSkids ); //TODO sync the class and db, prevent bug where calling this can reset skids list to size 1
+		if (mSelectedWorkOrder.getSkidsList().isEmpty()) {
+			List<Skid<Product>> savedSkids = mDbHelper.getSkidList(mSelectedWorkOrder.getWoNumber());
+			if (!savedSkids.isEmpty() ) {
+				mSelectedWorkOrder.setSkidsList( savedSkids ); //TODO sync the class and db, prevent bug where calling this can reset skids list to size 1. Did this by adding isEmpty call
+			}
 		}
 		mSelectedSkid = mSelectedWorkOrder.selectSkid(skidNumber);
 		propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, oldSkid, mSelectedSkid);
@@ -263,8 +287,26 @@ public class PrimexModel {
 			mProductsPerMinute = INCHES_PER_FOOT / mSelectedWorkOrder.getProduct().getLength() * mSelectedLine.getLineSpeed();
 			propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldPpm, mProductsPerMinute);
 			
-			mNetRate = mProductsPerMinute * mSelectedWorkOrder.getProduct().getWeight();
-			//TODO gross rate
+			Double oldNet = mNetPph;
+			mNetPph = mProductsPerMinute * mSelectedWorkOrder.getProduct().getUnitWeight() * HelperFunction.MINUTES_PER_HOUR;
+			propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, oldNet, mNetPph);
+			
+			if (mGrossWidth > 0) {
+				Double oldEt = mEdgeTrimRatio;
+				if (mNetWidth >= mGrossWidth) {
+					throw new IllegalStateException("net width is not less than gross width");
+				}
+				mEdgeTrimRatio = (mGrossWidth - mNetWidth) / mGrossWidth;
+				propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, oldEt, mEdgeTrimRatio);
+				
+				Double oldGross = mGrossPph;
+				mGrossPph = mNetPph / (1 - mEdgeTrimRatio);
+				propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, oldGross, mGrossPph);
+				
+				Double oldColorPercent = mColorPercent;
+				mColorPercent = getSelectedLine().getNovatec().getRate() / mGrossPph;
+				propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, oldColorPercent, mColorPercent);
+			}
 		}		
 	}
 	
@@ -280,13 +322,15 @@ public class PrimexModel {
 			Date oldStartTime = null; //mSelectedSkid.getStartTime(); 
 			Date newStartTime = mSelectedSkid.calculateStartTime(mProductsPerMinute);
 			Date oldFinishTime = mSelectedSkid.getFinishTime();
-			Date newFinishTime = mSelectedSkid.calculateFinishTimeWhileRunning(mProductsPerMinute);				
+			Date newFinishTime = mSelectedSkid.calculateFinishTimeWhileRunning(mProductsPerMinute);			
 			propChangeSupport.firePropertyChange(CURRENT_SKID_START_TIME_CHANGE_EVENT, oldStartTime, newStartTime);
 			propChangeSupport.firePropertyChange(CURRENT_SKID_FINISH_TIME_CHANGE_EVENT, oldFinishTime, newFinishTime);
 			
 			//calculate job finish times
 			Date oldJobFinishTime = null; //mSelectedWorkOrder.getFinishTime();
 			Date newJobFinishTime = mSelectedWorkOrder.calculateFinishTimes(mProductsPerMinute);
+			SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US);
+			String time = formatter.format(newJobFinishTime);	
 			propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, oldJobFinishTime, newJobFinishTime);
 		}
 		if (mSelectedLine.getLineSpeed() > 0) {
@@ -344,5 +388,13 @@ public class PrimexModel {
 	
 	public void clearWoNumbers() {
 		mDbHelper.clearWorkOrders();		
+	}
+
+	public double getGrossWidth() {
+		return mGrossWidth;
+	}
+
+	public void setGrossWidth(double grossWidth) {
+		this.mGrossWidth = grossWidth;
 	}
 }
