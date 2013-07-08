@@ -9,12 +9,13 @@
    <style name="ProgramGuessed">
        <item name="android:textColor">@color/win8_orange</item>
    </style> 
-   <style name="Label" parent="@android:style/TextAppearance.Medium">
+   <style name="Label" parent="@android:style/TextAppearance.Large">
    </style>
    <style name="Label.Small" parent="@android:style/TextAppearance.Small">
    </style>
-   <style name="EditText" parent="@android:style/TextAppearance.Medium">
+   <style name="EditText" parent="@android:style/TextAppearance.Large">
        <item name="android:textColor">@color/Sienna</item>
+       <item name="android:gravity">center</item>
    </style>
    <style name="ParentFragment">
        <item name="android:paddingTop">@dimen/fragment_vertical_margin</item>
@@ -35,5 +36,30 @@
    <style name="Label.TableHeader">
       
    </style>
+   <style name="Label.FirstTableColumn">
+       <item name="android:layout_gravity">left|center_vertical</item>
+       <item name="android:layout_width">0dip</item>
+       <item name="android:layout_weight">0.4</item>
+       <item name="android:minHeight">70px</item>
+       <item name="android:paddingRight">@dimen/table_column_padding</item>
+   </style>
+   <style name="Label.SecondTableColumn">
+       <item name="android:layout_gravity">center</item>
+       <item name="android:layout_width">0dip</item>
+       <item name="android:layout_weight">0.2</item>
+       <item name="android:minHeight">70px</item>
+   </style>
+   <style name="EditText.SecondTableColumn">
+       <item name="android:layout_gravity">center</item>
+       <item name="android:layout_width">0dip</item>
+       <item name="android:layout_weight">0.2</item>
+       <item name="android:minHeight">70px</item>
+       <item name="android:ems">5</item>
+   </style>
+   <style name="BlankThirdColumn">
+       <item name="android:layout_width">0dip</item>
+       <item name="android:layout_weight">0.0</item>
+   </style>
+       
       
 </resources>
