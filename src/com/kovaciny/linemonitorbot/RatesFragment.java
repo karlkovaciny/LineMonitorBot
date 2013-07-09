@@ -76,7 +76,14 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 				Double sheetWeight = Double.valueOf(mEdit_sheetWeight.getText().toString());
 				Double novaSetpoint = Double.valueOf(mEdit_novatecSetpoint.getText().toString());
 				hideKeyboard();
-				((MainActivity)getActivity()).updateRatesData(grossWidth, sheetWeight, novaSetpoint);
+				try {
+					((MainActivity)getActivity()).updateRatesData(grossWidth, sheetWeight, novaSetpoint);
+				} catch (IllegalStateException e) {
+					String cause = e.getCause().getMessage();
+					if (cause.equals(PrimexModel.ERROR_NET_LESS_THAN_GROSS)) {
+						mEdit_grossWidth.setError("Gross width must be higher than sheet width");
+					}
+				}
 			}
 		}
 	}
