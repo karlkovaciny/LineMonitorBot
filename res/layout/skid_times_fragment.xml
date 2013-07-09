@@ -55,8 +55,7 @@
 			        android:layout_toRightOf="@id/textView123"
 			        android:layout_alignBaseline="@id/lbl_skid_number"
 			        android:inputType="number"
-			        android:maxLength="3"
-			        android:minEms="2" />
+			        android:maxLength="3" />
 
 			    <Button
 			        android:id="@+id/btn_enter_product"

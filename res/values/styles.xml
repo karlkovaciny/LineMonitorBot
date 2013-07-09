@@ -31,6 +31,7 @@
        <item name="android:gravity">center</item>
        <item name="android:selectAllOnFocus">true</item>
        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+       <item name="android:minEms">2</item>
    </style> 
    
 </resources>

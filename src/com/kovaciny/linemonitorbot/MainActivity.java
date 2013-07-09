@@ -325,7 +325,9 @@ public class MainActivity extends FragmentActivity implements
 		} else return null;
 	}
 	
-	public void updateSkidData(Integer skidNumber, Integer currentCount, Integer totalCount) {
+	public void updateSkidData(Integer skidNumber, Integer currentCount, Integer totalCount, Integer numberOfSkids) {
+		mModel.changeNumberOfSkids(numberOfSkids);
+		
 		if (mModel.hasSelectedProduct()) {
 			mModel.calculateRates();
 			mModel.calculateTimes();
