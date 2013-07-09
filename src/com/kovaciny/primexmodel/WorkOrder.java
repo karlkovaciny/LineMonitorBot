@@ -13,7 +13,7 @@ public class WorkOrder {
 	private double mMaximumStackHeight; // in inches, not including pallet
 	private double mNovatecSetpoint = 0;
 	private int mSelectedSkidPosition = -1;
-	private Date mFinishTime;
+	private Date mFinishDate;
 	
 	static final double MAX_STACK_HEIGHT_OLEFINS = 24d;
 	static final double MAX_STACK_HEIGHT_STYRENE = 30d;
@@ -32,8 +32,11 @@ public class WorkOrder {
 				this.mWoNumber = woNumber;
 	}	
 	
-	public Date getFinishTime() {
-		return mFinishTime;
+	public Date getFinishDate() {
+		return mFinishDate;
+	}
+	public void setFinishDate(Date finishDate) {
+		mFinishDate = finishDate;
 	}
 	
 	/*
@@ -42,7 +45,7 @@ public class WorkOrder {
 	 */
 	public Date calculateFinishTimes(double productsPerMinute) {
 		if (mSkidsList.isEmpty()) {
-			mFinishTime = null;
+			mFinishDate = null;
 		} else {
 			Skid<Product> currentSkid = mSkidsList.get(mSelectedSkidPosition);
 			Date currentFinishTime = currentSkid.calculateFinishTimeWhileRunning(productsPerMinute);
@@ -50,9 +53,9 @@ public class WorkOrder {
 			for (int i = mSelectedSkidPosition + 1; i < mSkidsList.size(); i++) {
 				currentFinishTime = mSkidsList.get(i).calculateFinishTime(productsPerMinute, currentFinishTime);
 			}
-			mFinishTime = currentFinishTime;
+			mFinishDate = currentFinishTime;
 		}
-		return mFinishTime;
+		return mFinishDate;
 	}
 	
 	/*
@@ -67,7 +70,7 @@ public class WorkOrder {
 				productsPerSkid = mSkidsList.get(mSelectedSkidPosition).getTotalItems();
 			}
 			newSkid = new Skid<Product>(productsPerSkid, mProduct);
-			Date currentFinishTime = getFinishTime();
+			Date currentFinishTime = getFinishDate();
 			newSkid.setStartTime(currentFinishTime);
 		}
 		mSkidsList.add(newSkid);
