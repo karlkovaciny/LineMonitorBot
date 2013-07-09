@@ -310,7 +310,7 @@ public class SkidTimesFragment extends SectionFragment implements
 			
 		} else if (propertyName == PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE_EVENT) {
 			//update finish time for this skid
-			SimpleDateFormat formatter = new SimpleDateFormat("hh:mm", Locale.US);
+			SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US);
 			String formattedTime = formatter.format((Date)newProperty);
 			mTxt_skidFinishTime.setText(formattedTime);
 			
@@ -331,7 +331,7 @@ public class SkidTimesFragment extends SectionFragment implements
 								
 			}			
 		} else if (propertyName == PrimexModel.CURRENT_SKID_START_TIME_CHANGE_EVENT) {
-			SimpleDateFormat formatter2 = new SimpleDateFormat("hh:mm", Locale.US);
+			SimpleDateFormat formatter2 = new SimpleDateFormat("h:mm a", Locale.US);
 			String formattedTime2 = formatter2.format((Date)newProperty);
 			mTxt_skidStartTime.setText(formattedTime2);
 			
