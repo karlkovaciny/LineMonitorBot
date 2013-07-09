@@ -109,14 +109,17 @@ public class PrimexModel {
 					
 			WorkOrder lookedUpWo = mDbHelper.getWorkOrder(woNumber);
 			if (lookedUpWo == null) throw new RuntimeException("WorkOrder not found even though it is in woNumbersList");
-			
 			mSelectedWorkOrder = lookedUpWo;
 			mDbHelper.updateLineWorkOrderLink(mSelectedLine.getLineNumber(), woNumber);
 			changeSkid(mSelectedWorkOrder.getSkidsList().get(0).getSkidNumber());
 			
 			Product p = mDbHelper.getProduct(woNumber);
 			mSelectedWorkOrder.setProduct(p);
-		
+			
+			Date finishDate = mSelectedWorkOrder.getFinishDate();
+			if (finishDate != null) {
+				propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, null, finishDate);
+			}
 			propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldWo, mSelectedWorkOrder);
 		} else throw new IllegalArgumentException("Work order number must be positive");
 	}

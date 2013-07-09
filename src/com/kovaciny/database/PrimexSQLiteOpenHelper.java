@@ -31,7 +31,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 84;
+    public static final int DATABASE_VERSION = 85;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -62,6 +62,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER + INTEGER_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT + DOUBLE_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NOVATEC_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
+	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME + INTEGER_TYPE + COMMA_SEP +
 	    	" UNIQUE (" + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + ")" +
 	    	" )";
     
@@ -161,7 +162,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         	List<Double> dieWidthsList = Arrays.asList(new Double[]{1000d,58d,53d,58d,64d, 64d,78d,75d,75d,64d, 64d, 58.5d, 53d});
         	Iterator<Double> dieWidthsIterator = dieWidthsList.iterator();
         	
-        	List<Double> speedFactorsList = Arrays.asList(new Double[]{1d,.0769d,1d,.99d,1.015d,  1d,0.9917d,.98d,1d,1.01d, 1d,.0347d,.987d});        	
+        	List<Double> speedFactorsList = Arrays.asList(new Double[]{1d,.0769d,1d,.99d,1.015d,  1d,1d,.98d,1d,1.01d, 1d,.0347d,.987d});        	
         	Iterator<Double> speedFactorsIterator = speedFactorsList.iterator();
         	
 	        db.beginTransaction();
@@ -438,7 +439,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			if (cc != null && cc.moveToFirst()) {
 			    String pproductId = cc.getString(1);
 			}
-//			values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_ID, lastRowId);
+			//values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_ID, lastRowId);
 		}
 		
 		ContentValues values = new ContentValues();
@@ -452,6 +453,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER, newWo.getSelectedSkid().getSkidNumber());	
 		} else Log.e("ERROR", String.valueOf(newWo.getWoNumber()) + " doesn't have a selected skid (maybe it's new)");
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NOVATEC_SETPOINT, nova);
+		if (newWo.getFinishDate() != null) {
+			values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME, newWo.getFinishDate().getTime());	
+		}
 		long rowId;
 		try {
 			rowId = db.insertWithOnConflict(
@@ -482,6 +486,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		int selected = -1;
 		double height = -1d;
 		double nova = -1d;
+		int finish;
 		try {
 			if (resultCursor.moveToFirst()) {
 		    	wonum = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER));
@@ -490,7 +495,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		    	selected = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER));
 		    	height = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT));
 		    	nova = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NOVATEC_SETPOINT));
-				WorkOrder wo = new WorkOrder(wonum);
+		    	finish = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME));
+		    	WorkOrder wo = new WorkOrder(wonum);
 				if (prod_id != -1) {
 					wo.setProduct(getProduct(wonum));
 				}
@@ -507,7 +513,10 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				}
 				wo.setMaximumStackHeight(height);
 				wo.setNovatecSetpoint(nova);
-		    	return wo;
+				if (finish > 0) {
+					wo.setFinishDate(new Date(finish));	
+				}
+				return wo;
 			} else return null;
 	    } finally {
 	    	if (resultCursor != null) resultCursor.close();
