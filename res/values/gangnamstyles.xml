@@ -37,7 +37,7 @@
        <item name="android:layout_gravity">left|center_vertical</item>
        <item name="android:layout_height">wrap_content</item>
        <item name="android:layout_width">0dip</item>
-       <item name="android:layout_weight">0.4</item>
+       <item name="android:layout_weight">0.35</item>
        <item name="android:minHeight">70px</item>
        <item name="android:paddingRight">@dimen/table_column_padding</item>
    </style>
@@ -45,14 +45,14 @@
        <item name="android:gravity">center</item>
        <item name="android:layout_height">wrap_content</item>
        <item name="android:layout_width">0dip</item>
-       <item name="android:layout_weight">0.2</item>
+       <item name="android:layout_weight">0.25</item>
        <item name="android:minHeight">70px</item>
    </style>
    <style name="EditText.SecondTableColumn">
        <item name="android:gravity">center</item>
        <item name="android:layout_height">wrap_content</item>
        <item name="android:layout_width">0dip</item>
-       <item name="android:layout_weight">0.2</item>
+       <item name="android:layout_weight">0.25</item>
        <item name="android:minHeight">70px</item>
        <item name="android:ems">5</item>
    </style>

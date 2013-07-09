@@ -348,10 +348,11 @@ public class MainActivity extends FragmentActivity implements
 		mModel.setGrossWidth(grossWidth);
 		mModel.getSelectedWorkOrder().setNovatecSetpoint(novaSetpoint);
 		mModel.getSelectedLine().getNovatec().setControllerSetpoint(novaSetpoint); //TODO ug...ly.
-		Product p = mModel.getSelectedWorkOrder().getProduct();
-		p.setUnitWeight(unitWeight);
-		mModel.changeProduct(p);
-//		mModel.calculateRates();
+		if (mModel.hasSelectedProduct()) {
+			Product p = mModel.getSelectedWorkOrder().getProduct();
+			p.setUnitWeight(unitWeight);
+			mModel.changeProduct(p);	
+		}
 	}
 	
 	public int createNewSkid(Integer currentCount, Integer totalCount) {

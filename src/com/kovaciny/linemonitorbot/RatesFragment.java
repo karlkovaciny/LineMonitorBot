@@ -84,6 +84,7 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 						mEdit_grossWidth.setError("Gross width must be higher than sheet width");
 					}
 				}
+				mTxt_netPph.setVisibility(TextView.VISIBLE);
 			}
 		}
 	}
@@ -120,7 +121,8 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 		} else if (propertyName == PrimexModel.NET_PPH_CHANGE_EVENT) {
 			Double netPph = (Double)newProperty;
 			long netPphdisp = Math.round(netPph);
-			mTxt_netPph.setText(String.valueOf(netPphdisp));	
+			mTxt_netPph.setText(String.valueOf(netPphdisp));
+			mTxt_netPph.setVisibility(TextView.INVISIBLE); //don't display till user clicks button
 			
 		} else if (propertyName == PrimexModel.GROSS_PPH_CHANGE_EVENT) {
 			Double grossPph = (Double)newProperty;
