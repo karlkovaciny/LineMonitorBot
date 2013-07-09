@@ -48,6 +48,7 @@ public class PrimexModel {
 	public static final String EDGE_TRIM_RATIO_CHANGE_EVENT = "PrimexModel.EDGE_TRIM_PERCENT_CHANGE"; 
 	 
 	public static final String ERROR_NET_LESS_THAN_GROSS = "PrimexModel.Net width less than gross width";
+	public static final String ERROR_NO_PRODUCT_SELECTED = "PrimexModel.No product selected";
 		
 	// Create PropertyChangeSupport to manage listeners and fire events.
 	private final PropertyChangeSupport propChangeSupport = new PropertyChangeSupport(this);
@@ -134,8 +135,6 @@ public class PrimexModel {
 				totalCount,
 				1);
 		int newSkidNum = getSelectedWorkOrder().addSkid(newSkid);
-		calculateRates(); //TODO this does nothing and you get wrong rates if no product
-		calculateTimes();
 		return newSkidNum;
 	
 	}
@@ -191,14 +190,12 @@ public class PrimexModel {
 				null, 
 				null, 
 				String.valueOf(setpoint));
-		calculateRates();
 	}
 	public void changeProduct (Product p) {
 		Product oldProduct = mSelectedWorkOrder.getProduct();
 		mSelectedWorkOrder.setProduct(p);
 		addProduct(p);
 		mNetWidth = p.getWidth(); //TODO why is this necessary, and not double stack ready
-		calculateRates();
 		this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, oldProduct, p);
 	}
 
@@ -214,7 +211,6 @@ public class PrimexModel {
 		}
 		mSelectedSkid = mSelectedWorkOrder.selectSkid(skidNumber);
 		propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, oldSkid, mSelectedSkid);
-		calculateTimes();
 		return skidNumber;
 	}
 	
@@ -271,8 +267,6 @@ public class PrimexModel {
 	public void setProductsPerMinute(double spm) {
 		Double oldSpm = mProductsPerMinute;
 		mProductsPerMinute = null; //spm; TODO this function shouldnt' be allowed! also validity checking. Also this maybe should be for direct setting only?
-		calculateRates();
-		calculateTimes();
 		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldSpm, spm);
 	}
 	
@@ -285,32 +279,33 @@ public class PrimexModel {
 	 * TODO should not need to remember to call it before times.
 	 */
 	public void calculateRates() {
-		if (hasSelectedProduct()) {
-			Double oldPpm = mProductsPerMinute; 
-			mProductsPerMinute = HelperFunction.INCHES_PER_FOOT / mSelectedWorkOrder.getProduct().getLength() * mSelectedLine.getLineSpeed();
-			propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldPpm, mProductsPerMinute);
-			
-			Double oldNet = mNetPph;
-			mNetPph = mProductsPerMinute * mSelectedWorkOrder.getProduct().getUnitWeight() * HelperFunction.MINUTES_PER_HOUR;
-			propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, oldNet, mNetPph);
-			
-			if (mGrossWidth > 0) {
-				Double oldEt = mEdgeTrimRatio;
-				if (mNetWidth >= mGrossWidth) {
-					throw new IllegalStateException(new Throwable(ERROR_NET_LESS_THAN_GROSS));
-				}
-				mEdgeTrimRatio = (mGrossWidth - mNetWidth) / mGrossWidth;
-				propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, oldEt, mEdgeTrimRatio);
-				
-				Double oldGross = mGrossPph;
-				mGrossPph = mNetPph / (1 - mEdgeTrimRatio);
-				propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, oldGross, mGrossPph);
-				
-				Double oldColorPercent = mColorPercent;
-				mColorPercent = getSelectedLine().getNovatec().getRate() / mGrossPph;
-				propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, oldColorPercent, mColorPercent);
+		if (!hasSelectedProduct()) {
+			throw new IllegalStateException(new Throwable(ERROR_NO_PRODUCT_SELECTED));
+		}
+		Double oldPpm = mProductsPerMinute; 
+		mProductsPerMinute = HelperFunction.INCHES_PER_FOOT / mSelectedWorkOrder.getProduct().getLength() * mSelectedLine.getLineSpeed();
+		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldPpm, mProductsPerMinute);
+		
+		Double oldNet = mNetPph;
+		mNetPph = mProductsPerMinute * mSelectedWorkOrder.getProduct().getUnitWeight() * HelperFunction.MINUTES_PER_HOUR;
+		propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, oldNet, mNetPph);
+		
+		if (mGrossWidth > 0) {
+			Double oldEt = mEdgeTrimRatio;
+			if (mNetWidth >= mGrossWidth) {
+				throw new IllegalStateException(new Throwable(ERROR_NET_LESS_THAN_GROSS));
 			}
-		}		
+			mEdgeTrimRatio = (mGrossWidth - mNetWidth) / mGrossWidth;
+			propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, oldEt, mEdgeTrimRatio);
+			
+			Double oldGross = mGrossPph;
+			mGrossPph = mNetPph / (1 - mEdgeTrimRatio);
+			propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, oldGross, mGrossPph);
+			
+			Double oldColorPercent = mColorPercent;
+			mColorPercent = getSelectedLine().getNovatec().getRate() / mGrossPph;
+			propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, oldColorPercent, mColorPercent);
+		} 		
 	}
 	
 	public void calculateTimes() {
@@ -346,8 +341,7 @@ public class PrimexModel {
 	}
 	public void changeNumberOfSkids(int num) {
 		int oldNum = mSelectedWorkOrder.getNumberOfSkids();
-		mSelectedWorkOrder.setNumberOfSkids(num);	
-		calculateTimes(); //TODO necessary?
+		mSelectedWorkOrder.setNumberOfSkids(num);
 		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, oldNum, mSelectedWorkOrder.getNumberOfSkids());		
 	}
 	
