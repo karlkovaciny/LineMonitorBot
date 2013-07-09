@@ -75,7 +75,7 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 				Double grossWidth = Double.valueOf(mEdit_grossWidth.getText().toString());
 				Double sheetWeight = Double.valueOf(mEdit_sheetWeight.getText().toString());
 				Double novaSetpoint = Double.valueOf(mEdit_novatecSetpoint.getText().toString());
-				hideKeyboard();
+				((MainActivity)getActivity()).hideKeyboard();
 				try {
 					((MainActivity)getActivity()).updateRatesData(grossWidth, sheetWeight, novaSetpoint);
 				} catch (IllegalStateException e) {
@@ -88,14 +88,6 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 			}
 		}
 	}
-	/* Hide Keyboard */
-    public void hideKeyboard(){
-        InputMethodManager inputMethodManager = (InputMethodManager)getActivity()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        View focus = getActivity().getCurrentFocus();
-        if(focus != null) {inputMethodManager.hideSoftInputFromWindow(focus.getWindowToken(), 0);
-}
-    }
 
 	public void modelPropertyChange (PropertyChangeEvent event) {
 		String propertyName = event.getPropertyName();
