@@ -76,8 +76,6 @@
                 android:inputType="numberDecimal"
                 android:maxLength="5"
                 android:selectAllOnFocus="true" >
-
-                <requestFocus />
             </EditText>
         </TableRow>
 

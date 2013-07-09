@@ -2,13 +2,13 @@ package com.kovaciny.linemonitorbot;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import android.app.ActionBar;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -21,8 +21,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
-import com.kovaciny.primexmodel.Novatec;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Products;
@@ -144,7 +146,7 @@ public class MainActivity extends FragmentActivity implements
 		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.clear_wos, Menu.FLAG_APPEND_TO_GROUP, "Clear");
 
 		if (!mModel.hasSelectedLine()) {
-			mModel.loadState();	
+			mModel.loadState();
 		}
 		
 		//refresh the line picker text from its default reinflated value
@@ -201,6 +203,7 @@ public class MainActivity extends FragmentActivity implements
     		mModel.changeProduct(p);
     	}
     }	
+    
 	/* (non-Javadoc)
 	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
 	 */
