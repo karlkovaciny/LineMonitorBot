@@ -19,13 +19,12 @@
 			<RelativeLayout
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content" >
-
+			    
 			    <TextView
 			        android:id="@+id/lbl_skid_number"
-			        style="@style/Label.TableHeader"
+			        style="@style/Label"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
-			        android:gravity="center_horizontal"
 			        android:layout_alignParentLeft="true"
 			        android:text="Skid:" />
 
@@ -33,22 +32,18 @@
 			        android:id="@+id/edit_skid_number"
 			        style="@style/EditText"
 			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
+		        	android:layout_height="wrap_content"
 			        android:layout_toRightOf="@id/lbl_skid_number"
 			        android:layout_alignBaseline="@id/lbl_skid_number"
-			        android:gravity="center_horizontal"
 			        android:inputType="number"
 			        android:maxLength="4"
-			        android:selectAllOnFocus="true"
-			        android:text="1" >
-			        <requestFocus />
-			    </EditText>
+			        android:text="1" />
 
 			    <TextView
 			        android:id="@+id/textView123"
 			        style="@style/Label"
-			        android:layout_height="wrap_content"
-			        android:layout_width="wrap_content"
+			   		android:layout_width="wrap_content"
+		        	android:layout_height="wrap_content"
 			        android:layout_toRightOf="@id/edit_skid_number"
 			        android:text="of" />
 
@@ -56,7 +51,7 @@
 			        android:id="@+id/edit_num_skids_in_job"
 			        style="@style/EditText"
 			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
+		        	android:layout_height="wrap_content"
 			        android:layout_toRightOf="@id/textView123"
 			        android:layout_alignBaseline="@id/lbl_skid_number"
 			        android:inputType="number"
@@ -65,17 +60,15 @@
 
 			    <Button
 			        android:id="@+id/btn_enter_product"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:gravity="right"
+					android:layout_height="wrap_content"		
+	            	android:layout_width="wrap_content"		
+	         		android:gravity="right"
 			        android:layout_alignParentRight="true"
 			        android:text="Enter Product" />
 			    
 			    <TextView
 			        android:id="@+id/lbl_products"
 			        style="@style/Label"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
 			        android:layout_below="@id/btn_enter_product"
 			        android:text="Sheets: " />
 			    
@@ -83,48 +76,41 @@
 			        android:id="@+id/edit_current_count"
 			        style="@style/EditText"
 			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
+		        	android:layout_height="wrap_content"
 			        android:layout_below="@id/btn_enter_product"
 			        android:layout_toRightOf="@id/lbl_products"
 			        android:layout_alignBaseline="@id/lbl_products"
-			        android:gravity="center_horizontal"
 			        android:inputType="number"
 			        android:maxLength="4"
-			        android:minEms="3"
-			        android:selectAllOnFocus="true" />
+			        android:minEms="3" />
 	
 			    <TextView
 			        android:id="@+id/textView124"
 			        style="@style/Label"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
 			        android:layout_below="@id/btn_enter_product"
 			        android:layout_toRightOf="@id/edit_current_count"
-			        android:text="of"/>
+			        android:text="of" />
 	
 			    <EditText
 			        android:id="@+id/edit_total_sheets_per_skid"
 			        style="@style/EditText"
 			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
+		        	android:layout_height="wrap_content"
 			        android:layout_below="@id/btn_enter_product"
 			        android:layout_toRightOf="@id/textView124"
 			        android:layout_alignBaseline="@id/lbl_products"
-			        android:gravity="center_horizontal"
 			        android:inputType="number"
 			        android:maxLength="4"
-			        android:minEms="3"
-			        android:selectAllOnFocus="true" />
+			        android:minEms="3" />
 	
 			    <Button
 			        android:id="@+id/btn_calculate_times"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:layout_below="@id/btn_enter_product"
+				    android:layout_width="wrap_content"
+		        	android:layout_height="wrap_content"
+			    	android:layout_below="@id/btn_enter_product"
 			        android:layout_alignParentRight="true"
 			        android:gravity="right"
 			        android:text="Get Times" />
-
 			    			    
 			</RelativeLayout>
 
@@ -133,33 +119,7 @@
 		<TableLayout
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
-		    android:shrinkColumns="*"
-		    android:stretchColumns="3" >
-
-		    <TableRow
-		        android:id="@+id/tableRow5"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"		         >
-
-		        <TextView
-		            android:id="@+id/lbl_skid_start_time"
-		            style="@style/Label.FirstTableColumn"
-		            android:layout_height="wrap_content"
-		            android:text="Skid start" />
-
-		        <TextView
-		            android:id="@+id/txt_skid_start_time"
-		            style="@style/Label.SecondTableColumn"
-		            android:layout_height="wrap_content" />
-
-		        <TextView
-		            android:id="@+id/textView2"
-		            style="@style/BlankThirdColumn"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-		    </TableRow>
+		    android:shrinkColumns="3" >
 
 		    <TableRow
 		        android:id="@+id/tableRow6"
@@ -169,21 +129,13 @@
 		        <TextView
 		            android:id="@+id/lbl_skid_finish_time"
 		            style="@style/Label.FirstTableColumn"
-		            android:layout_height="wrap_content"
 		            android:text="Skid finish" />
 
 		        <TextView
 		            android:id="@+id/txt_skid_finish_time"
-		            style="@style/Label.SecondTableColumn"
-		            android:layout_height="wrap_content"
-		            android:maxLength="5" />
+		            style="@style/Label.SecondTableColumn" />
 		        
-				<TextView
-		            android:id="@+id/textView2a"
-		            style="@style/BlankThirdColumn"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:textAppearance="?android:attr/textAppearanceMedium" />
+				<TextView style="@style/BlankThirdColumn.Unused"/>
 		    </TableRow>
 
 		    <TableRow
@@ -194,24 +146,13 @@
 		        <TextView
 		            android:id="@+id/lbl_job_finish_time"
 		            style="@style/Label.FirstTableColumn"
-		            android:layout_height="wrap_content"
-		            android:layout_gravity="left"
 		            android:text="Job finish" />
 
 		        <TextView
 		            android:id="@+id/txt_job_finish_time"
-		            style="@style/Label.SecondTableColumn"
-		            android:layout_height="wrap_content"
-		            android:gravity="center_horizontal"
-		            android:layout_gravity="left"
-		            android:text="0:00 PM" />
+		            style="@style/Label.SecondTableColumn" />
 
-		        <TextView
-		            android:id="@+id/textView2b"
-		            style="@style/BlankThirdColumn"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:textAppearance="?android:attr/textAppearanceMedium" />
+		        <TextView style="@style/BlankThirdColumn.Unused" />
 		        
 		    </TableRow>
 
@@ -220,8 +161,41 @@
 		<TableLayout
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
-		        android:shrinkColumns="*"
-		        android:stretchColumns="3" >
+		    	android:shrinkColumns="3"  >
+
+			<TableRow
+			    android:id="@+id/tableRow5"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content" >
+
+			    <TextView
+			        android:id="@+id/lbl_skid_start_time"
+			        style="@style/Label.FirstTableColumn"
+			        android:text="Skid start" />
+
+			    <TextView
+			        android:id="@+id/txt_skid_start_time"
+			        style="@style/Label.SecondTableColumn" />
+
+			    <TextView style="@style/BlankThirdColumn.Unused" />
+			</TableRow>
+
+			<TableRow
+			    android:id="@+id/tableRow9"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content" >
+
+			    <TextView
+			        android:id="@+id/lbl_time_per_skid"
+			        style="@style/Label.FirstTableColumn"
+			        android:text="Time per skid" />
+
+			    <TextView
+			        android:id="@+id/txt_time_per_skid"
+			        style="@style/Label.SecondTableColumn" />
+
+			    <TextView style="@style/BlankThirdColumn.Unused" />
+			</TableRow>
 
 		    <TableRow
 		        android:id="@+id/tableRow8"
@@ -231,56 +205,16 @@
 		        <TextView
 		            android:id="@+id/lbl_products_per_minute"
 		            style="@style/Label.FirstTableColumn"
-		            android:layout_height="wrap_content"
-		            android:layout_gravity="left"
 		            android:text="Sheets per minute" />
 
 		        <TextView
 		            android:id="@+id/txt_products_per_minute"
 		            style="@style/Label.SecondTableColumn"
-		            android:layout_height="wrap_content"
-		            android:gravity="center_horizontal"
-		            android:imeOptions="actionDone"
-		            android:inputType="numberDecimal"
 		            android:maxEms="4"
-		            android:maxLength="5"
+		            android:maxLength="4"
 		            android:minEms="4" />
 
-		        <TextView
-		            android:id="@+id/textView2c"
-		            style="@style/BlankThirdColumn"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:textAppearance="?android:attr/textAppearanceMedium" />
-		        
-		    </TableRow>
-
-		    <TableRow
-		        android:id="@+id/tableRow9"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content" >
-
-		        <TextView
-		            android:id="@+id/lbl_time_per_skid"
-		            style="@style/Label.FirstTableColumn"
-		            android:layout_height="wrap_content"
-		            android:layout_gravity="left"
-		            android:text="Time per skid" />
-
-		        <TextView
-		            android:id="@+id/txt_time_per_skid"
-		            style="@style/Label.SecondTableColumn"
-		            android:layout_height="wrap_content"
-		            android:layout_gravity="left"
-		            android:gravity="center"
-		            android:text="0:00" />
-
-		        <TextView
-		            android:id="@+id/textView2d"
-		            style="@style/BlankThirdColumn"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:textAppearance="?android:attr/textAppearanceMedium" />
+		        <TextView style="@style/BlankThirdColumn.Unused" />
 		        
 		    </TableRow>
 
@@ -292,24 +226,13 @@
 		        <TextView
 		            android:id="@+id/lbl_time_to_maxson"
 		            style="@style/Label.FirstTableColumn"
-		            android:layout_height="wrap_content"
-		            android:layout_gravity="left"
-		            android:text="Die to Maxson"
-		            android:textAppearance="?android:attr/textAppearanceMedium" />
+		            android:text="Die to Maxson"/>
 
 		        <TextView
 		            android:id="@+id/txt_time_to_maxson"
-		            style="@style/Label.SecondTableColumn"
-		            android:layout_height="wrap_content"
-		            android:layout_gravity="left"
-		            android:textAppearance="?android:attr/textAppearanceMedium" />
+		            style="@style/Label.SecondTableColumn" />
 
-		        <TextView
-		            android:id="@+id/textView2e"
-		            style="@style/BlankThirdColumn"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:textAppearance="?android:attr/textAppearanceMedium" />
+		        <TextView style="@style/BlankThirdColumn.Unused" />
 		        
 		    </TableRow>
 		    </TableLayout>
@@ -320,10 +243,9 @@
 
 	        <Button
 	            android:id="@+id/btn_cancel_alarm"
-	            style="?android:attr/buttonStyleSmall"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="Cancel alarm" />
+	            android:layout_height="wrap_content"		
+	            android:layout_width="wrap_content"		
+	         	android:text="Cancel alarm" />
 	    </LinearLayout>
 
 	</LinearLayout>
