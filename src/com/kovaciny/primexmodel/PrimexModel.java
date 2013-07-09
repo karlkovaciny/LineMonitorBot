@@ -47,7 +47,7 @@ public class PrimexModel {
 	public static final String COLOR_PERCENT_CHANGE_EVENT = "PrimexModel.NOVATEC_LETDOWN_CHANGE"; 
 	public static final String EDGE_TRIM_RATIO_CHANGE_EVENT = "PrimexModel.EDGE_TRIM_PERCENT_CHANGE"; 
 	 
-	public static final double INCHES_PER_FOOT = 12.0; 
+	public static final String ERROR_NET_LESS_THAN_GROSS = "PrimexModel.Net width less than gross width";
 		
 	// Create PropertyChangeSupport to manage listeners and fire events.
 	private final PropertyChangeSupport propChangeSupport = new PropertyChangeSupport(this);
@@ -284,7 +284,7 @@ public class PrimexModel {
 	public void calculateRates() {
 		if (hasSelectedProduct()) {
 			Double oldPpm = mProductsPerMinute; 
-			mProductsPerMinute = INCHES_PER_FOOT / mSelectedWorkOrder.getProduct().getLength() * mSelectedLine.getLineSpeed();
+			mProductsPerMinute = HelperFunction.INCHES_PER_FOOT / mSelectedWorkOrder.getProduct().getLength() * mSelectedLine.getLineSpeed();
 			propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldPpm, mProductsPerMinute);
 			
 			Double oldNet = mNetPph;
@@ -294,7 +294,7 @@ public class PrimexModel {
 			if (mGrossWidth > 0) {
 				Double oldEt = mEdgeTrimRatio;
 				if (mNetWidth >= mGrossWidth) {
-					throw new IllegalStateException("net width is not less than gross width");
+					throw new IllegalStateException(new Throwable(ERROR_NET_LESS_THAN_GROSS));
 				}
 				mEdgeTrimRatio = (mGrossWidth - mNetWidth) / mGrossWidth;
 				propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, oldEt, mEdgeTrimRatio);
@@ -329,8 +329,6 @@ public class PrimexModel {
 			//calculate job finish times
 			Date oldJobFinishTime = null; //mSelectedWorkOrder.getFinishTime();
 			Date newJobFinishTime = mSelectedWorkOrder.calculateFinishTimes(mProductsPerMinute);
-			SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US);
-			String time = formatter.format(newJobFinishTime);	
 			propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, oldJobFinishTime, newJobFinishTime);
 		}
 		if (mSelectedLine.getLineSpeed() > 0) {
