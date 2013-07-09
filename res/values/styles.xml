@@ -30,7 +30,7 @@
        <item name="android:textColor">@color/Sienna</item>
        <item name="android:gravity">center</item>
        <item name="android:selectAllOnFocus">true</item>
-       <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+       <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
    </style> 
    
 </resources>

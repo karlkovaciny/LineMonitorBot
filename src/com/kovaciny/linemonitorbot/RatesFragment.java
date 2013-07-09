@@ -5,11 +5,14 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -72,10 +75,19 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 				Double grossWidth = Double.valueOf(mEdit_grossWidth.getText().toString());
 				Double sheetWeight = Double.valueOf(mEdit_sheetWeight.getText().toString());
 				Double novaSetpoint = Double.valueOf(mEdit_novatecSetpoint.getText().toString());
+				hideKeyboard();
 				((MainActivity)getActivity()).updateRatesData(grossWidth, sheetWeight, novaSetpoint);
 			}
 		}
 	}
+	/* Hide Keyboard */
+    public void hideKeyboard(){
+        InputMethodManager inputMethodManager = (InputMethodManager)getActivity()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        View focus = getActivity().getCurrentFocus();
+        if(focus != null) {inputMethodManager.hideSoftInputFromWindow(focus.getWindowToken(), 0);
+}
+    }
 
 	public void modelPropertyChange (PropertyChangeEvent event) {
 		String propertyName = event.getPropertyName();
@@ -83,18 +95,18 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 		if (propertyName == PrimexModel.PRODUCT_CHANGE_EVENT) {
 			Product p = (Product)newProperty;
 			Double sheetWeight = p.getUnitWeight();
-			String swdisp = new DecimalFormat("#.00").format(sheetWeight);
+			String swdisp = new DecimalFormat("#0.00").format(sheetWeight);
 			mEdit_sheetWeight.setText(swdisp);
 			
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
 			WorkOrder wo = (WorkOrder)newProperty;
 			Double nova = wo.getNovatecSetpoint();
-			String novaDisp = new DecimalFormat("#.0").format(nova);
+			String novaDisp = new DecimalFormat("#0.0").format(nova);
 			mEdit_novatecSetpoint.setText(novaDisp);
 			
 		} else if (propertyName == PrimexModel.EDGE_TRIM_RATIO_CHANGE_EVENT) {
 			Double etPercent = (Double)newProperty * 100d;
-			String etdisp = new DecimalFormat("#.0").format(etPercent);
+			String etdisp = new DecimalFormat("#0.0").format(etPercent);
 			etdisp += "%";
 			mTxt_edgeTrimPercent.setText(etdisp);
 			
@@ -110,12 +122,12 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 			
 		} else if (propertyName == PrimexModel.GROSS_WIDTH_CHANGE_EVENT) {
 			Double grossWidth = (Double)newProperty;
-			String gwdisp = new DecimalFormat("#.0").format(grossWidth);
+			String gwdisp = new DecimalFormat("#0.0").format(grossWidth);
 			mEdit_grossWidth.setText(gwdisp);
 			
 		} else if (propertyName == PrimexModel.COLOR_PERCENT_CHANGE_EVENT) {
 			double concPercent = (Double)newProperty;
-			String concdisp = new DecimalFormat("#.0").format(concPercent*100); //TODO use round instead?
+			String concdisp = new DecimalFormat("#0.0").format(concPercent*100); //TODO use round instead?
 			concdisp += "%";
 			mTxt_colorPercent.setText(concdisp);
 		} 

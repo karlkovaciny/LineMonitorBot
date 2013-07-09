@@ -38,8 +38,7 @@ import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.WorkOrder;
 
 public class SkidTimesFragment extends SectionFragment implements
-		OnClickListener, OnEditorActionListener, View.OnFocusChangeListener, ViewEventResponder,
-		OnItemSelectedListener {
+		OnClickListener, OnEditorActionListener, OnItemSelectedListener, View.OnFocusChangeListener, ViewEventResponder	{
 	private SkidFinishedBroadcastReceiver mAlarmReceiver;
 	private List<Skid<Product>> mSkidList;
 	private Button mBtn_enterProduct;
@@ -77,9 +76,6 @@ public class SkidTimesFragment extends SectionFragment implements
 		mAlarmReceiver = new SkidFinishedBroadcastReceiver();
 		
 		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
-		mMillisPerSkid = settings.getLong("millisPerSkid", 0);
-		mJobFinishText = settings.getString("jobFinishText","");
-		mTimeToMaxsonText = settings.getString("timeToMaxsonText", "");
 	}
 
 	@Override
@@ -134,7 +130,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		mBtn_calculateTimes = (Button) rootView.findViewById(R.id.btn_calculate_times);
 		mBtn_calculateTimes.setOnClickListener(this);
 		
-		//set up textviews
+		//set up textViews
 		mTxt_timePerSkid = (TextView) rootView
 				.findViewById(R.id.txt_time_per_skid);
 		if (mMillisPerSkid > 0) {
@@ -142,22 +138,12 @@ public class SkidTimesFragment extends SectionFragment implements
 					.formatMinutesAsHours(mMillisPerSkid / HelperFunction.ONE_MINUTE_IN_MILLIS));	
 		}
 		
-		mLbl_productsPerMinute = (TextView) rootView
-				.findViewById(R.id.lbl_products_per_minute);
+		mLbl_productsPerMinute = (TextView) rootView.findViewById(R.id.lbl_products_per_minute);
 		mLbl_products = (TextView) rootView.findViewById(R.id.lbl_products);
-
-
+		mLbl_timeToMaxson = (TextView) rootView.findViewById(R.id.lbl_time_to_maxson);
 		
 		mTxt_jobFinishTime = (TextView) rootView.findViewById(R.id.txt_job_finish_time);
-		if (mJobFinishText != null) {
-			mTxt_jobFinishTime.setText(mJobFinishText);
-		}
-		
 		mTxt_timeToMaxson = (TextView) rootView.findViewById(R.id.txt_time_to_maxson);
-		if (mTimeToMaxsonText != null) {
-			mTxt_timeToMaxson.setText(mTimeToMaxsonText);
-		}
-		
 		mLbl_jobFinishTime = (TextView) rootView.findViewById(R.id.lbl_job_finish_time);
 			
 		return rootView;
@@ -174,7 +160,6 @@ public class SkidTimesFragment extends SectionFragment implements
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent arg2) {
 		return false;
 	}
-
 	
 	/* (non-Javadoc)
 	 * @see android.view.View.OnFocusChangeListener#onFocusChange(android.view.View, boolean)
@@ -182,14 +167,9 @@ public class SkidTimesFragment extends SectionFragment implements
 	@Override
 	public void onFocusChange(View v, boolean hasFocus) {
 		if ( !hasFocus && mEditableGroup.contains(v)) {
-//			hideTimes();
 		}
 	}
 	
-	public void hideTimes() {
-		mTxt_timeToMaxson.setVisibility(TextView.GONE);
-	}
-
 	public List<Skid<Product>> getSkidList() {
 		return mSkidList;
 	}
@@ -250,6 +230,8 @@ public class SkidTimesFragment extends SectionFragment implements
 				for (View ett : mEditableGroup) {
 					((EditText)ett).setError(null);
 				}
+				mTxt_productsPerMinute.setVisibility(TextView.VISIBLE);
+				mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
 			}
 			break;
 		case (R.id.btn_cancel_alarm):
@@ -306,7 +288,7 @@ public class SkidTimesFragment extends SectionFragment implements
 			
 		} else if (propertyName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {
 			this.mTxt_productsPerMinute.setText(String.valueOf(newProperty));
-			hideTimes();
+			this.mTxt_productsPerMinute.setVisibility(TextView.GONE); //Don't show it till user clicks the get times button
 			
 		} else if (propertyName == PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE_EVENT) {
 			//update finish time for this skid
@@ -338,7 +320,6 @@ public class SkidTimesFragment extends SectionFragment implements
 		} else if (propertyName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
 			this.mTxt_timePerSkid.setText(HelperFunction
 					.formatMinutesAsHours((Long)newProperty));
-			mTxt_timePerSkid.setVisibility(TextView.VISIBLE);
 			mMillisPerSkid = (Long)newProperty * HelperFunction.ONE_MINUTE_IN_MILLIS;
 			
 		} else if (propertyName == PrimexModel.NUMBER_OF_SKIDS_CHANGE_EVENT) {
@@ -349,7 +330,6 @@ public class SkidTimesFragment extends SectionFragment implements
 			SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a", Locale.US);
 			mJobFinishText = formatter3.format(finishTime);
 			mTxt_jobFinishTime.setText(mJobFinishText);
-			mTxt_jobFinishTime.setVisibility(TextView.VISIBLE);
 			
 		} else if (propertyName == PrimexModel.SKID_CHANGE_EVENT) {
 			Skid<Product> skid = (Skid<Product>)newProperty;
@@ -360,16 +340,21 @@ public class SkidTimesFragment extends SectionFragment implements
 			
 		} else if (propertyName == PrimexModel.TIME_TO_MAXSON_CHANGE_EVENT) {
 			Double timeToMaxson = (Double)newProperty;
-			mTimeToMaxsonText = Math.round(timeToMaxson / HelperFunction.ONE_SECOND_IN_MILLIS) + " seconds";
+			mTimeToMaxsonText = HelperFunction.formatSecondsAsMinutes(Math.round(timeToMaxson / HelperFunction.ONE_SECOND_IN_MILLIS));
 			mTxt_timeToMaxson.setText(mTimeToMaxsonText);
-			mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
+			mTxt_timeToMaxson.setVisibility(TextView.GONE); //don't show it unless the user clicks the get times button
 			
 		} else if (propertyName == PrimexModel.NEW_WORK_ORDER_EVENT) {
 			
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
 			mSelectedSkidNumber =  ((WorkOrder)newProperty).getSelectedSkid().getSkidNumber();
-			hideTimes();
 		} 
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		//save the user's current state
+		super.onSaveInstanceState(outState);
 	}
 
 	/* (non-Javadoc)
@@ -379,9 +364,6 @@ public class SkidTimesFragment extends SectionFragment implements
 	public void onPause() {
 		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
 	    SharedPreferences.Editor editor = settings.edit();
-	    editor.putLong("millisPerSkid", mMillisPerSkid);
-	    editor.putString("jobFinishText", mJobFinishText);
-	    editor.putString("timeToMaxsonText", mTimeToMaxsonText);
 	    
 	    // Commit the edits!
 	    editor.commit();

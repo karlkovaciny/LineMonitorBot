@@ -14,4 +14,9 @@ final public class HelperFunction {
         return String.format("%d:%02d", hours, remainingMinutes);
     }
 	
+	public static String formatSecondsAsMinutes(long seconds) {
+        long minutes = seconds/60;
+        long remainingSeconds = seconds % 60;
+        return String.format("%d:%02d", minutes, remainingSeconds);
+    }
 }

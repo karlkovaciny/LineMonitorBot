@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -102,12 +104,19 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		// Add action buttons
 		builder.setPositiveButton(R.string.calculate, new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
-		               mListener.onClickPositiveButton(SheetsPerMinuteDialogFragment.this);
+		        	   //hide keyboard
+		        	   getActivity().getWindow().setSoftInputMode(
+		        	         WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		        	   
+		        	   mListener.onClickPositiveButton(SheetsPerMinuteDialogFragment.this);
 		           }
 		       });
 		builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
 		               // User cancelled the dialog
+		        	   //hide keyboard
+		        	   getActivity().getWindow().setSoftInputMode(
+			        	         WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		           }
 		       });
 		
@@ -118,8 +127,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		return alertDialog;
 	}
 
-	
-	/* (non-Javadoc)
+		/* (non-Javadoc)
 	 * @see android.view.View.OnClickListener#onClick(android.view.View)
 	 */
 	@Override
