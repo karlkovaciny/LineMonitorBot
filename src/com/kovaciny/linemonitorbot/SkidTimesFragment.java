@@ -218,16 +218,12 @@ public class SkidTimesFragment extends SectionFragment implements
 			if (validInputs) {
 				((MainActivity)getActivity()).hideKeyboard();
 				mSelectedSkidNumber = Integer.valueOf(mEdit_currentSkidNumber.getText().toString());
-				((MainActivity)getActivity()).getModelDebug().changeNumberOfSkids(Integer.valueOf(mEdit_numSkidsInJob.getText().toString()));
 				((MainActivity)getActivity()).updateSkidData(
 						mSelectedSkidNumber,
 						Integer.valueOf(mEdit_currentCount.getText().toString()),
-						Integer.valueOf(mEdit_totalCountPerSkid.getText().toString())
+						Integer.valueOf(mEdit_totalCountPerSkid.getText().toString()),
+						Integer.valueOf(mEdit_numSkidsInJob.getText().toString())
 						);
-				((MainActivity)getActivity()).getModelDebug().changeSkid(mSelectedSkidNumber);
-				((MainActivity)getActivity()).getModelDebug().setProductsPerMinute(Double.valueOf(mTxt_productsPerMinute.getText().toString()));
-				((MainActivity)getActivity()).getModelDebug().calculateRates();
-				((MainActivity)getActivity()).getModelDebug().calculateTimes();
 				for (View ett : mEditableGroup) {
 					((EditText)ett).setError(null);
 				}
