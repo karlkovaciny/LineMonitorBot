@@ -217,13 +217,21 @@ public class SkidTimesFragment extends SectionFragment implements
 			}
 			if (validInputs) {
 				((MainActivity)getActivity()).hideKeyboard();
+				mBtn_enterProduct.setError(null);
 				mSelectedSkidNumber = Integer.valueOf(mEdit_currentSkidNumber.getText().toString());
-				((MainActivity)getActivity()).updateSkidData(
-						mSelectedSkidNumber,
-						Integer.valueOf(mEdit_currentCount.getText().toString()),
-						Integer.valueOf(mEdit_totalCountPerSkid.getText().toString()),
-						Integer.valueOf(mEdit_numSkidsInJob.getText().toString())
-						);
+				try {
+					((MainActivity)getActivity()).updateSkidData(
+							mSelectedSkidNumber,
+							Integer.valueOf(mEdit_currentCount.getText().toString()),
+							Integer.valueOf(mEdit_totalCountPerSkid.getText().toString()),
+							Integer.valueOf(mEdit_numSkidsInJob.getText().toString())
+							);
+				} catch (IllegalStateException e) {
+					if (e.getCause().getMessage().equals(PrimexModel.ERROR_NO_PRODUCT_SELECTED)) {
+						mBtn_enterProduct.setError("Please enter a product");
+					}
+				}
+					
 				for (View ett : mEditableGroup) {
 					((EditText)ett).setError(null);
 				}
