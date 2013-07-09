@@ -202,20 +202,21 @@ public class SkidTimesFragment extends SectionFragment implements
 			}
 			//Process the entries only if all the necessary ones are filled.
 			Iterator<View> itr = mEditableGroup.iterator();
-			boolean calculatable = true;
+			boolean validInputs = true;
 			if (mEdit_totalCountPerSkid.getText().toString().equals("0")) {
 				mEdit_totalCountPerSkid.setError(getString(R.string.error_need_nonzero));
-				calculatable = false;
+				validInputs = false;
 			} else {
 				while (itr.hasNext()) {
 					EditText et = (EditText)itr.next();
 					if ( et.getText().toString().trim().equals("") ) {
 						et.setError(getString(R.string.error_empty_field));
-						calculatable = false;
+						validInputs = false;
 					}
 				}	
 			}
-			if (calculatable) {
+			if (validInputs) {
+				((MainActivity)getActivity()).hideKeyboard();
 				mSelectedSkidNumber = Integer.valueOf(mEdit_currentSkidNumber.getText().toString());
 				((MainActivity)getActivity()).getModelDebug().changeNumberOfSkids(Integer.valueOf(mEdit_numSkidsInJob.getText().toString()));
 				((MainActivity)getActivity()).updateSkidData(

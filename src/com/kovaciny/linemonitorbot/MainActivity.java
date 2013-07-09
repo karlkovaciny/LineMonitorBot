@@ -532,4 +532,11 @@ public class MainActivity extends FragmentActivity implements
 	    newFragment.show(getFragmentManager(), "dialog");
 	}
 
+	public void hideKeyboard(){
+        InputMethodManager inputMethodManager = (InputMethodManager)this
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        View focus = this.getCurrentFocus();
+        if(focus != null) {inputMethodManager.hideSoftInputFromWindow(focus.getWindowToken(), 0);
+        }
+    }
 }
