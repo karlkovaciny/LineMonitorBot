@@ -327,16 +327,18 @@ public class MainActivity extends FragmentActivity implements
 	
 	public void updateSkidData(Integer skidNumber, Integer currentCount, Integer totalCount, Integer numberOfSkids) {
 		mModel.changeNumberOfSkids(numberOfSkids);
-		mModel.calculateRates();
-		mModel.calculateTimes();
 		
 		Skid<Product> skid = new Skid<Product>(
 				currentCount, 
 				totalCount,
 				1);
 		skid.setSkidNumber(skidNumber);
-		mModel.saveSkid(skid);
-		mModel.changeSkid(skidNumber);
+		mModel.getSelectedWorkOrder().addOrUpdateSkid(skid);
+		mModel.changeSelectedSkid(skidNumber);
+		mModel.saveSkid(skid);	
+
+		mModel.calculateRates();
+		mModel.calculateTimes();
 	}
 	
 	public void updateProductData() {
