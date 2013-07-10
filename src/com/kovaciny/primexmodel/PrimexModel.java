@@ -112,7 +112,7 @@ public class PrimexModel {
 			if (lookedUpWo == null) throw new RuntimeException("WorkOrder not found even though it is in woNumbersList");
 			mSelectedWorkOrder = lookedUpWo;
 			mDbHelper.updateLineWorkOrderLink(mSelectedLine.getLineNumber(), woNumber);
-			changeSkid(mSelectedWorkOrder.getSkidsList().get(0).getSkidNumber());
+			changeSelectedSkid(mSelectedWorkOrder.getSkidsList().get(0).getSkidNumber());
 			
 			Product p = mDbHelper.getProduct(woNumber);
 			mSelectedWorkOrder.setProduct(p);
@@ -134,9 +134,8 @@ public class PrimexModel {
 		Skid<Product> newSkid = new Skid<Product>(currentCount, 
 				totalCount,
 				1);
-		int newSkidNum = getSelectedWorkOrder().addSkid(newSkid);
-		return newSkidNum;
-	
+		int newSkidNum = getSelectedWorkOrder().addOrUpdateSkid(newSkid);
+		return newSkidNum;	
 	}
 	
 	protected void addProduct(Product p) {
@@ -148,7 +147,7 @@ public class PrimexModel {
 			mWoNumbersList.add(newWo.getWoNumber());
 			if (newWo.getSkidsList().isEmpty()) { //Doing this after inserting the WO so that the WO will be in the table so I can look up its id. TODO stop exposing the skids list.
 				Skid<Product> defaultSkid = new Skid<Product>(1000, null);
-				newWo.addSkid(defaultSkid);
+				newWo.addOrUpdateSkid(defaultSkid);
 				mDbHelper.insertOrReplaceSkid(defaultSkid, newWo.getWoNumber());
 				newWo.selectSkid(defaultSkid.getSkidNumber());
 				mDbHelper.insertOrUpdateWorkOrder(newWo); //doing it twice to get the selection in there.
@@ -198,11 +197,12 @@ public class PrimexModel {
 		mNetWidth = p.getWidth(); //TODO why is this necessary, and not double stack ready
 		this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, oldProduct, p);
 	}
-
-	public int changeSkid(Integer skidNumber) {
+	
+	public int changeSelectedSkid(Integer skidNumber) {
 		//TODO this function fires twice in a row. Catch index out of bounds exceptions.
 		//maybe this should call changeNumber of skids to make sure the skid exists you're changing to?
-		Skid<Product> oldSkid = null; //mSelectedSkid;
+		//You should not have to check the WO has the right skids list to use this!
+		Skid<Product> oldSkid = mSelectedSkid;
 		if (mSelectedWorkOrder.getSkidsList().isEmpty()) {
 			List<Skid<Product>> savedSkids = mDbHelper.getSkidList(mSelectedWorkOrder.getWoNumber());
 			if (!savedSkids.isEmpty() ) {
@@ -223,9 +223,7 @@ public class PrimexModel {
 	 */
 	public void saveSkid(Skid<Product> s) {
 		mDbHelper.insertOrReplaceSkid(s, mSelectedWorkOrder.getWoNumber());
-		mSelectedWorkOrder.getSkidsList().remove(s.getSkidNumber() - 1);
-		mSelectedWorkOrder.getSkidsList().add(s.getSkidNumber() - 1, s);
-		mSelectedWorkOrder.selectSkid(s.getSkidNumber()); //TODO safe?
+		mSelectedWorkOrder.getSkidsList().set(s.getSkidNumber() - 1, s);
 	}
 	
 	
@@ -282,27 +280,27 @@ public class PrimexModel {
 		if (!hasSelectedProduct()) {
 			throw new IllegalStateException(new Throwable(ERROR_NO_PRODUCT_SELECTED));
 		}
-		Double oldPpm = mProductsPerMinute; 
+		Double oldPpm = null; //mProductsPerMinute; 
 		mProductsPerMinute = HelperFunction.INCHES_PER_FOOT / mSelectedWorkOrder.getProduct().getLength() * mSelectedLine.getLineSpeed();
 		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldPpm, mProductsPerMinute);
 		
-		Double oldNet = mNetPph;
+		Double oldNet = null; //mNetPph;
 		mNetPph = mProductsPerMinute * mSelectedWorkOrder.getProduct().getUnitWeight() * HelperFunction.MINUTES_PER_HOUR;
 		propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, oldNet, mNetPph);
 		
 		if (mGrossWidth > 0) {
-			Double oldEt = mEdgeTrimRatio;
+			Double oldEt = null; //mEdgeTrimRatio;
 			if (mNetWidth >= mGrossWidth) {
 				throw new IllegalStateException(new Throwable(ERROR_NET_LESS_THAN_GROSS));
 			}
 			mEdgeTrimRatio = (mGrossWidth - mNetWidth) / mGrossWidth;
 			propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, oldEt, mEdgeTrimRatio);
 			
-			Double oldGross = mGrossPph;
+			Double oldGross = null; //mGrossPph;
 			mGrossPph = mNetPph / (1 - mEdgeTrimRatio);
 			propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, oldGross, mGrossPph);
 			
-			Double oldColorPercent = mColorPercent;
+			Double oldColorPercent = null; //mColorPercent;
 			mColorPercent = getSelectedLine().getNovatec().getRate() / mGrossPph;
 			propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, oldColorPercent, mColorPercent);
 		} 		
