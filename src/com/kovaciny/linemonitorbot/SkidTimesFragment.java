@@ -229,6 +229,8 @@ public class SkidTimesFragment extends SectionFragment implements
 				} catch (IllegalStateException e) {
 					if (e.getCause().getMessage().equals(PrimexModel.ERROR_NO_PRODUCT_SELECTED)) {
 						mBtn_enterProduct.setError("Please enter a product");
+					} else {
+						throw e;
 					}
 				}
 					

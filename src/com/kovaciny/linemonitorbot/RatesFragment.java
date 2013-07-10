@@ -82,6 +82,8 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 					String cause = e.getCause().getMessage();
 					if (cause.equals(PrimexModel.ERROR_NET_LESS_THAN_GROSS)) {
 						mEdit_grossWidth.setError("Gross width must be higher than sheet width");
+					} else {
+						throw e;
 					}
 				}
 				mTxt_netPph.setVisibility(TextView.VISIBLE);
