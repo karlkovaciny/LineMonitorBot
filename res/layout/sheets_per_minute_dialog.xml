@@ -41,14 +41,12 @@
 
             <EditText
                 android:id="@+id/edit_gauge"
-                style="@style/EditText"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.5"
                 android:inputType="numberDecimal"
                 android:maxLength="5"
-                android:selectAllOnFocus="true"
-                android:text=".014" />
+                android:text=".010" />
 
         </TableRow>
 
@@ -69,14 +67,12 @@
 
             <EditText
                 android:id="@+id/edit_sheet_width"
-                style="@style/EditText"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.5"
                 android:inputType="numberDecimal"
-                android:maxLength="5"
-                android:selectAllOnFocus="true" >
-            </EditText>
+                android:maxLength="5" />
+            
         </TableRow>
 
         <TableRow
@@ -121,12 +117,10 @@
 
             <EditText
                 android:id="@+id/edit_line_speed"
-                style="@style/EditText"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.5"
                 android:maxLength="5"
-                android:selectAllOnFocus="true"
                 android:ems="10"
                 android:inputType="numberDecimal" >
             </EditText>
@@ -145,18 +139,16 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
-                android:text="Differential" />
+                android:text="Pull rolls" />
 
             <EditText
                 android:id="@+id/edit_differential_speed"
-                style="@style/EditText"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.5"
                 android:ems="10"
                 android:inputType="numberDecimal"
-                android:maxLength="10"
-                android:selectAllOnFocus="true" />
+                android:maxLength="10"/>
         </TableRow>
 
         <TableRow
@@ -174,11 +166,9 @@
 
             <EditText
                 android:id="@+id/edit_speed_factor"
-                style="@style/EditText"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.5"
-                android:selectAllOnFocus="true"
                 android:ems="10"
                 android:maxLength="5"
                 android:inputType="numberDecimal" />

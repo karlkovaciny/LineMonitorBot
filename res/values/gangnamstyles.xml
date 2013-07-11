@@ -19,7 +19,9 @@
        <item name="android:paddingTop">@dimen/fragment_vertical_margin</item>
        <item name="android:paddingBottom">@dimen/fragment_vertical_margin</item>
        <item name="android:paddingLeft">@dimen/fragment_horizontal_margin</item>
-       <item name="android:paddingRight">@dimen/fragment_horizontal_margin</item>       
+       <item name="android:paddingRight">@dimen/fragment_horizontal_margin</item>  
+       <item name="android:focusable">true</item>  
+       <item name="android:focusableInTouchMode">true</item>
    </style>
    <style name="ParentFragment.HorizontallyDivided">
        <item name="android:divider">?android:attr/dividerHorizontal</item>
