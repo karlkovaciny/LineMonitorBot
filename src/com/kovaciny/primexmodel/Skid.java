@@ -12,7 +12,7 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 	double mPackagingWeight;
 	double mFinishedNetWeight;
 	double mFinishedGrossWeight;
-	long mMinutesPerSkid;
+	double mMinutesPerSkid;
 	int mSkidNumber = 0;
 	int mNumberOfStacks;
 	Date mStartTime;
@@ -120,21 +120,21 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 	 */
 	public Date calculateFinishTime(double productsPerMinute, Date startTime) {
 		calculateMinutesPerSkid(productsPerMinute); //TODO maybe I shouldn't be able to use mMinutesPerSkid when it must have this called first
-		long millisPerSkid = mMinutesPerSkid * HelperFunction.ONE_MINUTE_IN_MILLIS;
+		long millisPerSkid = Math.round(mMinutesPerSkid * HelperFunction.ONE_MINUTE_IN_MILLIS);
 		Date finishTime = new Date(startTime.getTime() + millisPerSkid);
 		return finishTime;
 	}
 	
-	public long calculateMinutesPerSkid(double productsPerMinute) {
+	public double calculateMinutesPerSkid(double productsPerMinute) {
 		if (productsPerMinute <= 0) throw new IllegalArgumentException("products per minute not positive number");
 		if ( mTotalItems == null) {
 			throw new IllegalStateException("total items not set");
 		}
-		mMinutesPerSkid = Math.round(mTotalItems / productsPerMinute);
+		mMinutesPerSkid = mTotalItems / productsPerMinute;
 		return mMinutesPerSkid;
 	}
 	
-	public long getMinutesPerSkid() {
+	public double getMinutesPerSkid() {
 		return mMinutesPerSkid;
 	}
 

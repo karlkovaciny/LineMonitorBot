@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.kovaciny.helperfunctions.HelperFunction;
+
 public class WorkOrder {
 	private int mWoNumber;
 	private List<Skid<Product>> mSkidsList;
@@ -49,11 +51,10 @@ public class WorkOrder {
 		} else {
 			Skid<Product> currentSkid = mSkidsList.get(mSelectedSkidPosition);
 			Date currentFinishTime = currentSkid.calculateFinishTimeWhileRunning(productsPerMinute);
-			
-			for (int i = mSelectedSkidPosition + 1; i < mSkidsList.size(); i++) {
-				currentFinishTime = mSkidsList.get(i).calculateFinishTime(productsPerMinute, currentFinishTime);
-			}
-			mFinishDate = currentFinishTime;
+			int skidsRemaining = mSkidsList.size() - currentSkid.getSkidNumber();
+			long millisPerSkid = Math.round(currentSkid.calculateMinutesPerSkid(productsPerMinute) * HelperFunction.ONE_MINUTE_IN_MILLIS);
+			long millisRemaining = skidsRemaining * millisPerSkid;
+			mFinishDate = new Date(currentFinishTime.getTime() + millisRemaining);
 		}
 		return mFinishDate;
 	}

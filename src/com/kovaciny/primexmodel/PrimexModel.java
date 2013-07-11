@@ -49,6 +49,7 @@ public class PrimexModel {
 	 
 	public static final String ERROR_NET_LESS_THAN_GROSS = "PrimexModel.Net width less than gross width";
 	public static final String ERROR_NO_PRODUCT_SELECTED = "PrimexModel.No product selected";
+	public static final String ERROR_NO_SKID_SELECTED = "PrimexModel.No skid selected";
 		
 	// Create PropertyChangeSupport to manage listeners and fire events.
 	private final PropertyChangeSupport propChangeSupport = new PropertyChangeSupport(this);
@@ -79,7 +80,6 @@ public class PrimexModel {
 	private double mGrossWidth;
 	private double mEdgeTrimRatio;
 	private double mColorPercent;
-	private long mMinutesPerSkid;
 
 	public void setSelectedLine (Integer lineNumber) {
 		if (lineNumber == null) throw new NullPointerException("need to select a line");
@@ -307,11 +307,11 @@ public class PrimexModel {
 	}
 	
 	public void calculateTimes() {
-		if (mSelectedSkid == null) throw new RuntimeException("Can't calc times without a skid");
+		if (mSelectedSkid == null) throw new IllegalStateException(new Throwable("ERROR_NO_SELECTED_SKID"));
 		if ( (mProductsPerMinute != null) && (mSelectedSkid.getTotalItems() > 0) ) { //TODO this function gets called way too much			
 			//calculate total time per skid. 
-			Long oldMinutes = null; //mSelectedSkid.getMinutesPerSkid();
-			long newMinutes = mSelectedSkid.calculateMinutesPerSkid(mProductsPerMinute);
+			Double oldMinutes = null; //mSelectedSkid.getMinutesPerSkid();
+			double newMinutes = mSelectedSkid.calculateMinutesPerSkid(mProductsPerMinute);
 			propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, oldMinutes, newMinutes);
 			
 			//calculate skid start and finish time
