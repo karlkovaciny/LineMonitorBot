@@ -1,10 +1,11 @@
 package com.kovaciny.linemonitorbot;
 
 import java.beans.PropertyChangeEvent;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -23,10 +24,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -325,16 +324,24 @@ public class SkidTimesFragment extends SectionFragment implements
 			mTxt_skidStartTime.setText(formattedTime2);
 			
 		} else if (propertyName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
+			long minutes = Math.round((Double)newProperty);
 			this.mTxt_timePerSkid.setText(HelperFunction
-					.formatMinutesAsHours((Long)newProperty));
-			mMillisPerSkid = (Long)newProperty * HelperFunction.ONE_MINUTE_IN_MILLIS;
+					.formatMinutesAsHours(minutes));
+			mMillisPerSkid = Math.round((Double)newProperty * HelperFunction.ONE_MINUTE_IN_MILLIS);
 			
 		} else if (propertyName == PrimexModel.NUMBER_OF_SKIDS_CHANGE_EVENT) {
 			mEdit_numSkidsInJob.setText(String.valueOf(newProperty));
 			
 		} else if (propertyName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) {
 			Date finishTime = (Date)newProperty;
-			SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a", Locale.US);
+			//show the day of the week if it's not today -- but 12am-6am still counts as today in Pace time. 
+			Calendar finishDate = new GregorianCalendar(Locale.US);
+			SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a", Locale.US); 
+			Date shiftedFinishTime = new Date(finishTime.getTime() - (6 * HelperFunction.ONE_HOUR_IN_MILLIS));
+			finishDate.setTime(shiftedFinishTime);
+			if (finishDate.get(Calendar.DAY_OF_WEEK) != Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
+				formatter3 = new SimpleDateFormat("h:mm a E", Locale.US);
+			} 
 			mJobFinishText = formatter3.format(finishTime);
 			mTxt_jobFinishTime.setText(mJobFinishText);
 			
