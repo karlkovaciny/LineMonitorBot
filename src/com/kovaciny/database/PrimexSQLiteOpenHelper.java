@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.webkit.WebView.FindListener;
 
 import com.kovaciny.primexmodel.Novatec;
 import com.kovaciny.primexmodel.Pallet;
@@ -32,7 +33,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 89;
+    public static final int DATABASE_VERSION = 92;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -47,11 +48,13 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + INTEGER_TYPE + COMMA_SEP +
     	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LENGTH + INTEGER_TYPE + COMMA_SEP +
     	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH + INTEGER_TYPE + COMMA_SEP +
+    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_WEB_WIDTH + REAL_TYPE + COMMA_SEP +
     	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE + TEXT_TYPE + COMMA_SEP +
     	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
     	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
     	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR + DOUBLE_TYPE + COMMA_SEP +
-    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE + TEXT_TYPE +
+    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE + TEXT_TYPE + COMMA_SEP +
+    	    " UNIQUE (" + PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + ")" +
     	    " )";
     
     private static final String SQL_CREATE_WORK_ORDERS =
@@ -93,7 +96,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     		PrimexDatabaseSchema.Novatecs._ID + " INTEGER PRIMARY KEY," +
     		PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO + REAL_TYPE + COMMA_SEP + 
     		PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT + REAL_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID + INTEGER_TYPE + 
+    		PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID + INTEGER_TYPE + COMMA_SEP +
+    		" UNIQUE (" + PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID + ")" +
+
     		" )";
     
     private static final String SQL_CREATE_SKIDS = 
@@ -345,24 +350,64 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	
     }
     
-    public long addLine(ProductionLine newLine) {
+    public long insertOrUpdateLine(ProductionLine newLine) {
+    	insertOrUpdateNovatec(newLine.getNovatec(), newLine.getLineNumber());
     	SQLiteDatabase db = getWritableDatabase();
     	
     	ContentValues values = new ContentValues();
     	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, newLine.getLineNumber());
     	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LENGTH, newLine.getLineLength());
     	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH, newLine.getDieWidth());
+    	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_WEB_WIDTH, newLine.getWebWidth());
     	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE, newLine.getSpeedControllerType());
     	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE, newLine.getTakeoffEquipmentType());
     	
-    	long rowId = db.insertOrThrow(
-    			PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
-    			null, 
-    			values);
-    	
+    	long rowId;
+    	try {
+			rowId = db.insertWithOnConflict(
+		
+				PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
+				null, 
+				values,
+				SQLiteDatabase.CONFLICT_ABORT);
+		} catch (SQLiteConstraintException sqle) {
+			rowId = db.updateWithOnConflict(
+				PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
+				values, 
+				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + "=?", 
+				new String[]{String.valueOf(newLine.getLineNumber())}, 
+				SQLiteDatabase.CONFLICT_REPLACE);
+		}
     	return rowId;
     }
     
+    public long insertOrUpdateNovatec(Novatec novatec, int lineNumber) {
+    	SQLiteDatabase db = getWritableDatabase();
+    	
+    	ContentValues values = new ContentValues();
+    	values.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT, novatec.getControllerSetpoint());
+    	values.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO, novatec.getLetdownRatio());
+    	int lineId = getIdOfValue(PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
+    			PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, lineNumber);
+    	values.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID, lineId);
+    	
+    	long rowId;
+    	try {
+			rowId = db.insertWithOnConflict(
+				PrimexDatabaseSchema.Novatecs.TABLE_NAME, 
+				null, 
+				values,
+				SQLiteDatabase.CONFLICT_ABORT);
+		} catch (SQLiteConstraintException sqle) {
+			rowId = db.updateWithOnConflict(
+				PrimexDatabaseSchema.Novatecs.TABLE_NAME, 
+				values, 
+				PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID + "=?", 
+				new String[]{String.valueOf(lineId)}, 
+				SQLiteDatabase.CONFLICT_REPLACE);
+		}
+    	return rowId;
+    }
     public ProductionLine getLine(int lineNumber){
     	SQLiteDatabase db = getReadableDatabase();
     	
@@ -378,10 +423,10 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     			
     	try {
     		resultCursor.moveToFirst();
-	    	int ln_index = resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER);
-	    	int ln = resultCursor.getInt(ln_index);
+	    	int ln = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER));
 	    	int ll = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LENGTH));
 	    	int dw = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH));
+	    	double ww = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_WEB_WIDTH));
 	    	String sct = resultCursor.getString(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE));
 	    	String tet = resultCursor.getString(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE));
 	    	double sp = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT));
@@ -391,6 +436,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	    	ProductionLine newLine = new ProductionLine(ln,ll,dw,sct,tet);
 	    	SpeedValues sv = new SpeedValues(sp,diff,sf);
 	    	newLine.setSpeedValues(sv);
+	    	newLine.setWebWidth(ww);
 	    	return newLine;
 	    } finally {
 	    	if (resultCursor != null) resultCursor.close();
@@ -414,7 +460,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		try {
 			if (resultCursor.getCount() > 1) {
 				throw new RuntimeException("ERROR, You are not looking up a unique record for line " + String.valueOf(lineNumber) +
-						"and are going to get errors until you implement multiple Novatecs");
+						" and are going to get errors until you implement multiple Novatecs");
 			}
 			
 			if (resultCursor.moveToFirst()) {

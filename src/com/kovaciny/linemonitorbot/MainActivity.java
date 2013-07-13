@@ -22,7 +22,6 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.kovaciny.primexmodel.PrimexModel;
@@ -216,6 +215,7 @@ public class MainActivity extends FragmentActivity implements
 		Object newProperty = event.getNewValue();
 		SkidTimesFragment skidTimesFrag = (SkidTimesFragment) this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
 		RatesFragment ratesFrag = (RatesFragment) this.findFragmentByPosition(MainActivity.RATES_FRAGMENT_POSITION);
+		if (ratesFrag == null) throw new RuntimeException("Rates fragment not found");
 		
 		if (eventName == PrimexModel.SELECTED_LINE_CHANGE_EVENT) {
 			if (newProperty == null) {
@@ -228,6 +228,7 @@ public class MainActivity extends FragmentActivity implements
 				//TODO
 			CharSequence lineTitle = "Line " + String.valueOf(mModel.getSelectedLine().getLineNumber());
 			mLinePicker.setTitle(lineTitle);
+			ratesFrag.modelPropertyChange(event);
 			}
 			
 		} else if (eventName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
@@ -347,14 +348,14 @@ public class MainActivity extends FragmentActivity implements
 	}
 	
 	public void updateRatesData(Double grossWidth, Double unitWeight, Double novaSetpoint) {
-		mModel.setGrossWidth(grossWidth);
-		mModel.getSelectedWorkOrder().setNovatecSetpoint(novaSetpoint);
+		mModel.getSelectedLine().setWebWidth(grossWidth);
 		mModel.getSelectedLine().getNovatec().setControllerSetpoint(novaSetpoint); //TODO ug...ly.
 		if (mModel.hasSelectedProduct()) {
 			Product p = mModel.getSelectedWorkOrder().getProduct();
 			p.setUnitWeight(unitWeight);
 			mModel.changeProduct(p);
 		}
+		mModel.saveSelectedLine();
 		mModel.calculateRates();
 	}
 	

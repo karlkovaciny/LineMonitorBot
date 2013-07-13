@@ -20,7 +20,6 @@ public class Sheet implements Product {
 		mWidth = width;
 		mLength = length;
 		mDensity = .0375d;
-		mSheetWeight = getEstimatedWeight();
 	}
 	
 	private boolean areValidDimensions(double gauge, double width, double length) {

@@ -32,6 +32,10 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 	TextView mLbl_novatecSetpoint;
 	private List<EditText> mEditableGroup = new ArrayList<EditText>();
 	private double mNovatecLetdownRatio;
+	private String mGrossWidthText;
+	private String mNetPphText;
+	private String mSheetWeightText;
+	private String mNovatecSetpointText;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -92,7 +96,7 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 						throw e;
 					}
 				}
-				mTxt_netPph.setVisibility(TextView.VISIBLE);
+				mTxt_netPph.setText(mNetPphText);
 			}
 		}
 	}
@@ -107,10 +111,8 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 			mEdit_sheetWeight.setText(swdisp);
 			
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
-			WorkOrder wo = (WorkOrder)newProperty;
-			Double nova = wo.getNovatecSetpoint();
-			String novaDisp = new DecimalFormat("#0.0").format(nova);
-			mEdit_novatecSetpoint.setText(novaDisp);
+			
+		} else if (propertyName == PrimexModel.SELECTED_LINE_CHANGE_EVENT){
 			
 		} else if (propertyName == PrimexModel.EDGE_TRIM_RATIO_CHANGE_EVENT) {
 			Double etPercent = (Double)newProperty * 100d;
@@ -121,8 +123,7 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 		} else if (propertyName == PrimexModel.NET_PPH_CHANGE_EVENT) {
 			Double netPph = (Double)newProperty;
 			long netPphdisp = Math.round(netPph);
-			mTxt_netPph.setText(String.valueOf(netPphdisp));
-			mTxt_netPph.setVisibility(TextView.INVISIBLE); //don't display till user clicks button
+			mNetPphText = String.valueOf(netPphdisp);
 			
 		} else if (propertyName == PrimexModel.GROSS_PPH_CHANGE_EVENT) {
 			Double grossPph = (Double)newProperty;
@@ -148,6 +149,8 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 				 label += " (" + String.valueOf(n.getLetdownRatio()) + "x)";
 			}
 			mLbl_novatecSetpoint.setText(label); 
+			mEdit_novatecSetpoint.setText(String.valueOf(n.getControllerSetpoint()));
+			
 		}
 	}	
 }
