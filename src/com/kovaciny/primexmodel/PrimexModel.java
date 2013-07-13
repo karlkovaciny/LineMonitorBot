@@ -46,6 +46,7 @@ public class PrimexModel {
 	public static final String GROSS_WIDTH_CHANGE_EVENT = "PrimexModel.GROSS_WIDTH_CHANGE"; //TODO not fired 
 	public static final String COLOR_PERCENT_CHANGE_EVENT = "PrimexModel.NOVATEC_LETDOWN_CHANGE"; 
 	public static final String EDGE_TRIM_RATIO_CHANGE_EVENT = "PrimexModel.EDGE_TRIM_PERCENT_CHANGE"; 
+	public static final String NOVATEC_CHANGE_EVENT = "PrimexModel.NOVATEC_CHANGE"; 
 	 
 	public static final String ERROR_NET_LESS_THAN_GROSS = "PrimexModel.Net width less than gross width";
 	public static final String ERROR_NO_PRODUCT_SELECTED = "PrimexModel.No product selected";
@@ -88,6 +89,10 @@ public class PrimexModel {
 		int oldLineNumber = hasSelectedLine() ? mSelectedLine.getLineNumber() : -1;
 		if (lineNumber != oldLineNumber) {
 			mSelectedLine = mDbHelper.getLine(lineNumber);
+			mSelectedLine.setNovatec(mDbHelper.getNovatec(lineNumber));
+			propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLineNumber, mSelectedLine.getLineNumber());
+			propChangeSupport.firePropertyChange(NOVATEC_CHANGE_EVENT, null, mSelectedLine.getNovatec());
+			
 			int associatedWoNumber = mDbHelper.getWoNumberByLine(lineNumber);
 			if (associatedWoNumber > 0) {
 				setSelectedWorkOrder(associatedWoNumber);
@@ -97,7 +102,7 @@ public class PrimexModel {
 				addWorkOrder(new WorkOrder(newWoNumber));
 				setSelectedWorkOrder(newWoNumber);
 			}
-			propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLineNumber, mSelectedLine.getLineNumber());	
+				
 		}
 	}
 	
@@ -249,7 +254,7 @@ public class PrimexModel {
 	}
 
 	public void loadState() {
-		String lineNum = mDbHelper.getFieldAsString(PrimexDatabaseSchema.ModelState.TABLE_NAME, PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, null);
+		String lineNum = mDbHelper.getFieldAsString(PrimexDatabaseSchema.ModelState.TABLE_NAME, PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, null, null);
 		try {
 			if ( (lineNum == null)) {
 				throw new IllegalStateException("line number is null");
@@ -301,7 +306,7 @@ public class PrimexModel {
 			propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, oldGross, mGrossPph);
 			
 			Double oldColorPercent = null; //mColorPercent;
-			mColorPercent = getSelectedLine().getNovatec().getRate() / mGrossPph;
+			mColorPercent =  mSelectedLine.getNovatec().getRate() / mGrossPph;
 			propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, oldColorPercent, mColorPercent);
 		} 		
 	}

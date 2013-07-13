@@ -10,14 +10,17 @@ public class Novatec implements Hopper {
 	Material mReferenceMaterial; 
 	private double mControllerSetpoint;
 	double mLbsContained;
-	private double mScrewSize;
+	private double mLetdownRatio;
 	private double mRate;
 	Material mContents;
 	
-	public Novatec(double capacity, double setpoint, double screwSize) {
-		mCapacity = Math.max(capacity, 0);
-		mControllerSetpoint = Math.max(setpoint, 0);
-		mScrewSize = Math.max(screwSize,0);
+	public Novatec(double capacity, double setpoint, double letdownRatio) {
+		if ((capacity < 0) || (setpoint < 0) || (letdownRatio < 0)) {
+			throw new IllegalArgumentException("No negative numbers");
+		}
+		mCapacity = capacity;
+		mControllerSetpoint = setpoint;
+		mLetdownRatio = letdownRatio;
 		mLbsContained = 0;
 		mReferenceMaterial = new Material("105 Concentrate");
 		mContents = mReferenceMaterial;
@@ -29,7 +32,7 @@ public class Novatec implements Hopper {
 	}
 	
 	private void updateRate(){
-		mRate = mControllerSetpoint * mScrewSize * mContents.getDensity()/mReferenceMaterial.getDensity();
+		mRate = mControllerSetpoint * mLetdownRatio * mContents.getDensity()/mReferenceMaterial.getDensity();
 	}
 	public double getRate(){
 		updateRate();
@@ -37,9 +40,12 @@ public class Novatec implements Hopper {
 	}
 	
 	public double setControllerSetpoint(double setpoint) {
-		setpoint = Math.max(setpoint,0);
+		if (setpoint < 0) {
+			throw new IllegalArgumentException("No negative numbers");
+		}
+		mControllerSetpoint = setpoint;
 		updateRate();
-		return mControllerSetpoint = setpoint;
+		return mControllerSetpoint;
 	}
 	public double getControllerSetpoint() {
 		return mControllerSetpoint;
@@ -62,12 +68,12 @@ public class Novatec implements Hopper {
 		else return mLbsContained = lbs;
 	}
 
-	public double getScrewSize() {
-		return mScrewSize;
+	public double getLetdownRatio() {
+		return mLetdownRatio;
 	}
 
-	public void setScrewSize(double mScrewSize) {
-		this.mScrewSize = mScrewSize;
+	public void setLetdownRatio(double letdownRatio) {
+		this.mLetdownRatio = letdownRatio;
 		updateRate();
 	}
 

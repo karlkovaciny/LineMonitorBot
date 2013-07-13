@@ -5,18 +5,17 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.kovaciny.primexmodel.Novatec;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.WorkOrder;
@@ -30,7 +29,9 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 	EditText mEdit_novatecSetpoint;
 	Button mBtn_calculateColorPercent;
 	TextView mTxt_colorPercent;
+	TextView mLbl_novatecSetpoint;
 	private List<EditText> mEditableGroup = new ArrayList<EditText>();
+	private double mNovatecLetdownRatio;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,9 +54,11 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 		mTxt_edgeTrimPercent = (TextView) rootView.findViewById(R.id.txt_edge_trim_percent);
 		mTxt_netPph = (TextView) rootView.findViewById(R.id.txt_net_pph);
 		mTxt_grossPph = (TextView) rootView.findViewById(R.id.txt_gross_pph);
-		mBtn_calculateColorPercent = (Button) rootView.findViewById(R.id.btn_calculate_rates);
 		mTxt_colorPercent = (TextView) rootView.findViewById(R.id.txt_color_percent);	
 		
+		mLbl_novatecSetpoint = (TextView) rootView.findViewById(R.id.lbl_novatec_setpoint);
+		
+		mBtn_calculateColorPercent = (Button) rootView.findViewById(R.id.btn_calculate_rates);
 		mBtn_calculateColorPercent.setOnClickListener(this);
 		return rootView;
 	}
@@ -82,6 +85,9 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 					String cause = e.getCause().getMessage();
 					if (cause.equals(PrimexModel.ERROR_NET_LESS_THAN_GROSS)) {
 						mEdit_grossWidth.setError("Gross width must be higher than sheet width");
+					} else if (cause.equals(PrimexModel.ERROR_NO_PRODUCT_SELECTED)){
+						Toast.makeText(getActivity(), R.string.prompt_need_product, Toast.LENGTH_LONG).show();
+						((MainActivity)getActivity()).showSheetsPerMinuteDialog();
 					} else {
 						throw e;
 					}
@@ -134,5 +140,14 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 			concdisp += "%";
 			mTxt_colorPercent.setText(concdisp);
 		} 
+		
+		else if (propertyName == PrimexModel.NOVATEC_CHANGE_EVENT) {
+			Novatec n = (Novatec)newProperty;
+			String label = getString(R.string.label_novatec_setpoint);
+			if (n.getLetdownRatio() != 1) {
+				 label += " (" + String.valueOf(n.getLetdownRatio()) + "x)";
+			}
+			mLbl_novatecSetpoint.setText(label); 
+		}
 	}	
 }
