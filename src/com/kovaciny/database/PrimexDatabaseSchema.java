@@ -52,7 +52,9 @@ public class PrimexDatabaseSchema {
 	
 	public static abstract class Novatecs implements BaseColumns {
 		public static final String TABLE_NAME = "novatecs";
+		public static final String COLUMN_NAME_LETDOWN_RATIO = "letdown_ratio";
 		public static final String COLUMN_NAME_CURRENT_SETPOINT = "current_setpoint";
+		public static final String COLUMN_NAME_LINE_NUMBER_ID = "line_number_id";
 	}
 	
 	public static abstract class Skids implements BaseColumns {

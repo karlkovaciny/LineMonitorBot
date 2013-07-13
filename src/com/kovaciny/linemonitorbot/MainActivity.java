@@ -269,6 +269,7 @@ public class MainActivity extends FragmentActivity implements
 				(eventName == PrimexModel.NET_PPH_CHANGE_EVENT) || 
 				(eventName == PrimexModel.GROSS_PPH_CHANGE_EVENT) || 
 				(eventName == PrimexModel.GROSS_WIDTH_CHANGE_EVENT) || 
+				(eventName == PrimexModel.NOVATEC_CHANGE_EVENT) || 
 				(eventName == PrimexModel.COLOR_PERCENT_CHANGE_EVENT)) {
 			ratesFrag.modelPropertyChange(event);
 		}
@@ -410,6 +411,7 @@ public class MainActivity extends FragmentActivity implements
 						
 			// Return a SectionFragment with the page number as its lone argument.
 			Fragment fragment;
+			Bundle args = new Bundle();
 			
 			switch(position){
 			case SKID_TIMES_FRAGMENT_POSITION:
@@ -425,9 +427,7 @@ public class MainActivity extends FragmentActivity implements
 				fragment = new SectionFragment();
 			}
 			
-			Bundle args = new Bundle();
 			args.putInt(SectionFragment.ARG_SECTION_NUMBER, position + 1);
-			args.putInt("passingavalue", 722);
 			fragment.setArguments(args);
 			return fragment;
 		}

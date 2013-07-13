@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.kovaciny.primexmodel.Novatec;
 import com.kovaciny.primexmodel.Pallet;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.ProductionLine;
@@ -31,7 +32,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 85;
+    public static final int DATABASE_VERSION = 89;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -90,7 +91,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_NOVATECS = 
     		"CREATE TABLE " + PrimexDatabaseSchema.Novatecs.TABLE_NAME + " (" +
     		PrimexDatabaseSchema.Novatecs._ID + " INTEGER PRIMARY KEY," +
-    		PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT + REAL_TYPE + 
+    		PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO + REAL_TYPE + COMMA_SEP + 
+    		PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT + REAL_TYPE + COMMA_SEP +
+    		PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID + INTEGER_TYPE + 
     		" )";
     
     private static final String SQL_CREATE_SKIDS = 
@@ -238,10 +241,24 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         try {
         	db.beginTransaction();
         	Integer defaultSetpoint = 0;
-        	ContentValues thevalues = new ContentValues();
-        	thevalues.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT, defaultSetpoint);
+        	List<Integer> linesWithBigNovatecs = Arrays.asList(new Integer[] {1,12,13,14});
+        	double screwRatio;
         	
-        	long rowId = db.insertOrThrow(PrimexDatabaseSchema.Novatecs.TABLE_NAME, null, thevalues);
+        	ContentValues novatecValues = new ContentValues();
+        	for (Integer lineNum : lineNumbers) {
+        		int lineId = getIdOfValue(PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
+        				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, 
+        				lineNum, 
+        				db);
+        		novatecValues.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID, lineId);
+        		novatecValues.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT, defaultSetpoint);
+        		if (linesWithBigNovatecs.contains(lineNum)) {
+        			screwRatio = 1.5; 
+        		} else screwRatio = 1d;
+        		novatecValues.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO, screwRatio);
+        		long rowId = db.insertOrThrow(PrimexDatabaseSchema.Novatecs.TABLE_NAME, null, novatecValues);
+        	}
+        	
             db.setTransactionSuccessful();
         } finally {
         	db.endTransaction();
@@ -378,6 +395,41 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	    } finally {
 	    	if (resultCursor != null) resultCursor.close();
     	}    	
+    }
+    
+    public Novatec getNovatec(int lineNumber) {
+    	SQLiteDatabase db = getReadableDatabase();
+		
+		String sql = "SELECT * FROM " +
+				PrimexDatabaseSchema.Novatecs.TABLE_NAME +
+				" WHERE " + PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID + "=?";
+		long lineId = getIdOfValue(PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
+				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, 
+				lineNumber);
+		String[] whereargs = new String[]{String.valueOf(lineId)};
+		Cursor resultCursor = db.rawQuery(sql, whereargs);
+
+		Novatec n = null;
+		
+		try {
+			if (resultCursor.getCount() > 1) {
+				throw new RuntimeException("ERROR, You are not looking up a unique record for line " + String.valueOf(lineNumber) +
+						"and are going to get errors until you implement multiple Novatecs");
+			}
+			
+			if (resultCursor.moveToFirst()) {
+				
+				double setpoint = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT));
+				double letdownRatio = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO));
+				n = new Novatec(50, setpoint, letdownRatio);
+			} else {
+				Log.e("error", "SQLiteOpenHelper::getNovatec returned no results");
+			}
+		} finally {
+			if (resultCursor != null) {resultCursor.close();}
+		}	
+		return n;
+	
     }
     
     public List<Integer> getLineNumbers() {
@@ -630,12 +682,12 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public String getFieldAsString(String tableName, String columnName, String[] whereArgs){
+	public String getFieldAsString(String tableName, String columnName, String whereColumn, String[] whereArgs){
 		SQLiteDatabase db = getReadableDatabase();
 		
 		String sql = "SELECT " + columnName + " FROM " + tableName;
 		if (whereArgs != null) {
-			sql += " WHERE " + columnName + "=?";
+			sql += " WHERE " + whereColumn + "=?";
 		}
 		Cursor resultCursor = db.rawQuery(sql, whereArgs);
 		
@@ -651,11 +703,15 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		}
 	}
 	
+	//never call this version in onCreate
+	public int getIdOfValue (String tableName, String columnName, Object value) {
+		 return getIdOfValue(tableName, columnName, value, this.getReadableDatabase());
+	}
+	
 	/*
 	 * Returns -1 if the id was not found.
 	 */
-	public int getIdOfValue (String tableName, String columnName, Object value) {
-		SQLiteDatabase db = getReadableDatabase();
+	private int getIdOfValue (String tableName, String columnName, Object value, SQLiteDatabase db) {
 		String sql = "SELECT _id" +
 				" FROM " + tableName + 
 				" WHERE " + columnName + 
