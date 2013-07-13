@@ -2,10 +2,8 @@ package com.kovaciny.primexmodel;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import android.content.Context;
@@ -13,6 +11,7 @@ import android.content.Context;
 import com.kovaciny.database.PrimexDatabaseSchema;
 import com.kovaciny.database.PrimexSQLiteOpenHelper;
 import com.kovaciny.helperfunctions.HelperFunction;
+import com.kovaciny.linemonitorbot.Job;
 
 
 public class PrimexModel {
@@ -73,36 +72,43 @@ public class PrimexModel {
 	private WorkOrder mSelectedWorkOrder;
 	private Skid<Product> mSelectedSkid;
 	private PrimexSQLiteOpenHelper mDbHelper;
+	private List<Job> mJobList;
+	
 	private Double mProductsPerMinute;
 	private double mMillisToMaxson;
 	private double mNetPph; 
 	private double mGrossPph;
-	private double mNetWidth;
-	private double mGrossWidth;
 	private double mEdgeTrimRatio;
 	private double mColorPercent;
+	private Job mSelectedJob;
 
 	public void setSelectedLine (Integer lineNumber) {
 		if (lineNumber == null) throw new NullPointerException("need to select a line");
 		if (!mLineNumbersList.contains(lineNumber)) throw new NoSuchElementException("Line number not in the list of lines");;
-		
 		int oldLineNumber = hasSelectedLine() ? mSelectedLine.getLineNumber() : -1;
 		if (lineNumber != oldLineNumber) {
-			mSelectedLine = mDbHelper.getLine(lineNumber);
-			mSelectedLine.setNovatec(mDbHelper.getNovatec(lineNumber));
-			propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLineNumber, mSelectedLine.getLineNumber());
-			propChangeSupport.firePropertyChange(NOVATEC_CHANGE_EVENT, null, mSelectedLine.getNovatec());
-			
-			int associatedWoNumber = mDbHelper.getWoNumberByLine(lineNumber);
-			if (associatedWoNumber > 0) {
-				setSelectedWorkOrder(associatedWoNumber);
-				propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, null, mSelectedWorkOrder.getNumberOfSkids()); //TODO load the whole state not just this
-			} else { //make sure a work order is selected
-				int newWoNumber = mDbHelper.getHighestWoNumber() + 1;
-				addWorkOrder(new WorkOrder(newWoNumber));
-				setSelectedWorkOrder(newWoNumber);
-			}
-				
+			ProductionLine lineToSelect = mDbHelper.getLine(lineNumber);
+			setSelectedLine(lineToSelect);
+		}
+	}
+	
+	public void setSelectedLine (ProductionLine line) {
+		ProductionLine oldLine = mSelectedLine;
+		mSelectedLine = line;
+		mSelectedLine.setNovatec(mDbHelper.getNovatec(line.getLineNumber()));
+
+		propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLine, mSelectedLine);
+		propChangeSupport.firePropertyChange(NOVATEC_CHANGE_EVENT, null, mSelectedLine.getNovatec());
+		propChangeSupport.firePropertyChange(GROSS_WIDTH_CHANGE_EVENT, null, mSelectedLine.getWebWidth());
+
+		int associatedWoNumber = mDbHelper.getWoNumberByLine(line.getLineNumber());
+		if (associatedWoNumber > 0) {
+			setSelectedWorkOrder(associatedWoNumber);
+			propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, null, mSelectedWorkOrder.getNumberOfSkids()); //TODO load the whole state not just this
+		} else { //make sure a work order is selected
+			int newWoNumber = mDbHelper.getHighestWoNumber() + 1;
+			addWorkOrder(new WorkOrder(newWoNumber));
+			setSelectedWorkOrder(newWoNumber);
 		}
 	}
 	
@@ -121,6 +127,7 @@ public class PrimexModel {
 			
 			Product p = mDbHelper.getProduct(woNumber);
 			mSelectedWorkOrder.setProduct(p);
+			if (p != null) propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, p);
 			
 			Date finishDate = mSelectedWorkOrder.getFinishDate();
 			if (finishDate != null) {
@@ -199,8 +206,7 @@ public class PrimexModel {
 		Product oldProduct = mSelectedWorkOrder.getProduct();
 		mSelectedWorkOrder.setProduct(p);
 		addProduct(p);
-		mNetWidth = p.getWidth(); //TODO why is this necessary, and not double stack ready
-		this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, oldProduct, p);
+		this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, p);
 	}
 	
 	public int changeSelectedSkid(Integer skidNumber) {
@@ -221,6 +227,10 @@ public class PrimexModel {
 	
 	public void saveProduct(Product p) {
 		mDbHelper.insertOrReplaceProduct(p, getSelectedWorkOrder().getWoNumber());
+	}
+	
+	public void saveSelectedLine() {
+		mDbHelper.insertOrUpdateLine(mSelectedLine);
 	}
 	
 	/*
@@ -293,12 +303,14 @@ public class PrimexModel {
 		mNetPph = mProductsPerMinute * mSelectedWorkOrder.getProduct().getUnitWeight() * HelperFunction.MINUTES_PER_HOUR;
 		propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, oldNet, mNetPph);
 		
-		if (mGrossWidth > 0) {
+		double grossWidth = mSelectedLine.getWebWidth();
+		if (grossWidth > 0) {
 			Double oldEt = null; //mEdgeTrimRatio;
-			if (mNetWidth >= mGrossWidth) {
+			double netWidth = getSelectedWorkOrder().getProduct().getWidth();
+			if (netWidth >= grossWidth) {
 				throw new IllegalStateException(new Throwable(ERROR_NET_LESS_THAN_GROSS));
 			}
-			mEdgeTrimRatio = (mGrossWidth - mNetWidth) / mGrossWidth;
+			mEdgeTrimRatio = (grossWidth - netWidth) / grossWidth;
 			propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, oldEt, mEdgeTrimRatio);
 			
 			Double oldGross = null; //mGrossPph;
@@ -388,11 +400,4 @@ public class PrimexModel {
 		mDbHelper.clearWorkOrders();		
 	}
 
-	public double getGrossWidth() {
-		return mGrossWidth;
-	}
-
-	public void setGrossWidth(double grossWidth) {
-		this.mGrossWidth = grossWidth;
-	}
 }

@@ -22,7 +22,6 @@ public class Roll implements Product {
 		mWidth = width;
 		mLinearFeet = linearFeet;
 		mDensity = .0375d;
-		mLinearFootWeight = getEstimatedWeight();
 	}
 		
 	public double getEstimatedWeight() {

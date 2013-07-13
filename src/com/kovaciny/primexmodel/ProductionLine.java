@@ -4,6 +4,7 @@ public class ProductionLine {
 	private int mLineNumber;
 	private int mLineLength; //in feet
 	private int mDieWidth; //in inches
+	private double mWebWidth;
 	private SpeedValues mSpeedValues;
 	private String mSpeedControllerType;
 	private String mTakeoffEquipmentType;
@@ -86,5 +87,11 @@ public class ProductionLine {
 	}
 	public void setNovatec(Novatec novatec) {
 		this.mNovatec = novatec;
+	}
+	public double getWebWidth() {
+		return mWebWidth;
+	}
+	public void setWebWidth(double width) {
+		this.mWebWidth = width;
 	}
 }
