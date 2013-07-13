@@ -137,16 +137,16 @@ public class MainActivity extends FragmentActivity implements
 		List<Integer> jobList = new ArrayList<Integer>(); 
 		jobList = mModel.getWoNumbers();
 		
+		if (!mModel.hasSelectedLine()) {
+			mModel.loadState();
+		}
+
 		for (int i=0; i<jobList.size(); i++) {
 			String title = "WO #" + String.valueOf(jobList.get(i));
 			pickJobSubMenu.add(JOB_LIST_MENU_GROUP, jobList.get(i), Menu.FLAG_APPEND_TO_GROUP, title);
 		}
 		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.new_wo, Menu.FLAG_APPEND_TO_GROUP, "+ New");
 		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.clear_wos, Menu.FLAG_APPEND_TO_GROUP, "Clear");
-
-		if (!mModel.hasSelectedLine()) {
-			mModel.loadState();
-		}
 		
 		//refresh the line picker text from its default reinflated value
 		CharSequence lineTitle = "Line " + String.valueOf(mModel.getSelectedLine().getLineNumber());
@@ -288,10 +288,7 @@ public class MainActivity extends FragmentActivity implements
 		
 		switch (item.getItemId()) {
 		case R.id.new_wo:
-			//increment highest WO
-			int newWoNumber = mModel.getHighestWoNumber() + 1;
-			mModel.addWorkOrder(new WorkOrder(newWoNumber));
-			mModel.setSelectedWorkOrder(newWoNumber);	
+			mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());	
 	        break;
 		case R.id.clear_wos:
 			//clear the menu
@@ -304,9 +301,7 @@ public class MainActivity extends FragmentActivity implements
 			mModel.clearWoNumbers();
 			
 			//make sure a new WO always exists
-			int aWoNumber = mModel.getHighestWoNumber() + 1;
-			mModel.addWorkOrder(new WorkOrder(aWoNumber));
-			mModel.setSelectedWorkOrder(aWoNumber);
+			mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());
 			break;
 		case R.id.action_settings:
 			Intent intent = new Intent(this, SettingsActivity.class);

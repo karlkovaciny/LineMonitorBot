@@ -154,19 +154,24 @@ public class PrimexModel {
 		mDbHelper.insertOrReplaceProduct(p, mSelectedWorkOrder.getWoNumber());
 	}
 	
-	public boolean addWorkOrder(WorkOrder newWo) {
-		if (mDbHelper.insertOrUpdateWorkOrder(newWo) != -1l) {
-			mWoNumbersList.add(newWo.getWoNumber());
-			if (newWo.getSkidsList().isEmpty()) { //Doing this after inserting the WO so that the WO will be in the table so I can look up its id. TODO stop exposing the skids list.
-				Skid<Product> defaultSkid = new Skid<Product>(1000, null);
-				newWo.addOrUpdateSkid(defaultSkid);
-				mDbHelper.insertOrReplaceSkid(defaultSkid, newWo.getWoNumber());
-				newWo.selectSkid(defaultSkid.getSkidNumber());
-				mDbHelper.insertOrUpdateWorkOrder(newWo); //doing it twice to get the selection in there.
-			}
-			propChangeSupport.firePropertyChange(NEW_WORK_ORDER_EVENT, null, newWo);
-			return true;
-		} else return false;
+	public WorkOrder addWorkOrder() {
+		//generate a work order number
+		int newWoNumber = getHighestWoNumber() + 1;
+		return addWorkOrder(new WorkOrder(newWoNumber));
+	}
+	
+	public WorkOrder addWorkOrder(WorkOrder newWo) {
+		mDbHelper.insertOrUpdateWorkOrder(newWo);
+		mWoNumbersList.add(newWo.getWoNumber());
+		if (newWo.getSkidsList().isEmpty()) { //Doing this after inserting the WO so that the WO will be in the table so I can look up its id. TODO stop exposing the skids list.
+			Skid<Product> defaultSkid = new Skid<Product>(1000, null);
+			newWo.addOrUpdateSkid(defaultSkid);
+			mDbHelper.insertOrReplaceSkid(defaultSkid, newWo.getWoNumber());
+			newWo.selectSkid(defaultSkid.getSkidNumber());
+			mDbHelper.insertOrUpdateWorkOrder(newWo); //doing it twice to get the selection in there.
+		}
+		propChangeSupport.firePropertyChange(NEW_WORK_ORDER_EVENT, null, newWo);
+		return newWo;
 	}
 		
 	public void setCurrentSpeed (SpeedValues values) { 
