@@ -3,6 +3,7 @@ package com.kovaciny.linemonitorbot;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -11,7 +12,6 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -114,6 +114,8 @@ public class MainActivity extends FragmentActivity implements
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		doFirstRun();
+		
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		mJobPicker = (MenuItem) menu.findItem(R.id.action_pick_job);
@@ -148,18 +150,31 @@ public class MainActivity extends FragmentActivity implements
 		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.new_wo, Menu.FLAG_APPEND_TO_GROUP, "+ New");
 		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.clear_wos, Menu.FLAG_APPEND_TO_GROUP, "Clear");
 		
-		//refresh the line picker text from its default reinflated value
+		//refresh the menu picker text from their default reinflated value
 		CharSequence lineTitle = "Line " + String.valueOf(mModel.getSelectedLine().getLineNumber());
 		mLinePicker.setTitle(lineTitle);
-		CharSequence jobTitle = generateJobTitle(mModel.getSelectedWorkOrder().getWoNumber());
-		mJobPicker.setTitle(jobTitle);
+		if (mModel.hasSelectedWorkOrder()) {
+			CharSequence jobTitle = generateJobTitle(mModel.getSelectedWorkOrder().getWoNumber());
+			mJobPicker.setTitle(jobTitle);
+		}
 		return true;
 	}
+	
 	private CharSequence generateJobTitle(int woNumber) {
 		List<Integer> woNumbers = mModel.getAllWoNumbersForLine(mModel.getSelectedLine().getLineNumber());
 		int position = woNumbers.indexOf(woNumber);
 		return "WO " + String.valueOf(mModel.getSelectedLine().getLineNumber()) + "-" + String.valueOf(position + 1);
 	}
+	
+	private void doFirstRun() {
+        SharedPreferences settings = getPreferences(MODE_PRIVATE);
+        if (settings.getLong("firstRunDate", -1) == -1) {
+            showDummyDialog("Welcome to LineMonitorBot!");
+        	SharedPreferences.Editor editor = settings.edit();
+            editor.putLong("firstRunDate", new Date().getTime());
+            editor.commit();
+        }
+}
 	public void showSheetsPerMinuteDialog() {
 		// Create the fragment and show it as a dialog.
 		SheetsPerMinuteDialogFragment newFragment = new SheetsPerMinuteDialogFragment();
@@ -474,36 +489,6 @@ public class MainActivity extends FragmentActivity implements
  * end of functions I never change
  * ---------------------------------------
  */
-	
-	@Override
-	protected void onStart() {
-		super.onStart();		
-		
-		//look up database asynchronously.
-		//new PopulateMenusTask().execute();		
-	}
-
-	
-	public class PopulateMenusTask extends AsyncTask<Void,Void,Void> {
-				
-		public PopulateMenusTask() {
-			super();
-		}
-		@Override
-		protected Void doInBackground(Void... arg0) {
-			
-			
-			return null;
-		}
-		
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-			
-			//Now it's safe to update UI elements.
-			
-		}
-	}
 
 	@Override
 	protected void onPause() {
