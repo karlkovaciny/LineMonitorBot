@@ -2,6 +2,7 @@ package com.kovaciny.primexmodel;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -101,7 +102,7 @@ public class PrimexModel {
 		propChangeSupport.firePropertyChange(NOVATEC_CHANGE_EVENT, null, mSelectedLine.getNovatec());
 		propChangeSupport.firePropertyChange(GROSS_WIDTH_CHANGE_EVENT, null, mSelectedLine.getWebWidth());
 
-		int associatedWoNumber = mDbHelper.getWoNumberByLine(line.getLineNumber());
+		int associatedWoNumber = mDbHelper.getSelectedWoNumberByLine(line.getLineNumber());
 		if (associatedWoNumber > 0) {
 			setSelectedWorkOrder(associatedWoNumber);
 			propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, null, mSelectedWorkOrder.getNumberOfSkids()); //TODO load the whole state not just this
@@ -397,6 +398,9 @@ public class PrimexModel {
 		return mDbHelper.getWoNumbers();
 	}
 	
+	public List<Integer> getWoNumbersByLine(int lineNumber) {
+		return mDbHelper.getWoNumbersByLine(lineNumber);
+	}
 	public int getHighestWoNumber() {
 		return mDbHelper.getHighestWoNumber();
 	}
