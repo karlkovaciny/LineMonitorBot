@@ -117,25 +117,24 @@ public class PrimexModel {
 		if (!mWoNumbersList.contains(woNumber)) {
 			throw new NoSuchElementException("Work order number not in the list of work orders, need to add it");
 		}
-		if (woNumber > 0) {
-			WorkOrder oldWo = mSelectedWorkOrder;
-					
-			WorkOrder lookedUpWo = mDbHelper.getWorkOrder(woNumber);
-			if (lookedUpWo == null) throw new RuntimeException("WorkOrder not found even though it is in woNumbersList");
-			mSelectedWorkOrder = lookedUpWo;
-			mDbHelper.updateLineWorkOrderLink(mSelectedLine.getLineNumber(), woNumber);
-			changeSelectedSkid(mSelectedWorkOrder.getSkidsList().get(0).getSkidNumber());
-			
-			Product p = mDbHelper.getProduct(woNumber);
-			mSelectedWorkOrder.setProduct(p);
-			if (p != null) propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, p);
-			
-			Date finishDate = mSelectedWorkOrder.getFinishDate();
-			if (finishDate != null) {
-				propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, null, finishDate);
-			}
-			propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldWo, mSelectedWorkOrder);
-		} else throw new IllegalArgumentException("Work order number must be positive");
+		if (woNumber <= 0) throw new IllegalArgumentException("Work order number must be positive");
+		WorkOrder oldWo = null; //mSelectedWorkOrder;
+
+		WorkOrder lookedUpWo = mDbHelper.getWorkOrder(woNumber);
+		if (lookedUpWo == null) throw new RuntimeException("WorkOrder not found even though it is in woNumbersList");
+		mSelectedWorkOrder = lookedUpWo;
+		mDbHelper.updateLineWorkOrderLink(mSelectedLine.getLineNumber(), woNumber);
+		changeSelectedSkid(mSelectedWorkOrder.getSkidsList().get(0).getSkidNumber());
+
+		Product p = mDbHelper.getProduct(woNumber);
+		mSelectedWorkOrder.setProduct(p);
+		if (p != null) propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, p);
+
+		Date finishDate = mSelectedWorkOrder.getFinishDate();
+		if (finishDate != null) {
+			propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, null, finishDate);
+		}
+		propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldWo, mSelectedWorkOrder); 
 	}
 
 	/*
@@ -398,9 +397,10 @@ public class PrimexModel {
 		return mDbHelper.getWoNumbers();
 	}
 	
-	public List<Integer> getWoNumbersByLine(int lineNumber) {
-		return mDbHelper.getWoNumbersByLine(lineNumber);
+	public List<Integer> getAllWoNumbersForLine(int lineNumber) {
+		return mDbHelper.getAllWoNumbersForLine(lineNumber);
 	}
+	
 	public int getHighestWoNumber() {
 		return mDbHelper.getHighestWoNumber();
 	}
