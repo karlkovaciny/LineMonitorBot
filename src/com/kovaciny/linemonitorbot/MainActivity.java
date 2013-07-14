@@ -131,18 +131,18 @@ public class MainActivity extends FragmentActivity implements
 			pickLineSubMenu.add(LINE_LIST_MENU_GROUP, (lineNumberList.get(i) + LINE_LIST_ID_RANDOMIZER), Menu.FLAG_APPEND_TO_GROUP, String.valueOf(lineNumberList.get(i)));
 		}
 		
+		if (!mModel.hasSelectedLine()) {
+			mModel.loadState();
+		}
+		
 		//populate the job picker with jobs
 		Menu pickJobSubMenu = mJobPicker.getSubMenu();
 		pickJobSubMenu.clear();
 		List<Integer> jobList = new ArrayList<Integer>(); 
-		jobList = mModel.getWoNumbers();
+		jobList = mModel.getAllWoNumbersForLine(mModel.getSelectedLine().getLineNumber());
 		
-		if (!mModel.hasSelectedLine()) {
-			mModel.loadState();
-		}
-
 		for (int i=0; i<jobList.size(); i++) {
-			String title = "WO #" + String.valueOf(jobList.get(i));
+			CharSequence title = generateJobTitle(jobList.get(i));
 			pickJobSubMenu.add(JOB_LIST_MENU_GROUP, jobList.get(i), Menu.FLAG_APPEND_TO_GROUP, title);
 		}
 		pickJobSubMenu.add(JOB_OPTIONS_MENU_GROUP , R.id.new_wo, Menu.FLAG_APPEND_TO_GROUP, "+ New");
@@ -151,9 +151,15 @@ public class MainActivity extends FragmentActivity implements
 		//refresh the line picker text from its default reinflated value
 		CharSequence lineTitle = "Line " + String.valueOf(mModel.getSelectedLine().getLineNumber());
 		mLinePicker.setTitle(lineTitle);
+		CharSequence jobTitle = generateJobTitle(mModel.getSelectedWorkOrder().getWoNumber());
+		mJobPicker.setTitle(jobTitle);
 		return true;
 	}
-
+	private CharSequence generateJobTitle(int woNumber) {
+		List<Integer> woNumbers = mModel.getAllWoNumbersForLine(mModel.getSelectedLine().getLineNumber());
+		int position = woNumbers.indexOf(woNumber);
+		return "WO " + String.valueOf(mModel.getSelectedLine().getLineNumber()) + "-" + String.valueOf(position + 1);
+	}
 	public void showSheetsPerMinuteDialog() {
 		// Create the fragment and show it as a dialog.
 		SheetsPerMinuteDialogFragment newFragment = new SheetsPerMinuteDialogFragment();
@@ -236,15 +242,16 @@ public class MainActivity extends FragmentActivity implements
 				mJobPicker.setTitle(R.string.action_pick_job_title);
 			} else {
 				WorkOrder newWo = (WorkOrder)newProperty; 
-				CharSequence woTitle = "WO #" + String.valueOf(newWo.getWoNumber());
+				CharSequence woTitle = generateJobTitle(newWo.getWoNumber());
 				mJobPicker.setTitle(woTitle);
+				invalidateOptionsMenu();
 			}
 			skidTimesFrag.modelPropertyChange(event);
 			ratesFrag.modelPropertyChange(event);
 			
 		} else if (eventName == PrimexModel.NEW_WORK_ORDER_EVENT) { //not safe to fire without a selected WO
 			int newWonum = ((WorkOrder)newProperty).getWoNumber();
-			String newTitle = "WO #" + String.valueOf(newWonum);
+			CharSequence newTitle = generateJobTitle(newWonum);
 			mJobPicker.getSubMenu().add(JOB_LIST_MENU_GROUP, newWonum, Menu.FLAG_APPEND_TO_GROUP, newTitle);
 			invalidateOptionsMenu();
 			skidTimesFrag.modelPropertyChange(event);
@@ -288,7 +295,7 @@ public class MainActivity extends FragmentActivity implements
 		
 		switch (item.getItemId()) {
 		case R.id.new_wo:
-			mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());	
+			mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());
 	        break;
 		case R.id.clear_wos:
 			//clear the menu
@@ -310,16 +317,6 @@ public class MainActivity extends FragmentActivity implements
 	    default:
 	    }
 		return super.onOptionsItemSelected(item);
-	}
-	
-	public PrimexModel getModelDebug() { //TODO delete
-		return mModel;
-	}
-	
-	public List<Integer> getSkidNumbersDebug() {
-		if (mModel.hasSelectedWorkOrder()) {
-			return mModel.getSelectedWorkOrder().getSkidNumbers();	
-		} else return null;
 	}
 	
 	public void updateSkidData(Integer skidNumber, Integer currentCount, Integer totalCount, Integer numberOfSkids) {

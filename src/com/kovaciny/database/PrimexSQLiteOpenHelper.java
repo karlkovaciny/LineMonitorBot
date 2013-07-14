@@ -1029,4 +1029,32 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			}
 		}
 	}
+	public List<Integer> getAllWoNumbersForLine(int lineNumber) {
+		SQLiteDatabase db = getReadableDatabase();
+		String sql = "SELECT " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + "." + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + 
+				" FROM " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME +  
+				" JOIN " + PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME + 
+				" ON " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + "." + PrimexDatabaseSchema.WorkOrders._ID + 
+				"=" + PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME + "." + PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID +
+				" JOIN " + PrimexDatabaseSchema.ProductionLines.TABLE_NAME +
+				" ON " + PrimexDatabaseSchema.ProductionLines.TABLE_NAME + "." + PrimexDatabaseSchema.ProductionLines._ID + 
+				"=" + PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME + "." + PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID +
+				" WHERE " + PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + "=?";
+		
+		Cursor resultCursor = db.rawQuery(sql, new String[]{String.valueOf(lineNumber)});
+		List<Integer> woNumbers = new ArrayList<Integer>();
+		try {
+			int columnIndex = resultCursor.getColumnIndex(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER);
+			int woNumber = 0;
+			while (resultCursor.moveToNext()) {
+				woNumber = resultCursor.getInt(columnIndex);
+				woNumbers.add(woNumber);
+			}
+			return woNumbers;
+		} finally {
+			if (resultCursor != null) {
+				resultCursor.close();
+			}
+		}
+	}
 }
