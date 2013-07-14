@@ -169,7 +169,7 @@ public class MainActivity extends FragmentActivity implements
 	private void doFirstRun() {
         SharedPreferences settings = getPreferences(MODE_PRIVATE);
         if (settings.getLong("firstRunDate", -1) == -1) {
-            showDummyDialog("Welcome to LineMonitorBot!");
+//            showDummyDialog("Welcome to LineMonitorBot!");
         	SharedPreferences.Editor editor = settings.edit();
             editor.putLong("firstRunDate", new Date().getTime());
             editor.commit();
