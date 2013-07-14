@@ -14,7 +14,6 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.webkit.WebView.FindListener;
 
 import com.kovaciny.primexmodel.Novatec;
 import com.kovaciny.primexmodel.Pallet;
@@ -33,7 +32,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 92;
+    public static final int DATABASE_VERSION = 94;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -75,7 +74,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     		PrimexDatabaseSchema.LineWorkOrderLink._ID + " INTEGER PRIMARY KEY, " + 
     		PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID + INTEGER_TYPE + COMMA_SEP + 
     		PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID + INTEGER_TYPE + COMMA_SEP +
-    		" UNIQUE (" + PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID + ")" +
+    		PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_IS_SELECTED + INTEGER_TYPE + COMMA_SEP +
+    		" UNIQUE (" + PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID + ")" +
     		")";
     		
 
@@ -930,6 +930,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		return rowId;
 	}
 	
+	/*
+	 * 
+	 */
 	public int updateColumn(String tableName, String columnName, String where, String[] whereArgs, String newValue){
 		SQLiteDatabase db = getWritableDatabase();
 		
@@ -957,9 +960,22 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				PrimexDatabaseSchema.WorkOrders.TABLE_NAME, 
 				PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER,
 				woNumber);
+		
+		//first, invalidate the previously selected work order for this line. //TODO maybe should be in model
+		String where = PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID + "=? " + 
+				" AND " + PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_IS_SELECTED + "=?";
+		String[] whereArgs = new String[]{String.valueOf(lineId), String.valueOf(1)};
+		updateColumn(PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME,
+				PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_IS_SELECTED,
+				where, 
+				whereArgs, 
+				"0");
+		
+		//Then, add the new work order and mark it selected.
 		ContentValues values = new ContentValues();
 		values.put (PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID, lineId);
 		values.put (PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID, woId);
+		values.put (PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_IS_SELECTED, "1");
     	long rowId;
 		try {
 			rowId = db.insertWithOnConflict(
@@ -971,8 +987,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			rowId = db.updateWithOnConflict(
 				PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME, 
 				values, 
-				PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID + "=?", 
-				new String[]{String.valueOf(lineId)}, 
+				PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID + "=?", 
+				new String[]{String.valueOf(woId)}, 
 				SQLiteDatabase.CONFLICT_REPLACE);
 		}
     	
@@ -982,7 +998,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	/*
 	 * Returns 0 if work order not found.
 	 */
-	public int getWoNumberLinkedToLine(int lineNumber) {
+	public int getWoNumbersLinkedToLine(int lineNumber) {
 		SQLiteDatabase db = getReadableDatabase();
 		String sql = "SELECT " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + "." + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + 
 				" FROM " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME +  

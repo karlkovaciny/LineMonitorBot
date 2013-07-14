@@ -39,6 +39,7 @@ public class PrimexDatabaseSchema {
 		public static final String TABLE_NAME = "line_work_order_link";
 		public static final String COLUMN_NAME_LINE_ID = "line_id";
 		public static final String COLUMN_NAME_WO_ID = "wo_id";
+		public static final String COLUMN_NAME_WO_IS_SELECTED = "wo_selected";
 	}
 	
 	public static abstract class Products implements BaseColumns {
