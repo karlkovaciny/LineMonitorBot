@@ -998,7 +998,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	/*
 	 * Returns 0 if work order not found.
 	 */
-	public int getWoNumbersLinkedToLine(int lineNumber) {
+	public int getSelectedWoNumberByLine(int lineNumber) {
 		SQLiteDatabase db = getReadableDatabase();
 		String sql = "SELECT " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + "." + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + 
 				" FROM " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME +  
@@ -1009,11 +1009,12 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				" ON " + PrimexDatabaseSchema.ProductionLines.TABLE_NAME + "." + PrimexDatabaseSchema.ProductionLines._ID + 
 				"=" + PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME + "." + PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID +
 				" AND " + PrimexDatabaseSchema.ProductionLines.TABLE_NAME + "." + PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + 
-				"=" + lineNumber;
+				"=" + lineNumber +
+				" WHERE " + PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_IS_SELECTED + "=?";
 		
-		Cursor resultCursor = db.rawQuery(sql, null);
+		Cursor resultCursor = db.rawQuery(sql, new String[]{"1"});
 		if (resultCursor.getCount() > 1) {
-			Log.e("ERROR", "More than one work order for this query, you will get errors");
+			Log.e("ERROR", "More than one work order for this query, you will have problems");
 		}
 		int woNumber = 0;
 		try {
