@@ -238,6 +238,7 @@ public class SkidTimesFragment extends SectionFragment implements
 				}
 				mTxt_productsPerMinute.setVisibility(TextView.VISIBLE);
 				mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
+				this.mTxt_timePerSkid.setText(mTimeToMaxsonText);
 			}
 			break;
 		case (R.id.btn_cancel_alarm):
@@ -325,8 +326,7 @@ public class SkidTimesFragment extends SectionFragment implements
 			
 		} else if (propertyName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
 			long minutes = Math.round((Double)newProperty);
-			this.mTxt_timePerSkid.setText(HelperFunction
-					.formatMinutesAsHours(minutes));
+			mTimeToMaxsonText =	HelperFunction.formatMinutesAsHours(minutes);
 			mMillisPerSkid = Math.round((Double)newProperty * HelperFunction.ONE_MINUTE_IN_MILLIS);
 			
 		} else if (propertyName == PrimexModel.NUMBER_OF_SKIDS_CHANGE_EVENT) {
