@@ -960,14 +960,29 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put (PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID, lineId);
 		values.put (PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID, woId);
-		long rowId = db.replace(PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME, null, values);
+    	long rowId;
+		try {
+			rowId = db.insertWithOnConflict(
+				PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME, 
+				null, 
+				values,
+				SQLiteDatabase.CONFLICT_ABORT);
+		} catch (SQLiteConstraintException sqle) {
+			rowId = db.updateWithOnConflict(
+				PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME, 
+				values, 
+				PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID + "=?", 
+				new String[]{String.valueOf(lineId)}, 
+				SQLiteDatabase.CONFLICT_REPLACE);
+		}
+    	
 		return rowId;	
 	}
 	
 	/*
 	 * Returns 0 if work order not found.
 	 */
-	public int getWoNumberByLine(int lineNumber) {
+	public int getWoNumberLinkedToLine(int lineNumber) {
 		SQLiteDatabase db = getReadableDatabase();
 		String sql = "SELECT " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + "." + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + 
 				" FROM " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME +  
