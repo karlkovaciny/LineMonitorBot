@@ -252,15 +252,23 @@ public class PrimexModel {
 	 */
 	public void saveState() {
 		if (hasSelectedLine()) {
-			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, null, null, String.valueOf(getSelectedLine().getLineNumber()));
+			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, 
+					null, null, String.valueOf(getSelectedLine().getLineNumber()));
 		} else {
-			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, null, null, null);
+			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, 
+					null, null, null);
 		}
 		
 		if (hasSelectedWorkOrder()) {
-			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, null, null, String.valueOf(getSelectedWorkOrder().getWoNumber()));
+			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, 
+					null, null, String.valueOf(getSelectedWorkOrder().getWoNumber()));
 		} else {
-			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, null, null, null);
+			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, 
+					null, null, null);
 		}
 		
 		if (hasSelectedProduct()){
