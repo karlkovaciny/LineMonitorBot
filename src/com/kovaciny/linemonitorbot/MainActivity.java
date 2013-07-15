@@ -506,6 +506,12 @@ public class MainActivity extends FragmentActivity implements
 	    //mModel.closeDb(); TODO, cause lag
 	}
 	
+	@Override
+	protected void onStop() {
+		mModel.saveState();
+		super.onStop();		
+	}
+
 	void showDummyDialog(String text) {
 	    // Create the fragment and show it as a dialog.
 	    DialogFragment newFragment = MyDialogFragment.newInstance(text);

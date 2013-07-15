@@ -87,8 +87,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		//set up editTexts
 		mEditableGroup = new ArrayList<View>(); //TODO make the finish times noneditable since they're not in the group.
 		
-		mTxt_productsPerMinute = (TextView) rootView
-				.findViewById(R.id.txt_products_per_minute);
+		
 		
 		mEdit_currentSkidNumber = (EditText) rootView.findViewById(R.id.edit_skid_number);
 		mEditableGroup.add(mEdit_currentSkidNumber);
@@ -104,12 +103,6 @@ public class SkidTimesFragment extends SectionFragment implements
 		mEdit_totalCountPerSkid = (EditText) rootView
 				.findViewById(R.id.edit_total_sheets_per_skid);
 		mEditableGroup.add(mEdit_totalCountPerSkid);
-		
-		mTxt_skidStartTime = (TextView) rootView
-				.findViewById(R.id.txt_skid_start_time);
-		
-		mTxt_skidFinishTime = (TextView) rootView
-				.findViewById(R.id.txt_skid_finish_time);
 		
 		for (View v : mEditableGroup) {
 			EditText etv = (EditText) v;
@@ -130,21 +123,18 @@ public class SkidTimesFragment extends SectionFragment implements
 		mBtn_calculateTimes.setOnClickListener(this);
 		
 		//set up textViews
-		mTxt_timePerSkid = (TextView) rootView
-				.findViewById(R.id.txt_time_per_skid);
-		if (mMillisPerSkid > 0) {
-			this.mTxt_timePerSkid.setText(HelperFunction
-					.formatMinutesAsHours(mMillisPerSkid / HelperFunction.ONE_MINUTE_IN_MILLIS));	
-		}
+		mTxt_timePerSkid = (TextView) rootView.findViewById(R.id.txt_time_per_skid);		
+		mTxt_jobFinishTime = (TextView) rootView.findViewById(R.id.txt_job_finish_time);
+		mTxt_timeToMaxson = (TextView) rootView.findViewById(R.id.txt_time_to_maxson);
+		mTxt_productsPerMinute = (TextView) rootView.findViewById(R.id.txt_products_per_minute);
+		mTxt_skidStartTime = (TextView) rootView.findViewById(R.id.txt_skid_start_time);
+		mTxt_skidFinishTime = (TextView) rootView.findViewById(R.id.txt_skid_finish_time);
 		
 		mLbl_productsPerMinute = (TextView) rootView.findViewById(R.id.lbl_products_per_minute);
 		mLbl_products = (TextView) rootView.findViewById(R.id.lbl_products);
 		mLbl_timeToMaxson = (TextView) rootView.findViewById(R.id.lbl_time_to_maxson);
-		
-		mTxt_jobFinishTime = (TextView) rootView.findViewById(R.id.txt_job_finish_time);
-		mTxt_timeToMaxson = (TextView) rootView.findViewById(R.id.txt_time_to_maxson);
 		mLbl_jobFinishTime = (TextView) rootView.findViewById(R.id.lbl_job_finish_time);
-			
+		
 		return rootView;
 	}
 
