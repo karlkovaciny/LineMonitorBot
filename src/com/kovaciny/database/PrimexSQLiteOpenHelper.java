@@ -32,7 +32,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 94;
+    public static final int DATABASE_VERSION = 95;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -64,7 +64,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED + DOUBLE_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER + INTEGER_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT + DOUBLE_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NOVATEC_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME + INTEGER_TYPE + COMMA_SEP +
 	    	" UNIQUE (" + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + ")" +
 	    	" )";
@@ -208,7 +207,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED,69);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT,0);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER,1);
-        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NOVATEC_SETPOINT,0);
         	
         	db.insertOrThrow(PrimexDatabaseSchema.WorkOrders.TABLE_NAME, null, values);
         	db.setTransactionSuccessful();
@@ -524,33 +522,16 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		
 		if (newWo.hasProduct()) {
 			insertOrReplaceProduct(newWo.getProduct(), newWo.getWoNumber());
-			String query = "SELECT last_insert_rowid() FROM " + PrimexDatabaseSchema.Products.TABLE_NAME;
-			Cursor c = db.rawQuery(query, null);
-			int productId = 0;
-			if (c != null && c.moveToFirst()) {
-			    productId = c.getInt(0); //The 0 is the column index, we only have 1 column, so the index is 0
-			}
-			//debug TODO use getIdOfValue
-			String sqll = "SELECT * FROM " + PrimexDatabaseSchema.Products.TABLE_NAME + " WHERE " + 
-			PrimexDatabaseSchema.Products._ID + "=?";
-			Cursor cc = db.rawQuery(sqll, new String[]{String.valueOf(productId)});
-			if (cc != null && cc.moveToFirst()) {
-			    String pproductId = cc.getString(1);
-			}
-			//values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_ID, lastRowId);
 		}
 		
 		ContentValues values = new ContentValues();
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, newWo.getWoNumber());
-		double tpo = newWo.getTotalProductsOrdered();
-		tpo = 69; //debug
-		double nova = newWo.getNovatecSetpoint();
-		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED, tpo);
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED, 
+				newWo.getTotalProductsOrdered());
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT, newWo.getMaximumStackHeight());
 		if ( newWo.hasSelectedSkid()) {
 			values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER, newWo.getSelectedSkid().getSkidNumber());	
 		} else Log.e("ERROR", String.valueOf(newWo.getWoNumber()) + " doesn't have a selected skid (maybe it's new)");
-		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NOVATEC_SETPOINT, nova);
 		if (newWo.getFinishDate() != null) {
 			values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME, newWo.getFinishDate().getTime());	
 		}
@@ -592,7 +573,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		    	ordered = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED));
 		    	selected = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER));
 		    	height = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT));
-		    	nova = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NOVATEC_SETPOINT));
 		    	finish = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME));
 		    	WorkOrder wo = new WorkOrder(wonum);
 				if (prod_id != -1) {
@@ -610,7 +590,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 					wo.selectSkid(selected);
 				}
 				wo.setMaximumStackHeight(height);
-				wo.setNovatecSetpoint(nova);
 				if (finish > 0) {
 					wo.setFinishDate(new Date(finish));	
 				}
