@@ -31,7 +31,6 @@ public class PrimexDatabaseSchema {
 		public static final String COLUMN_NAME_TOTAL_PRODUCTS_ORDERED = "products_ordered";	
 		public static final String COLUMN_NAME_SELECTED_SKID_NUMBER = "skid_number";	
 		public static final String COLUMN_NAME_MAXIMUM_STACK_HEIGHT = "max_stack_height";
-		public static final String COLUMN_NAME_NOVATEC_SETPOINT = "novatec_setpoint";
 		public static final String COLUMN_NAME_FINISH_TIME = "finish_time";
 	}
 	

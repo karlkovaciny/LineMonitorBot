@@ -118,8 +118,9 @@ public class PrimexModel {
 			throw new NoSuchElementException("Work order number not in the list of work orders, need to add it");
 		}
 		if (woNumber <= 0) throw new IllegalArgumentException("Work order number must be positive");
-		WorkOrder oldWo = null; //mSelectedWorkOrder;
-
+		
+		//save data from old WO
+		
 		WorkOrder lookedUpWo = mDbHelper.getWorkOrder(woNumber);
 		if (lookedUpWo == null) throw new RuntimeException("WorkOrder not found even though it is in woNumbersList");
 		mSelectedWorkOrder = lookedUpWo;
@@ -134,7 +135,7 @@ public class PrimexModel {
 		if (finishDate != null) {
 			propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, null, finishDate);
 		}
-		propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, oldWo, mSelectedWorkOrder); 
+		propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, null, mSelectedWorkOrder); 
 	}
 
 	/*
