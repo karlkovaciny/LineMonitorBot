@@ -71,10 +71,8 @@ public class SkidTimesFragment extends SectionFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		mAlarmReceiver = new SkidFinishedBroadcastReceiver();
 		
-		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+		mAlarmReceiver = new SkidFinishedBroadcastReceiver();
 	}
 
 	@Override
@@ -117,8 +115,7 @@ public class SkidTimesFragment extends SectionFragment implements
 		
 		mBtn_cancelAlarm = (Button) rootView.findViewById(R.id.btn_cancel_alarm);
 		mBtn_cancelAlarm.setOnClickListener(this);
-		mBtn_cancelAlarm.setVisibility(Button.INVISIBLE);
-		
+				
 		mBtn_calculateTimes = (Button) rootView.findViewById(R.id.btn_calculate_times);
 		mBtn_calculateTimes.setOnClickListener(this);
 		
@@ -134,6 +131,25 @@ public class SkidTimesFragment extends SectionFragment implements
 		mLbl_products = (TextView) rootView.findViewById(R.id.lbl_products);
 		mLbl_timeToMaxson = (TextView) rootView.findViewById(R.id.lbl_time_to_maxson);
 		mLbl_jobFinishTime = (TextView) rootView.findViewById(R.id.lbl_job_finish_time);
+		
+		//restore saved state
+		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+		boolean visible = settings.getBoolean("cancelAlarmVisible", false);
+		String tps = settings.getString("timePerSkid", "");
+		String ppm = settings.getString("productsPerMinute", "");
+		String jft = settings.getString("jobFinishTime", "");
+		String ttm = settings.getString("timeToMaxson", "");
+		String sst = settings.getString("skidStartTime", "");
+		String sft = settings.getString("skidFinishTime", "");
+		if (visible) {
+			mBtn_cancelAlarm.setVisibility(Button.VISIBLE);
+		} else mBtn_cancelAlarm.setVisibility(Button.INVISIBLE);
+		mTxt_timePerSkid.setText(tps);
+		mTxt_productsPerMinute.setText(ppm);
+		mTxt_jobFinishTime.setText(jft);
+		mTxt_timeToMaxson.setText(ttm);
+		mTxt_skidStartTime.setText(sst);
+		mTxt_skidFinishTime.setText(sft);
 		
 		return rootView;
 	}
@@ -180,6 +196,7 @@ public class SkidTimesFragment extends SectionFragment implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case (R.id.btn_enter_product):
+			mBtn_enterProduct.setError(null);
 			((MainActivity)getActivity()).showSheetsPerMinuteDialog();
 			break;
 		case (R.id.btn_calculate_times):
@@ -368,7 +385,18 @@ public class SkidTimesFragment extends SectionFragment implements
 	public void onPause() {
 		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
 	    SharedPreferences.Editor editor = settings.edit();
-	    
+		boolean visible = false;
+		if (mBtn_cancelAlarm.getVisibility() == Button.VISIBLE) {
+			visible = true;
+		}
+		editor.putBoolean("cancelAlarmVisible", visible);
+		editor.putString("timePerSkid", mTxt_timePerSkid.getText().toString());
+		editor.putString("productsPerMinute", mTxt_productsPerMinute.getText().toString());
+		editor.putString("jobFinishTime", mTxt_jobFinishTime.getText().toString());
+		editor.putString("timeToMaxson", mTxt_timeToMaxson.getText().toString());
+		editor.putString("skidStartTime", mTxt_skidStartTime.getText().toString());
+		editor.putString("skidFinishTime", mTxt_skidFinishTime.getText().toString());
+
 	    // Commit the edits!
 	    editor.commit();
 		super.onPause();

@@ -347,7 +347,11 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     public void saveState() {
     	
     }
-    
+  
+
+    /*
+     * Also updates Novatec
+     */
     public long insertOrUpdateLine(ProductionLine newLine) {
     	insertOrUpdateNovatec(newLine.getNovatec(), newLine.getLineNumber());
     	SQLiteDatabase db = getWritableDatabase();
@@ -359,7 +363,10 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_WEB_WIDTH, newLine.getWebWidth());
     	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE, newLine.getSpeedControllerType());
     	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE, newLine.getTakeoffEquipmentType());
-    	
+    	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT , newLine.getSpeedValues().differentialSpeed);
+		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR, newLine.getSpeedValues().speedFactor);
+		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT, newLine.getSpeedValues().lineSpeedSetpoint);
+		
     	long rowId;
     	try {
 			rowId = db.insertWithOnConflict(
@@ -515,8 +522,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	
 	
 	
-	
-	
 	public long insertOrUpdateWorkOrder(WorkOrder newWo) {
 		SQLiteDatabase db = getWritableDatabase();
 		
@@ -564,7 +569,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		double ordered = -1d;
 		int selected = -1;
 		double height = -1d;
-		double nova = -1d;
 		int finish;
 		try {
 			if (resultCursor.moveToFirst()) {

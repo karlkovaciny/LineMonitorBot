@@ -85,7 +85,7 @@ public class PrimexModel {
 
 	public void setSelectedLine (Integer lineNumber) {
 		if (lineNumber == null) throw new NullPointerException("need to select a line");
-		if (!mLineNumbersList.contains(lineNumber)) throw new NoSuchElementException("Line number not in the list of lines");;
+		if (!mLineNumbersList.contains(lineNumber)) throw new NoSuchElementException("Line number not in the list of lines");
 		int oldLineNumber = hasSelectedLine() ? mSelectedLine.getLineNumber() : -1;
 		if (lineNumber != oldLineNumber) {
 			ProductionLine lineToSelect = mDbHelper.getLine(lineNumber);
@@ -94,7 +94,9 @@ public class PrimexModel {
 	}
 	
 	public void setSelectedLine (ProductionLine line) {
+		if (hasSelectedLine()) saveSelectedLine();
 		ProductionLine oldLine = mSelectedLine;
+		
 		mSelectedLine = line;
 		mSelectedLine.setNovatec(mDbHelper.getNovatec(line.getLineNumber()));
 
@@ -120,6 +122,7 @@ public class PrimexModel {
 		if (woNumber <= 0) throw new IllegalArgumentException("Work order number must be positive");
 		
 		//save data from old WO
+		if (hasSelectedWorkOrder()) mDbHelper.insertOrUpdateWorkOrder(mSelectedWorkOrder);
 		
 		WorkOrder lookedUpWo = mDbHelper.getWorkOrder(woNumber);
 		if (lookedUpWo == null) throw new RuntimeException("WorkOrder not found even though it is in woNumbersList");
