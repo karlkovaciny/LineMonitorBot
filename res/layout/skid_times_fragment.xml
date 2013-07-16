@@ -132,7 +132,7 @@
 		            android:id="@+id/txt_skid_finish_time"
 		            style="@style/Label.SecondTableColumn" />
 		        
-				<TextView style="@style/BlankThirdColumn.Unused"/>
+				<TextView style="@style/BlankThirdColumn"/>
 		    </TableRow>
 
 		    <TableRow
@@ -149,7 +149,7 @@
 		            android:id="@+id/txt_job_finish_time"
 		            style="@style/Label.SecondTableColumn" />
 
-		        <TextView style="@style/BlankThirdColumn.Unused" />
+		        <TextView style="@style/BlankThirdColumn" />
 		        
 		    </TableRow>
 
@@ -174,7 +174,7 @@
 			        android:id="@+id/txt_skid_start_time"
 			        style="@style/Label.SecondTableColumn" />
 
-			    <TextView style="@style/BlankThirdColumn.Unused" />
+			    <TextView style="@style/BlankThirdColumn" />
 			</TableRow>
 
 			<TableRow
@@ -191,7 +191,7 @@
 			        android:id="@+id/txt_time_per_skid"
 			        style="@style/Label.SecondTableColumn" />
 
-			    <TextView style="@style/BlankThirdColumn.Unused" />
+			    <TextView style="@style/BlankThirdColumn" />
 			</TableRow>
 
 		    <TableRow
@@ -211,7 +211,7 @@
 		            android:maxLength="4"
 		            android:minEms="4" />
 
-		        <TextView style="@style/BlankThirdColumn.Unused" />
+		        <TextView style="@style/BlankThirdColumn" />
 		        
 		    </TableRow>
 
@@ -229,7 +229,7 @@
 		            android:id="@+id/txt_time_to_maxson"
 		            style="@style/Label.SecondTableColumn" />
 
-		        <TextView style="@style/BlankThirdColumn.Unused" />
+		        <TextView style="@style/BlankThirdColumn" />
 		        
 		    </TableRow>
 		    </TableLayout>
