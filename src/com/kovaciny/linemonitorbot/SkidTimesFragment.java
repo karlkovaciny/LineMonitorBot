@@ -3,6 +3,7 @@ package com.kovaciny.linemonitorbot;
 import java.beans.PropertyChangeEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -45,6 +46,7 @@ public class SkidTimesFragment extends SectionFragment implements
 	private Button mBtn_calculateTimes;
 	
 	private List<View> mEditableGroup;
+	private List<TextView> mTimesDisplayList;
 	
 	private EditText mEdit_currentSkidNumber;
 	private EditText mEdit_currentCount;
@@ -64,7 +66,6 @@ public class SkidTimesFragment extends SectionFragment implements
 	private TextView mTxt_skidFinishTime;
 	
 	private long mMillisPerSkid;
-	private int mSelectedSkidNumber;
 	private String mJobFinishText;
 	private String mTimeToMaxsonText;
 	
@@ -126,6 +127,9 @@ public class SkidTimesFragment extends SectionFragment implements
 		mTxt_productsPerMinute = (TextView) rootView.findViewById(R.id.txt_products_per_minute);
 		mTxt_skidStartTime = (TextView) rootView.findViewById(R.id.txt_skid_start_time);
 		mTxt_skidFinishTime = (TextView) rootView.findViewById(R.id.txt_skid_finish_time);
+		
+		mTimesDisplayList = Arrays.asList(new TextView[]{mTxt_timePerSkid, mTxt_jobFinishTime, mTxt_timeToMaxson,
+				mTxt_productsPerMinute, mTxt_skidStartTime, mTxt_skidFinishTime});
 		
 		mLbl_productsPerMinute = (TextView) rootView.findViewById(R.id.lbl_products_per_minute);
 		mLbl_products = (TextView) rootView.findViewById(R.id.lbl_products);
@@ -224,10 +228,9 @@ public class SkidTimesFragment extends SectionFragment implements
 			if (validInputs) {
 				((MainActivity)getActivity()).hideKeyboard();
 				mBtn_enterProduct.setError(null);
-				mSelectedSkidNumber = Integer.valueOf(mEdit_currentSkidNumber.getText().toString());
 				try {
 					((MainActivity)getActivity()).updateSkidData(
-							mSelectedSkidNumber,
+							Integer.valueOf(mEdit_currentSkidNumber.getText().toString()),
 							Integer.valueOf(mEdit_currentCount.getText().toString()),
 							Integer.valueOf(mEdit_totalCountPerSkid.getText().toString()),
 							Integer.valueOf(mEdit_numSkidsInJob.getText().toString())
@@ -354,8 +357,7 @@ public class SkidTimesFragment extends SectionFragment implements
 			
 		} else if (propertyName == PrimexModel.SKID_CHANGE_EVENT) {
 			Skid<Product> skid = (Skid<Product>)newProperty;
-			mSelectedSkidNumber = skid.getSkidNumber();
-			mEdit_currentSkidNumber.setText(String.valueOf(mSelectedSkidNumber));
+			mEdit_currentSkidNumber.setText(String.valueOf(skid.getSkidNumber()));
 			mEdit_currentCount.setText(String.valueOf(skid.getCurrentItems()));
 			mEdit_totalCountPerSkid.setText(String.valueOf(skid.getTotalItems()));
 			
@@ -363,12 +365,17 @@ public class SkidTimesFragment extends SectionFragment implements
 			Double timeToMaxson = (Double)newProperty;
 			mTimeToMaxsonText = HelperFunction.formatSecondsAsMinutes(Math.round(timeToMaxson / HelperFunction.ONE_SECOND_IN_MILLIS));
 			mTxt_timeToMaxson.setText(mTimeToMaxsonText);
-			mTxt_timeToMaxson.setVisibility(TextView.GONE); //don't show it unless the user clicks the get times button
+			mTxt_timeToMaxson.setVisibility(TextView.INVISIBLE); //don't show it unless the user clicks the get times button
 			
 		} else if (propertyName == PrimexModel.NEW_WORK_ORDER_EVENT) {
+			for (TextView tv : mTimesDisplayList) {
+				tv.setText("");
+			}
 			
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
-			mSelectedSkidNumber =  ((WorkOrder)newProperty).getSelectedSkid().getSkidNumber();
+			WorkOrder wo = (WorkOrder)newProperty;
+			Skid<Product> skid = wo.getSelectedSkid();
+			mEdit_currentSkidNumber.setText(String.valueOf(skid.getSkidNumber()));
 		} 
 	}
 
