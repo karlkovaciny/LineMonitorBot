@@ -287,9 +287,7 @@ public class PrimexModel {
 				throw new IllegalStateException("line number is null");
 			}
 		} catch (IllegalStateException e) { 
-			setSelectedLine(18);
-			addWorkOrder(new WorkOrder(18));
-			setSelectedWorkOrder(18);
+			lineNum = "18";
 		}
 		setSelectedLine(Integer.valueOf(lineNum));
 	}
