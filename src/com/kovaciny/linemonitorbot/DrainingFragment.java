@@ -1,7 +1,6 @@
 package com.kovaciny.linemonitorbot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,25 +11,23 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.GridView;
 import android.widget.Spinner;
 
 import com.kovaciny.database.DatabaseViewer;
-import com.kovaciny.database.PrimexDatabaseSchema;
 
 public class DrainingFragment extends SectionFragment implements OnItemSelectedListener {
 	
 	private DatabaseViewer mDbViewer;
-	private ListView mTableViewer;
+	private GridView mTableViewer;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		View rootView = inflater.inflate(R.layout.draining_fragment,
-				container, false);
+		View rootView = inflater.inflate(R.layout.database_gridview, container, false);
 		
-		mTableViewer = (ListView) rootView.findViewById(R.id.listView1);
+		mTableViewer = (GridView) rootView.findViewById(R.id.gridview_database);
 		
 		mDbViewer = new DatabaseViewer(getActivity());
 
@@ -67,7 +64,6 @@ public class DrainingFragment extends SectionFragment implements OnItemSelectedL
 				mDbViewer.selectRecordsFromDBList(tableName, new String[]{"*"}, null, null, null, null, null);
 		
 		for (ArrayList<String> record : records) {
-			results.add(tableName.toUpperCase());
 			Iterator<String> columnNamesItr = columnNames.iterator();
 			Iterator<String> recordItr = record.iterator();
 			while (columnNamesItr.hasNext()) {
@@ -78,6 +74,8 @@ public class DrainingFragment extends SectionFragment implements OnItemSelectedL
 					results.add(next);	
 				}				
 			}
+			results.add("--------------------");
+			results.add("--------------------");
 		}
 					
 		ArrayAdapter<String> testAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, results);
