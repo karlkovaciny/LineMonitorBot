@@ -8,7 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.app.Instrumentation;
+import android.support.v4.app.Fragment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.EditText;
 
@@ -28,7 +28,6 @@ public class RatesFragmentTest extends
 	List<PropertyChangeEvent> mPropertyChangeEventList;
 	List<Object> mPropertyChangeResultList;
 	RatesFragment mRatesFragment;
-	Instrumentation mInstrumentation;
 	
 	public RatesFragmentTest() {
 		super(MainActivity.class);
@@ -40,15 +39,15 @@ public class RatesFragmentTest extends
 
 	    setActivityInitialTouchMode(false);
 
-	    mActivity = getActivity();
-	    mInstrumentation = getInstrumentation();
+	    mActivity = (MainActivity)getActivity();
+	    mRatesFragment = (RatesFragment)mActivity.findFragmentByPosition(MainActivity.RATES_FRAGMENT_POSITION);
 	    
 	    mEdit_sheetWeight = (EditText) mActivity.findViewById(R.id.edit_sheet_weight);
-	    mEdit_sheetWeight.setText("sissy");
 
 		Product oldProduct = new Roll(.020, 55d, 1000);
 		Product newProduct = new Sheet(.010, 40d, 28d);
 		newProduct.setUnitWeight(1.015); //testing round up
+		oldProduct.setUnitWeight(0.990);
 		
 		mPropertyChangeEventList = Arrays.asList(				
 				new PropertyChangeEvent(PrimexModel.class, PrimexModel.PRODUCT_CHANGE_EVENT, oldProduct, newProduct),
@@ -64,29 +63,19 @@ public class RatesFragmentTest extends
 				null,
 				null
 			);
-		mRatesFragment = new RatesFragment();
+		
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		super.tearDown();
 	}
 
 	@Test
 	public void testPreConditions() {
 		assertTrue(mEdit_sheetWeight != null);
-		assertTrue(mEdit_sheetWeight.getText().toString().equals("sissy"));
 	}
 	
-	@Test
-	public void testOnCreateBundle() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public void testOnCreateViewLayoutInflaterViewGroupBundle() {
-		fail("Not yet implemented"); // TODO
-	}
-
 	@Test
 	public void testOnClick() {
 		fail("Not yet implemented"); // TODO
@@ -96,17 +85,17 @@ public class RatesFragmentTest extends
 	public void testModelPropertyChange() {
 		getActivity().runOnUiThread(new Runnable() {
 		     public void run() {
-mEdit_sheetWeight.setText("I hate unit tests");
-		    	 //		    	 mRatesFragment.modelPropertyChange(mPropertyChangeEventList.get(0));
-//		    	 assertTrue("product needs to set right sheet weight", mEdit_sheetWeight.getText().toString().equals("1.01"));
-//		    	 assertTrue("product needs to set right sheet weight", mEdit_sheetWeight.getText().toString().equals("1.02"));
+		    	 mRatesFragment.modelPropertyChange(mPropertyChangeEventList.get(0));
 		     }
 		});
-		mRatesFragment.modelPropertyChange(mPropertyChangeEventList.get(4));
+	    getInstrumentation().waitForIdleSync();
+//	    assertEquals("product needs equal sheet weight but rounded down", "1.01", mRatesFragment.mEdit_sheetWeight.getText().toString());
+
+	    assertEquals("product needs to set right sheet weight and round up", "1.02", mEdit_sheetWeight.getText().toString());
+		
+   	 	
+   	 	mRatesFragment.modelPropertyChange(mPropertyChangeEventList.get(4));
 		assertEquals((Double)mPropertyChangeEventList.get(4).getNewValue(), 1000.0d, .01);
-		String s = mEdit_sheetWeight.getText().toString();
-		assertEquals("dfd", s, "bab");
-//		mInstrumentation.waitForIdleSync();
 	}
 
 }
