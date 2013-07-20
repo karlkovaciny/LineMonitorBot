@@ -79,7 +79,8 @@
 			        android:layout_alignBaseline="@id/lbl_products"
 			        android:inputType="number"
 			        android:maxLength="4"
-			        android:minEms="3" />
+			        android:minEms="3"
+			        android:imeOptions="actionNext" />
 	
 			    <TextView
 			        android:id="@+id/textView124"
@@ -98,7 +99,8 @@
 			        android:layout_alignBaseline="@id/lbl_products"
 			        android:inputType="number"
 			        android:maxLength="4"
-			        android:minEms="3" />
+			        android:minEms="3"
+			        android:imeOptions="actionDone" />
 	
 			    <Button
 			        android:id="@+id/btn_calculate_times"
