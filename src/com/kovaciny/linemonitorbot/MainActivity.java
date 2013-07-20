@@ -366,10 +366,6 @@ public class MainActivity extends FragmentActivity implements
 		mModel.calculateRates();
 	}
 	
-	public int createNewSkid(Integer currentCount, Integer totalCount) {
-		int newSkidNum = mModel.addSkid(currentCount, totalCount);
-		return newSkidNum;
-		}
 /*
  * ---------------------------------------------------------
  * start of functions I never change

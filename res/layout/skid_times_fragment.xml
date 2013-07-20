@@ -132,11 +132,19 @@
 
 		        <TextView
 		            android:id="@+id/txt_skid_finish_time"
-		            style="@style/Label.SecondTableColumn" />
+		            style="@style/Label.SecondTableColumn" 
+		            android:textStyle="bold"/>
 		        
 				<TextView style="@style/BlankThirdColumn"/>
 		    </TableRow>
 
+		</TableLayout>
+
+		<TableLayout
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		    	android:shrinkColumns="3"  >
+		    
 		    <TableRow
 		        android:id="@+id/tableRow7"
 		        android:layout_width="wrap_content"
@@ -149,18 +157,13 @@
 
 		        <TextView
 		            android:id="@+id/txt_job_finish_time"
-		            style="@style/Label.SecondTableColumn" />
+		            style="@style/Label.SecondTableColumn"
+		            android:textStyle="bold" 
+		            />
 
 		        <TextView style="@style/BlankThirdColumn" />
 		        
 		    </TableRow>
-
-		</TableLayout>
-
-		<TableLayout
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		    	android:shrinkColumns="3"  >
 
 			<TableRow
 			    android:id="@+id/tableRow5"
