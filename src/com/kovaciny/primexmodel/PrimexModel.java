@@ -126,9 +126,8 @@ public class PrimexModel {
 		if (lookedUpWo == null) throw new RuntimeException("WorkOrder not found even though it is in woNumbersList");
 		mSelectedWorkOrder = lookedUpWo;
 		mDbHelper.updateLineWorkOrderLink(mSelectedLine.getLineNumber(), woNumber);
-		int skidNumberToSelect = mSelectedWorkOrder.getSkidsList().get(0).getSkidNumber();
-		changeSelectedSkid(skidNumberToSelect); //TODO need to store which skid was actually selected
-
+		changeSelectedSkid(mSelectedWorkOrder.getSelectedSkid().getSkidNumber());
+		
 		Product p = mDbHelper.getProduct(woNumber);
 		mSelectedWorkOrder.setProduct(p);
 		if (p != null) propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, p);
@@ -137,7 +136,9 @@ public class PrimexModel {
 		if (finishDate != null) {
 			propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, null, finishDate);
 		}
-		if (mSelectedSkid != null) propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, null, mSelectedSkid);
+		if (mSelectedSkid != null) {
+			propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, null, mSelectedSkid);
+		}
 		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, null, mSelectedWorkOrder.getNumberOfSkids());
 		propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, null, mSelectedWorkOrder); 
 	}
@@ -378,7 +379,7 @@ public class PrimexModel {
 			mDbHelper.insertOrReplaceSkid(currentSkid, mSelectedWorkOrder.getWoNumber());
 		}
 		while (mSelectedWorkOrder.getNumberOfSkids() > num) {
-			//TODO delete skids 
+			mSelectedWorkOrder.removeSkid(); //TODO delete from database as well
 		}
 		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, null, mSelectedWorkOrder.getNumberOfSkids());		
 	}

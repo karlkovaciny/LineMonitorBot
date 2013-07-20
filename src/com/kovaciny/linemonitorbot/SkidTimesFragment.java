@@ -364,7 +364,7 @@ public class SkidTimesFragment extends SectionFragment implements
 			mTxt_jobFinishTime.setText(mJobFinishText);
 			
 		} else if (propertyName == PrimexModel.SKID_CHANGE_EVENT) {
-			Skid<Product> skid = (Skid<Product>)newProperty;
+			Skid<Product> skid = (Skid<Product>)newProperty; //TODO check if null, clear the fields
 			mEdit_currentSkidNumber.setText(String.valueOf(skid.getSkidNumber()));
 			mEdit_currentCount.setText(String.valueOf(skid.getCurrentItems()));
 			mEdit_totalCountPerSkid.setText(String.valueOf(skid.getTotalItems()));
