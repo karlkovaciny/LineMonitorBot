@@ -2,7 +2,6 @@ package com.kovaciny.primexmodel;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -107,7 +106,6 @@ public class PrimexModel {
 		int associatedWoNumber = mDbHelper.getSelectedWoNumberByLine(line.getLineNumber());
 		if (associatedWoNumber > 0) {
 			setSelectedWorkOrder(associatedWoNumber);
-			propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, null, mSelectedWorkOrder.getNumberOfSkids()); //TODO load the whole state not just this
 		} else { //make sure a work order is selected
 			int newWoNumber = mDbHelper.getHighestWoNumber() + 1;
 			addWorkOrder(new WorkOrder(newWoNumber));
@@ -128,7 +126,8 @@ public class PrimexModel {
 		if (lookedUpWo == null) throw new RuntimeException("WorkOrder not found even though it is in woNumbersList");
 		mSelectedWorkOrder = lookedUpWo;
 		mDbHelper.updateLineWorkOrderLink(mSelectedLine.getLineNumber(), woNumber);
-		changeSelectedSkid(mSelectedWorkOrder.getSkidsList().get(0).getSkidNumber());
+		int skidNumberToSelect = mSelectedWorkOrder.getSkidsList().get(0).getSkidNumber();
+		changeSelectedSkid(skidNumberToSelect); //TODO need to store which skid was actually selected
 
 		Product p = mDbHelper.getProduct(woNumber);
 		mSelectedWorkOrder.setProduct(p);
@@ -138,20 +137,22 @@ public class PrimexModel {
 		if (finishDate != null) {
 			propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, null, finishDate);
 		}
+		if (mSelectedSkid != null) propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, null, mSelectedSkid);
+		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, null, mSelectedWorkOrder.getNumberOfSkids());
 		propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, null, mSelectedWorkOrder); 
 	}
 
 	/*
-	 * Returns the number of the newly added skid.
+	 * Returns the newly added skid.
 	 */
-	public int addSkid (int currentCount, int totalCount) {
+	public Skid<Product> addSkid (int currentCount, int totalCount) {
 		int oldNumSkids = getSelectedWorkOrder().getSkidsList().size();
 		getSelectedWorkOrder().setNumberOfSkids(oldNumSkids + 1);
 		Skid<Product> newSkid = new Skid<Product>(currentCount, 
 				totalCount,
 				1);
-		int newSkidNum = getSelectedWorkOrder().addOrUpdateSkid(newSkid);
-		return newSkidNum;	
+		getSelectedWorkOrder().addOrUpdateSkid(newSkid);
+		return newSkid;	
 	}
 	
 	protected void addProduct(Product p) {
@@ -370,9 +371,16 @@ public class PrimexModel {
 		return PrimexSQLiteOpenHelper.DATABASE_VERSION;
 	}
 	public void changeNumberOfSkids(int num) {
-		int oldNum = mSelectedWorkOrder.getNumberOfSkids();
-		mSelectedWorkOrder.setNumberOfSkids(num);
-		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, oldNum, mSelectedWorkOrder.getNumberOfSkids());		
+		Skid<Product> currentSkid = mSelectedWorkOrder.getSelectedSkid();
+		while (mSelectedWorkOrder.getNumberOfSkids() < num) {
+			currentSkid = addSkid(0, mSelectedSkid.getTotalItems());
+			mSelectedWorkOrder.addOrUpdateSkid(currentSkid);
+			mDbHelper.insertOrReplaceSkid(currentSkid, mSelectedWorkOrder.getWoNumber());
+		}
+		while (mSelectedWorkOrder.getNumberOfSkids() > num) {
+			//TODO delete skids 
+		}
+		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, null, mSelectedWorkOrder.getNumberOfSkids());		
 	}
 	
 	public void closeDb() {

@@ -61,9 +61,9 @@ public class WorkOrder {
 	/*
 	 * Appends a skid to the end of the list, changing its skid number.. If the skid is null, set start time equal to the last skid's finish time (now if none)
 	 * and set the skid's sheet count equal to the last one TODO
-	 * Return the skid's position.
+	 * Return the skid.
 	 */
-	public int addOrUpdateSkid (Skid<Product> newSkid) {
+	public Skid<Product> addOrUpdateSkid (Skid<Product> newSkid) {
 		if (newSkid == null) {
 			int productsPerSkid = 0;
 			if (hasSelectedSkid()) {
@@ -79,7 +79,7 @@ public class WorkOrder {
 			mSkidsList.add(newSkid);
 			newSkid.setSkidNumber(mSkidsList.size());	
 		}		
-		return newSkid.getSkidNumber() - 1;
+		return newSkid;
 	}
 	
 	/*
@@ -144,14 +144,14 @@ public class WorkOrder {
 	}
 
 	public void setNumberOfSkids(int num) {
-		if (num < 0) throw new RuntimeException ("Negative number of skids");
+		/*if (num < 0) throw new RuntimeException ("Negative number of skids");
 		while ( getNumberOfSkids() > num) {
 			removeSkid();
 		}
 		while (getNumberOfSkids() < num) {
 			addOrUpdateSkid(null);
 		}
-		if (getNumberOfSkids() != num) throw new RuntimeException("something isn't right here");
+		if (getNumberOfSkids() != num) throw new RuntimeException("something isn't right here");*/
 	}
 
 	public Skid<Product> getSelectedSkid() {
