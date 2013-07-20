@@ -110,7 +110,7 @@ public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<Main
 	@Test
 	public void testModelPropertyChange() {
 		// As is you have to test this at the time it needs testing.
-		GregorianCalendar nowDate = new GregorianCalendar(2013, 6, 19, 5, 04);
+		GregorianCalendar nowDate = new GregorianCalendar(2013, 6, 20, 5, 04);
 //		final GregorianCalendar oneHourFromNow = new GregorianCalendar(2013, 6, 19, 10, 45);
 //		final GregorianCalendar sevenAmTomorrow = new GregorianCalendar(2013, 6, 20, 7, 0);
 		final GregorianCalendar fiveAmTomorrow = new GregorianCalendar(2013, 6, 20, 5, 0);
@@ -129,6 +129,7 @@ public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<Main
 		assertEquals("should never show date when it's before 6 tomorrow.", "5:00 AM", mTxt_jobFinishTime.getText().toString());
 		//can only test before 6 am
 //		assertEquals("should always show date when it's before 6 now and finish time is after 6 today.", "7:00 AM Sat", mTxt_jobFinishTime.getText().toString());
+//		assertEquals("should not show day when it's after midnight, but less than six hours after midnight", "1:00 AM", mTxt_jobFinishTime.getText().toString());
 	}
 
 }
