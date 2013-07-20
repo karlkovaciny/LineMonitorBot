@@ -205,6 +205,9 @@ public class SkidTimesFragment extends SectionFragment implements
 			break;
 		case (R.id.btn_calculate_times):
 			//supply default values and validate entries
+			if (mEdit_currentSkidNumber.getText().toString().equals("")) {
+				mEdit_currentSkidNumber.setText("1");
+			}
 			String numSkids = mEdit_numSkidsInJob.getText().toString();
 			String skidNumber = mEdit_currentSkidNumber.getText().toString();
 			if ( numSkids.equals("") || ( Integer.valueOf(skidNumber) > Integer.valueOf(numSkids)) ) {
@@ -344,14 +347,19 @@ public class SkidTimesFragment extends SectionFragment implements
 			
 		} else if (propertyName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) {
 			Date finishTime = (Date)newProperty;
-			//show the day of the week if it's not today -- but 12am-6am still counts as today in Pace time. 
+			SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a E", Locale.US);
+
+			//"Pace time": Don't show the day of the week if it's before 6 am the next day. 
 			Calendar finishDate = new GregorianCalendar(Locale.US);
-			SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a", Locale.US); 
-			Date shiftedFinishTime = new Date(finishTime.getTime() - (6 * HelperFunction.ONE_HOUR_IN_MILLIS));
-			finishDate.setTime(shiftedFinishTime);
-			if (finishDate.get(Calendar.DAY_OF_WEEK) != Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
-				formatter3 = new SimpleDateFormat("h:mm a E", Locale.US);
-			} 
+			finishDate.setTime(finishTime);
+			Calendar today = Calendar.getInstance(Locale.US);
+			today.add(Calendar.DAY_OF_MONTH, 1);
+			today.set(Calendar.HOUR_OF_DAY, 6);
+			today.set(Calendar.MINUTE, 0);
+			if (finishDate.before(today)) {
+				formatter3 = new SimpleDateFormat("h:mm a", Locale.US);
+			}
+			
 			mJobFinishText = formatter3.format(finishTime);
 			mTxt_jobFinishTime.setText(mJobFinishText);
 			
