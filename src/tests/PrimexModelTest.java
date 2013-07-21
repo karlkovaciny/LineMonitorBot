@@ -1,12 +1,13 @@
 package tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+import junit.framework.TestCase;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PrimexModelTest {
+public class PrimexModelTest extends TestCase {
 
 	@Before
 	public void setUp() throws Exception {
