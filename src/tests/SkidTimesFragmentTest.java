@@ -23,7 +23,7 @@ public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<Main
 	TextView mTxt_jobFinishTime;
 	
 	public SkidTimesFragmentTest() {
-		super( MainActivity.class);
+		super(MainActivity.class);
 	}
 	
 	@Before
