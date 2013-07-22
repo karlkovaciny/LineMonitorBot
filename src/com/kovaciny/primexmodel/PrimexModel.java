@@ -398,7 +398,9 @@ public class PrimexModel {
 		} else return false;		
 	}
 	public boolean hasSelectedProduct() {
-		return mSelectedWorkOrder.hasProduct();
+		if (hasSelectedWorkOrder()) {
+			return mSelectedWorkOrder.hasProduct();	
+		} else return false;		
 	}
 	public ProductionLine getSelectedLine() {
 		return mSelectedLine;

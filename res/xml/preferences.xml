@@ -4,9 +4,15 @@
 
   <CheckBoxPreference 
             android:key="repeating_timer"
+          	android:title="Repeating alarm" 
             android:summary="Reset alarm each skid until cancelled"
-            android:title="Repeating alarm" 
             android:defaultValue="false"
         />
- 
+  <ListPreference
+      android:key="vibrator_duration"
+      android:title="Alarm vibrator duration"
+      android:entries="@array/vibrator_durations_entries"
+      android:entryValues="@array/vibrator_durations_values"
+      android:defaultValue="Long"
+      />
 </PreferenceScreen>

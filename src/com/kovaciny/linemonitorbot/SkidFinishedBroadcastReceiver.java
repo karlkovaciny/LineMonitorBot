@@ -8,10 +8,11 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.Vibrator;
-import android.widget.Toast;
+import android.preference.PreferenceManager;
 
 public class SkidFinishedBroadcastReceiver extends BroadcastReceiver {
 
@@ -48,8 +49,16 @@ public class SkidFinishedBroadcastReceiver extends BroadcastReceiver {
 		         msgStr.append(formatter.format(new Date()));
 		 
 //		         Toast.makeText(context, msgStr, Toast.LENGTH_LONG).show();
-		         long[] offOnPattern = {0, 300, 300, 300, 300, 2500, 300, 300, 300, 2500, 300, 300, 300, 2500, 300, 300, 300, 2500, 300, 300, 300, 2500,30000,2000};
-		         vibe.vibrate(offOnPattern, -1);
+		         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+		         String durationPref = sharedPref.getString("vibrator_duration", "Off");
+		         
+		         if (durationPref.equals("Long")) {
+		        	 long[] offOnPattern = {0, 300, 300, 300, 300, 2500, 300, 300, 300, 2500, 300, 300, 300, 2500, 300, 300, 300, 2500, 300, 300, 300, 2500,30000,2000};
+		        	 vibe.vibrate(offOnPattern, -1);
+		         } else if (durationPref.equals("Short")) {
+		        	 long[] offOnPattern = {0, 1500, 300, 1500, 300, 1500};
+		        	 vibe.vibrate(offOnPattern, -1);
+		         }
 		         
 		     } finally {
 		         //Release the lock
