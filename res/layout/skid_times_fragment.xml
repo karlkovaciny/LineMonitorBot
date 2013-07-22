@@ -15,6 +15,7 @@
 		    android:orientation="vertical" >
 
 			<RelativeLayout
+			    android:id="@+id/rl_data_entry_group"
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content" >
 			    

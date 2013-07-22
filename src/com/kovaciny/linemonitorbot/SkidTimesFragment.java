@@ -27,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -45,7 +46,7 @@ public class SkidTimesFragment extends SectionFragment implements
 	private Button mBtn_cancelAlarm;
 	private Button mBtn_calculateTimes;
 	
-	private List<View> mEditableGroup;
+	private List<EditText> mEditableGroup;
 	private List<TextView> mTimesDisplayList;
 	
 	private EditText mEdit_currentSkidNumber;
@@ -83,25 +84,21 @@ public class SkidTimesFragment extends SectionFragment implements
 		View rootView = inflater.inflate(R.layout.skid_times_fragment, container,
 				false);
 
-		//set up editTexts
-		mEditableGroup = new ArrayList<View>(); //TODO make the finish times noneditable since they're not in the group.
-		
-		
-		
+		//set up editTexts		
+		mEdit_numSkidsInJob = (EditText) rootView.findViewById(R.id.edit_num_skids_in_job);
 		mEdit_currentSkidNumber = (EditText) rootView.findViewById(R.id.edit_skid_number);
-		mEditableGroup.add(mEdit_currentSkidNumber);
-		
-		mEdit_numSkidsInJob = (EditText) rootView
-				.findViewById(R.id.edit_num_skids_in_job);
-		//needs to be added before skid number so skid number will be in range when checked
-		
-		mEdit_currentCount = (EditText) rootView
-				.findViewById(R.id.edit_current_count);
-		mEditableGroup.add(mEdit_currentCount);
-		
+		mEdit_currentCount = (EditText) rootView.findViewById(R.id.edit_current_count);
 		mEdit_totalCountPerSkid = (EditText) rootView
 				.findViewById(R.id.edit_total_sheets_per_skid);
-		mEditableGroup.add(mEdit_totalCountPerSkid);
+		
+		mEditableGroup = new ArrayList<EditText>(); 
+		ViewGroup dataEntryGroup = (RelativeLayout) rootView.findViewById(R.id.rl_data_entry_group);
+		for (int i = 0, n = dataEntryGroup.getChildCount(); i < n; i++) {
+			View nextChild = dataEntryGroup.getChildAt(i);
+			if (nextChild instanceof EditText) {
+				mEditableGroup.add((EditText)nextChild);
+			}
+		}
 		
 		for (View v : mEditableGroup) {
 			EditText etv = (EditText) v;
@@ -201,6 +198,9 @@ public class SkidTimesFragment extends SectionFragment implements
 		switch (v.getId()) {
 		case (R.id.btn_enter_product):
 			mBtn_enterProduct.setError(null);
+			for (EditText et : mEditableGroup) {
+				et.clearFocus();
+			}
 			((MainActivity)getActivity()).showSheetsPerMinuteDialog();
 			break;
 		case (R.id.btn_calculate_times):
@@ -214,14 +214,14 @@ public class SkidTimesFragment extends SectionFragment implements
 				mEdit_numSkidsInJob.setText(skidNumber);
 			}
 			//Process the entries only if all the necessary ones are filled.
-			Iterator<View> itr = mEditableGroup.iterator();
+			Iterator<EditText> itr = mEditableGroup.iterator();
 			boolean validInputs = true;
 			if (mEdit_totalCountPerSkid.getText().toString().equals("0")) {
 				mEdit_totalCountPerSkid.setError(getString(R.string.error_need_nonzero));
 				validInputs = false;
 			} else {
 				while (itr.hasNext()) {
-					EditText et = (EditText)itr.next();
+					EditText et = itr.next();
 					if ( et.getText().toString().trim().equals("") ) {
 						et.setError(getString(R.string.error_empty_field));
 						validInputs = false;
@@ -246,8 +246,9 @@ public class SkidTimesFragment extends SectionFragment implements
 					}
 				}
 					
-				for (View ett : mEditableGroup) {
-					((EditText)ett).setError(null);
+				for (EditText ett : mEditableGroup) {
+					ett.setError(null);
+					ett.clearFocus();
 				}
 				mTxt_productsPerMinute.setVisibility(TextView.VISIBLE);
 				mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
