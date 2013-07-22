@@ -14,6 +14,7 @@
         <item >Line 6</item>
         <item >Line 7</item>
         <item >Line 9</item>
+        <item >Line 42</item>
         <item >Line 10</item>
         <item >Line 11</item>
         <item >Line 12</item>
@@ -27,6 +28,16 @@
     <string-array name="jobs_list">
         <item >W0 #1</item>
         <item >+ New&#160;</item>
+    </string-array>
+    <string-array name="vibrator_durations_entries">
+        <item >Long</item>
+        <item >Short</item>
+        <item >Off</item>
+    </string-array>
+    <string-array name="vibrator_durations_values">
+        <item >Long</item>
+        <item >Short</item>
+        <item >Off</item>        
     </string-array>
 	<string name="new_wo">+ New</string>
 	<string name="ok">OK</string>
