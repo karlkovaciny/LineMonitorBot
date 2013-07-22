@@ -47,22 +47,21 @@
        <item name="android:gravity">center</item>
        <item name="android:layout_height">wrap_content</item>
        <item name="android:layout_width">0dip</item>
-       <item name="android:layout_weight">0.25</item>
+       <item name="android:layout_weight">0.3</item>
        <item name="android:minHeight">70px</item>
-       <item name="android:singleLine">true</item>
    </style>
    <style name="EditText.SecondTableColumn">
        <item name="android:gravity">center</item>
        <item name="android:layout_height">wrap_content</item>
        <item name="android:layout_width">0dip</item>
-       <item name="android:layout_weight">0.25</item>
+       <item name="android:layout_weight">0.3</item>
        <item name="android:minHeight">70px</item>
        <item name="android:ems">5</item>
    </style>
    <style name="BlankThirdColumn">
        <item name="android:layout_width">0dip</item>
        <item name="android:layout_height">wrap_content</item>
-       <item name="android:layout_weight">0.2</item>
+       <item name="android:layout_weight">0.15</item>
    </style>
    <style name="BlankThirdColumn.Unused">
        <item name="android:layout_weight">0.0</item>
