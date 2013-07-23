@@ -789,7 +789,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		if (rowId == -1) {
 			Log.v("verbose", "insert error code -1");
 		} else {
-			Log.v("verbose", "insert row ID " + String.valueOf(rowId));
+			Log.v("verbose", "insert row ID " + String.valueOf(rowId)); //TODO firing on restart?
 		}
 		return rowId;
 	}

@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
-  <CheckBoxPreference 
+    
+    <PreferenceCategory android:title="Skid finished alarm" >
+        <CheckBoxPreference
             android:key="repeating_timer"
-          	android:title="Repeating alarm" 
             android:summary="Reset alarm each skid until cancelled"
+            android:title="Repeating" 
             android:defaultValue="false"
-        />
-  <ListPreference
-      android:key="vibrator_duration"
-      android:title="Alarm vibrator duration"
-      android:entries="@array/vibrator_durations_entries"
-      android:entryValues="@array/vibrator_durations_values"
-      android:defaultValue="Long"
-      />
+            />
+        
+        <ListPreference
+            android:key="vibrator_duration"
+            android:title="Vibration time" 
+            android:defaultValue="Long"
+            android:entries="@array/vibrator_durations_entries"
+            android:entryValues="@array/vibrator_durations_values"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Version">
+        <Preference 
+            android:key="version_name" ></Preference>
+    </PreferenceCategory>
 </PreferenceScreen>
