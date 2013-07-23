@@ -1,8 +1,6 @@
 package com.kovaciny.linemonitorbot;
 
-import java.util.Arrays;
-import java.util.List;
-
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -31,5 +29,14 @@ public class SettingsFragment extends PreferenceFragment {
                 return true;
             }
         });
+        
+        Preference version = findPreference("version_name");
+        String versionName;
+        try {
+        	versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;	
+        } catch (NameNotFoundException e){
+        	versionName = "3.14159";
+        }
+        version.setTitle(versionName);
     }
 }
