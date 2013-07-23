@@ -1,37 +1,74 @@
 package tests;
 
-import static org.junit.Assert.fail;
-import junit.framework.TestCase;
+import java.beans.PropertyChangeEvent;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PrimexModelTest extends TestCase {
+import android.test.ActivityInstrumentationTestCase2;
 
+import com.kovaciny.linemonitorbot.MainActivity;
+import com.kovaciny.primexmodel.PrimexModel;
+import com.kovaciny.primexmodel.Product;
+import com.kovaciny.primexmodel.Sheet;
+
+public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivity> {
+
+	MainActivity mActivity;
+	PrimexModel mModel;
+	
+	public PrimexModelTest() {
+		super(MainActivity.class);
+	}
+	
 	@Before
 	public void setUp() throws Exception {
+		setActivityInitialTouchMode(false);
+		
+		mActivity = (MainActivity)getActivity();
+	    
+		mModel = new PrimexModel(mActivity);
+		mModel.addPropertyChangeListener(mActivity);
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		super.tearDown();
 	}
 
+	@Test
+	public void testLineRoundTrip() {
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				// UI affecting code here
+				// no asserts allowed in here! junit.framework.AssertionFailedError.
+				mModel.setSelectedLine(12);
+				Product p = new Sheet(.010, 40, 28);
+				p.setUnitWeight(1.5);
+				mModel.changeProduct(p);
+//				mModel.addPropertyChangeListener()
+				
+				mModel.setSelectedLine(7);
+				Product q = new Sheet(.010, 56, 80);
+				q.setUnitWeight(2.5);
+				mModel.changeProduct(q);
+				mModel.setSelectedLine(12);
+				//no sendKeys() or invoking context menu here, "this method cannot be called from the main application thread"
+			}
+		});
+		getInstrumentation().waitForIdleSync();
+		//asserts and this.sendKeys() OK here
+
+		assertEquals(mModel.getSelectedWorkOrder().getProduct().getUnitWeight(), 1.5);
+
+	}
+	/*
 	@Test
 	public void testPrimexModel() {
 		fail("Not yet implemented"); // TODO
 	}
-
-	@Test
-	public void testAddPropertyChangeListener() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public void testRemovePropertyChangeListener() {
-		fail("Not yet implemented"); // TODO
-	}
-
+	
 	@Test
 	public void testSetSelectedLineInteger() {
 		fail("Not yet implemented"); // TODO
@@ -39,7 +76,7 @@ public class PrimexModelTest extends TestCase {
 
 	@Test
 	public void testSetSelectedLineProductionLine() {
-		fail("Not yet implemented"); // TODO
+		
 	}
 
 	@Test
@@ -79,7 +116,11 @@ public class PrimexModelTest extends TestCase {
 
 	@Test
 	public void testChangeProduct() {
-		fail("Not yet implemented"); // TODO
+		Product p = new Sheet(.010, 40, 28);
+		p.setUnitWeight(1.5);
+		mModel.changeProduct(p);
+		
+		
 	}
 
 	@Test
@@ -196,5 +237,5 @@ public class PrimexModelTest extends TestCase {
 	public void testClearWoNumbers() {
 		fail("Not yet implemented"); // TODO
 	}
-
+	*/
 }

@@ -21,6 +21,7 @@ public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<Main
 	MainActivity mActivity;
 	SkidTimesFragment mSkidTimesFragment;
 	TextView mTxt_jobFinishTime;
+	TextView mTxt_sheetsPerMinute;
 	
 	public SkidTimesFragmentTest() {
 		super(MainActivity.class);
@@ -35,6 +36,7 @@ public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<Main
 	    mActivity = (MainActivity)getActivity();
 	    mSkidTimesFragment = (SkidTimesFragment)mActivity.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
 	    mTxt_jobFinishTime = (TextView)mActivity.findViewById(R.id.txt_job_finish_time);
+	    mTxt_sheetsPerMinute = (TextView)mActivity.findViewById(R.id.txt_products_per_minute);
 	}
 
 	@After
@@ -44,15 +46,16 @@ public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<Main
 
 	@Test
 	public void testPreConditions() {
-		
+		assertTrue(mTxt_sheetsPerMinute != null);
+		assertTrue(mTxt_sheetsPerMinute.getText().toString().equals(""));
 	}
 	
 
-	@Test @Ignore ("not ready yet") 
+	/*@Test
 	public void testOnPause() {
 		fail("Not yet implemented"); // TODO
 	}
-	/*
+	
 	@Test
 	public void testOnCreateBundle() {
 		fail("Not yet implemented"); // TODO
