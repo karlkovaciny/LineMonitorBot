@@ -93,10 +93,8 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 				mEdit_differentialSpeed.setText(String.valueOf(getArguments().getDouble("DifferentialSpeed")));
 				mSheetsOrRollsState = getArguments().getString("ProductType");
 			  	setSheetsOrRollsState(mSheetsOrRollsState);
-//			  	Toast.makeText(getActivity(), "setting sheets or rolls state to " + mSheetsOrRollsState, Toast.LENGTH_SHORT).show();
 			}
 		  	mEdit_speedFactor.setText(String.valueOf(getArguments().getDouble("SpeedFactor")));
-		  	  	
 		}
 		
 		mImgbtnSheetsOrRolls.setOnClickListener(this);
