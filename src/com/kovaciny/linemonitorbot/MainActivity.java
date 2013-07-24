@@ -58,12 +58,10 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	ViewPager mViewPager;
 
-
 	private MenuItem mJobPicker;
 	private MenuItem mLinePicker;
 	private PrimexModel mModel;
-		
-   
+	   
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -198,20 +196,20 @@ public class MainActivity extends FragmentActivity implements
     public void onClickPositiveButton(DialogFragment d) {
     	if (d.getTag() == "SheetsPerMinuteDialog") {
     		SheetsPerMinuteDialogFragment spmd = (SheetsPerMinuteDialogFragment)d;
-    		//kind of redundant error checking with the dialog's return functions
+    		
     		double lineSpeed = spmd.getLineSpeedValue();
     		double diffSpeed = spmd.getDifferentialSpeedValue();
     		double speedFactor = spmd.getSpeedFactorValue();
     		if ( !(lineSpeed > 0) ) lineSpeed = 0;
     		if ( !(diffSpeed > 0) ) diffSpeed = 0;
     		if ( !(speedFactor > 0) ) speedFactor = 0;
-    		SpeedValues sv = new SpeedValues(lineSpeed, diffSpeed, speedFactor);
-    		mModel.setCurrentSpeed(sv);
-    		String prodtype;
+    		updateSpeedData(lineSpeed, diffSpeed, speedFactor);
+    		
+    		String productType;
     		if (spmd.getSheetsOrRollsState().equals(SheetsPerMinuteDialogFragment.ROLLS_MODE)) {
-    			prodtype = Product.ROLLS_TYPE;
+    			productType = Product.ROLLS_TYPE;
     		} else {
-    			prodtype = Product.SHEETS_TYPE;
+    			productType = Product.SHEETS_TYPE;
     		}
     		double gauge = spmd.getGauge();
     		double width = spmd.getSheetWidthValue();
@@ -219,8 +217,7 @@ public class MainActivity extends FragmentActivity implements
     		if ( !(gauge > 0)) gauge = 0;
     		if ( !(width > 0)) width = 0;
     		if ( !(length > 0)) length = 0;
-    		Product p = Products.makeProduct(prodtype, gauge, width, length);
-    		mModel.changeProduct(p);
+    		updateProductData(productType, gauge, width, length);
     	}
     }	
     
@@ -350,8 +347,21 @@ public class MainActivity extends FragmentActivity implements
 		mModel.calculateTimes();
 	}
 	
-	public void updateProductData() {
-		
+	protected void updateProductData(String productType, double gauge, double width, double length) {
+		Product p;
+		try {
+			p = Products.makeProduct(productType, gauge, width, length);
+		} catch (IllegalArgumentException e) {
+			if (e.getCause().equals(PrimexModel.ERROR_NO_PRODUCT_SELECTED)) {
+				throw new IllegalStateException(new Throwable(PrimexModel.ERROR_NO_PRODUCT_SELECTED));	
+			} else throw e;	
+		}
+		mModel.changeProduct(p);
+	}
+	
+	protected void updateSpeedData(double lineSpeed, double diffSpeed, double speedFactor) {
+		SpeedValues sv = new SpeedValues(lineSpeed, diffSpeed, speedFactor);
+		mModel.setCurrentSpeed(sv);	
 	}
 	
 	public void updateRatesData(Double grossWidth, Double unitWeight, Double novaSetpoint) {

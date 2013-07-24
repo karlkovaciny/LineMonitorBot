@@ -6,12 +6,12 @@ import junit.framework.TestSuite;
 
 public class ATestSuiteRunner extends TestCase {
 	  public static Test suite() {
-		    TestSuite suite = new TestSuite();
-		    suite.addTestSuite(MainActivityTest.class);
-		    suite.addTestSuite(RatesFragmentTest.class);
-		    suite.addTestSuite(SkidTimesFragmentTest.class);
-		    suite.addTestSuite(PrimexModelTest.class);
-		    suite.addTestSuite(SpeedValuesTest.class);
-		    return suite;
-		  }
+		  TestSuite suite = new TestSuite();
+		  suite.addTestSuite(MainActivityTest.class);
+		  suite.addTestSuite(RatesFragmentTest.class);
+		  suite.addTestSuite(SkidTimesFragmentTest.class);
+		  suite.addTestSuite(PrimexModelTest.class);
+		  suite.addTestSuite(SpeedValuesTest.class);
+		  return suite;
+	  }
 }

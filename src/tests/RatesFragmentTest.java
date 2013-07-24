@@ -75,12 +75,16 @@ public class RatesFragmentTest extends
 	public void testPreConditions() {
 		assertTrue(mEdit_sheetWeight != null);
 	}
-	
+/*	
 	@Test
 	public void testOnClick() {
 		fail("Not yet implemented"); // TODO
 	}
 
+
+
+
+*/
 	@Test
 	public void testModelPropertyChange() {
 		getActivity().runOnUiThread(new Runnable() {

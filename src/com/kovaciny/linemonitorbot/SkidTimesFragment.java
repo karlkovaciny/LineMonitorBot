@@ -309,7 +309,6 @@ public class SkidTimesFragment extends SectionFragment implements
 			
 		} else if (propertyName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {
 			this.mTxt_productsPerMinute.setText(String.valueOf(newProperty));
-			this.mTxt_productsPerMinute.setVisibility(TextView.GONE); //Don't show it till user clicks the get times button
 			
 		} else if (propertyName == PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE_EVENT) {
 			//update finish time for this skid
@@ -374,7 +373,6 @@ public class SkidTimesFragment extends SectionFragment implements
 			Double timeToMaxson = (Double)newProperty;
 			mTimeToMaxsonText = HelperFunction.formatSecondsAsMinutes(Math.round(timeToMaxson / HelperFunction.ONE_SECOND_IN_MILLIS));
 			mTxt_timeToMaxson.setText(mTimeToMaxsonText);
-			mTxt_timeToMaxson.setVisibility(TextView.INVISIBLE); //don't show it unless the user clicks the get times button
 			
 		} else if (propertyName == PrimexModel.NEW_WORK_ORDER_EVENT) {
 			for (TextView tv : mTimesDisplayList) {

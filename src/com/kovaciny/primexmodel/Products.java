@@ -6,6 +6,6 @@ public abstract class Products {
 			return new Sheet(gauge, width, length);
 		} else if (type == Product.ROLLS_TYPE) {
 			return new Roll(gauge, width, 0);
-		} else throw new RuntimeException ("unknown product type");
+		} else throw new IllegalArgumentException ("unknown product type");
 	}
 }
