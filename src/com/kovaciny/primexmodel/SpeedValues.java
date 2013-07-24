@@ -21,4 +21,10 @@ public class SpeedValues {
 	public double getProduct() {
 		return lineSpeedSetpoint * differentialSpeed * speedFactor;
 	}
+	
+	@Override
+	public String toString() {
+		return "Line speed: " + String.valueOf(lineSpeedSetpoint) + ", diff. speed: " + String.valueOf(differentialSpeed) +
+				", speed factor: " + String.valueOf(speedFactor);
+	}
 }

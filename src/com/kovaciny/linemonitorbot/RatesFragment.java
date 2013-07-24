@@ -31,11 +31,6 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 	TextView mTxt_colorPercent;
 	TextView mLbl_novatecSetpoint;
 	private List<EditText> mEditableGroup = new ArrayList<EditText>();
-	private double mNovatecLetdownRatio;
-	private String mGrossWidthText;
-	private String mNetPphText;
-	private String mSheetWeightText;
-	private String mNovatecSetpointText;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +91,6 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 						throw e;
 					}
 				}
-				mTxt_netPph.setText(mNetPphText);
 			}
 		}
 	}
@@ -107,8 +101,12 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 		if (propertyName == PrimexModel.PRODUCT_CHANGE_EVENT) {
 			Product p = (Product)newProperty;
 			Double sheetWeight = p.getUnitWeight();
-			String swdisp = new DecimalFormat("#0.00").format(sheetWeight);
-			mEdit_sheetWeight.setText(swdisp);
+			if (sheetWeight <= 0) {
+				mEdit_sheetWeight.setText("");
+			} else {
+				String swdisp = new DecimalFormat("#0.00").format(sheetWeight);
+				mEdit_sheetWeight.setText(swdisp);
+			}
 			
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
 			
@@ -116,30 +114,50 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 			
 		} else if (propertyName == PrimexModel.EDGE_TRIM_RATIO_CHANGE_EVENT) {
 			Double etPercent = (Double)newProperty * 100d;
-			String etdisp = new DecimalFormat("#0.0").format(etPercent);
-			etdisp += "%";
-			mTxt_edgeTrimPercent.setText(etdisp);
+			if (etPercent <= 0) {
+				mTxt_edgeTrimPercent.setText("");
+			} else {
+				String etdisp = new DecimalFormat("#0.0").format(etPercent);
+				etdisp += "%";
+				mTxt_edgeTrimPercent.setText(etdisp);
+			}
 			
 		} else if (propertyName == PrimexModel.NET_PPH_CHANGE_EVENT) {
 			Double netPph = (Double)newProperty;
-			long netPphdisp = Math.round(netPph);
-			mNetPphText = String.valueOf(netPphdisp);
+			if (netPph <= 0) {
+				mTxt_netPph.setText("");
+			} else {
+				long netPphdisp = Math.round(netPph);
+				mTxt_netPph.setText(String.valueOf(netPphdisp));
+			}
 			
 		} else if (propertyName == PrimexModel.GROSS_PPH_CHANGE_EVENT) {
 			Double grossPph = (Double)newProperty;
-			long grossPphdisp = Math.round(grossPph);
-			mTxt_grossPph.setText(String.valueOf(grossPphdisp));
+			if (grossPph <= 0) {
+				mTxt_grossPph.setText("");
+			} else {
+				long grossPphdisp = Math.round(grossPph);
+				mTxt_grossPph.setText(String.valueOf(grossPphdisp));
+			}
 			
 		} else if (propertyName == PrimexModel.GROSS_WIDTH_CHANGE_EVENT) {
 			Double grossWidth = (Double)newProperty;
-			String gwdisp = new DecimalFormat("#0.0").format(grossWidth);
-			mEdit_grossWidth.setText(gwdisp);
+			if (grossWidth <= 0) {
+				mEdit_grossWidth.setText("");
+			} else {
+				String gwdisp = new DecimalFormat("#0.0").format(grossWidth);
+				mEdit_grossWidth.setText(gwdisp);
+			}
 			
 		} else if (propertyName == PrimexModel.COLOR_PERCENT_CHANGE_EVENT) {
 			double concPercent = (Double)newProperty;
-			String concdisp = new DecimalFormat("#0.0").format(concPercent*100); //TODO use round instead?
-			concdisp += "%";
-			mTxt_colorPercent.setText(concdisp);
+			if (concPercent <= 0) {
+				mTxt_colorPercent.setText("");
+			} else {
+				String concdisp = new DecimalFormat("#0.0").format(concPercent*100); //TODO use round instead?
+				concdisp += "%";
+				mTxt_colorPercent.setText(concdisp);	
+			}
 		} 
 		
 		else if (propertyName == PrimexModel.NOVATEC_CHANGE_EVENT) {

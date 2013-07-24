@@ -1,5 +1,7 @@
 package com.kovaciny.primexmodel;
 
+import com.kovaciny.helperfunctions.HelperFunction;
+
 public class ProductionLine {
 	private int mLineNumber;
 	private int mLineLength; //in feet
@@ -33,13 +35,20 @@ public class ProductionLine {
 		sb.append(
 				getLineNumber()).append(", length ").append(getLineLength()).append(", die width ").append(getDieWidth())
 				.append (", speed controller type: ").append(getSpeedControllerType()).append(", takeoff equipment: ")
-				.append(getTakeoffEquipmentType()).append(" (").append(super.toString()).append(")");
+				.append(getTakeoffEquipmentType());
+		sb.append(" (").append(super.toString()).append(")");
+		sb.append("\n").append("Speed values: ").append(mSpeedValues.toString());
 		return sb.toString();
 	}
 	
-
 	public double getLineSpeed() {
 		return mSpeedValues.getProduct();		
+	}
+	
+	public long getSecondsToMaxson() {
+		if (getLineSpeed() > 0) {
+			return Math.round(getLineLength() / getLineSpeed() * HelperFunction.SECONDS_PER_MINUTE);
+		} else throw new IllegalStateException(new Throwable(PrimexModel.ERROR_ZERO_LINE_SPEED));
 	}
 	
 	/*
