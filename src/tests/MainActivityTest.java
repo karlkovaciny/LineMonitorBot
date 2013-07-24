@@ -5,10 +5,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Instrumentation.ActivityMonitor;
 import android.support.v4.view.ViewPager;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.kovaciny.linemonitorbot.MainActivity.SectionsPagerAdapter;
 import com.kovaciny.linemonitorbot.R;
 import com.kovaciny.linemonitorbot.RatesFragment;
 import com.kovaciny.linemonitorbot.SettingsActivity;
+import com.kovaciny.linemonitorbot.SheetsPerMinuteDialogFragment;
 import com.kovaciny.linemonitorbot.SkidTimesFragment;
 
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
@@ -28,6 +31,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	ViewPager mViewPager;
 	TextView mTxt_sheetsPerMinute;
 	EditText mEdit_currentCount;
+	Button mBtn_calculateTimes;
+	Button mBtn_calculateRates;
+	Button mBtn_enterProduct;
 
 	public static final String TEST_STATE_DESTROY_TEXT = "666";
 	
@@ -43,11 +49,17 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	    mRatesFragment = (RatesFragment)mActivity.findFragmentByPosition(MainActivity.RATES_FRAGMENT_POSITION);
 	    mTxt_sheetsPerMinute = (TextView)mActivity.findViewById(R.id.txt_products_per_minute);
 	    mEdit_currentCount = (EditText)mActivity.findViewById(R.id.edit_current_count);
+	    mBtn_calculateTimes = (Button)mActivity.findViewById((R.id.btn_calculate_times));
+	    mBtn_enterProduct = (Button)mActivity.findViewById(R.id.btn_enter_product);
+	    mBtn_calculateRates = (Button)mActivity.findViewById(R.id.btn_calculate_rates);
+	    assertTrue(mSkidTimesFragment != null);
+		assertTrue(mRatesFragment != null);
 	}
 
 	@Test
 	public void testPreConditions() {
 		assertTrue(mSkidTimesFragment != null);
+		assertTrue(mRatesFragment != null);
 	}
 	
 	@After
@@ -73,11 +85,68 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		Activity a = getInstrumentation().waitForMonitorWithTimeout(am, 1000);
 		assertEquals(true, getInstrumentation().checkMonitorHit(am, 1));
 		a.finish();
-		
-//		String afterClick = mTxt_sheetsPerMinute.getText().toString();
-//		assertEquals("beforeClick = " + beforeClick + ", afterClick = " + afterClick, beforeClick, afterClick);
 	}
 	
+	
+//		String afterClick = mTxt_sheetsPerMinute.getText().toString();
+//		assertEquals("beforeClick = " + beforeClick + ", afterClick = " + afterClick, beforeClick, afterClick);
+
+	/*
+	 * this test can't be made to work now because of protected methods
+	 */
+	/*@Test
+	public void testUpdateProductDataWithNullProductType() {
+		try {
+			getActivity().runOnUiThread(new Runnable() {
+				public void run() {
+					DialogFragment d = new SheetsPerMinuteDialogFragment();
+					mActivity.onClickPositiveButton(d);
+					mActivity.updateRatesData(70d,70d,70d);
+				}
+			});
+			getInstrumentation().waitForIdleSync();
+			//asserts and this.sendKeys() OK here
+		}
+		catch (IllegalStateException e) {
+			assertTrue("yey", true);
+		}
+		fail ("failed to generate an exception");
+	}*/
+
+	@Test
+	public void testGetTimesWithoutProductDialog() {
+		mActivity.runOnUiThread(new Runnable() {
+		     public void run() {
+		    	 mBtn_calculateTimes.requestFocus();
+		    	 mTxt_sheetsPerMinute.setVisibility(TextView.INVISIBLE);
+		     }
+		});
+		getInstrumentation().waitForIdleSync();
+		//asserts OK here
+		try {
+			this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
+			assertEquals(mTxt_sheetsPerMinute.getVisibility(), TextView.VISIBLE); //testing the click produced results
+			assertEquals(null, mBtn_enterProduct.getError()); //The click must not have thrown a no product exception
+			
+		} catch (IllegalStateException e) {
+			fail ("Threw exception don't know why");
+		}
+		
+	    
+	}
+	
+	public void testClickCalcRatesResetsSheetsPerMinute() {
+		mActivity.runOnUiThread(new Runnable() {
+		     public void run() {
+		    	 mBtn_calculateRates.requestFocus();
+		    	 mTxt_sheetsPerMinute.setVisibility(TextView.VISIBLE);
+		     }
+		});
+		getInstrumentation().waitForIdleSync();
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
+		assertEquals(mTxt_sheetsPerMinute.getVisibility(), TextView.VISIBLE);
+	
+	}
 	/*
 	@Test
 	public void testOnTabSelected() {

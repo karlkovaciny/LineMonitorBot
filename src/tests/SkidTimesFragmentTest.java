@@ -47,7 +47,6 @@ public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<Main
 	@Test
 	public void testPreConditions() {
 		assertTrue(mTxt_sheetsPerMinute != null);
-		assertTrue(mTxt_sheetsPerMinute.getText().toString().equals(""));
 	}
 	
 

@@ -81,6 +81,12 @@ public class PrimexModel {
 	private double mEdgeTrimRatio;
 	private double mColorPercent;
 	private Job mSelectedJob;
+	
+	/*
+	 * Used to save speed changes until we're ready to fire them to the view.
+	 */
+	private boolean mSpeedChanged = false;
+	private boolean mProductChanged = false;
 
 	public void setSelectedLine (Integer lineNumber) {
 		if (lineNumber == null) throw new NullPointerException("need to select a line");
@@ -102,7 +108,7 @@ public class PrimexModel {
 		propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLine, mSelectedLine);
 		propChangeSupport.firePropertyChange(NOVATEC_CHANGE_EVENT, null, mSelectedLine.getNovatec());
 		propChangeSupport.firePropertyChange(GROSS_WIDTH_CHANGE_EVENT, null, mSelectedLine.getWebWidth());
-
+		
 		int associatedWoNumber = mDbHelper.getSelectedWoNumberByLine(line.getLineNumber());
 		if (associatedWoNumber > 0) {
 			setSelectedWorkOrder(associatedWoNumber);
@@ -181,7 +187,6 @@ public class PrimexModel {
 	}
 		
 	public void setCurrentSpeed (SpeedValues values) { 
-		SpeedValues oldValues = mSelectedLine.getSpeedValues();
 		mSelectedLine.setSpeedValues(values);
 		String[] lineNum = new String[]{String.valueOf(mSelectedLine.getLineNumber())};
 		mDbHelper.updateColumn(PrimexDatabaseSchema.ProductionLines.TABLE_NAME,
@@ -199,8 +204,7 @@ public class PrimexModel {
 				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + "=?",
 				lineNum,
 				String.valueOf(values.speedFactor));
-		//TODO don't use three calls
-		propChangeSupport.firePropertyChange(LINE_SPEED_CHANGE_EVENT, oldValues, values);
+		mSpeedChanged = true;
 	}
  
 	public void changeNovatecSetpoint (Double setpoint) {
@@ -217,7 +221,7 @@ public class PrimexModel {
 		Product oldProduct = mSelectedWorkOrder.getProduct();
 		mSelectedWorkOrder.setProduct(p);
 		addProduct(p);
-		this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, p);
+		mProductChanged = true;
 	}
 	
 	public int changeSelectedSkid(Integer skidNumber) {
@@ -312,6 +316,15 @@ public class PrimexModel {
 		if (!hasSelectedProduct()) {
 			throw new IllegalStateException(new Throwable(ERROR_NO_PRODUCT_SELECTED));
 		}
+		
+		if (mSpeedChanged) {
+			propChangeSupport.firePropertyChange(LINE_SPEED_CHANGE_EVENT, null, mSelectedLine.getLineSpeed());
+			mSpeedChanged = false;
+		}
+		if (mProductChanged) {
+			this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, mSelectedWorkOrder.getProduct());
+			mProductChanged = false;
+		}
 		Double oldPpm = null; //mProductsPerMinute; 
 		mProductsPerMinute = HelperFunction.INCHES_PER_FOOT / mSelectedWorkOrder.getProduct().getLength() * mSelectedLine.getLineSpeed();
 		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldPpm, mProductsPerMinute);
@@ -342,6 +355,14 @@ public class PrimexModel {
 	
 	public void calculateTimes() {
 		if (mSelectedSkid == null) throw new IllegalStateException(new Throwable("ERROR_NO_SELECTED_SKID"));
+		if (mSpeedChanged) {
+			propChangeSupport.firePropertyChange(LINE_SPEED_CHANGE_EVENT, null, mSelectedLine.getLineSpeed());
+			mSpeedChanged = false;
+		}
+		if (mProductChanged) {
+			this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, mSelectedWorkOrder.getProduct());
+			mProductChanged = false;
+		}
 		if ( (mProductsPerMinute != null) && (mSelectedSkid.getTotalItems() > 0) ) { //TODO this function gets called way too much			
 			//calculate total time per skid. 
 			Double oldMinutes = null; //mSelectedSkid.getMinutesPerSkid();
