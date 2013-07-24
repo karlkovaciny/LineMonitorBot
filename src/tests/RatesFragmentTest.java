@@ -97,8 +97,13 @@ public class RatesFragmentTest extends
 
 	    assertEquals("product needs to set right sheet weight and round up", "1.02", mEdit_sheetWeight.getText().toString());
 		
+	    getActivity().runOnUiThread(new Runnable() {
+		     public void run() {
+		    	 mRatesFragment.modelPropertyChange(mPropertyChangeEventList.get(4));
+		     }
+		});
+	    getInstrumentation().waitForIdleSync();
    	 	
-   	 	mRatesFragment.modelPropertyChange(mPropertyChangeEventList.get(4));
 		assertEquals((Double)mPropertyChangeEventList.get(4).getNewValue(), 1000.0d, .01);
 	}
 
