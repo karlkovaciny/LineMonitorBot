@@ -224,6 +224,7 @@ public class WorkOrder {
 	public String toString() {
 		String finish = (mFinishDate == null) ? "n/a" : mFinishDate.toString();
 		return "W0" + mWoNumber + ": selected skid " + String.valueOf(mSelectedSkidPosition + 1) + " of " + 
-				String.valueOf(mSkidsList.size()) + ", finish time " + finish;
+				String.valueOf(mSkidsList.size()) + ", finish time " + finish + "\nRates: net " + mNetPph + 
+				", gross " + mGrossPph;
 	}
 }

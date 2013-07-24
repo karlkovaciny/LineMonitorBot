@@ -5,6 +5,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +56,17 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 		mTxt_netPph = (TextView) rootView.findViewById(R.id.txt_net_pph);
 		mTxt_grossPph = (TextView) rootView.findViewById(R.id.txt_gross_pph);
 		mTxt_colorPercent = (TextView) rootView.findViewById(R.id.txt_color_percent);	
+
+		//restore saved state
+		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+		String etpct = settings.getString("edgeTrimPercent", "");
+		String net = settings.getString("netPph", "");
+		String gross = settings.getString("grossPph", "");
+		String colorpct = settings.getString("colorPercent", "");
+		mTxt_edgeTrimPercent.setText(etpct);
+		mTxt_netPph.setText(net);
+		mTxt_grossPph.setText(gross);
+		mTxt_colorPercent.setText(colorpct);
 		
 		mLbl_novatecSetpoint = (TextView) rootView.findViewById(R.id.lbl_novatec_setpoint);
 		
@@ -170,5 +183,20 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 			mEdit_novatecSetpoint.setText(String.valueOf(n.getControllerSetpoint()));
 			
 		}
+	}
+
+	@Override
+	public void onPause() {
+		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+	    SharedPreferences.Editor editor = settings.edit();
+
+	    editor.putString("edgeTrimPercent", mTxt_edgeTrimPercent.getText().toString());
+		editor.putString("netPph", mTxt_netPph.getText().toString());
+		editor.putString("grossPph", mTxt_grossPph.getText().toString());
+		editor.putString("colorPercent", mTxt_colorPercent.getText().toString());
+
+	    // Commit the edits!
+	    editor.commit();
+		super.onPause();
 	}	
 }

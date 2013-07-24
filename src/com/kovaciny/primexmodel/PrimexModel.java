@@ -280,6 +280,7 @@ public class PrimexModel {
 		}
 		
 		if (hasSelectedWorkOrder()) {
+			mDbHelper.insertOrUpdateWorkOrder(mSelectedWorkOrder);
 			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, 
 					null, null, String.valueOf(getSelectedWorkOrder().getWoNumber()));
