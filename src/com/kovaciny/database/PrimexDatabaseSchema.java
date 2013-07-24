@@ -66,6 +66,7 @@ public class PrimexDatabaseSchema {
 		public static final String COLUMN_NAME_STACKS = "stacks";
 		public static final String COLUMN_NAME_START_DATE = "start_time";
 		public static final String COLUMN_NAME_FINISH_DATE = "finish_time";
+		public static final String COLUMN_NAME_TIME_PER_SKID = "time_per_skid";
 		public static final String COLUMN_NAME_WO_ID = "wo_id";
 	}
 	

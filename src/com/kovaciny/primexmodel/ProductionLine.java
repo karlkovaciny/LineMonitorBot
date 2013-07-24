@@ -33,7 +33,7 @@ public class ProductionLine {
 		sb.append(
 				getLineNumber()).append(", length ").append(getLineLength()).append(", die width ").append(getDieWidth())
 				.append (", speed controller type: ").append(getSpeedControllerType()).append(", takeoff equipment: ")
-				.append(getTakeoffEquipmentType()).append("\n").append(super.toString());
+				.append(getTakeoffEquipmentType()).append(" (").append(super.toString()).append(")");
 		return sb.toString();
 	}
 	

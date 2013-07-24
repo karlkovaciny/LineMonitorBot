@@ -33,9 +33,9 @@ public class PrimexModel {
 	public static final String NEW_WORK_ORDER_EVENT = "PrimexModel.NEW_WORK_ORDER"; 
 	public static final String PRODUCT_CHANGE_EVENT = "PrimexModel.NEW_PRODUCT"; 
 	public static final String PRODUCTS_PER_MINUTE_CHANGE_EVENT = "PrimexModel.PPM_CHANGE"; 
-	public static final String CURRENT_SKID_FINISH_TIME_CHANGE_EVENT = "PrimexModel.FINISH_TIME_CHANGE"; 
-	public static final String CURRENT_SKID_START_TIME_CHANGE_EVENT = "PrimexModel.START_TIME_CHANGE"; 
-	public static final String MINUTES_PER_SKID_CHANGE_EVENT = "PrimexModel.SKID_TIME_CHANGE"; 
+	public static final String CURRENT_SKID_FINISH_TIME_CHANGE_EVENT = "PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE"; 
+	public static final String CURRENT_SKID_START_TIME_CHANGE_EVENT = "PrimexModel.CURRENT_SKID_START_TIME_CHANGE"; 
+	public static final String MINUTES_PER_SKID_CHANGE_EVENT = "PrimexModel.MINUTES_PER_SKID_CHANGE"; 
 	public static final String NUMBER_OF_SKIDS_CHANGE_EVENT = "PrimexModel.NUMBER_OF_SKIDS_CHANGE"; 
 	public static final String JOB_FINISH_TIME_CHANGE_EVENT = "PrimexModel.JOB_FINISH_TIME_CHANGE"; 
 	public static final String SKID_CHANGE_EVENT = "PrimexModel.SKID_CHANGE"; 
@@ -126,7 +126,12 @@ public class PrimexModel {
 		if (woNumber <= 0) throw new IllegalArgumentException("Work order number must be positive");
 		
 		//save data from old WO
-		if (hasSelectedWorkOrder()) mDbHelper.insertOrUpdateWorkOrder(mSelectedWorkOrder);
+		if (hasSelectedWorkOrder()) {
+			mDbHelper.insertOrUpdateWorkOrder(mSelectedWorkOrder);
+			if (mSelectedWorkOrder.hasSelectedSkid()) {
+				saveSkid(mSelectedWorkOrder.getSelectedSkid());
+			}
+		}
 		
 		WorkOrder lookedUpWo = mDbHelper.getWorkOrder(woNumber);
 		if (lookedUpWo == null) throw new RuntimeException("WorkOrder not found even though it is in woNumbersList");
@@ -144,8 +149,12 @@ public class PrimexModel {
 		}
 		if (mSelectedSkid != null) {
 			propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, null, mSelectedSkid);
+			propChangeSupport.firePropertyChange(CURRENT_SKID_FINISH_TIME_CHANGE_EVENT, null, mSelectedSkid.getFinishTime());
+			propChangeSupport.firePropertyChange(CURRENT_SKID_START_TIME_CHANGE_EVENT, null, mSelectedSkid.getStartTime());
 		}
+		propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, null, mSelectedSkid.getMinutesPerSkid());
 		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, null, mSelectedWorkOrder.getNumberOfSkids());
+		propChangeSupport.firePropertyChange(TIME_TO_MAXSON_CHANGE_EVENT, null, mMillisToMaxson);
 		propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, null, mSelectedWorkOrder); 
 	}
 
@@ -275,6 +284,9 @@ public class PrimexModel {
 			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, 
 					null, null, String.valueOf(getSelectedWorkOrder().getWoNumber()));
+			if (mSelectedSkid != null) {
+				saveSkid(mSelectedSkid);
+			}
 		} else {
 			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, 

@@ -32,7 +32,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 96;
+    public static final int DATABASE_VERSION = 98;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -109,6 +109,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     		PrimexDatabaseSchema.Skids.COLUMN_NAME_STACKS + INTEGER_TYPE + COMMA_SEP +
     		PrimexDatabaseSchema.Skids.COLUMN_NAME_START_DATE + INTEGER_TYPE + COMMA_SEP +
     		PrimexDatabaseSchema.Skids.COLUMN_NAME_FINISH_DATE + INTEGER_TYPE + COMMA_SEP +
+    		PrimexDatabaseSchema.Skids.COLUMN_NAME_TIME_PER_SKID + REAL_TYPE + COMMA_SEP +
     		PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID + INTEGER_TYPE + COMMA_SEP +
     		" UNIQUE (" + PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER + ", " + PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID + ")" +
     		" )";
@@ -789,7 +790,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		if (rowId == -1) {
 			Log.v("verbose", "insert error code -1");
 		} else {
-			Log.v("verbose", "insert row ID " + String.valueOf(rowId)); //TODO firing on restart?
+			Log.v("verbose", "inserted product " + newProduct.toString() + " into rowID " + String.valueOf(rowId)); //TODO firing on restart?
 		}
 		return rowId;
 	}
@@ -869,6 +870,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				skid.setCurrentItems(currentItems);
 				Date finishTime = new Date(resultCursor.getLong(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_FINISH_DATE)));
 				skid.setFinishTime(finishTime);
+				double minutesPerSkid = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_TIME_PER_SKID));
+				skid.setMinutesPerSkid(minutesPerSkid);
 				skidList.add(skid);
 			}
 			Collections.sort(skidList);
@@ -889,6 +892,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_CURRENT_ITEMS, skid.getCurrentItems());
 		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_TOTAL_ITEMS, skid.getTotalItems());
 		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_STACKS, skid.getmNumberOfStacks());
+		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_TIME_PER_SKID, skid.getMinutesPerSkid());
 		if (skid.getStartTime() != null) {
 			values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_START_DATE, skid.getStartTime().getTime());	
 		}
@@ -908,7 +912,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		if (rowId == -1) {
 			Log.v("verbose", "insert error code -1");
 		} else {
-			Log.v("verbose", "insert row ID " + String.valueOf(rowId));
+			Log.v("verbose", "inserted this skid into row ID " + String.valueOf(rowId) + ": " + skid.toString());
 		}
 		return rowId;
 	}

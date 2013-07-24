@@ -89,4 +89,9 @@ public class Sheet implements Product {
 	public String getType() {
 		return Product.SHEETS_TYPE;
 	}
+	
+	@Override
+	public String toString() {
+		return "Sheet: " + String.valueOf(mGauge) + " x " + String.valueOf(mWidth) + " x " + String.valueOf(mLength);
+	}
 }
