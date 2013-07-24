@@ -16,6 +16,13 @@ public class WorkOrder {
 	private int mSelectedSkidPosition = -1;
 	private Date mFinishDate;
 	
+	private double mProductsPerMinute;
+	private double mEdgeTrimPercent;
+	private double mNetPph;
+	private double mGrossPph;
+	private double mColorPercent;
+	
+	
 	static final double MAX_STACK_HEIGHT_OLEFINS = 24d;
 	static final double MAX_STACK_HEIGHT_STYRENE = 30d;
 	static final double MAX_WO_NUMBER = 999999d;
@@ -172,5 +179,51 @@ public class WorkOrder {
 	public Product getProduct() {
 		return mProduct;
 	}	
-		
+
+	public double getProductsPerMinute() {
+		return mProductsPerMinute;
+	}
+
+	public void setProductsPerMinute(double productsPerMinute) {
+		this.mProductsPerMinute = productsPerMinute;
+	}
+
+	public double getEdgeTrimPercent() {
+		return mEdgeTrimPercent;
+	}
+
+	public void setEdgeTrimPercent(double edgeTrimPercent) {
+		this.mEdgeTrimPercent = edgeTrimPercent;
+	}
+
+	public double getNetPph() {
+		return mNetPph;
+	}
+
+	public void setNetPph(double netPph) {
+		this.mNetPph = netPph;
+	}
+
+	public double getGrossPph() {
+		return mGrossPph;
+	}
+
+	public void setGrossPph(double grossPph) {
+		this.mGrossPph = grossPph;
+	}
+
+	public double getColorPercent() {
+		return mColorPercent;
+	}
+
+	public void setColorPercent(double colorPercent) {
+		this.mColorPercent = colorPercent;
+	}
+
+	@Override
+	public String toString() {
+		String finish = (mFinishDate == null) ? "n/a" : mFinishDate.toString();
+		return "W0" + mWoNumber + ": selected skid " + String.valueOf(mSelectedSkidPosition + 1) + " of " + 
+				String.valueOf(mSkidsList.size()) + ", finish time " + finish;
+	}
 }

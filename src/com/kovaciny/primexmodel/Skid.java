@@ -24,7 +24,7 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 	 * 
 	 */
 	public Skid (Pallet p, int totalItems, double packagingWeight,
-			int numStacks, Date start, Product product) {
+			int numStacks, Product product) {
 		mPallet = p;
 		mTotalItems = totalItems;
 		mPackagingWeight = 0; // unimportant for now;
@@ -45,7 +45,7 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 	}
 
 	public Skid(int totalItems, Product product) {
-		this(new Pallet(), totalItems, 0d, 1, new Date(), product);
+		this(new Pallet(), totalItems, 0d, 1, product);
 	}
 
 	public double getStackHeight() {
@@ -165,6 +165,7 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 		this.mSkidNumber = skidNumber;
 	}
 
+	@Override
 	public String toString() {
 		String start = "n/a";
 		String finish = "n/a";
@@ -172,7 +173,8 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 		if (mStartTime != null) start = formatter.format(mStartTime);
 		if (mFinishTime != null) finish = formatter.format(mFinishTime);
 		return "Skid " + mSkidNumber + ": Start time " + start + ", finish time " + finish + ", current sheets " + 
-				String.valueOf(mCurrentItems) + ", total sheets " + String.valueOf(mTotalItems);
+				String.valueOf(mCurrentItems) + ", total sheets " + String.valueOf(mTotalItems) + ", time per skid " + 
+				String.valueOf(mMinutesPerSkid) + " minutes";
 	}
 	@Override
 	public int compareTo(Skid arg0) {

@@ -81,20 +81,24 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		mImgbtnSheetsOrRolls = (ImageButton) rootView.findViewById(R.id.imgbtn_sheets_or_rolls);
 	  	
 		if (getArguments() != null) {
-			if(getArguments().getDouble("Gauge") != 0) {
-				mEdit_gauge.setText(String.valueOf(getArguments().getDouble("Gauge")));
-				
-				mEdit_sheetWidth.setText(String.valueOf(getArguments().getDouble("SheetWidth")));
-				
-				mEdit_sheetLength.setText(String.valueOf(getArguments().getDouble("SheetLength")));
-			  	
-				mEdit_lineSpeed.setText(String.valueOf(getArguments().getDouble("LineSpeed")));
-				
-				mEdit_differentialSpeed.setText(String.valueOf(getArguments().getDouble("DifferentialSpeed")));
-				mSheetsOrRollsState = getArguments().getString("ProductType");
-			  	setSheetsOrRollsState(mSheetsOrRollsState);
+			double gauge = getArguments().getDouble("Gauge", 0);
+			double width = getArguments().getDouble("SheetWidth", 0);
+			double length = getArguments().getDouble("SheetLength", 0);
+			double speed = getArguments().getDouble("LineSpeed", 0);
+			double diff = getArguments().getDouble("DifferentialSpeed", 0);
+			double factor = getArguments().getDouble("SpeedFactor", 0);
+			String prodtype = getArguments().getString("ProductType");
+			
+			if (gauge > 0) mEdit_gauge.setText(String.valueOf(gauge));
+			if (width > 0) mEdit_sheetWidth.setText(String.valueOf(width));
+			if (length > 0) mEdit_sheetLength.setText(String.valueOf(length));
+			if (speed > 0) mEdit_lineSpeed.setText(String.valueOf(speed));
+			if (diff > 0) mEdit_differentialSpeed.setText(String.valueOf(diff));
+			if (factor > 0) mEdit_speedFactor.setText(String.valueOf(factor));
+			if (prodtype != null) {
+				mSheetsOrRollsState = prodtype;
+				setSheetsOrRollsState(mSheetsOrRollsState);
 			}
-		  	mEdit_speedFactor.setText(String.valueOf(getArguments().getDouble("SpeedFactor")));
 		}
 		
 		mImgbtnSheetsOrRolls.setOnClickListener(this);

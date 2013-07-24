@@ -39,7 +39,7 @@ public class PrimexModel {
 	public static final String NUMBER_OF_SKIDS_CHANGE_EVENT = "PrimexModel.NUMBER_OF_SKIDS_CHANGE"; 
 	public static final String JOB_FINISH_TIME_CHANGE_EVENT = "PrimexModel.JOB_FINISH_TIME_CHANGE"; 
 	public static final String SKID_CHANGE_EVENT = "PrimexModel.SKID_CHANGE"; 
-	public static final String TIME_TO_MAXSON_CHANGE_EVENT = "PrimexModel.TIME_TO_MAXSON_CHANGE"; 
+	public static final String SECONDS_TO_MAXSON_CHANGE_EVENT = "PrimexModel.SECONDS_TO_MAXSON_CHANGE"; 
 	public static final String NET_PPH_CHANGE_EVENT = "PrimexModel.NET_PPH_CHANGE"; 
 	public static final String GROSS_PPH_CHANGE_EVENT = "PrimexModel.GROSS_PPH_CHANGE"; 
 	public static final String GROSS_WIDTH_CHANGE_EVENT = "PrimexModel.GROSS_WIDTH_CHANGE"; //TODO not fired 
@@ -50,6 +50,7 @@ public class PrimexModel {
 	public static final String ERROR_NET_LESS_THAN_GROSS = "PrimexModel.Net width less than gross width";
 	public static final String ERROR_NO_PRODUCT_SELECTED = "PrimexModel.No product selected";
 	public static final String ERROR_NO_SKID_SELECTED = "PrimexModel.No skid selected";
+	public static final String ERROR_ZERO_LINE_SPEED = "PrimexModel.Dividing by zero line speed";
 		
 	// Create PropertyChangeSupport to manage listeners and fire events.
 	private final PropertyChangeSupport propChangeSupport = new PropertyChangeSupport(this);
@@ -74,12 +75,6 @@ public class PrimexModel {
 	private PrimexSQLiteOpenHelper mDbHelper;
 	private List<Job> mJobList;
 	
-	private Double mProductsPerMinute;
-	private double mMillisToMaxson;
-	private double mNetPph; 
-	private double mGrossPph;
-	private double mEdgeTrimRatio;
-	private double mColorPercent;
 	private Job mSelectedJob;
 	
 	/*
@@ -87,6 +82,7 @@ public class PrimexModel {
 	 */
 	private boolean mSpeedChanged = false;
 	private boolean mProductChanged = false;
+	private boolean mSkidChanged = false;
 
 	public void setSelectedLine (Integer lineNumber) {
 		if (lineNumber == null) throw new NullPointerException("need to select a line");
@@ -143,10 +139,7 @@ public class PrimexModel {
 		mSelectedWorkOrder.setProduct(p);
 		if (p != null) propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, p);
 
-		Date finishDate = mSelectedWorkOrder.getFinishDate();
-		if (finishDate != null) {
-			propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, null, finishDate);
-		}
+		propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, null, mSelectedWorkOrder.getFinishDate());
 		if (mSelectedSkid != null) {
 			propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, null, mSelectedSkid);
 			propChangeSupport.firePropertyChange(CURRENT_SKID_FINISH_TIME_CHANGE_EVENT, null, mSelectedSkid.getFinishTime());
@@ -154,7 +147,14 @@ public class PrimexModel {
 		}
 		propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, null, mSelectedSkid.getMinutesPerSkid());
 		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, null, mSelectedWorkOrder.getNumberOfSkids());
-		propChangeSupport.firePropertyChange(TIME_TO_MAXSON_CHANGE_EVENT, null, mMillisToMaxson);
+		if (mSelectedLine.getLineSpeed() > 0) {
+			propChangeSupport.firePropertyChange(SECONDS_TO_MAXSON_CHANGE_EVENT, null, mSelectedLine.getSecondsToMaxson());
+		}
+		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, mSelectedWorkOrder.getProductsPerMinute()); 
+		propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, null, mSelectedWorkOrder.getEdgeTrimPercent()); 
+		propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, null, mSelectedWorkOrder.getNetPph()); 
+		propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, null, mSelectedWorkOrder.getGrossPph()); 
+		propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, null, mSelectedWorkOrder.getColorPercent()); 
 		propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, null, mSelectedWorkOrder); 
 	}
 
@@ -227,7 +227,6 @@ public class PrimexModel {
 				String.valueOf(setpoint));
 	}
 	public void changeProduct (Product p) {
-		Product oldProduct = mSelectedWorkOrder.getProduct();
 		mSelectedWorkOrder.setProduct(p);
 		addProduct(p);
 		mProductChanged = true;
@@ -245,7 +244,7 @@ public class PrimexModel {
 			}
 		}
 		mSelectedSkid = mSelectedWorkOrder.selectSkid(skidNumber);
-		propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, oldSkid, mSelectedSkid);
+		mSkidChanged = true;
 		return skidNumber;
 	}
 	
@@ -310,16 +309,6 @@ public class PrimexModel {
 		setSelectedLine(Integer.valueOf(lineNum));
 	}
 	
-	public void setProductsPerMinute(double spm) {
-		Double oldSpm = mProductsPerMinute;
-		mProductsPerMinute = null; //spm; TODO this function shouldnt' be allowed! also validity checking. Also this maybe should be for direct setting only?
-		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldSpm, spm);
-	}
-	
-	public double getProductsPerMinute() {
-		return mProductsPerMinute;
-	}
-	
 	/*
 	 * This function is called whenever relevant properties change.
 	 * TODO should not need to remember to call it before times.
@@ -337,13 +326,19 @@ public class PrimexModel {
 			this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, mSelectedWorkOrder.getProduct());
 			mProductChanged = false;
 		}
+		if (mSkidChanged) {
+			this.propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, null, mSelectedSkid);
+			mSkidChanged = false;
+		}
 		Double oldPpm = null; //mProductsPerMinute; 
-		mProductsPerMinute = HelperFunction.INCHES_PER_FOOT / mSelectedWorkOrder.getProduct().getLength() * mSelectedLine.getLineSpeed();
-		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldPpm, mProductsPerMinute);
+		double productsPerMinute = HelperFunction.INCHES_PER_FOOT / mSelectedWorkOrder.getProduct().getLength() * mSelectedLine.getLineSpeed();
+		mSelectedWorkOrder.setProductsPerMinute(productsPerMinute);
+		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldPpm, productsPerMinute);
 		
 		Double oldNet = null; //mNetPph;
-		mNetPph = mProductsPerMinute * mSelectedWorkOrder.getProduct().getUnitWeight() * HelperFunction.MINUTES_PER_HOUR;
-		propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, oldNet, mNetPph);
+		double netPph = productsPerMinute * mSelectedWorkOrder.getProduct().getUnitWeight() * HelperFunction.MINUTES_PER_HOUR;
+		mSelectedWorkOrder.setNetPph(netPph);
+		propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, oldNet, netPph);
 		
 		double grossWidth = mSelectedLine.getWebWidth();
 		if (grossWidth > 0) {
@@ -352,16 +347,19 @@ public class PrimexModel {
 			if (netWidth >= grossWidth) {
 				throw new IllegalStateException(new Throwable(ERROR_NET_LESS_THAN_GROSS));
 			}
-			mEdgeTrimRatio = (grossWidth - netWidth) / grossWidth;
-			propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, oldEt, mEdgeTrimRatio);
+			double edgeTrimRatio = (grossWidth - netWidth) / grossWidth;
+			mSelectedWorkOrder.setEdgeTrimPercent(edgeTrimRatio);
+			propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, oldEt, edgeTrimRatio);
 			
 			Double oldGross = null; //mGrossPph;
-			mGrossPph = mNetPph / (1 - mEdgeTrimRatio);
-			propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, oldGross, mGrossPph);
+			double grossPph = netPph / (1 - edgeTrimRatio);
+			mSelectedWorkOrder.setGrossPph(grossPph);
+			propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, oldGross, grossPph);
 			
 			Double oldColorPercent = null; //mColorPercent;
-			mColorPercent =  mSelectedLine.getNovatec().getRate() / mGrossPph;
-			propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, oldColorPercent, mColorPercent);
+			double colorPercent =  mSelectedLine.getNovatec().getRate() / grossPph;
+			mSelectedWorkOrder.setColorPercent(colorPercent);
+			propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, oldColorPercent, colorPercent);
 		} 		
 	}
 	
@@ -375,29 +373,32 @@ public class PrimexModel {
 			this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, mSelectedWorkOrder.getProduct());
 			mProductChanged = false;
 		}
-		if ( (mProductsPerMinute != null) && (mSelectedSkid.getTotalItems() > 0) ) { //TODO this function gets called way too much			
+		if (mSkidChanged) {
+			this.propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, null, mSelectedSkid);
+			mSkidChanged = false;
+		}
+		double ppm = mSelectedWorkOrder.getProductsPerMinute();
+		if ( (ppm > 0 ) && (mSelectedSkid.getTotalItems() > 0) ) {			
 			//calculate total time per skid. 
 			Double oldMinutes = null; //mSelectedSkid.getMinutesPerSkid();
-			double newMinutes = mSelectedSkid.calculateMinutesPerSkid(mProductsPerMinute);
+			double newMinutes = mSelectedSkid.calculateMinutesPerSkid(ppm);
 			propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, oldMinutes, newMinutes);
 			
 			//calculate skid start and finish time
 			Date oldStartTime = null; //mSelectedSkid.getStartTime(); 
-			Date newStartTime = mSelectedSkid.calculateStartTime(mProductsPerMinute);
+			Date newStartTime = mSelectedSkid.calculateStartTime(ppm);
 			Date oldFinishTime = mSelectedSkid.getFinishTime();
-			Date newFinishTime = mSelectedSkid.calculateFinishTimeWhileRunning(mProductsPerMinute);			
+			Date newFinishTime = mSelectedSkid.calculateFinishTimeWhileRunning(ppm);			
 			propChangeSupport.firePropertyChange(CURRENT_SKID_START_TIME_CHANGE_EVENT, oldStartTime, newStartTime);
 			propChangeSupport.firePropertyChange(CURRENT_SKID_FINISH_TIME_CHANGE_EVENT, oldFinishTime, newFinishTime);
 			
 			//calculate job finish times
 			Date oldJobFinishTime = null; //mSelectedWorkOrder.getFinishTime();
-			Date newJobFinishTime = mSelectedWorkOrder.calculateFinishTimes(mProductsPerMinute);
+			Date newJobFinishTime = mSelectedWorkOrder.calculateFinishTimes(ppm);
 			propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, oldJobFinishTime, newJobFinishTime);
 		}
 		if (mSelectedLine.getLineSpeed() > 0) {
-			double oldMillisToMaxson = mMillisToMaxson;
-			mMillisToMaxson = mSelectedLine.getLineLength() / mSelectedLine.getLineSpeed() * HelperFunction.ONE_MINUTE_IN_MILLIS;
-			propChangeSupport.firePropertyChange(TIME_TO_MAXSON_CHANGE_EVENT, oldMillisToMaxson, mMillisToMaxson);
+			propChangeSupport.firePropertyChange(SECONDS_TO_MAXSON_CHANGE_EVENT, null, mSelectedLine.getSecondsToMaxson());
 		}
 	}
 

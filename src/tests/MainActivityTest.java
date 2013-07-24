@@ -118,14 +118,12 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		mActivity.runOnUiThread(new Runnable() {
 		     public void run() {
 		    	 mBtn_calculateTimes.requestFocus();
-		    	 mTxt_sheetsPerMinute.setVisibility(TextView.INVISIBLE);
 		     }
 		});
 		getInstrumentation().waitForIdleSync();
 		//asserts OK here
 		try {
 			this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
-			assertEquals(mTxt_sheetsPerMinute.getVisibility(), TextView.VISIBLE); //testing the click produced results
 			assertEquals(null, mBtn_enterProduct.getError()); //The click must not have thrown a no product exception
 			
 		} catch (IllegalStateException e) {

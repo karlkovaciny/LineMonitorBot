@@ -32,6 +32,11 @@ public class PrimexDatabaseSchema {
 		public static final String COLUMN_NAME_SELECTED_SKID_NUMBER = "skid_number";	
 		public static final String COLUMN_NAME_MAXIMUM_STACK_HEIGHT = "max_stack_height";
 		public static final String COLUMN_NAME_FINISH_TIME = "finish_time";
+		public static final String COLUMN_NAME_PRODUCTS_PER_MINUTE = "products_per_minute";
+		public static final String COLUMN_NAME_EDGE_TRIM_PERCENT = "edge_trim_percent";
+		public static final String COLUMN_NAME_NET_PPH = "net_pph";
+		public static final String COLUMN_NAME_GROSS_PPH = "gross_pph";
+		public static final String COLUMN_NAME_COLOR_PERCENT = "color_percent";
 	}
 	
 	public static abstract class LineWorkOrderLink implements BaseColumns {

@@ -67,8 +67,6 @@ public class SkidTimesFragment extends SectionFragment implements
 	private TextView mTxt_skidFinishTime;
 	
 	private long mMillisPerSkid;
-	private String mJobFinishText;
-	private String mTimeToMaxsonText;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -136,21 +134,21 @@ public class SkidTimesFragment extends SectionFragment implements
 		//restore saved state
 		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
 		boolean visible = settings.getBoolean("cancelAlarmVisible", false);
-		/*String tps = settings.getString("timePerSkid", "");
+		String tps = settings.getString("timePerSkid", "");
 		String ppm = settings.getString("productsPerMinute", "");
 		String jft = settings.getString("jobFinishTime", "");
 		String ttm = settings.getString("timeToMaxson", "");
 		String sst = settings.getString("skidStartTime", "");
-		String sft = settings.getString("skidFinishTime", "");*/
+		String sft = settings.getString("skidFinishTime", "");
 		if (visible) {
 			mBtn_cancelAlarm.setVisibility(Button.VISIBLE);
 		} else mBtn_cancelAlarm.setVisibility(Button.INVISIBLE);
-		/*mTxt_timePerSkid.setText(tps);
+		mTxt_timePerSkid.setText(tps);
 		mTxt_productsPerMinute.setText(ppm);
 		mTxt_jobFinishTime.setText(jft);
 		mTxt_timeToMaxson.setText(ttm);
 		mTxt_skidStartTime.setText(sst);
-		mTxt_skidFinishTime.setText(sft);*/
+		mTxt_skidFinishTime.setText(sft);
 		
 		return rootView;
 	}
@@ -250,9 +248,6 @@ public class SkidTimesFragment extends SectionFragment implements
 					ett.setError(null);
 					ett.clearFocus();
 				}
-				mTxt_productsPerMinute.setVisibility(TextView.VISIBLE);
-				mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
-				this.mTxt_timePerSkid.setText(mTimeToMaxsonText);
 			}
 			break;
 		case (R.id.btn_cancel_alarm):
@@ -308,7 +303,11 @@ public class SkidTimesFragment extends SectionFragment implements
 			this.mLbl_products.setText(capUnits.toString() + ":");
 			
 		} else if (propertyName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {
-			this.mTxt_productsPerMinute.setText(String.valueOf(newProperty));
+			if ( (newProperty == null) || ((Double)newProperty <= 0) ) {
+				mTxt_productsPerMinute.setText("");
+			} else {
+				mTxt_productsPerMinute.setText(String.valueOf(newProperty));
+			}
 			
 		} else if (propertyName == PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE_EVENT) {
 			if (newProperty == null) {
@@ -345,30 +344,36 @@ public class SkidTimesFragment extends SectionFragment implements
 			}
 			
 		} else if (propertyName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
-			long minutes = Math.round((Double)newProperty);
-			mTimeToMaxsonText =	HelperFunction.formatMinutesAsHours(minutes);
-			mMillisPerSkid = Math.round((Double)newProperty * HelperFunction.ONE_MINUTE_IN_MILLIS);
+			if ((newProperty == null) || ((Double)newProperty <= 0) ) {
+				mTxt_timePerSkid.setText("");
+			} else {
+				long minutes = Math.round((Double)newProperty);
+				mTxt_timePerSkid.setText( HelperFunction.formatMinutesAsHours(minutes) );
+				mMillisPerSkid = minutes * HelperFunction.ONE_MINUTE_IN_MILLIS;
+			}
 			
 		} else if (propertyName == PrimexModel.NUMBER_OF_SKIDS_CHANGE_EVENT) {
 			mEdit_numSkidsInJob.setText(String.valueOf(newProperty));
 			
 		} else if (propertyName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) {
-			Date finishTime = (Date)newProperty;
-			SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a E", Locale.US);
-
-			//"Pace time": Don't show the day of the week if it's before 6 am the next day. 
-			Calendar finishDate = new GregorianCalendar(Locale.US);
-			finishDate.setTime(finishTime);
-			Calendar today = Calendar.getInstance(Locale.US);
-			today.add(Calendar.DAY_OF_MONTH, 1);
-			today.set(Calendar.HOUR_OF_DAY, 6);
-			today.set(Calendar.MINUTE, 0);
-			if (finishDate.before(today)) {
-				formatter3 = new SimpleDateFormat("h:mm a", Locale.US);
+			if (newProperty == null) {
+				mTxt_jobFinishTime.setText("");
+			} else {
+				Date finishTime = (Date)newProperty;
+				SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a E", Locale.US);
+				
+				//"Pace time": Don't show the day of the week if it's before 6 am the next day. 
+				Calendar finishDate = new GregorianCalendar(Locale.US);
+				finishDate.setTime(finishTime);
+				Calendar today = Calendar.getInstance(Locale.US);
+				today.add(Calendar.DAY_OF_MONTH, 1);
+				today.set(Calendar.HOUR_OF_DAY, 6);
+				today.set(Calendar.MINUTE, 0);
+				if (finishDate.before(today)) {
+					formatter3 = new SimpleDateFormat("h:mm a", Locale.US);
+				}
+				mTxt_jobFinishTime.setText(formatter3.format(finishTime));
 			}
-			
-			mJobFinishText = formatter3.format(finishTime);
-			mTxt_jobFinishTime.setText(mJobFinishText);
 			
 		} else if (propertyName == PrimexModel.SKID_CHANGE_EVENT) {
 			Skid<Product> skid = (Skid<Product>)newProperty; //TODO check if null, clear the fields
@@ -376,10 +381,13 @@ public class SkidTimesFragment extends SectionFragment implements
 			mEdit_currentCount.setText(String.valueOf(skid.getCurrentItems()));
 			mEdit_totalCountPerSkid.setText(String.valueOf(skid.getTotalItems()));
 			
-		} else if (propertyName == PrimexModel.TIME_TO_MAXSON_CHANGE_EVENT) {
-			Double timeToMaxson = (Double)newProperty;
-			mTimeToMaxsonText = HelperFunction.formatSecondsAsMinutes(Math.round(timeToMaxson / HelperFunction.ONE_SECOND_IN_MILLIS));
-			mTxt_timeToMaxson.setText(mTimeToMaxsonText);
+		} else if (propertyName == PrimexModel.SECONDS_TO_MAXSON_CHANGE_EVENT) {
+			Long timeToMaxson = (Long)newProperty;
+			if (!(timeToMaxson > 0)) {
+				mTxt_timeToMaxson.setText("");
+			} else {
+				mTxt_timeToMaxson.setText( HelperFunction.formatSecondsAsMinutes(timeToMaxson) );
+			}
 			
 		} else if (propertyName == PrimexModel.NEW_WORK_ORDER_EVENT) {
 			for (TextView tv : mTimesDisplayList) {

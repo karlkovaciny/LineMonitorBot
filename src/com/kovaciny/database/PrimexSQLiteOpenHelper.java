@@ -32,7 +32,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 98;
+    public static final int DATABASE_VERSION = 102;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -65,6 +65,11 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER + INTEGER_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT + DOUBLE_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME + INTEGER_TYPE + COMMA_SEP +
+	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_PRODUCTS_PER_MINUTE + DOUBLE_TYPE + COMMA_SEP +
+	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_EDGE_TRIM_PERCENT + DOUBLE_TYPE + COMMA_SEP +
+	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NET_PPH + DOUBLE_TYPE + COMMA_SEP +
+	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_GROSS_PPH + DOUBLE_TYPE + COMMA_SEP +
+	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_COLOR_PERCENT + DOUBLE_TYPE + COMMA_SEP +
 	    	" UNIQUE (" + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + ")" +
 	    	" )";
     
@@ -541,6 +546,11 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		if (newWo.getFinishDate() != null) {
 			values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME, newWo.getFinishDate().getTime());	
 		}
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_PRODUCTS_PER_MINUTE, newWo.getProductsPerMinute());
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_EDGE_TRIM_PERCENT, newWo.getEdgeTrimPercent());
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NET_PPH, newWo.getNetPph());
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_GROSS_PPH, newWo.getGrossPph());
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_COLOR_PERCENT, newWo.getColorPercent());
 		long rowId;
 		try {
 			rowId = db.insertWithOnConflict(
@@ -557,6 +567,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				new String[]{String.valueOf(newWo.getWoNumber())}, 
 				SQLiteDatabase.CONFLICT_REPLACE);
 		}
+		Log.v("Verbose", "just inserted this work order into row " + String.valueOf(rowId) + ": " + newWo.toString());
 		return rowId;
 	}
 	
@@ -570,7 +581,12 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		double ordered = -1d;
 		int selected = -1;
 		double height = -1d;
-		int finish;
+		long finish;
+		double ppm;
+		double etpct;
+		double netpph;
+		double grosspph;
+		double colorpct;
 		try {
 			if (resultCursor.moveToFirst()) {
 		    	wonum = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER));
@@ -578,7 +594,12 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		    	ordered = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED));
 		    	selected = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER));
 		    	height = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT));
-		    	finish = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME));
+		    	finish = resultCursor.getLong(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME));
+		    	ppm = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_PRODUCTS_PER_MINUTE));
+		    	etpct = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_EDGE_TRIM_PERCENT));
+		    	netpph = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NET_PPH));
+		    	grosspph = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_GROSS_PPH));
+		    	colorpct = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_COLOR_PERCENT));
 		    	WorkOrder wo = new WorkOrder(wonum);
 				if (prod_id != -1) {
 					wo.setProduct(getProduct(wonum));
@@ -598,6 +619,12 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				if (finish > 0) {
 					wo.setFinishDate(new Date(finish));	
 				}
+				wo.setProductsPerMinute(ppm);
+				wo.setEdgeTrimPercent(etpct);
+				wo.setNetPph(netpph);
+				wo.setGrossPph(grosspph);
+				wo.setColorPercent(colorpct);
+				Log.v("Verbose", "just loaded this work order: " + wo.toString());
 				return wo;
 			} else return null;
 	    } finally {
@@ -861,15 +888,20 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 						resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_TOTAL_ITEMS)),
 						0.0d, 
 						resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_STACKS)),
-						new Date(resultCursor.getLong(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_START_DATE))),
 						getProduct(woNumber)
 						);
 				int skidNumber = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER));
 				skid.setSkidNumber(skidNumber);
 				int currentItems = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_CURRENT_ITEMS));
 				skid.setCurrentItems(currentItems);
-				Date finishTime = new Date(resultCursor.getLong(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_FINISH_DATE)));
-				skid.setFinishTime(finishTime);
+				long startTime = resultCursor.getLong(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_START_DATE));
+				if (startTime > 0) {
+					skid.setStartTime(new Date(startTime));
+				}
+				long finishTime = resultCursor.getLong(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_FINISH_DATE));
+				if (finishTime > 0) {
+					skid.setFinishTime(new Date(finishTime));
+				}
 				double minutesPerSkid = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Skids.COLUMN_NAME_TIME_PER_SKID));
 				skid.setMinutesPerSkid(minutesPerSkid);
 				skidList.add(skid);
