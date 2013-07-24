@@ -19,6 +19,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -230,34 +231,26 @@ public class MainActivity extends FragmentActivity implements
 			throw new RuntimeException("something threw a null event");
 		}
 		String eventName = event.getPropertyName();
+		Log.v("VERBOSE", eventName);
 		Object newProperty = event.getNewValue();
+		String objectDescription = (newProperty == null) ? "null" : newProperty.toString();
+		Log.v("VERBOSE", objectDescription);
+		
 		SkidTimesFragment skidTimesFrag = (SkidTimesFragment) this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
 		RatesFragment ratesFrag = (RatesFragment) this.findFragmentByPosition(MainActivity.RATES_FRAGMENT_POSITION);
 		if (ratesFrag == null) throw new RuntimeException("Rates fragment not found");
 		
 		if (eventName == PrimexModel.SELECTED_LINE_CHANGE_EVENT) {
-			if (newProperty == null) {
-				//mLinePicker.setTitle(R.string.action_pick_line_title);
-				throw new RuntimeException("cannot change to no line");
-			} else {
-			//if there was one, then either
-				//create a whole new environment with a blank work order
-				//or load up whatever data was last entered on that line
-				//TODO
 			CharSequence lineTitle = "Line " + String.valueOf(mModel.getSelectedLine().getLineNumber());
 			mLinePicker.setTitle(lineTitle);
 			ratesFrag.modelPropertyChange(event);
-			}
-			
+
 		} else if (eventName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
-			if (newProperty == null) {
-				mJobPicker.setTitle(R.string.action_pick_job_title);
-			} else {
-				WorkOrder newWo = (WorkOrder)newProperty; 
-				CharSequence woTitle = generateJobTitle(newWo.getWoNumber());
-				mJobPicker.setTitle(woTitle);
-				invalidateOptionsMenu();
-			}
+			WorkOrder newWo = (WorkOrder)newProperty; 
+			CharSequence woTitle = generateJobTitle(newWo.getWoNumber());
+			mJobPicker.setTitle(woTitle);
+			invalidateOptionsMenu();
+
 			skidTimesFrag.modelPropertyChange(event);
 			ratesFrag.modelPropertyChange(event);
 			

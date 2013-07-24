@@ -1,6 +1,8 @@
 package com.kovaciny.primexmodel;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import com.kovaciny.helperfunctions.HelperFunction;
 
@@ -137,6 +139,10 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 	public double getMinutesPerSkid() {
 		return mMinutesPerSkid;
 	}
+	
+	public void setMinutesPerSkid(double minutes) {
+		mMinutesPerSkid = minutes;
+	}
 
 	public void setFinishTime(Date finishTime) {
 		this.mFinishTime = finishTime;
@@ -159,6 +165,15 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 		this.mSkidNumber = skidNumber;
 	}
 
+	public String toString() {
+		String start = "n/a";
+		String finish = "n/a";
+		SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US);
+		if (mStartTime != null) start = formatter.format(mStartTime);
+		if (mFinishTime != null) finish = formatter.format(mFinishTime);
+		return "Skid " + mSkidNumber + ": Start time " + start + ", finish time " + finish + ", current sheets " + 
+				String.valueOf(mCurrentItems) + ", total sheets " + String.valueOf(mTotalItems);
+	}
 	@Override
 	public int compareTo(Skid arg0) {
 		return this.mSkidNumber - arg0.getSkidNumber();

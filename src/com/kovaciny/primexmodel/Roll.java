@@ -82,4 +82,9 @@ public class Roll implements Product {
 	public String getType() {
 		return Product.ROLLS_TYPE;
 	}
+	
+	@Override
+	public String toString() {
+		return "Roll: " + String.valueOf(mGauge) + " x " + String.valueOf(mWidth) + " x R8";
+	}
 }

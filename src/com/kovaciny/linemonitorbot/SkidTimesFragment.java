@@ -136,21 +136,21 @@ public class SkidTimesFragment extends SectionFragment implements
 		//restore saved state
 		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
 		boolean visible = settings.getBoolean("cancelAlarmVisible", false);
-		String tps = settings.getString("timePerSkid", "");
+		/*String tps = settings.getString("timePerSkid", "");
 		String ppm = settings.getString("productsPerMinute", "");
 		String jft = settings.getString("jobFinishTime", "");
 		String ttm = settings.getString("timeToMaxson", "");
 		String sst = settings.getString("skidStartTime", "");
-		String sft = settings.getString("skidFinishTime", "");
+		String sft = settings.getString("skidFinishTime", "");*/
 		if (visible) {
 			mBtn_cancelAlarm.setVisibility(Button.VISIBLE);
 		} else mBtn_cancelAlarm.setVisibility(Button.INVISIBLE);
-		mTxt_timePerSkid.setText(tps);
+		/*mTxt_timePerSkid.setText(tps);
 		mTxt_productsPerMinute.setText(ppm);
 		mTxt_jobFinishTime.setText(jft);
 		mTxt_timeToMaxson.setText(ttm);
 		mTxt_skidStartTime.setText(sst);
-		mTxt_skidFinishTime.setText(sft);
+		mTxt_skidFinishTime.setText(sft);*/
 		
 		return rootView;
 	}
@@ -311,31 +311,38 @@ public class SkidTimesFragment extends SectionFragment implements
 			this.mTxt_productsPerMinute.setText(String.valueOf(newProperty));
 			
 		} else if (propertyName == PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE_EVENT) {
-			//update finish time for this skid
-			SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US);
-			String formattedTime = formatter.format((Date)newProperty);
-			mTxt_skidFinishTime.setText(formattedTime);
-			
-			//set alarm 
-			long alarmLeadTime = (long) (1.5 * HelperFunction.ONE_MINUTE_IN_MILLIS); //TODO
-			Date curDate = new Date();
-			long timeNow = curDate.getTime();
-			long timeThen = ((Date)newProperty).getTime();
-			Long triggerAtMillis = timeThen - timeNow - alarmLeadTime;
-			if (triggerAtMillis > 0) {
-				SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-				Boolean repeatPref = sharedPref.getBoolean("repeating_timer", false);
-				if (repeatPref) {
-					repeatingTimer( mTxt_skidFinishTime, triggerAtMillis, mMillisPerSkid );	
-				} else {
-					onetimeTimer(mTxt_skidFinishTime, triggerAtMillis);
+			if (newProperty == null) {
+				mTxt_skidFinishTime.setText("");
+			} else {
+				SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US);
+				String formattedTime = formatter.format((Date)newProperty);
+				mTxt_skidFinishTime.setText(formattedTime);
+
+				//set alarm 
+				long alarmLeadTime = (long) (1.5 * HelperFunction.ONE_MINUTE_IN_MILLIS); //TODO
+				Date curDate = new Date();
+				long timeNow = curDate.getTime();
+				long timeThen = ((Date)newProperty).getTime();
+				Long triggerAtMillis = timeThen - timeNow - alarmLeadTime;
+				if (triggerAtMillis > 0) {
+					SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+					Boolean repeatPref = sharedPref.getBoolean("repeating_timer", false);
+					if (repeatPref) {
+						repeatingTimer( mTxt_skidFinishTime, triggerAtMillis, mMillisPerSkid );	
+					} else {
+						onetimeTimer(mTxt_skidFinishTime, triggerAtMillis);
+					}
 				}
-								
-			}			
+			}
+			
 		} else if (propertyName == PrimexModel.CURRENT_SKID_START_TIME_CHANGE_EVENT) {
-			SimpleDateFormat formatter2 = new SimpleDateFormat("h:mm a", Locale.US);
-			String formattedTime2 = formatter2.format((Date)newProperty);
-			mTxt_skidStartTime.setText(formattedTime2);
+			if (newProperty == null) {
+				mTxt_skidStartTime.setText("");
+			} else {
+				SimpleDateFormat formatter2 = new SimpleDateFormat("h:mm a", Locale.US);
+				String formattedTime2 = formatter2.format((Date)newProperty);
+				mTxt_skidStartTime.setText(formattedTime2);
+			}
 			
 		} else if (propertyName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
 			long minutes = Math.round((Double)newProperty);
