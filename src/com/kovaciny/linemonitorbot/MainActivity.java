@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Locale;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -303,17 +305,8 @@ public class MainActivity extends FragmentActivity implements
 			mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());
 	        break;
 		case R.id.clear_wos:
-			//clear the menu
-			mJobPicker.getSubMenu().removeGroup(JOB_LIST_MENU_GROUP);
-			
-			//clear the menu title
-			mJobPicker.setTitle(R.string.action_pick_job_title);
-			
-			//clear the database
-			mModel.clearWoNumbers();
-			
-			//make sure a new WO always exists
-			mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());
+			ClearWorkOrdersDialogFragment clearDialog = new ClearWorkOrdersDialogFragment();
+			clearDialog.show(getFragmentManager(), "clearDialog");
 			break;
 		case R.id.action_settings:
 			Intent intent = new Intent(this, SettingsActivity.class);
@@ -322,6 +315,20 @@ public class MainActivity extends FragmentActivity implements
 	    default:
 	    }
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public void clearWos() {
+		//clear the menu
+		mJobPicker.getSubMenu().removeGroup(JOB_LIST_MENU_GROUP);
+		
+		//clear the menu title
+		mJobPicker.setTitle(R.string.action_pick_job_title);
+		
+		//clear the database
+		mModel.clearWoNumbers();
+		
+		//make sure a new WO always exists
+		mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());
 	}
 	
 	public void updateSkidData(Integer skidNumber, Integer currentCount, Integer totalCount, Integer numberOfSkids) {
