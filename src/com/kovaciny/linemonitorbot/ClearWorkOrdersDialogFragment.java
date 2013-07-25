@@ -25,6 +25,4 @@ public class ClearWorkOrdersDialogFragment extends DialogFragment {
 		// Create the AlertDialog
 		return builder.create();
 	}
-
-	
 }

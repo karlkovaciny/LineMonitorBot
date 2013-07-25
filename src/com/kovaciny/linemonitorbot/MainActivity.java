@@ -325,7 +325,7 @@ public class MainActivity extends FragmentActivity implements
 		mJobPicker.setTitle(R.string.action_pick_job_title);
 		
 		//clear the database
-		mModel.clearWoNumbers();
+		mModel.deleteWorkOrders();
 		
 		//make sure a new WO always exists
 		mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());
