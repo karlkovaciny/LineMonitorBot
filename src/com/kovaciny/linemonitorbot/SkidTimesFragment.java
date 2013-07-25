@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -15,6 +16,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -45,6 +49,7 @@ public class SkidTimesFragment extends SectionFragment implements
 	private Button mBtn_enterProduct;
 	private Button mBtn_cancelAlarm;
 	private Button mBtn_calculateTimes;
+	private Button mBtn_calculator;
 	
 	private List<EditText> mEditableGroup;
 	private List<TextView> mTimesDisplayList;
@@ -114,6 +119,9 @@ public class SkidTimesFragment extends SectionFragment implements
 				
 		mBtn_calculateTimes = (Button) rootView.findViewById(R.id.btn_calculate_times);
 		mBtn_calculateTimes.setOnClickListener(this);
+		
+		mBtn_calculator = (Button) rootView.findViewById(R.id.btn_calculator);
+		mBtn_calculator.setOnClickListener(this);
 		
 		//set up textViews
 		mTxt_timePerSkid = (TextView) rootView.findViewById(R.id.txt_time_per_skid);		
@@ -252,6 +260,45 @@ public class SkidTimesFragment extends SectionFragment implements
 			break;
 		case (R.id.btn_cancel_alarm):
 			cancelAlarm();
+			break;
+		case (R.id.btn_calculator):
+			ArrayList<HashMap<String,Object>> items =new ArrayList<HashMap<String,Object>>();
+			final PackageManager pm = getActivity().getPackageManager();
+			List<PackageInfo> packs = pm.getInstalledPackages(0);  
+			for (PackageInfo pi : packs) {
+				if( pi.packageName.toString().toLowerCase().contains("calcul")){
+					HashMap<String, Object> map = new HashMap<String, Object>();
+					map.put("appName", pi.applicationInfo.loadLabel(pm));
+					map.put("packageName", pi.packageName);
+					items.add(map);
+				}
+			}
+			if(items.size()>=1){
+				//Search the list for the first calculator whose name starts with just plain "Calculator".
+				//If you don't find one, take the first app in the list.
+				boolean found = false;
+				String packageName = "";
+				for (HashMap<String, Object> hm : items) {
+					if (!found) {
+						String appName = (String) hm.get("appName");
+						if (appName.toLowerCase().startsWith("calc")) {
+							packageName = (String) hm.get("packageName");
+							found = true;
+						}
+					}
+				}
+				if (!found) {
+					packageName = (String) items.get(0).get("packageName");
+				}
+				Intent i = pm.getLaunchIntentForPackage(packageName);
+				if (i != null)
+					startActivity(i);
+			} 
+			else{
+				// Application not found
+		    	Toast.makeText(getActivity(), "No calculator found", Toast.LENGTH_SHORT).show();
+			}
+	
 			break;
 		}
 	}
