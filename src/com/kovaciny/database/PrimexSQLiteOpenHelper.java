@@ -167,15 +167,15 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	db.execSQL(SQL_CREATE_PRODUCTION_LINES);
         //Batch insert to SQLite database on Android
         try {
-        	List<Integer> linesWithGearedSpeedControl = Arrays.asList(6,9,12,16,17); //TODO remove this and speed controller type
+        	List<Integer> linesWithGearedSpeedControl = Arrays.asList(6,9,12,17); //TODO remove this and speed controller type
         	List<Double> lengthsList = 
         			Arrays.asList(new Double[] {99.0d, 51.5d, 34.2d, 46.0d, 44.7d,  45.7d,56.7d,56.3d,64.3d,46.5d, 45.0d,61.9d, 71d});
         	Iterator<Double> lengthsIterator = lengthsList.iterator();
         	
-        	List<Double> dieWidthsList = Arrays.asList(new Double[]{1000d,58d,53d,58d,64d, 64d,78d,75d,75d,64d, 64d, 58.5d, 53d});
+        	List<Double> dieWidthsList = Arrays.asList(new Double[]{130d,58d,53d,58d,64d, 64d,78d,75d,75d,64d, 64d, 58.5d, 53d});
         	Iterator<Double> dieWidthsIterator = dieWidthsList.iterator();
         	
-        	List<Double> speedFactorsList = Arrays.asList(new Double[]{1d,.0769d,1d,.99d,1.015d,  1d,1d,.98d,1d,1.01d, 1d,.0347d,1.003d});        	
+        	List<Double> speedFactorsList = Arrays.asList(new Double[]{.4032d,.0771d,1d,.99d,1.015d,  1d,1d,.98d,.98d,1.01d, 1d,.0347d,1.003d});        	
         	Iterator<Double> speedFactorsIterator = speedFactorsList.iterator();
         	
 	        db.beginTransaction();
