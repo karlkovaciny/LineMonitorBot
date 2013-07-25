@@ -36,7 +36,8 @@
 			        android:layout_alignBaseline="@id/lbl_skid_number"
 			        android:inputType="number"
 			        android:maxLength="4"
-			        android:text="1" />
+			        android:text="1"
+			        android:imeOptions="actionNext" />
 
 			    <TextView
 			        android:id="@+id/textView123"
@@ -54,7 +55,9 @@
 			        android:layout_toRightOf="@id/textView123"
 			        android:layout_alignBaseline="@id/lbl_skid_number"
 			        android:inputType="number"
-			        android:maxLength="3" />
+			        android:maxLength="3"
+			        android:imeOptions="actionNext"
+			        android:nextFocusForward="@+id/edit_current_count" />
 
 			    <Button
 			        android:id="@+id/btn_enter_product"
@@ -71,7 +74,7 @@
 			        android:text="Sheets: " />
 			    
 			    <EditText
-			        android:id="@+id/edit_current_count"
+			        android:id="@id/edit_current_count"
 			        style="@style/EditText"
 			        android:layout_width="wrap_content"
 		        	android:layout_height="wrap_content"
