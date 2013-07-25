@@ -461,7 +461,7 @@ public class PrimexModel {
 		return mDbHelper.getHighestWoNumber();
 	}
 	
-	public void clearWoNumbers() {
+	public void deleteWorkOrders() {
 		mDbHelper.clearWorkOrders();		
 	}
 
