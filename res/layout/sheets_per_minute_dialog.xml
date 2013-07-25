@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2.5"
                 android:inputType="numberDecimal"
-                android:maxLength="5" />
+                android:maxLength="6" />
             
         </TableRow>
 
@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:selectAllOnFocus="true"
                 android:layout_weight="2.5"
-				android:maxLength="5"
+				android:maxLength="6"
                 android:inputType="numberDecimal" />
 
         </TableRow>
@@ -170,7 +170,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2.5"
                 android:ems="10"
-                android:maxLength="5"
+                android:maxLength="6"
                 android:inputType="numberDecimal" />
 
         </TableRow>
