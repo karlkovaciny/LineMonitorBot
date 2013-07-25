@@ -352,15 +352,19 @@ public class PrimexModel {
 			mSelectedWorkOrder.setEdgeTrimPercent(edgeTrimRatio);
 			propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, oldEt, edgeTrimRatio);
 			
-			Double oldGross = null; //mGrossPph;
-			double grossPph = netPph / (1 - edgeTrimRatio);
-			mSelectedWorkOrder.setGrossPph(grossPph);
-			propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, oldGross, grossPph);
+			if (edgeTrimRatio < 1) {
+				double grossPph = netPph / (1 - edgeTrimRatio);
+				mSelectedWorkOrder.setGrossPph(grossPph);
+				propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, null, grossPph);
+				
+				if (grossPph > 0) {
+					double colorPercent =  mSelectedLine.getNovatec().getRate() / grossPph;
+					mSelectedWorkOrder.setColorPercent(colorPercent);
+					propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, null, colorPercent);
+				}
+
+			}
 			
-			Double oldColorPercent = null; //mColorPercent;
-			double colorPercent =  mSelectedLine.getNovatec().getRate() / grossPph;
-			mSelectedWorkOrder.setColorPercent(colorPercent);
-			propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, oldColorPercent, colorPercent);
 		} 		
 	}
 	
