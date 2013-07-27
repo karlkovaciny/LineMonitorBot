@@ -87,7 +87,24 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		a.finish();
 	}
 	
-	
+	public void testSwitchLines() {
+		getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
+		getInstrumentation().invokeMenuActionSync(mActivity, R.id.action_pick_line, 0);
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER); //click line 99
+		
+		mActivity.runOnUiThread(new Runnable() {
+		     public void run() {
+		    	 
+		     }
+		});
+		getInstrumentation().waitForIdleSync();
+		
+		assertEquals("9", mEdit_currentCount.getText().toString()); //only works if preset
+
+	}
 //		String afterClick = mTxt_sheetsPerMinute.getText().toString();
 //		assertEquals("beforeClick = " + beforeClick + ", afterClick = " + afterClick, beforeClick, afterClick);
 
@@ -125,6 +142,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		try {
 			this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
 			//I think this should have thrown an exception even though the comment that was here said it shouldn't.
+			//needs to run when certain lines don't have products?
 			assertEquals(getActivity().getString(R.string.prompt_need_product), mBtn_enterProduct.getError()); 
 			
 		} catch (IllegalStateException e) {
