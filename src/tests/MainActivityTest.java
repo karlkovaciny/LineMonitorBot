@@ -124,7 +124,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		//asserts OK here
 		try {
 			this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
-			assertEquals(null, mBtn_enterProduct.getError()); //The click must not have thrown a no product exception
+			//I think this should have thrown an exception even though the comment that was here said it shouldn't.
+			assertEquals(getActivity().getString(R.string.prompt_need_product), mBtn_enterProduct.getError()); 
 			
 		} catch (IllegalStateException e) {
 			fail ("Threw exception don't know why");
