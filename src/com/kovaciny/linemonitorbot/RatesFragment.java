@@ -8,6 +8,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,9 +21,8 @@ import android.widget.Toast;
 import com.kovaciny.primexmodel.Novatec;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
-import com.kovaciny.primexmodel.WorkOrder;
 
-public class RatesFragment extends SectionFragment implements OnClickListener{
+public class RatesFragment extends Fragment implements OnClickListener{
 	EditText mEdit_grossWidth;
 	TextView mTxt_edgeTrimPercent;
 	EditText mEdit_sheetWeight;
@@ -43,7 +43,7 @@ public class RatesFragment extends SectionFragment implements OnClickListener{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		View rootView = inflater.inflate(R.layout.rates_fragment, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_rates, container, false);
 		
 		mEdit_grossWidth = (EditText)  rootView.findViewById(R.id.edit_gross_width);
 		mEditableGroup.add(mEdit_grossWidth);

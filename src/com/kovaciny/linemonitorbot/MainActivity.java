@@ -8,10 +8,8 @@ import java.util.List;
 import java.util.Locale;
 
 import android.app.ActionBar;
-import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -308,9 +306,13 @@ public class MainActivity extends FragmentActivity implements
 			ClearWorkOrdersDialogFragment clearDialog = new ClearWorkOrdersDialogFragment();
 			clearDialog.show(getFragmentManager(), "clearDialog");
 			break;
+		case R.id.action_view_database:
+			Intent dbintent = new Intent(this, DatabaseViewerActivity.class);
+			this.startActivity(dbintent);
+			break;
 		case R.id.action_settings:
-			Intent intent = new Intent(this, SettingsActivity.class);
-			this.startActivity(intent);
+			Intent settingsIntent = new Intent(this, SettingsActivity.class);
+			this.startActivity(settingsIntent);
 			break;
 	    default:
 	    }
@@ -425,7 +427,6 @@ public class MainActivity extends FragmentActivity implements
 						
 			// Return a SectionFragment with the page number as its lone argument.
 			Fragment fragment;
-			Bundle args = new Bundle();
 			
 			switch(position){
 			case SKID_TIMES_FRAGMENT_POSITION:
@@ -438,11 +439,9 @@ public class MainActivity extends FragmentActivity implements
 				fragment = new DrainingFragment();
 				break;
 			default:
-				fragment = new SectionFragment();
+				fragment = new DrainingFragment(); //better never get here!
 			}
 			
-			args.putInt(SectionFragment.ARG_SECTION_NUMBER, position + 1);
-			fragment.setArguments(args);
 			return fragment;
 		}
 
