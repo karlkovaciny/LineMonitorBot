@@ -21,6 +21,8 @@ public class WorkOrder {
 	private double mNetPph;
 	private double mGrossPph;
 	private double mColorPercent;
+	private double mLineSpeedSetpoint;
+	private double mDifferentialSetpoint;
 	
 	
 	static final double MAX_STACK_HEIGHT_OLEFINS = 24d;
@@ -225,6 +227,23 @@ public class WorkOrder {
 		String finish = (mFinishDate == null) ? "n/a" : mFinishDate.toString();
 		return "W0" + mWoNumber + ": selected skid " + String.valueOf(mSelectedSkidPosition + 1) + " of " + 
 				String.valueOf(mSkidsList.size()) + ", finish time " + finish + "\nRates: net " + mNetPph + 
-				", gross " + mGrossPph;
+				", gross " + mGrossPph + ", line speed setpoint " + String.valueOf(mLineSpeedSetpoint) + ", differential " +
+				String.valueOf(mDifferentialSetpoint);
+	}
+
+	public void setLineSpeedSetpoint(double setpoint) {
+		mLineSpeedSetpoint = setpoint;
+	}
+	
+	public double getLineSpeedSetpoint() {
+		return mLineSpeedSetpoint;
+	}
+
+	public double getDifferentialSetpoint() {
+		return mDifferentialSetpoint;
+	}
+
+	public void setDifferentialSetpoint(double differentialSetpoint) {
+		this.mDifferentialSetpoint = differentialSetpoint;
 	}
 }

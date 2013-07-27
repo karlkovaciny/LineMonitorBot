@@ -32,7 +32,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 106;
+    public static final int DATABASE_VERSION = 107;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -70,6 +70,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NET_PPH + DOUBLE_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_GROSS_PPH + DOUBLE_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_COLOR_PERCENT + DOUBLE_TYPE + COMMA_SEP +
+	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_LINE_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
+	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_DIFFERENTIAL_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
 	    	" UNIQUE (" + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + ")" +
 	    	" )";
     
@@ -551,6 +553,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NET_PPH, newWo.getNetPph());
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_GROSS_PPH, newWo.getGrossPph());
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_COLOR_PERCENT, newWo.getColorPercent());
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_LINE_SPEED_SETPOINT, newWo.getLineSpeedSetpoint());
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_DIFFERENTIAL_SETPOINT, newWo.getDifferentialSetpoint());
 		long rowId;
 		try {
 			rowId = db.insertWithOnConflict(
@@ -587,6 +591,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		double netpph;
 		double grosspph;
 		double colorpct;
+		double linespeed;
+		double differential;
 		try {
 			if (resultCursor.moveToFirst()) {
 		    	wonum = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER));
@@ -600,6 +606,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		    	netpph = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NET_PPH));
 		    	grosspph = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_GROSS_PPH));
 		    	colorpct = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_COLOR_PERCENT));
+		    	linespeed = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_LINE_SPEED_SETPOINT));
+		    	differential = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_DIFFERENTIAL_SETPOINT));
+		    	
 		    	WorkOrder wo = new WorkOrder(wonum);
 				if (prod_id != -1) {
 					wo.setProduct(getProduct(wonum));
@@ -624,6 +633,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				wo.setNetPph(netpph);
 				wo.setGrossPph(grosspph);
 				wo.setColorPercent(colorpct);
+				wo.setLineSpeedSetpoint(linespeed);
+				wo.setDifferentialSetpoint(differential);
 				Log.v("Verbose", "just loaded this work order: " + wo.toString());
 				return wo;
 			} else return null;
