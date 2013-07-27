@@ -49084,7 +49084,7 @@ Methods (count = 6):
       [2] ldc #3
         + String [Primex.db]
       [4] aconst_null
-      [5] bipush 105
+      [5] bipush 106
       [7] invokespecial #19
         + Methodref [android/database/sqlite/SQLiteOpenHelper.<init> (Landroid/content/Context;Ljava/lang/String;Landroid/database/sqlite/SQLiteDatabase$CursorFactory;I)V]
       [10] return
@@ -50313,7 +50313,7 @@ Methods (count = 26):
       [2] ldc #41
         + String [Primex.db]
       [4] aconst_null
-      [5] bipush 105
+      [5] bipush 106
       [7] invokespecial #257
         + Methodref [android/database/sqlite/SQLiteOpenHelper.<init> (Landroid/content/Context;Ljava/lang/String;Landroid/database/sqlite/SQLiteDatabase$CursorFactory;I)V]
       [10] return
@@ -59174,7 +59174,7 @@ Methods (count = 18):
       [19] getfield #133
         + Fieldref [com/kovaciny/linemonitorbot/MainActivity.mModel Lcom/kovaciny/primexmodel/PrimexModel;]
       [22] pop
-      [23] bipush 105
+      [23] bipush 106
       [25] invokeinterface #286
         + InterfaceMethodref [android/content/SharedPreferences$Editor.putInt (Ljava/lang/String;I)Landroid/content/SharedPreferences$Editor;]
       [30] pop
