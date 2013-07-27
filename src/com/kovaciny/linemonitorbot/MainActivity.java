@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Locale;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -168,7 +170,24 @@ public class MainActivity extends FragmentActivity implements
 	private void doFirstRun() {
         SharedPreferences settings = getPreferences(MODE_PRIVATE);
         if (settings.getLong("firstRunDate", -1) == -1) {
-//            showDummyDialog("Welcome to LineMonitorBot!");
+        	AlertDialog.Builder builder = new AlertDialog.Builder(this).setMessage(
+					"Welcome to LineMonitorBot!\n\n" +
+					"* Pick your line from the top menu \n" +
+					"* Then, enter your product details.\n\n" +
+					"LineMonitorBot will\n\n" +
+					"* Know when your skids are done\n" +
+					"* Remind you by vibrating with 90 seconds left (optional)\n" +
+					"* Calculate your run rates.");
+			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			builder.show();
+        	
         	SharedPreferences.Editor editor = settings.edit();
             editor.putLong("firstRunDate", new Date().getTime());
             editor.commit();
