@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">LineMonitorBot</string>
+    <string name="settings_activity_name">Settings</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_section1">Skid Times</string>
+    <string name="title_section2">Rates</string>
+    <string name="title_section3">Draining</string>
+    <string name="action_pick_line_title">Pick Line</string>
+    <string name="action_pick_job_title">Pick Job</string>
+    <string-array name="line_list">
+        <item >Line 42</item>    
+    </string-array>
+    <string-array name="jobs_list">
+        <item >W0 #1</item>
+        <item >+ New&#160;</item>
+    </string-array>
+    <string-array name="vibrator_durations_entries">
+        <item >Long</item>
+        <item >Short</item>
+        <item >Off</item>
+    </string-array>
+    <string-array name="vibrator_durations_values">
+        <item >Long</item>
+        <item >Short</item>
+        <item >Off</item>        
+    </string-array>
+	<string name="new_wo">+ New</string>
+	<string name="ok">OK</string>
+	<string name="cancel">Cancel</string>
+	<string name="clear_wos">Clear</string>
+	<string name="placeholder">&#8230;</string>
+	<string name="debug_display">Debug</string>
+	<string name="calculate">Calculate</string>
+	<string name="title_activity_alarm_manager">Skid Finished Alarm Manager</string>
+	<string name="error_empty_field">Please enter a value</string>
+	<string name="error_need_nonzero">Value must be greater than zero</string>
+	<string name="prompt_need_product">Please enter a product</string>
+	<string name="confirm_clear_wos">Delete all work orders?</string>
+	<string name="pref_timer_default">Automatic</string>
+	
+	<string name="label_novatec_setpoint">Nova setpt</string>
+	
+</resources>

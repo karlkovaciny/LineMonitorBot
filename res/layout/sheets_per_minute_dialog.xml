@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ParentFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal" >
+
+        <ImageButton
+            android:id="@+id/imgbtn_sheets_or_rolls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/sheet_slider120"/>
+
+    </LinearLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:shrinkColumns="*"
+        android:stretchColumns="*">
+
+        <TableRow
+            android:id="@+id/TableRow02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_gauge"
+                style="@style/Label"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:layout_weight="4"
+                android:maxWidth="150dp"
+                android:text="Gauge" />
+
+            <EditText
+                android:id="@+id/edit_gauge"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:inputType="numberDecimal"
+                android:maxLength="5"
+                android:text=".010" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/TableRow01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_sheet_width"
+                style="@style/Label"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:maxLines="3"
+                android:maxWidth="150dp"
+                android:text="Width" />
+
+            <EditText
+                android:id="@+id/edit_sheet_width"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:inputType="numberDecimal"
+                android:maxLength="6" />
+            
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_sheet_length"
+                style="@style/Label"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:maxLines="3"
+                android:maxWidth="150dp"
+                android:text="Length" />
+
+            <EditText
+                android:id="@+id/edit_sheet_length"
+                style="@style/EditText"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:selectAllOnFocus="true"
+                android:layout_weight="2.5"
+				android:maxLength="6"
+                android:inputType="numberDecimal" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_line_speed"
+                style="@style/Label"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="Line speed" />
+
+            <EditText
+                android:id="@+id/edit_line_speed"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:maxLength="5"
+                android:ems="10"
+                android:inputType="numberDecimal" >
+            </EditText>
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/TableRow03"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="2" >
+
+            <TextView
+                android:id="@+id/lbl_differential_speed"
+                style="@style/Label"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="Differential" />
+
+            <EditText
+                android:id="@+id/edit_differential_speed"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:ems="10"
+                android:inputType="numberDecimal"
+                android:maxLength="10"/>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_speed_factor"
+                style="@style/Label"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="Speed factor" />
+
+            <EditText
+                android:id="@+id/edit_speed_factor"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:ems="10"
+                android:maxLength="6"
+                android:inputType="numberDecimal" />
+
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>
