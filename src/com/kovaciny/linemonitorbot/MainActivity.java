@@ -174,15 +174,16 @@ public class MainActivity extends FragmentActivity implements
             editor.commit();
         }
 }
-	public void showSheetsPerMinuteDialog() {
+	public Bundle showSheetsPerMinuteDialog() {
 		// Create the fragment and show it as a dialog.
 		SheetsPerMinuteDialogFragment newFragment = new SheetsPerMinuteDialogFragment();
 		Product currentProd = mModel.getSelectedWorkOrder().getProduct();
-		SpeedValues curSpeed = mModel.getSelectedLine().getSpeedValues();
 		Bundle args = new Bundle();
-		args.putDouble("SpeedFactor", curSpeed.speedFactor);
-		args.putDouble("LineSpeed", curSpeed.lineSpeedSetpoint);
-		args.putDouble("DifferentialSpeed", curSpeed.differentialSpeed);
+		args.putDouble("SpeedFactor", mModel.getSelectedLine().getSpeedValues().speedFactor); //TODO it will bite me that these aren't all in WO
+		args.putDouble("LineSpeed", mModel.getSelectedWorkOrder().getLineSpeedSetpoint());
+		Log.v("Verbose", "Just sent line speed " + mModel.getSelectedWorkOrder().getLineSpeedSetpoint() + "from line " + 
+			mModel.getSelectedLine().getLineNumber() +	"to dialog");
+		args.putDouble("DifferentialSpeed", mModel.getSelectedWorkOrder().getDifferentialSetpoint());
 		if (currentProd != null) {
 			args.putDouble("Gauge", currentProd.getGauge());
 			args.putDouble("SheetWidth", currentProd.getWidth());
@@ -192,7 +193,9 @@ public class MainActivity extends FragmentActivity implements
 		newFragment.setArguments(args);
 		newFragment.show(this.getFragmentManager(),
 				"SheetsPerMinuteDialog");
+		return args; //for unit testing
 	}
+	
 	// Implementing interface for SheetsPerMinuteDialogFragment
     public void onClickPositiveButton(DialogFragment d) {
     	if (d.getTag() == "SheetsPerMinuteDialog") {

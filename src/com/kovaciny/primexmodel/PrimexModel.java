@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.kovaciny.database.PrimexDatabaseSchema;
 import com.kovaciny.database.PrimexSQLiteOpenHelper;
@@ -197,6 +198,8 @@ public class PrimexModel {
 		
 	public void setCurrentSpeed (SpeedValues values) { 
 		mSelectedLine.setSpeedValues(values);
+		mSelectedWorkOrder.setLineSpeedSetpoint(values.lineSpeedSetpoint);
+		mSelectedWorkOrder.setDifferentialSetpoint(values.differentialSpeed);
 		String[] lineNum = new String[]{String.valueOf(mSelectedLine.getLineNumber())};
 		mDbHelper.updateColumn(PrimexDatabaseSchema.ProductionLines.TABLE_NAME,
 				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT,
@@ -304,7 +307,8 @@ public class PrimexModel {
 			if ( (lineNum == null)) {
 				throw new IllegalStateException("line number is null");
 			}
-		} catch (IllegalStateException e) { 
+		} catch (IllegalStateException e) {
+			Log.e("ERROR!", "Loaded a null line number from loadState");
 			lineNum = "18";
 		}
 		setSelectedLine(Integer.valueOf(lineNum));

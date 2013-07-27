@@ -37,6 +37,8 @@ public class PrimexDatabaseSchema {
 		public static final String COLUMN_NAME_NET_PPH = "net_pph";
 		public static final String COLUMN_NAME_GROSS_PPH = "gross_pph";
 		public static final String COLUMN_NAME_COLOR_PERCENT = "color_percent";
+		public static final String COLUMN_NAME_LINE_SPEED_SETPOINT = "line_speed_setpoint";
+		public static final String COLUMN_NAME_DIFFERENTIAL_SETPOINT = "differential_setpoint";
 	}
 	
 	public static abstract class LineWorkOrderLink implements BaseColumns {
