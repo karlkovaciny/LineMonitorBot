@@ -67,8 +67,8 @@ public class DatabaseViewerFragment extends Fragment implements OnItemSelectedLi
 			Iterator<String> columnNamesItr = columnNames.iterator();
 			Iterator<String> recordItr = record.iterator();
 			while (columnNamesItr.hasNext()) {
-				String colName = columnNamesItr.next();
-				colName.replace("_", " ");
+				String colName = columnNamesItr.next().replace("_"," ");
+				colName = Character.toUpperCase(colName.charAt(0)) + colName.substring(1);
 				results.add(colName);
 				String next = recordItr.next();
 				if (next == null) results.add("null");
