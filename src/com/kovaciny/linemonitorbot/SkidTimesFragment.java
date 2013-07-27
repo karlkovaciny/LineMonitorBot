@@ -18,6 +18,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,7 @@ import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.WorkOrder;
 
-public class SkidTimesFragment extends SectionFragment implements
+public class SkidTimesFragment extends Fragment implements
 		OnClickListener, OnEditorActionListener, OnItemSelectedListener, View.OnFocusChangeListener, ViewEventResponder	{
 	private SkidFinishedBroadcastReceiver mAlarmReceiver;
 	private List<Skid<Product>> mSkidList;
@@ -79,7 +80,7 @@ public class SkidTimesFragment extends SectionFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View rootView = inflater.inflate(R.layout.skid_times_fragment, container,
+		View rootView = inflater.inflate(R.layout.fragment_skid_times, container,
 				false);
 
 		//set up editTexts		

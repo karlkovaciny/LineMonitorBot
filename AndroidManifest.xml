@@ -33,14 +33,21 @@
             </intent-filter>
         </activity>
         <activity
-        android:name="com.kovaciny.linemonitorbot.SettingsActivity"
-        android:label="@string/settings_activity_name"
-        android:parentActivityName="com.kovaciny.linemonitorbot.MainActivity" >
-        <meta-data
-            android:name="settingsActivity"
-            android:value="com.kovaciny.linemonitorbot.SettingsActivity" />
-    </activity>
-        
+            android:name="com.kovaciny.linemonitorbot.SettingsActivity"
+            android:label="@string/settings_activity_name"
+            android:parentActivityName="com.kovaciny.linemonitorbot.MainActivity" >
+            <meta-data
+                android:name="settingsActivity"
+                android:value="com.kovaciny.linemonitorbot.SettingsActivity" />
+        </activity>
+        <activity
+            android:name="com.kovaciny.linemonitorbot.DatabaseViewerActivity"
+            android:label="@string/database_viewer_activity_name"
+            android:parentActivityName="com.kovaciny.linemonitorbot.MainActivity" >
+            <meta-data
+                android:name="databaseViewerActivity"
+                android:value="com.kovaciny.linemonitorbot.DatabaseViewerActivity" />
+        </activity>        
         <receiver android:name="com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver">
         </receiver>
     </application>
