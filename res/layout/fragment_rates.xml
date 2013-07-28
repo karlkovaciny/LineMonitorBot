@@ -63,6 +63,7 @@
                 android:id="@+id/edit_sheet_weight"
                 style="@style/EditText.SecondTableColumn"
                 android:ems="3"
+                android:text="@string/default_sheet_weight"
                 android:inputType="numberDecimal"
                 android:maxLength="5" />
 			<TextView

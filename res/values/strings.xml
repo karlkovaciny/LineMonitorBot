@@ -36,8 +36,10 @@
 	<string name="debug_display">Debug</string>
 	<string name="calculate">Calculate</string>
 	<string name="title_activity_alarm_manager">Skid Finished Alarm Manager</string>
+	<string name="default_sheet_weight">0.0</string>
 	<string name="error_empty_field">Please enter a value</string>
 	<string name="error_need_nonzero">Value must be greater than zero</string>
+	<string name="error_net_less_than_gross">Gross width must be larger than sheet width</string>
 	<string name="prompt_need_product">Please enter a product</string>
 	<string name="confirm_clear_wos">Delete all work orders?</string>
 	<string name="pref_timer_default">Automatic</string>

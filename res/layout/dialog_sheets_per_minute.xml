@@ -98,7 +98,8 @@
                 android:selectAllOnFocus="true"
                 android:layout_weight="2.5"
 				android:maxLength="6"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"
+                android:nextFocusForward="@+id/edit_line_speed" />
 
         </TableRow>
 
@@ -116,7 +117,7 @@
                 android:text="Line speed" />
 
             <EditText
-                android:id="@+id/edit_line_speed"
+                android:id="@id/edit_line_speed"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.5"

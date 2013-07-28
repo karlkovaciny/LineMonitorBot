@@ -98,7 +98,7 @@ public class RatesFragment extends Fragment implements OnClickListener{
 				} catch (IllegalStateException e) {
 					String cause = e.getCause().getMessage();
 					if (cause.equals(PrimexModel.ERROR_NET_LESS_THAN_GROSS)) {
-						mEdit_grossWidth.setError("Gross width must be higher than sheet width");
+						mEdit_grossWidth.setError(getString(R.string.error_net_less_than_gross));
 					} else if (cause.equals(PrimexModel.ERROR_NO_PRODUCT_SELECTED)){
 						Toast.makeText(getActivity(), R.string.prompt_need_product, Toast.LENGTH_LONG).show();
 						((MainActivity)getActivity()).showSheetsPerMinuteDialog();
@@ -117,9 +117,9 @@ public class RatesFragment extends Fragment implements OnClickListener{
 			Product p = (Product)newProperty;
 			Double sheetWeight = p.getUnitWeight();
 			if (sheetWeight <= 0) {
-				mEdit_sheetWeight.setText("");
+				mEdit_sheetWeight.setText(getString(R.string.default_sheet_weight));
 			} else {
-				String swdisp = new DecimalFormat("#0.00").format(sheetWeight);
+				String swdisp = new DecimalFormat("#0.###").format(sheetWeight);
 				mEdit_sheetWeight.setText(swdisp);
 			}
 			
