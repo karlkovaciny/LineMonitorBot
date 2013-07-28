@@ -73,7 +73,7 @@ public class RatesFragment extends Fragment implements OnClickListener{
 		
 		mBtn_calculateColorPercent = (Button) rootView.findViewById(R.id.btn_calculate_rates);
 		mBtn_calculateColorPercent.setOnClickListener(this);
-		mBtn_calculateColorPercent.getBackground().setColorFilter(new LightingColorFilter(0xFFDDDDFF, 0xFF0000FF));
+		mBtn_calculateColorPercent.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
 		return rootView;
 	}
 		

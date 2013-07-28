@@ -110,15 +110,15 @@ public class SkidTimesFragment extends Fragment implements
 		mBtn_enterProduct = (Button) rootView
 				.findViewById(R.id.btn_enter_product);
 		mBtn_enterProduct.setOnClickListener(this);
-		mBtn_enterProduct.getBackground().setColorFilter(new LightingColorFilter(0xFFDDDDFF, 0xFF0000FF));
+		mBtn_enterProduct.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
 		
 		mBtn_cancelAlarm = (Button) rootView.findViewById(R.id.btn_cancel_alarm);
 		mBtn_cancelAlarm.setOnClickListener(this);
-		mBtn_cancelAlarm.getBackground().setColorFilter(new LightingColorFilter(0xFFDDDDFF, 0xFF0000FF));
+		mBtn_cancelAlarm.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
 		
 		mBtn_calculateTimes = (Button) rootView.findViewById(R.id.btn_calculate_times);
 		mBtn_calculateTimes.setOnClickListener(this);
-		mBtn_calculateTimes.getBackground().setColorFilter(new LightingColorFilter(0xFFDDDDFF,0xFF0000FF));
+		mBtn_calculateTimes.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF,0xFF0000FF));
 		
 		//set up textViews
 		mTxt_timePerSkid = (TextView) rootView.findViewById(R.id.txt_time_per_skid);		
