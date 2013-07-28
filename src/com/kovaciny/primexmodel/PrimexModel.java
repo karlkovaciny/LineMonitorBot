@@ -277,10 +277,12 @@ public class PrimexModel {
 			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, 
 					null, null, String.valueOf(getSelectedLine().getLineNumber()));
+			Log.v("saveState", "Saved state of line number " + String.valueOf(mSelectedLine.getLineNumber()));
 		} else {
 			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, 
 					null, null, null);
+			Log.e("saveState", "saved state with no selected line somehow.");
 		}
 		
 		if (hasSelectedWorkOrder()) {
@@ -290,15 +292,18 @@ public class PrimexModel {
 					null, null, String.valueOf(getSelectedWorkOrder().getWoNumber()));
 			if (mSelectedSkid != null) {
 				saveSkid(mSelectedSkid);
+				Log.v("saveState", "Saved state of selected skid");
 			}
 		} else {
 			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, 
 					null, null, null);
+			Log.e("saveState", "saved state with no selected work order somehow.");
 		}
 		
 		if (hasSelectedProduct()){
 			saveProduct(mSelectedWorkOrder.getProduct());
+			Log.v("saveState", "Saved state of selected product.");
 		}
 	}
 

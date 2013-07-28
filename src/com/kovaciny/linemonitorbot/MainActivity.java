@@ -258,10 +258,10 @@ public class MainActivity extends FragmentActivity implements
 			throw new RuntimeException("something threw a null event");
 		}
 		String eventName = event.getPropertyName();
-		Log.v("VERBOSE", eventName);
+		Log.v("Event", eventName);
 		Object newProperty = event.getNewValue();
 		String objectDescription = (newProperty == null) ? "null" : newProperty.toString();
-		Log.v("VERBOSE", objectDescription);
+		Log.v("Event value", objectDescription);
 		
 		SkidTimesFragment skidTimesFrag = (SkidTimesFragment) this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
 		RatesFragment ratesFrag = (RatesFragment) this.findFragmentByPosition(MainActivity.RATES_FRAGMENT_POSITION);
