@@ -64,6 +64,8 @@ public class MainActivity extends FragmentActivity implements
 	private MenuItem mJobPicker;
 	private MenuItem mLinePicker;
 	private PrimexModel mModel;
+	
+	private ActionBar mActionBar;
 	   
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +112,10 @@ public class MainActivity extends FragmentActivity implements
 			actionBar.addTab(actionBar.newTab()
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
+			
 		}
+		
+		mActionBar = actionBar;
 	}
 	
 	@Override
@@ -367,7 +372,6 @@ public class MainActivity extends FragmentActivity implements
 		mModel.changeSelectedSkid(skidNumber);
 		mModel.saveSkid(skid);	
 
-		mModel.calculateRates();
 		mModel.calculateTimes();
 	}
 	

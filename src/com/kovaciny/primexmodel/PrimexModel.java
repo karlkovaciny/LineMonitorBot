@@ -52,6 +52,7 @@ public class PrimexModel {
 	public static final String ERROR_NO_PRODUCT_SELECTED = "PrimexModel.No product selected";
 	public static final String ERROR_NO_SKID_SELECTED = "PrimexModel.No skid selected";
 	public static final String ERROR_ZERO_LINE_SPEED = "PrimexModel.Dividing by zero line speed";
+	public static final String ERROR_NO_PPM_VALUE = "PrimexModel.Products per minute is null";
 		
 	// Create PropertyChangeSupport to manage listeners and fire events.
 	private final PropertyChangeSupport propChangeSupport = new PropertyChangeSupport(this);
@@ -335,10 +336,11 @@ public class PrimexModel {
 			this.propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, null, mSelectedSkid);
 			mSkidChanged = false;
 		}
-		Double oldPpm = null; //mProductsPerMinute; 
-		double productsPerMinute = HelperFunction.INCHES_PER_FOOT / mSelectedWorkOrder.getProduct().getLength() * mSelectedLine.getLineSpeed();
-		mSelectedWorkOrder.setProductsPerMinute(productsPerMinute);
-		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, oldPpm, productsPerMinute);
+		
+		double productsPerMinute = mSelectedWorkOrder.getProductsPerMinute();
+		if (productsPerMinute == 0) {
+			throw new IllegalStateException(new Throwable(ERROR_NO_PPM_VALUE));
+		}
 		
 		Double oldNet = null; //mNetPph;
 		double netPph = productsPerMinute * mSelectedWorkOrder.getProduct().getUnitWeight() * HelperFunction.MINUTES_PER_HOUR;
@@ -386,24 +388,28 @@ public class PrimexModel {
 			this.propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, null, mSelectedSkid);
 			mSkidChanged = false;
 		}
-		double ppm = mSelectedWorkOrder.getProductsPerMinute();
-		if ( (ppm > 0 ) && (mSelectedSkid.getTotalItems() > 0) ) {			
+		
+		double productsPerMinute = HelperFunction.INCHES_PER_FOOT / mSelectedWorkOrder.getProduct().getLength() * mSelectedLine.getLineSpeed();
+		mSelectedWorkOrder.setProductsPerMinute(productsPerMinute);
+		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, productsPerMinute);
+		
+		if ( (productsPerMinute > 0 ) && (mSelectedSkid.getTotalItems() > 0) ) {			
 			//calculate total time per skid. 
 			Double oldMinutes = null; //mSelectedSkid.getMinutesPerSkid();
-			double newMinutes = mSelectedSkid.calculateMinutesPerSkid(ppm);
+			double newMinutes = mSelectedSkid.calculateMinutesPerSkid(productsPerMinute);
 			propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, oldMinutes, newMinutes);
 			
 			//calculate skid start and finish time
 			Date oldStartTime = null; //mSelectedSkid.getStartTime(); 
-			Date newStartTime = mSelectedSkid.calculateStartTime(ppm);
+			Date newStartTime = mSelectedSkid.calculateStartTime(productsPerMinute);
 			Date oldFinishTime = mSelectedSkid.getFinishTime();
-			Date newFinishTime = mSelectedSkid.calculateFinishTimeWhileRunning(ppm);			
+			Date newFinishTime = mSelectedSkid.calculateFinishTimeWhileRunning(productsPerMinute);			
 			propChangeSupport.firePropertyChange(CURRENT_SKID_START_TIME_CHANGE_EVENT, oldStartTime, newStartTime);
 			propChangeSupport.firePropertyChange(CURRENT_SKID_FINISH_TIME_CHANGE_EVENT, oldFinishTime, newFinishTime);
 			
 			//calculate job finish times
 			Date oldJobFinishTime = null; //mSelectedWorkOrder.getFinishTime();
-			Date newJobFinishTime = mSelectedWorkOrder.calculateFinishTimes(ppm);
+			Date newJobFinishTime = mSelectedWorkOrder.calculateFinishTimes(productsPerMinute);
 			propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, oldJobFinishTime, newJobFinishTime);
 		}
 		if (mSelectedLine.getLineSpeed() > 0) {
