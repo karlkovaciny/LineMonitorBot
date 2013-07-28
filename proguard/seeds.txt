@@ -50,6 +50,8 @@ android.support.v4.view.ViewPager: void setPageMarginDrawable(int)
 android.support.v4.view.ViewPager: void setScrollingCacheEnabled(boolean)
 android.support.v4.view.ViewPager$SavedState
 android.support.v4.view.ViewPager$SavedState: android.os.Parcelable$Creator CREATOR
+com.kovaciny.linemonitorbot.DatabaseViewerActivity
+com.kovaciny.linemonitorbot.DatabaseViewerActivity: DatabaseViewerActivity()
 com.kovaciny.linemonitorbot.MainActivity
 com.kovaciny.linemonitorbot.MainActivity: MainActivity()
 com.kovaciny.linemonitorbot.R$array: int jobs_list
@@ -228,6 +230,7 @@ com.kovaciny.linemonitorbot.R$id: int TableRow04
 com.kovaciny.linemonitorbot.R$id: int action_pick_job
 com.kovaciny.linemonitorbot.R$id: int action_pick_line
 com.kovaciny.linemonitorbot.R$id: int action_settings
+com.kovaciny.linemonitorbot.R$id: int action_view_database
 com.kovaciny.linemonitorbot.R$id: int btn_calculate_rates
 com.kovaciny.linemonitorbot.R$id: int btn_calculate_times
 com.kovaciny.linemonitorbot.R$id: int btn_cancel_alarm
@@ -270,13 +273,11 @@ com.kovaciny.linemonitorbot.R$id: int lbl_speed_factor
 com.kovaciny.linemonitorbot.R$id: int lbl_time_per_skid
 com.kovaciny.linemonitorbot.R$id: int lbl_time_to_maxson
 com.kovaciny.linemonitorbot.R$id: int line_list
-com.kovaciny.linemonitorbot.R$id: int listView1
 com.kovaciny.linemonitorbot.R$id: int new_wo
 com.kovaciny.linemonitorbot.R$id: int pager
 com.kovaciny.linemonitorbot.R$id: int pick_job_submenu
 com.kovaciny.linemonitorbot.R$id: int pick_line_submenu
 com.kovaciny.linemonitorbot.R$id: int rl_data_entry_group
-com.kovaciny.linemonitorbot.R$id: int section_label
 com.kovaciny.linemonitorbot.R$id: int skid_times_fragment_container
 com.kovaciny.linemonitorbot.R$id: int tableRow1
 com.kovaciny.linemonitorbot.R$id: int tableRow10
@@ -289,6 +290,7 @@ com.kovaciny.linemonitorbot.R$id: int tableRow7
 com.kovaciny.linemonitorbot.R$id: int tableRow8
 com.kovaciny.linemonitorbot.R$id: int tableRow9
 com.kovaciny.linemonitorbot.R$id: int table_name_spinner
+com.kovaciny.linemonitorbot.R$id: int textView1
 com.kovaciny.linemonitorbot.R$id: int textView123
 com.kovaciny.linemonitorbot.R$id: int textView124
 com.kovaciny.linemonitorbot.R$id: int textView3a
@@ -306,23 +308,24 @@ com.kovaciny.linemonitorbot.R$id: int txt_time_to_maxson
 com.kovaciny.linemonitorbot.R$layout: int action_pick_job
 com.kovaciny.linemonitorbot.R$layout: int action_pick_line
 com.kovaciny.linemonitorbot.R$layout: int activity_main
-com.kovaciny.linemonitorbot.R$layout: int database_gridview
+com.kovaciny.linemonitorbot.R$layout: int dialog_sheets_per_minute
 com.kovaciny.linemonitorbot.R$layout: int draining_fragment
 com.kovaciny.linemonitorbot.R$layout: int dummy_dialog
-com.kovaciny.linemonitorbot.R$layout: int fragment_main_dummy
-com.kovaciny.linemonitorbot.R$layout: int rates_fragment
-com.kovaciny.linemonitorbot.R$layout: int sheets_per_minute_dialog
-com.kovaciny.linemonitorbot.R$layout: int skid_times_fragment
+com.kovaciny.linemonitorbot.R$layout: int fragment_database_viewer
+com.kovaciny.linemonitorbot.R$layout: int fragment_rates
+com.kovaciny.linemonitorbot.R$layout: int fragment_skid_times
 com.kovaciny.linemonitorbot.R$layout: int spinnerriffic_textview
 com.kovaciny.linemonitorbot.R$menu: int main
 com.kovaciny.linemonitorbot.R$string: int action_pick_job_title
 com.kovaciny.linemonitorbot.R$string: int action_pick_line_title
 com.kovaciny.linemonitorbot.R$string: int action_settings
+com.kovaciny.linemonitorbot.R$string: int action_view_database_title
 com.kovaciny.linemonitorbot.R$string: int app_name
 com.kovaciny.linemonitorbot.R$string: int calculate
 com.kovaciny.linemonitorbot.R$string: int cancel
 com.kovaciny.linemonitorbot.R$string: int clear_wos
 com.kovaciny.linemonitorbot.R$string: int confirm_clear_wos
+com.kovaciny.linemonitorbot.R$string: int database_viewer_activity_name
 com.kovaciny.linemonitorbot.R$string: int debug_display
 com.kovaciny.linemonitorbot.R$string: int error_empty_field
 com.kovaciny.linemonitorbot.R$string: int error_need_nonzero
@@ -349,10 +352,7 @@ com.kovaciny.linemonitorbot.R$style: int Label_FirstTableColumn
 com.kovaciny.linemonitorbot.R$style: int Label_SecondTableColumn
 com.kovaciny.linemonitorbot.R$style: int ParentFragment
 com.kovaciny.linemonitorbot.R$style: int ParentFragment_HorizontallyDivided
-com.kovaciny.linemonitorbot.R$style: int ProgramCalculated
-com.kovaciny.linemonitorbot.R$style: int ProgramGuessed
 com.kovaciny.linemonitorbot.R$style: int Spinner
-com.kovaciny.linemonitorbot.R$style: int UserEntered
 com.kovaciny.linemonitorbot.R$xml: int preferences
 com.kovaciny.linemonitorbot.SettingsActivity
 com.kovaciny.linemonitorbot.SettingsActivity: SettingsActivity()

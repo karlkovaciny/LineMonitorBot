@@ -53,6 +53,8 @@ android.support.v4.app.Fragment:
     static final int RESUMED
     481:481:public final int getId()
     488:488:public final java.lang.String getTag()
+    499:503:public void setArguments(android.os.Bundle)
+    510:510:public final android.os.Bundle getArguments()
     522:527:public void setInitialSavedState(android.support.v4.app.Fragment$SavedState)
     541:543:public void setTargetFragment(android.support.v4.app.Fragment,int)
     549:549:public final android.support.v4.app.Fragment getTargetFragment()
@@ -956,8 +958,8 @@ com.kovaciny.database.PrimexSQLiteOpenHelper:
     private static final java.lang.String SQL_DELETE_PRODUCTION_LINES
     private static final java.lang.String SQL_DELETE_WORK_ORDERS
     private static final java.lang.String SQL_DELETE_MODEL_STATE
-    355:355:public void saveState()
-    706:725:public int getProductType(int)
+    357:357:public void saveState()
+    717:736:public int getProductType(int)
 com.kovaciny.helperfunctions.HelperFunction:
     public static final long ONE_HOUR_IN_MILLIS
     public static final long ONE_MINUTE_IN_MILLIS
@@ -976,7 +978,7 @@ com.kovaciny.linemonitorbot.MainActivity:
     public static final int SKID_TIMES_FRAGMENT_POSITION
     public static final int RATES_FRAGMENT_POSITION
     public static final int DRAINING_FRAGMENT_POSITION
-    523:525:void showDummyDialog(java.lang.String)
+    544:546:void showDummyDialog(java.lang.String)
 com.kovaciny.linemonitorbot.MyDialogFragment
 com.kovaciny.linemonitorbot.R
 com.kovaciny.linemonitorbot.R$array
@@ -990,21 +992,17 @@ com.kovaciny.linemonitorbot.R$menu
 com.kovaciny.linemonitorbot.R$string
 com.kovaciny.linemonitorbot.R$style
 com.kovaciny.linemonitorbot.R$xml
-com.kovaciny.linemonitorbot.SectionFragment:
-    public static final java.lang.String ARG_SECTION_NUMBER
-    28:35:static com.kovaciny.linemonitorbot.SectionFragment newInstance(int)
 com.kovaciny.linemonitorbot.SheetsPerMinuteDialogFragment:
     public static final java.lang.String SHEETS_MODE
     public static final java.lang.String ROLLS_MODE
-com.kovaciny.linemonitorbot.SissyFragment
 com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver:
     public static final java.lang.String ONE_TIME
     public static final java.lang.String REPEATING
 com.kovaciny.linemonitorbot.SkidTimesFragment:
     private java.util.List mSkidList
     private android.widget.TextView mLbl_totalProducts
-    178:178:public java.util.List getSkidList()
-    182:183:public void setSkidList(java.util.List)
+    183:183:public java.util.List getSkidList()
+    187:188:public void setSkidList(java.util.List)
 com.kovaciny.linemonitorbot.TimePickerFragment
 com.kovaciny.linemonitorbot.ViewEventResponder
 com.kovaciny.primexmodel.Concentrate
@@ -1051,10 +1049,10 @@ com.kovaciny.primexmodel.PrimexModel:
     public static final java.lang.String ERROR_ZERO_LINE_SPEED
     private java.util.List mJobList
     private com.kovaciny.linemonitorbot.Job mSelectedJob
-    64:65:public void removePropertyChangeListener(java.beans.PropertyChangeListener)
-    220:228:public void changeNovatecSetpoint(java.lang.Double)
-    427:428:public void closeDb()
-    457:457:public java.util.List getWoNumbers()
+    65:66:public void removePropertyChangeListener(java.beans.PropertyChangeListener)
+    223:231:public void changeNovatecSetpoint(java.lang.Double)
+    431:432:public void closeDb()
+    461:461:public java.util.List getWoNumbers()
 com.kovaciny.primexmodel.Product:
     public static final java.lang.String SHEETS_TYPE
     public static final java.lang.String ROLLS_TYPE
@@ -1336,6 +1334,7 @@ tests.ATestSuiteRunner
 tests.MainActivityTest
 tests.MainActivityTest$1
 tests.MainActivityTest$2
+tests.MainActivityTest$3
 tests.PrimexModelTest
 tests.PrimexModelTest$1
 tests.RatesFragmentTest
