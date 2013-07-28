@@ -62,7 +62,7 @@
     </style>
 
     <style name="Label.FirstTableColumn">
-        <item name="android:layout_gravity">left|center_vertical</item>
+        <item name="android:gravity">left|center_vertical</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dip</item>
         <item name="android:layout_weight">0.35</item>

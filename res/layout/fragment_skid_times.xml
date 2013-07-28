@@ -24,7 +24,9 @@
 			        style="@style/Label"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
-			        android:layout_alignParentLeft="true"
+			        android:layout_alignRight="@+id/lbl_products"
+			        android:layout_alignBaseline="@+id/btn_enter_product"
+			        android:paddingRight="12sp"
 			        android:text="Skid:" />
 
 			    <EditText
@@ -32,7 +34,7 @@
 			        style="@style/EditText"
 			        android:layout_width="wrap_content"
 		        	android:layout_height="wrap_content"
-			        android:layout_toRightOf="@id/lbl_skid_number"
+			        android:layout_toLeftOf="@+id/textView123"
 			        android:layout_alignBaseline="@id/lbl_skid_number"
 			        android:inputType="number"
 			        android:maxLength="4"
@@ -40,11 +42,13 @@
 			        android:imeOptions="actionNext" />
 
 			    <TextView
-			        android:id="@+id/textView123"
+			        android:id="@id/textView123"
 			        style="@style/Label"
 			   		android:layout_width="wrap_content"
 		        	android:layout_height="wrap_content"
-			        android:layout_toRightOf="@id/edit_skid_number"
+			        android:layout_alignLeft="@+id/textView124"
+			        android:layout_above="@id/textView124"
+			        android:layout_alignBaseline="@id/lbl_skid_number"
 			        android:text="of" />
 
 			    <EditText
@@ -60,7 +64,7 @@
 			        android:nextFocusForward="@+id/edit_current_count" />
 
 			    <Button
-			        android:id="@+id/btn_enter_product"
+			        android:id="@id/btn_enter_product"
 					android:layout_height="wrap_content"		
 	            	android:layout_width="wrap_content"		
 	         		android:gravity="right"
@@ -68,9 +72,10 @@
 			        android:text="Enter Product" />
 			    
 			    <TextView
-			        android:id="@+id/lbl_products"
+			        android:id="@id/lbl_products"
 			        style="@style/Label"
-			        android:layout_below="@id/btn_enter_product"
+			        android:layout_alignParentLeft="true"
+			        android:layout_alignBaseline="@+id/btn_calculate_times"
 			        android:text="Sheets: " />
 			    
 			    <EditText
@@ -87,10 +92,11 @@
 			        android:imeOptions="actionNext" />
 	
 			    <TextView
-			        android:id="@+id/textView124"
+			        android:id="@id/textView124"
 			        style="@style/Label"
 			        android:layout_below="@id/btn_enter_product"
 			        android:layout_toRightOf="@id/edit_current_count"
+			        android:layout_alignBaseline="@id/lbl_products"
 			        android:text="of" />
 	
 			    <EditText
@@ -107,7 +113,7 @@
 			        android:imeOptions="actionDone" />
 	
 			    <Button
-			        android:id="@+id/btn_calculate_times"
+			        android:id="@id/btn_calculate_times"
 				    android:layout_width="wrap_content"
 		        	android:layout_height="wrap_content"
 			    	android:layout_below="@id/btn_enter_product"
@@ -245,7 +251,8 @@
 	    <LinearLayout
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:gravity="center_horizontal" >
+	        android:gravity="center_horizontal"
+	        android:paddingTop="6dip" >
 
 	        <Button
 	            android:id="@+id/btn_cancel_alarm"
