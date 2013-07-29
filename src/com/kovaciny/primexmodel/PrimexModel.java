@@ -381,6 +381,9 @@ public class PrimexModel {
 	
 	public void calculateTimes() {
 		if (mSelectedSkid == null) throw new IllegalStateException(new Throwable("ERROR_NO_SELECTED_SKID"));
+		if (!hasSelectedProduct()) {
+			throw new IllegalStateException(new Throwable(ERROR_NO_PRODUCT_SELECTED));
+		}
 		if (mSpeedChanged) {
 			propChangeSupport.firePropertyChange(LINE_SPEED_CHANGE_EVENT, null, mSelectedLine.getLineSpeed());
 			mSpeedChanged = false;
