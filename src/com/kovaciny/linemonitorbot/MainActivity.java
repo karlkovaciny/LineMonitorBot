@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
@@ -204,10 +205,22 @@ public class MainActivity extends FragmentActivity implements
 		Product currentProd = mModel.getSelectedWorkOrder().getProduct();
 		Bundle args = new Bundle();
 		args.putDouble("SpeedFactor", mModel.getSelectedLine().getSpeedValues().speedFactor); //TODO it will bite me that these aren't all in WO
-		args.putDouble("LineSpeed", mModel.getSelectedWorkOrder().getLineSpeedSetpoint());
+		
+		//Load the line speed numbers for this work order or if none, the last ones used on this line.
+		Double lineSpeedSetpoint = mModel.getSelectedWorkOrder().getLineSpeedSetpoint();
+		if (lineSpeedSetpoint == 0d) {
+			lineSpeedSetpoint = mModel.getSelectedLine().getSpeedValues().lineSpeedSetpoint;
+		}
+		args.putDouble("LineSpeed", lineSpeedSetpoint);
 		Log.v("Verbose", "Just sent line speed " + mModel.getSelectedWorkOrder().getLineSpeedSetpoint() + "from line " + 
 			mModel.getSelectedLine().getLineNumber() +	"to dialog");
-		args.putDouble("DifferentialSpeed", mModel.getSelectedWorkOrder().getDifferentialSetpoint());
+		
+		Double differentialSpeed = mModel.getSelectedWorkOrder().getDifferentialSetpoint();
+		if (differentialSpeed == 0d) {
+			differentialSpeed = mModel.getSelectedLine().getSpeedValues().differentialSpeed;
+		}
+		args.putDouble("DifferentialSpeed", differentialSpeed);
+		
 		if (currentProd != null) {
 			args.putDouble("Gauge", currentProd.getGauge());
 			args.putDouble("SheetWidth", currentProd.getWidth());
@@ -225,27 +238,30 @@ public class MainActivity extends FragmentActivity implements
     	if (d.getTag() == "SheetsPerMinuteDialog") {
     		SheetsPerMinuteDialogFragment spmd = (SheetsPerMinuteDialogFragment)d;
     		
-    		double lineSpeed = spmd.getLineSpeedValue();
-    		double diffSpeed = spmd.getDifferentialSpeedValue();
-    		double speedFactor = spmd.getSpeedFactorValue();
-    		if ( !(lineSpeed > 0) ) lineSpeed = 0;
-    		if ( !(diffSpeed > 0) ) diffSpeed = 0;
-    		if ( !(speedFactor > 0) ) speedFactor = 0;
-    		updateSpeedData(lineSpeed, diffSpeed, speedFactor);
-    		
-    		String productType;
-    		if (spmd.getSheetsOrRollsState().equals(SheetsPerMinuteDialogFragment.ROLLS_MODE)) {
-    			productType = Product.ROLLS_TYPE;
-    		} else {
-    			productType = Product.SHEETS_TYPE;
-    		}
     		double gauge = spmd.getGauge();
     		double width = spmd.getSheetWidthValue();
     		double length = spmd.getSheetLengthValue();
-    		if ( !(gauge > 0)) gauge = 0;
-    		if ( !(width > 0)) width = 0;
-    		if ( !(length > 0)) length = 0;
-    		updateProductData(productType, gauge, width, length);
+    		double lineSpeed = spmd.getLineSpeedValue();
+    		double diffSpeed = spmd.getDifferentialSpeedValue();
+    		double speedFactor = spmd.getSpeedFactorValue();
+    		if ( !(lineSpeed > 0) ||
+    				!(diffSpeed > 0) ||
+    				!(speedFactor > 0) ||
+    				!(gauge > 0) ||
+    				!(width > 0) ||
+    				!(length > 0)) {
+    			Button btn_enterProduct = (Button) this.findViewById(R.id.btn_enter_product);
+    			btn_enterProduct.setError(getString(R.string.error_empty_field));
+    		} else {
+    			updateSpeedData(lineSpeed, diffSpeed, speedFactor);
+        		String productType;
+        		if (spmd.getSheetsOrRollsState().equals(SheetsPerMinuteDialogFragment.ROLLS_MODE)) {
+        			productType = Product.ROLLS_TYPE;
+        		} else {
+        			productType = Product.SHEETS_TYPE;
+        		}
+        		updateProductData(productType, gauge, width, length);
+    		}
     	}
     }	
     
