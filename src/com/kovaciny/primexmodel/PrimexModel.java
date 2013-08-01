@@ -342,7 +342,14 @@ public class PrimexModel {
 		
 		double productsPerMinute = mSelectedWorkOrder.getProductsPerMinute();
 		if (productsPerMinute == 0) {
-			throw new IllegalStateException(new Throwable(ERROR_NO_PPM_VALUE));
+			//TODO duplicated code
+			double productLength = mSelectedWorkOrder.getProduct().getLength();
+			double lineSpeed = mSelectedLine.getLineSpeed();
+			if ( (productLength > 0) && (lineSpeed > 0) ) {
+				productsPerMinute = HelperFunction.INCHES_PER_FOOT / productLength * lineSpeed;
+				mSelectedWorkOrder.setProductsPerMinute(productsPerMinute);
+				propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, productsPerMinute);
+			} else throw new IllegalStateException(new Throwable(ERROR_NO_PPM_VALUE));
 		}
 		
 		Double oldNet = null; //mNetPph;
