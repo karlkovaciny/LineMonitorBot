@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
+import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Products;
@@ -144,6 +145,17 @@ public class MainActivity extends FragmentActivity implements
 			mModel.loadState();
 		}
 		
+		//Delete all old  work order entries 
+		SharedPreferences settings = getPreferences(MODE_PRIVATE);
+		Date now = new Date();
+		Date lastEntryDate = new Date(settings.getLong("lastNewWoDate", 0));
+		long timeSinceLastEntry = now.getTime() - lastEntryDate.getTime();
+		if (timeSinceLastEntry > (2 * HelperFunction.ONE_MINUTE_IN_MILLIS) ) { //TODO debug 12 * HelperFunction.ONE_HOUR_IN_MILLIS 
+			Log.v("MainActivity.class", "Cleared work orders based on time since last new Wo entry");
+			showDummyDialog("Cleared work orders based on time since last new Wo entry");
+			clearWos();
+		}		
+
 		//populate the job picker with jobs
 		Menu pickJobSubMenu = mJobPicker.getSubMenu();
 		pickJobSubMenu.clear();
@@ -188,7 +200,7 @@ public class MainActivity extends FragmentActivity implements
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
+					// Do nothing
 					
 				}
 			});
@@ -344,6 +356,8 @@ public class MainActivity extends FragmentActivity implements
 		switch (item.getItemId()) {
 		case R.id.new_wo:
 			mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());
+			updateLastNewWoDate();
+			Log.v("MainActivity.class", "Just saved lastNewWoDate of " + new Date().toString());			
 	        break;
 		case R.id.clear_wos:
 			ClearWorkOrdersDialogFragment clearDialog = new ClearWorkOrdersDialogFragment();
@@ -369,13 +383,22 @@ public class MainActivity extends FragmentActivity implements
 		//clear the menu title
 		mJobPicker.setTitle(R.string.action_pick_job_title);
 		
+		updateLastNewWoDate();
+		
 		//clear the database
 		mModel.deleteWorkOrders();
 		
 		//make sure a new WO always exists
-		mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());
+		mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());		
 	}
 	
+	public void updateLastNewWoDate() {
+		SharedPreferences settings = getPreferences(MODE_PRIVATE);
+		SharedPreferences.Editor editor = settings.edit();
+		Date now = new Date();
+		editor.putLong("lastNewWoDate", now.getTime());
+		editor.commit();
+	}
 	public void updateSkidData(Integer skidNumber, Integer currentCount, Integer totalCount, Integer numberOfSkids) {
 		mModel.changeNumberOfSkids(numberOfSkids);
 		

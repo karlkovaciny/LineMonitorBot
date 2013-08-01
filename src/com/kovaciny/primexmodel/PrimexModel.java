@@ -178,7 +178,8 @@ public class PrimexModel {
 	public WorkOrder addWorkOrder() {
 		//generate a work order number
 		int newWoNumber = getHighestWoNumber() + 1;
-		return addWorkOrder(new WorkOrder(newWoNumber));
+		WorkOrder newWo = addWorkOrder(new WorkOrder(newWoNumber));
+		return newWo;
 	}
 	
 	public WorkOrder addWorkOrder(WorkOrder newWo) {
