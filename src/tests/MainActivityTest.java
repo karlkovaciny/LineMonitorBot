@@ -19,6 +19,7 @@ import com.kovaciny.linemonitorbot.MainActivity.SectionsPagerAdapter;
 import com.kovaciny.linemonitorbot.R;
 import com.kovaciny.linemonitorbot.RatesFragment;
 import com.kovaciny.linemonitorbot.SettingsActivity;
+import com.kovaciny.linemonitorbot.SheetsPerMinuteDialogFragment;
 import com.kovaciny.linemonitorbot.SkidTimesFragment;
 
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
@@ -209,9 +210,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 			
 		} catch (IllegalStateException e) {
 			fail ("Threw exception don't know why");
-		}
-		
-	    
+		}   
 	}
 	
 	public void testClickCalcRatesResetsSheetsPerMinute() {
@@ -225,6 +224,13 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
 		assertEquals(mTxt_sheetsPerMinute.getVisibility(), TextView.VISIBLE);
 	
+	}
+	
+	@Test
+	public void testShowSheetsPerMinuteDialog() {
+		clickButton(R.id.btn_enter_product);
+		SheetsPerMinuteDialogFragment spmd = (SheetsPerMinuteDialogFragment) mActivity.getFragmentManager().findFragmentByTag("SheetsPerMinuteDialog");
+		assertTrue(spmd != null);
 	}
 	/*
 	@Test
@@ -319,12 +325,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		fail("Not yet implemented"); // TODO
 	}
 
-	@Test
-	public void testShowSheetsPerMinuteDialog() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
+		@Test
 	public void testOnClickPositiveButton() {
 		fail("Not yet implemented"); // TODO
 	}
