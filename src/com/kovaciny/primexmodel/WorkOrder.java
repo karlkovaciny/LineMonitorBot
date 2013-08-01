@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import android.util.Log;
+
 import com.kovaciny.helperfunctions.HelperFunction;
 
 public class WorkOrder {
@@ -92,10 +94,13 @@ public class WorkOrder {
 	}
 	
 	/*
-	 * Removes the last skid
+	 * Removes the last skid.
+	 * Returns its skid number.
 	 */
-	public void removeSkid() {
+	public int removeLastSkid() {
+		int skidNumber = mSkidsList.size();
 		mSkidsList.remove(mSkidsList.size()-1);
+		return skidNumber;
 	}
 	
 	public boolean hasProduct() {
@@ -149,18 +154,8 @@ public class WorkOrder {
 		return numbers;
 	}
 	public int getNumberOfSkids() {
+		Log.v("WorkOrder.class", "returning number of skids: " + String.valueOf(mSkidsList.size()));
 		return mSkidsList.size();
-	}
-
-	public void setNumberOfSkids(int num) {
-		/*if (num < 0) throw new RuntimeException ("Negative number of skids");
-		while ( getNumberOfSkids() > num) {
-			removeSkid();
-		}
-		while (getNumberOfSkids() < num) {
-			addOrUpdateSkid(null);
-		}
-		if (getNumberOfSkids() != num) throw new RuntimeException("something isn't right here");*/
 	}
 
 	public Skid<Product> getSelectedSkid() {

@@ -5,10 +5,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.app.Instrumentation.ActivityMonitor;
 import android.support.v4.view.ViewPager;
 import android.test.ActivityInstrumentationTestCase2;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +19,6 @@ import com.kovaciny.linemonitorbot.MainActivity.SectionsPagerAdapter;
 import com.kovaciny.linemonitorbot.R;
 import com.kovaciny.linemonitorbot.RatesFragment;
 import com.kovaciny.linemonitorbot.SettingsActivity;
-import com.kovaciny.linemonitorbot.SheetsPerMinuteDialogFragment;
 import com.kovaciny.linemonitorbot.SkidTimesFragment;
 
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
@@ -31,6 +30,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	ViewPager mViewPager;
 	TextView mTxt_sheetsPerMinute;
 	EditText mEdit_currentCount;
+	EditText mEdit_numSkidsInJob;
 	Button mBtn_calculateTimes;
 	Button mBtn_calculateRates;
 	Button mBtn_enterProduct;
@@ -49,6 +49,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	    mRatesFragment = (RatesFragment)mActivity.findFragmentByPosition(MainActivity.RATES_FRAGMENT_POSITION);
 	    mTxt_sheetsPerMinute = (TextView)mActivity.findViewById(R.id.txt_products_per_minute);
 	    mEdit_currentCount = (EditText)mActivity.findViewById(R.id.edit_current_count);
+	    mEdit_numSkidsInJob = (EditText)mActivity.findViewById(R.id.edit_num_skids_in_job);
 	    mBtn_calculateTimes = (Button)mActivity.findViewById((R.id.btn_calculate_times));
 	    mBtn_enterProduct = (Button)mActivity.findViewById(R.id.btn_enter_product);
 	    mBtn_calculateRates = (Button)mActivity.findViewById(R.id.btn_calculate_rates);
@@ -67,15 +68,60 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		super.tearDown();
 	}
 	
-	public void testStateDestroy() {
-		String beforeDestroy = mTxt_sheetsPerMinute.getText().toString();
+	public void testStateDestroyRestoreNumSkids() {
+		//setup: add two skids to the current total, then subtract one, then destroy the activity to
+		//see if the database has only your new number of skids.
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				Integer currentNumSkids = Integer.valueOf(mEdit_numSkidsInJob.getText().toString());
+				String newNumSkids = String.valueOf(currentNumSkids + 3);
+				mEdit_numSkidsInJob.setText(newNumSkids);
+				mBtn_calculateTimes.requestFocus();
+			}
+		});
+		getInstrumentation().waitForIdleSync();
+		//asserts and this.sendKeys() OK here
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
+		
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				Integer currentNumSkids = Integer.valueOf(mEdit_numSkidsInJob.getText().toString());
+				String newLowerNumSkids = String.valueOf(currentNumSkids - 1);
+				mEdit_numSkidsInJob.setText(newLowerNumSkids);
+				mEdit_currentCount.setText("69");
+				mBtn_calculateTimes.requestFocus();
+			}
+		});
+		getInstrumentation().waitForIdleSync();
+		//asserts and this.sendKeys() OK here
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
+		
+		String skidCountBeforeDestroy = mEdit_numSkidsInJob.getText().toString();
+		this.sendKeys(KeyEvent.KEYCODE_BACK);
+		
 		mActivity.finish();
-		mActivity = this.getActivity();
-		String afterDestroy = mTxt_sheetsPerMinute.getText().toString();
-		assertEquals("beforeDestroy = " + beforeDestroy + ", afterDestroy = " + afterDestroy, beforeDestroy, afterDestroy);
+		setActivity(null);
+		mActivity = (MainActivity)getActivity();
+		mEdit_currentCount = (EditText) mActivity.findViewById(R.id.edit_current_count);
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+//				getInstrumentation().callActivityOnResume(mActivity);				
+				mEdit_currentCount.setText("71");
+				mBtn_calculateTimes.requestFocus();
+			}
+		});
+		getInstrumentation().waitForIdleSync();
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
+		
+	    mSkidTimesFragment = (SkidTimesFragment)mActivity.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
+	    mEdit_numSkidsInJob = (EditText)mActivity.findViewById(R.id.edit_num_skids_in_job);
+
+		assertEquals(skidCountBeforeDestroy, mEdit_numSkidsInJob.getText().toString());		
 	}
 	
-	public void testOpenSettingsActivity() {
+	
+	
+	public void testOpenSettingsActivity() {	
 		String beforeClick = mTxt_sheetsPerMinute.getText().toString();
 		ActivityMonitor am = getInstrumentation().addMonitor(SettingsActivity.class.getName(), null, false);
 		
@@ -102,7 +148,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		});
 		getInstrumentation().waitForIdleSync();
 		
-		assertEquals("9", mEdit_currentCount.getText().toString()); //only works if preset
+		assertEquals(9, mActivity.mModel.getSelectedLine().getLineNumber()); 
 
 	}
 //		String afterClick = mTxt_sheetsPerMinute.getText().toString();
@@ -114,6 +160,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	/*@Test
 	public void testUpdateProductDataWithNullProductType() {
 		try {
+		
+		
 			getActivity().runOnUiThread(new Runnable() {
 				public void run() {
 					DialogFragment d = new SheetsPerMinuteDialogFragment();
@@ -123,6 +171,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 			});
 			getInstrumentation().waitForIdleSync();
 			//asserts and this.sendKeys() OK here
+			  
+			  
+			 
 		}
 		catch (IllegalStateException e) {
 			assertTrue("yey", true);
@@ -132,6 +183,17 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
 	@Test
 	public void testGetTimesWithoutProductDialog() {
+		getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
+		getInstrumentation().invokeMenuActionSync(mActivity, R.id.action_pick_job, 0);
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_UP);
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER); //click + New
+				
 		mActivity.runOnUiThread(new Runnable() {
 		     public void run() {
 		    	 mBtn_calculateTimes.requestFocus();
@@ -357,5 +419,15 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	public void testOnOptionsItemSelectedMenuItem1() {
 		fail("Not yet implemented"); // TODO
 	}*/
+	public void clickButton(int buttonId) {
+		final Button button = (Button) mActivity.findViewById(buttonId);
+		mActivity.runOnUiThread(new Runnable() {
+		     public void run() {
+		    	 button.requestFocus();		    	 
+		     }
+		});
+		getInstrumentation().waitForIdleSync();
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
+	}
 
 }
