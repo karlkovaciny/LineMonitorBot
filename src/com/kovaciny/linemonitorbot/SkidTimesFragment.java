@@ -211,11 +211,21 @@ public class SkidTimesFragment extends Fragment implements
 			if (mEdit_currentSkidNumber.getText().toString().equals("")) {
 				mEdit_currentSkidNumber.setText("1");
 			}
-			String numSkids = mEdit_numSkidsInJob.getText().toString();
-			String skidNumber = mEdit_currentSkidNumber.getText().toString();
-			if ( numSkids.equals("") || ( Integer.valueOf(skidNumber) > Integer.valueOf(numSkids)) ) {
-				mEdit_numSkidsInJob.setText(skidNumber);
+			String skidNumText = mEdit_currentSkidNumber.getText().toString();
+			Integer skidNum = Integer.valueOf(skidNumText);
+			
+			if (mEdit_numSkidsInJob.getText().toString().equals("")) {
+				mEdit_numSkidsInJob.setText(skidNumText);
 			}
+			String numSkidsText = mEdit_numSkidsInJob.getText().toString();
+			Integer numSkids = Integer.valueOf(numSkidsText);
+			if (numSkids <= 0) {
+				mEdit_numSkidsInJob.setText("1");
+			}
+			if (skidNum > numSkids) {
+				mEdit_numSkidsInJob.setText(skidNum);
+			}
+			
 			//Process the entries only if all the necessary ones are filled.
 			Iterator<EditText> itr = mEditableGroup.iterator();
 			boolean validInputs = true;
