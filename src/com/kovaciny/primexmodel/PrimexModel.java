@@ -163,9 +163,7 @@ public class PrimexModel {
 	/*
 	 * Returns the newly added skid.
 	 */
-	public Skid<Product> addSkid (int currentCount, int totalCount) {
-		int oldNumSkids = getSelectedWorkOrder().getSkidsList().size();
-		getSelectedWorkOrder().setNumberOfSkids(oldNumSkids + 1);
+	public Skid<Product> addSkid (int currentCount, int totalCount) { 	 		 
 		Skid<Product> newSkid = new Skid<Product>(currentCount, 
 				totalCount,
 				1);
@@ -429,6 +427,7 @@ public class PrimexModel {
 		return PrimexSQLiteOpenHelper.DATABASE_VERSION;
 	}
 	public void changeNumberOfSkids(int num) {
+		if (num <= 0) throw new IllegalArgumentException("Number of skids not positive");
 		Skid<Product> currentSkid = mSelectedWorkOrder.getSelectedSkid();
 		while (mSelectedWorkOrder.getNumberOfSkids() < num) {
 			currentSkid = addSkid(0, mSelectedSkid.getTotalItems());
@@ -436,7 +435,10 @@ public class PrimexModel {
 			mDbHelper.insertOrReplaceSkid(currentSkid, mSelectedWorkOrder.getWoNumber());
 		}
 		while (mSelectedWorkOrder.getNumberOfSkids() > num) {
-			mSelectedWorkOrder.removeSkid(); //TODO delete from database as well
+			int deletedSkidNo = mSelectedWorkOrder.removeLastSkid();
+			Log.v("PrimexModel.class", "deleting skid" + String.valueOf(deletedSkidNo));
+			mDbHelper.deleteSkid(mSelectedWorkOrder.getWoNumber(), deletedSkidNo);
+			
 		}
 		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, null, mSelectedWorkOrder.getNumberOfSkids());		
 	}

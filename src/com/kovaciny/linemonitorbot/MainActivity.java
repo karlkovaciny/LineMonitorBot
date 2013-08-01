@@ -63,7 +63,7 @@ public class MainActivity extends FragmentActivity implements
 
 	private MenuItem mJobPicker;
 	private MenuItem mLinePicker;
-	private PrimexModel mModel;
+	public PrimexModel mModel; //only public so I can do testing!
 	
 	private ActionBar mActionBar;
 	   

@@ -32,7 +32,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 109;
+    public static final int DATABASE_VERSION = 116;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -966,6 +966,29 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		return rowId;
 	}
 	
+	/*
+	 * This function will let you delete the currently selected skid, because it shouldn't know about that.
+	 */
+	public void deleteSkid(int woNumber, int skidNumber) {
+		SQLiteDatabase db = getWritableDatabase();
+		
+		int woId = getIdOfValue(PrimexDatabaseSchema.WorkOrders.TABLE_NAME,
+				PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER,
+				woNumber);
+				
+		String whereConditions = PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER + "=?" + 
+				" and " + PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID + "=?";
+				
+		int rowsAffected = db.delete(
+				PrimexDatabaseSchema.Skids.TABLE_NAME, 
+				whereConditions, 
+				new String[]{String.valueOf(skidNumber), String.valueOf(woId)});
+				
+		if (rowsAffected != 1) {
+			throw new RuntimeException("deleted more than one skid");
+		}
+		
+	}
 	/*
 	 * 
 	 */
