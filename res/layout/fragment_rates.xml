@@ -85,15 +85,15 @@
 		            style="@style/Label.SecondTableColumn">
 	            <TextView
 	                android:id="@+id/txt_net_pph"
-	                style="@style/Label" />
+	                style="@style/Label.SecondTableColumn" />
 	            
 	            <TextView
-	                style="@style/Label"
+	                style="@style/Label.SecondTableColumn"
 	                android:text=" / " />
 	        
 	            <TextView
                 android:id="@+id/txt_gross_pph"
-                style="@style/Label"/>
+                style="@style/Label.SecondTableColumn"/>
             
         	</LinearLayout>
         	<TextView style="@style/BlankThirdColumn"/>
