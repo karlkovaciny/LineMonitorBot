@@ -46,7 +46,7 @@ public class RatesFragmentTest extends
 
 		Product oldProduct = new Roll(.020, 55d, 1000);
 		Product newProduct = new Sheet(.010, 40d, 28d);
-		newProduct.setUnitWeight(1.015); //testing round up
+		newProduct.setUnitWeight(1.0015); //testing round up
 		oldProduct.setUnitWeight(0.990);
 		
 		mPropertyChangeEventList = Arrays.asList(				
@@ -95,7 +95,7 @@ public class RatesFragmentTest extends
 	    getInstrumentation().waitForIdleSync();
 //	    assertEquals("product needs equal sheet weight but rounded down", "1.01", mRatesFragment.mEdit_sheetWeight.getText().toString());
 
-	    assertEquals("product needs to set right sheet weight and round up", "1.02", mEdit_sheetWeight.getText().toString());
+	    assertEquals("product needs to set right sheet weight and round up", "1.002", mEdit_sheetWeight.getText().toString());
 		
 	    getActivity().runOnUiThread(new Runnable() {
 		     public void run() {
