@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ParentFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_gross_width"
+                style="@style/Label.FirstTableColumn"
+                android:text="Gross width" />
+
+            <EditText
+                android:id="@+id/edit_gross_width"
+                style="@style/EditText.SecondTableColumn"
+                android:maxEms="3"
+                android:inputType="numberDecimal"
+                android:maxLength="6" />
+			
+			<TextView
+		            android:id="@+id/textView3a"
+		            style="@style/BlankThirdColumn"/>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_edge_trim_percent"
+                style="@style/Label.FirstTableColumn"
+                android:text="Edge trim" />
+
+            <TextView
+                android:id="@+id/txt_edge_trim_percent"
+                style="@style/Label.SecondTableColumn"/>
+            
+            <TextView style="@style/BlankThirdColumn"/>
+            
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_sheet_weight"
+                style="@style/Label.FirstTableColumn"
+                android:text="Sheet weight" />
+
+            <EditText
+                android:id="@+id/edit_sheet_weight"
+                style="@style/EditText.SecondTableColumn"
+                android:ems="3"
+                android:text="@string/default_sheet_weight"
+                android:inputType="numberDecimal"
+                android:maxLength="5" />
+			<TextView
+		            android:id="@+id/textView3c"
+		            style="@style/BlankThirdColumn"/>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_net_pph"
+                style="@style/Label.FirstTableColumn"
+                android:text="Net/gross rate" />
+
+            <LinearLayout 
+		            style="@style/Label.SecondTableColumn">
+	            <TextView
+	                android:id="@+id/txt_net_pph"
+	                style="@style/Label" />
+	            
+	            <TextView
+	                style="@style/Label"
+	                android:text=" / " />
+	        
+	            <TextView
+                android:id="@+id/txt_gross_pph"
+                style="@style/Label"/>
+            
+        	</LinearLayout>
+        	<TextView style="@style/BlankThirdColumn"/>
+        	
+       	</TableRow>
+
+        <TableRow
+            android:id="@+id/TableRow02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_novatec_setpoint"
+                style="@style/Label.FirstTableColumn"
+                android:text="Nova setpt" />
+
+            <EditText
+                android:id="@+id/edit_novatec_setpoint"
+                style="@style/EditText.SecondTableColumn"
+                android:ems="3"
+                android:inputType="numberDecimal"
+                android:text="0.0" />
+            
+            <TextView style="@style/BlankThirdColumn"/>
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/TableRow03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_color_percent"
+                style="@style/Label.FirstTableColumn"
+                android:text="Color letdown" />
+
+            <TextView
+                android:id="@+id/txt_color_percent"
+                style="@style/Label.SecondTableColumn" />
+			
+			<TextView style="@style/BlankThirdColumn"/>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/TableRow04"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <!-- layout_weight equals sum of weight of col1 + col2 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.65" 
+                android:layout_span="2"
+                android:orientation="vertical" 
+                android:gravity="right">
+
+                <Button
+                    android:id="@+id/btn_calculate_rates"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Calculate Rates" />
+            </LinearLayout>
+
+            <TextView style="@style/BlankThirdColumn"/>
+
+        </TableRow>
+
+    </TableLayout>
+        
+</LinearLayout>
