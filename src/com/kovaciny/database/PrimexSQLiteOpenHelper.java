@@ -773,7 +773,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			} else Log.e("error", "you didn't match any darn rows");
 	    	return value;
 	    } finally {
-	    	if (resultCursor != null) resultCursor.close();
+	    	if (resultCursor != null) resultCursor.close();	
 		}
 	}
 	

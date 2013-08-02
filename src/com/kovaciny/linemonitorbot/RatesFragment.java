@@ -99,7 +99,8 @@ public class RatesFragment extends Fragment implements OnClickListener{
 					String cause = e.getCause().getMessage();
 					if (cause.equals(PrimexModel.ERROR_NET_LESS_THAN_GROSS)) {
 						mEdit_grossWidth.setError(getString(R.string.error_net_less_than_gross));
-					} else if (cause.equals(PrimexModel.ERROR_NO_PRODUCT_SELECTED)){
+					} else if (cause.equals(PrimexModel.ERROR_NO_PRODUCT_SELECTED) || 
+							cause.equals(PrimexModel.ERROR_NO_PPM_VALUE)){
 						Toast.makeText(getActivity(), R.string.prompt_need_product, Toast.LENGTH_LONG).show();
 						((MainActivity)getActivity()).showSheetsPerMinuteDialog();
 					} else {
