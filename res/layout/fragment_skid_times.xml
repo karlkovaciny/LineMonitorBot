@@ -26,7 +26,9 @@
 			        android:layout_height="wrap_content"
 			        android:layout_alignRight="@+id/lbl_products"
 			        android:layout_alignBaseline="@+id/btn_enter_product"
-			        android:paddingRight="12sp"
+			        android:gravity="center"
+			        android:paddingRight="12dip"
+			        android:width="@dimen/sheets_label_width"
 			        android:text="Skid:" />
 
 			    <EditText
@@ -76,7 +78,8 @@
 			        style="@style/Label"
 			        android:layout_alignParentLeft="true"
 			        android:layout_alignBaseline="@+id/btn_calculate_times"
-			        android:text="Sheets: " />
+			        android:width="@dimen/sheets_label_width"
+			        android:text="Sheets:" />
 			    
 			    <EditText
 			        android:id="@id/edit_current_count"

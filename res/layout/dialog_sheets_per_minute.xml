@@ -14,6 +14,7 @@
             android:id="@+id/imgbtn_sheets_or_rolls"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingBottom="6dip"
             android:background="@drawable/sheet_slider120"/>
 
     </LinearLayout>
@@ -33,6 +34,8 @@
                 android:id="@+id/lbl_gauge"
                 style="@style/Label"
                 android:layout_width="0dip"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:singleLine="false"
                 android:layout_weight="4"
@@ -43,6 +46,7 @@
                 android:id="@+id/edit_gauge"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_weight="2.5"
                 android:inputType="numberDecimal"
                 android:maxLength="5"
@@ -58,6 +62,7 @@
             <TextView
                 android:id="@+id/lbl_sheet_width"
                 style="@style/Label"
+                android:layout_gravity="center_vertical"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
@@ -84,6 +89,7 @@
                 android:id="@+id/lbl_sheet_length"
                 style="@style/Label"
                 android:layout_width="0dip"
+                android:layout_gravity="center_vertical"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:maxLines="3"
@@ -111,6 +117,7 @@
             <TextView
                 android:id="@+id/lbl_line_speed"
                 style="@style/Label"
+                android:layout_gravity="center_vertical"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
@@ -137,6 +144,7 @@
             <TextView
                 android:id="@+id/lbl_differential_speed"
                 style="@style/Label"
+                android:layout_gravity="center_vertical"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
@@ -161,6 +169,7 @@
                 android:id="@+id/lbl_speed_factor"
                 style="@style/Label"
                 android:layout_width="0dip"
+                android:layout_gravity="center_vertical"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:text="Speed factor" />

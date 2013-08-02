@@ -44,6 +44,7 @@
     <style name="Label" parent="@android:style/TextAppearance.Medium">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_gravity">fill</item>
     </style>
 
     <style name="ParentFragment">
@@ -66,7 +67,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dip</item>
         <item name="android:layout_weight">0.35</item>
-        <item name="android:minHeight">70px</item>
+        <item name="android:minHeight">@dimen/label_row_height</item>
         <item name="android:paddingRight">@dimen/table_column_padding</item>
     </style>
 
@@ -75,7 +76,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dip</item>
         <item name="android:layout_weight">0.3</item>
-        <item name="android:minHeight">70px</item>
+        <item name="android:minHeight">@dimen/label_row_height</item>
     </style>
 
     <style name="EditText.SecondTableColumn">
@@ -83,7 +84,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dip</item>
         <item name="android:layout_weight">0.3</item>
-        <item name="android:minHeight">70px</item>
+        <item name="android:minHeight">@dimen/label_row_height</item>
         <item name="android:ems">5</item>
     </style>
 

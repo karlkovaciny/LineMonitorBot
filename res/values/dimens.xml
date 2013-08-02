@@ -7,4 +7,6 @@
     <dimen name="fragment_vertical_margin">4dp</dimen>
     <dimen name="fragment_divider_padding">8dp</dimen>
 	<dimen name="table_column_padding">8dp</dimen>
+	<dimen name="sheets_label_width">62dp</dimen>
+	<dimen name="label_row_height">70px</dimen>
 </resources>
