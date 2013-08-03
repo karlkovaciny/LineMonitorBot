@@ -2,8 +2,8 @@
 
 	<item
         android:id="@+id/action_pick_line"
-        android:orderInCategory="1"
-        android:showAsAction="ifRoom"
+        android:orderInCategory="2"
+        android:showAsAction="always"
         android:title="@string/action_pick_line_title" >
 		<!-- pick line submenu --> 
         <menu 
@@ -15,8 +15,8 @@
     </item>
 	<item
         android:id="@+id/action_pick_job"
-        android:orderInCategory="2"
-        android:showAsAction="ifRoom"
+        android:orderInCategory="3"
+        android:showAsAction="always"
         android:title="@string/action_pick_job_title" >
         <!-- pick job submenu -->
         <menu
@@ -31,7 +31,7 @@
 	<item 
 	    android:id="@+id/action_view_database"
 	    android:visible="false"
-	    android:orderInCategory="3"
+	    android:orderInCategory="4"
 	    android:showAsAction="never"
 	    android:title="@string/action_view_database_title" />
 	
