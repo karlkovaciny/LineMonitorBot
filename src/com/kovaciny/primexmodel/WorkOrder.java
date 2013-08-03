@@ -16,6 +16,7 @@ public class WorkOrder {
 	private double mTotalProductsOrdered;
 	private double mMaximumStackHeight; // in inches, not including pallet
 	private int mSelectedSkidPosition = -1;
+	private Date mCreateDate;
 	private Date mFinishDate;
 	
 	private double mProductsPerMinute;
@@ -44,6 +45,13 @@ public class WorkOrder {
 				this.mWoNumber = woNumber;
 	}	
 	
+	public Date getCreateDate() {
+		return mCreateDate;
+	}
+	
+	public void setCreateDate(Date createDate) {
+		this.mCreateDate = createDate;
+	}
 	public Date getFinishDate() {
 		return mFinishDate;
 	}

@@ -27,6 +27,7 @@ public class PrimexDatabaseSchema {
 	public static abstract class WorkOrders implements BaseColumns {
 		public static final String TABLE_NAME = "work_orders";
 		public static final String COLUMN_NAME_WO_NUMBER = "WO_number";	
+		public static final String COLUMN_NAME_CREATE_DATE = "create_date";	
 		public static final String COLUMN_NAME_SELECTED_PRODUCT_ID = "product_id";
 		public static final String COLUMN_NAME_TOTAL_PRODUCTS_ORDERED = "products_ordered";	
 		public static final String COLUMN_NAME_SELECTED_SKID_NUMBER = "skid_number";	

@@ -32,7 +32,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 117;
+    public static final int DATABASE_VERSION = 120;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -60,6 +60,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	    "CREATE TABLE " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + " (" +
     	    PrimexDatabaseSchema.WorkOrders._ID + " INTEGER PRIMARY KEY," +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + INTEGER_TYPE + COMMA_SEP +
+	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_CREATE_DATE + INTEGER_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_PRODUCT_ID + INTEGER_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED + DOUBLE_TYPE + COMMA_SEP +
 	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER + INTEGER_TYPE + COMMA_SEP +
@@ -212,6 +213,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         	db.beginTransaction();
         	ContentValues values = new ContentValues();
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER,1);
+        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_CREATE_DATE,0);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED,69);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT,0);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER,1);
@@ -541,6 +543,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		
 		ContentValues values = new ContentValues();
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, newWo.getWoNumber());
+		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_CREATE_DATE, newWo.getCreateDate().getTime());
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED, 
 				newWo.getTotalProductsOrdered());
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT, newWo.getMaximumStackHeight());
@@ -583,6 +586,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		Cursor resultCursor = db.rawQuery("SELECT * FROM " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + " WHERE " + 
 				PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + "=?", new String[]{String.valueOf(woNumber)});
 		int wonum = -1;
+		long create;
 		int prod_id = -1;
 		double ordered = -1d;
 		int selected = -1;
@@ -598,6 +602,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		try {
 			if (resultCursor.moveToFirst()) {
 		    	wonum = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER));
+		    	create = resultCursor.getLong(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_CREATE_DATE));
 		    	prod_id = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_PRODUCT_ID));
 		    	ordered = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED));
 		    	selected = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER));
@@ -612,6 +617,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		    	differential = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_DIFFERENTIAL_SETPOINT));
 		    	
 		    	WorkOrder wo = new WorkOrder(wonum);
+		    	wo.setCreateDate(new Date(create));
 				if (prod_id != -1) {
 					wo.setProduct(getProduct(wonum));
 				}
@@ -650,7 +656,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		
 		Cursor c = db.query(
 			    PrimexDatabaseSchema.WorkOrders.TABLE_NAME,  // The table to query
-			    new String[] {"MAX(WO_number)"}, // The columns to return
+			    new String[] {"MAX(" + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + ")"}, // The columns to return
 			    null,                                // The columns for the WHERE clause
 			    null,                            // The values for the WHERE clause
 			    null,                                     // don't group the rows
@@ -664,6 +670,27 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			}
 			else return 0; 
 		} finally { c.close(); } 
+	}
+	
+	public Date getLatestWoCreateDate() {
+		SQLiteDatabase db = getReadableDatabase();
+
+		Cursor c = db.query(
+				PrimexDatabaseSchema.WorkOrders.TABLE_NAME,  // The table to query
+				new String[] {"MAX(" + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_CREATE_DATE + ")"}, // The columns to return
+				null,                                // The columns for the WHERE clause
+				null,                            // The values for the WHERE clause
+				null,                                     // don't group the rows
+				null,                                     // don't filter by row groups
+				null	                                 // The sort order
+				);
+
+		try { 
+			if (c.moveToFirst()) {
+				return new Date(c.getLong(0));
+			}
+			else return null; 
+		} finally { c.close(); }
 	}
 	
 	public List<Integer> getWoNumbers() {
