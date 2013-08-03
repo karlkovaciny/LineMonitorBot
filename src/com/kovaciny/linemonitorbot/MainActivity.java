@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.PrimexModel;
@@ -48,6 +49,9 @@ public class MainActivity extends FragmentActivity implements
 	public static final int SKID_TIMES_FRAGMENT_POSITION = 0;
 	public static final int RATES_FRAGMENT_POSITION = 1;
 	public static final int DRAINING_FRAGMENT_POSITION = 2;
+	
+	public static final boolean DEBUG = true;
+	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a
@@ -145,17 +149,6 @@ public class MainActivity extends FragmentActivity implements
 			mModel.loadState();
 		}
 		
-		//Delete all old  work order entries 
-		SharedPreferences settings = getPreferences(MODE_PRIVATE);
-		Date now = new Date();
-		Date lastEntryDate = new Date(settings.getLong("lastNewWoDate", 0));
-		long timeSinceLastEntry = now.getTime() - lastEntryDate.getTime();
-		if (timeSinceLastEntry > (2 * HelperFunction.ONE_MINUTE_IN_MILLIS) ) { //TODO debug 12 * HelperFunction.ONE_HOUR_IN_MILLIS 
-			Log.v("MainActivity.class", "Cleared work orders based on time since last new Wo entry");
-			showDummyDialog("Cleared work orders based on time since last new Wo entry");
-			clearWos();
-		}		
-
 		//populate the job picker with jobs
 		Menu pickJobSubMenu = mJobPicker.getSubMenu();
 		pickJobSubMenu.clear();
@@ -175,6 +168,11 @@ public class MainActivity extends FragmentActivity implements
 		if (mModel.hasSelectedWorkOrder()) {
 			CharSequence jobTitle = generateJobTitle(mModel.getSelectedWorkOrder().getWoNumber());
 			mJobPicker.setTitle(jobTitle);
+		} 
+		
+		if (DEBUG) {
+			MenuItem viewDatabase = (MenuItem)menu.findItem(R.id.action_view_database);
+			viewDatabase.setVisible(true);
 		}
 		return true;
 	}
@@ -200,8 +198,7 @@ public class MainActivity extends FragmentActivity implements
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// Do nothing
-					
+					// Do nothing					
 				}
 			});
 			builder.show();
@@ -285,6 +282,7 @@ public class MainActivity extends FragmentActivity implements
 		if (event == null) {
 			throw new RuntimeException("something threw a null event");
 		}
+		
 		String eventName = event.getPropertyName();
 		Log.v("Event", eventName);
 		Object newProperty = event.getNewValue();
@@ -293,7 +291,6 @@ public class MainActivity extends FragmentActivity implements
 		
 		SkidTimesFragment skidTimesFrag = (SkidTimesFragment) this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
 		RatesFragment ratesFrag = (RatesFragment) this.findFragmentByPosition(MainActivity.RATES_FRAGMENT_POSITION);
-		if (ratesFrag == null) throw new RuntimeException("Rates fragment not found");
 		
 		if (eventName == PrimexModel.SELECTED_LINE_CHANGE_EVENT) {
 			CharSequence lineTitle = "Line " + String.valueOf(mModel.getSelectedLine().getLineNumber());
@@ -301,11 +298,11 @@ public class MainActivity extends FragmentActivity implements
 			ratesFrag.modelPropertyChange(event);
 
 		} else if (eventName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
-			WorkOrder newWo = (WorkOrder)newProperty; 
+			WorkOrder newWo = (WorkOrder)newProperty;
 			CharSequence woTitle = generateJobTitle(newWo.getWoNumber());
 			mJobPicker.setTitle(woTitle);
 			invalidateOptionsMenu();
-
+			
 			skidTimesFrag.modelPropertyChange(event);
 			ratesFrag.modelPropertyChange(event);
 			
@@ -314,6 +311,7 @@ public class MainActivity extends FragmentActivity implements
 			CharSequence newTitle = generateJobTitle(newWonum);
 			mJobPicker.getSubMenu().add(JOB_LIST_MENU_GROUP, newWonum, Menu.FLAG_APPEND_TO_GROUP, newTitle);
 			invalidateOptionsMenu();
+			
 			skidTimesFrag.modelPropertyChange(event);
 		} else if (eventName == PrimexModel.PRODUCT_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);
@@ -356,9 +354,7 @@ public class MainActivity extends FragmentActivity implements
 		switch (item.getItemId()) {
 		case R.id.new_wo:
 			mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());
-			updateLastNewWoDate();
-			Log.v("MainActivity.class", "Just saved lastNewWoDate of " + new Date().toString());			
-	        break;
+			break;
 		case R.id.clear_wos:
 			ClearWorkOrdersDialogFragment clearDialog = new ClearWorkOrdersDialogFragment();
 			clearDialog.show(getFragmentManager(), "clearDialog");
@@ -379,26 +375,17 @@ public class MainActivity extends FragmentActivity implements
 	public void clearWos() {
 		//clear the menu
 		mJobPicker.getSubMenu().removeGroup(JOB_LIST_MENU_GROUP);
-		
+
 		//clear the menu title
-		mJobPicker.setTitle(R.string.action_pick_job_title);
-		
-		updateLastNewWoDate();
-		
+		mJobPicker.setTitle(R.string.action_pick_job_title);			
+				
 		//clear the database
 		mModel.deleteWorkOrders();
 		
 		//make sure a new WO always exists
-		mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());		
+		mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());
 	}
-	
-	public void updateLastNewWoDate() {
-		SharedPreferences settings = getPreferences(MODE_PRIVATE);
-		SharedPreferences.Editor editor = settings.edit();
-		Date now = new Date();
-		editor.putLong("lastNewWoDate", now.getTime());
-		editor.commit();
-	}
+		
 	public void updateSkidData(Integer skidNumber, Integer currentCount, Integer totalCount, Integer numberOfSkids) {
 		mModel.changeNumberOfSkids(numberOfSkids);
 		

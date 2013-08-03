@@ -183,6 +183,7 @@ public class PrimexModel {
 	}
 	
 	public WorkOrder addWorkOrder(WorkOrder newWo) {
+		newWo.setCreateDate(new Date());
 		mDbHelper.insertOrUpdateWorkOrder(newWo);
 		mWoNumbersList.add(newWo.getWoNumber());
 		if (newWo.getSkidsList().isEmpty()) { //Doing this after inserting the WO so that the WO will be in the table so I can look up its id. TODO stop exposing the skids list.
@@ -307,7 +308,8 @@ public class PrimexModel {
 	}
 
 	public void loadState() {
-		String lineNum = mDbHelper.getFieldAsString(PrimexDatabaseSchema.ModelState.TABLE_NAME, PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, null, null);
+		String lineNum = mDbHelper.getFieldAsString(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
+				PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, null, null);
 		try {
 			if ( (lineNum == null)) {
 				throw new IllegalStateException("line number is null");
@@ -483,6 +485,10 @@ public class PrimexModel {
 	
 	public List<Integer> getWoNumbers() {
 		return mDbHelper.getWoNumbers();
+	}
+
+	public Date getLatestWoCreateDate() {
+		return mDbHelper.getLatestWoCreateDate();
 	}
 	
 	public List<Integer> getAllWoNumbersForLine(int lineNumber) {
