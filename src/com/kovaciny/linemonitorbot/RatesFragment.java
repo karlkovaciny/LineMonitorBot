@@ -38,7 +38,6 @@ public class RatesFragment extends Fragment implements OnClickListener{
 	Button mBtn_calculateColorPercent;
 	TextView mTxt_colorPercent;
 	TextView mLbl_novatecSetpoint;
-	private ImageButton mImgBtn_calculator;
 	private List<EditText> mEditableGroup = new ArrayList<EditText>();
 	
 	@Override
@@ -81,9 +80,6 @@ public class RatesFragment extends Fragment implements OnClickListener{
 		mBtn_calculateColorPercent.setOnClickListener(this);
 		mBtn_calculateColorPercent.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
 		
-		mImgBtn_calculator = (ImageButton) rootView.findViewById(R.id.btn_calculator);
-		mImgBtn_calculator.setOnClickListener(this);
-		
 		return rootView;
 	}
 		
@@ -120,46 +116,7 @@ public class RatesFragment extends Fragment implements OnClickListener{
 				}
 			}
 			break;
-		case (R.id.btn_calculator):
-			ArrayList<HashMap<String,Object>> items =new ArrayList<HashMap<String,Object>>();
-			final PackageManager pm = getActivity().getPackageManager();
-			List<PackageInfo> packs = pm.getInstalledPackages(0);  
-			for (PackageInfo pi : packs) {
-				if( pi.packageName.toString().toLowerCase().contains("calcul")){
-					HashMap<String, Object> map = new HashMap<String, Object>();
-					map.put("appName", pi.applicationInfo.loadLabel(pm));
-					map.put("packageName", pi.packageName);
-					items.add(map);
-				}
-			}
-			if(items.size()>=1){
-				//Search the list for the first calculator whose name starts with just plain "Calculator".
-				//If you don't find one, take the first app in the list.
-				boolean found = false;
-				String packageName = "";
-				for (HashMap<String, Object> hm : items) {
-					if (!found) {
-						String appName = (String) hm.get("appName");
-						if (appName.toLowerCase().startsWith("calc")) {
-							packageName = (String) hm.get("packageName");
-							found = true;
-						}
-					}
-				}
-				if (!found) {
-					packageName = (String) items.get(0).get("packageName");
-				}
-				Intent i = pm.getLaunchIntentForPackage(packageName);
-				if (i != null)
-					startActivity(i);
-			} 
-			else{
-				// Application not found
-		    	Toast.makeText(getActivity(), "No calculator found", Toast.LENGTH_SHORT).show();
-			}
-	
-			break;
-
+		
 		}
 	}
 

@@ -46,9 +46,11 @@ public class MainActivity extends FragmentActivity implements
 	private static final int JOB_LIST_MENU_GROUP = 2222;
 	private static final int JOB_OPTIONS_MENU_GROUP = 2223;
 	
+	public static final int POSITION_NONE = -1;
 	public static final int SKID_TIMES_FRAGMENT_POSITION = 0;
 	public static final int RATES_FRAGMENT_POSITION = 1;
 	public static final int DRAINING_FRAGMENT_POSITION = 2;
+	public static final int CALCULATOR_FRAGMENT_POSITION = POSITION_NONE;
 	
 	public static final boolean DEBUG = false;
 	
@@ -121,6 +123,11 @@ public class MainActivity extends FragmentActivity implements
 			
 		}
 		
+	     // Float a calculator over all tabs by replacing the main content.
+	     getSupportFragmentManager().beginTransaction()
+	             .replace(android.R.id.content, new CalculatorFragment())
+	             .commit();
+	     
 		mActionBar = actionBar;
 	}
 	
@@ -174,6 +181,7 @@ public class MainActivity extends FragmentActivity implements
 			MenuItem viewDatabase = (MenuItem)menu.findItem(R.id.action_view_database);
 			viewDatabase.setVisible(true);
 		}
+		
 		return true;
 	}
 	
@@ -490,6 +498,9 @@ public class MainActivity extends FragmentActivity implements
 			case DRAINING_FRAGMENT_POSITION:
 				fragment = new DrainingFragment();
 				break;
+			case CALCULATOR_FRAGMENT_POSITION:
+				fragment = new CalculatorFragment();
+				break;
 			default:
 				fragment = new DrainingFragment(); //better never get here!
 			}
@@ -507,12 +518,14 @@ public class MainActivity extends FragmentActivity implements
 		public CharSequence getPageTitle(int position) {
 			Locale l = Locale.getDefault();
 			switch (position) {
-			case 0:
-				return getString(R.string.title_section1).toUpperCase(l);
-			case 1:
-				return getString(R.string.title_section2).toUpperCase(l);
-			case 2:
-				return getString(R.string.title_section3).toUpperCase(l);
+			case SKID_TIMES_FRAGMENT_POSITION:
+				return getString(R.string.title_fragment_skid_times).toUpperCase(l);
+			case RATES_FRAGMENT_POSITION:
+				return getString(R.string.title_fragment_rates).toUpperCase(l);
+			case DRAINING_FRAGMENT_POSITION:
+				return getString(R.string.title_fragment_draining).toUpperCase(l);
+			case CALCULATOR_FRAGMENT_POSITION:
+				return getString(R.string.title_fragment_calculator_button).toUpperCase(l);
 			}
 			return null;
 		}
