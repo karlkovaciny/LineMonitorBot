@@ -4,16 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.kovaciny.primexmodel.Product;
 
@@ -39,6 +38,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
   	EditText mEdit_lineSpeed;
   	EditText mEdit_differentialSpeed;
   	EditText mEdit_speedFactor;
+  	TextView mLbl_speedFactor;
   	ImageButton mImgbtnSheetsOrRolls;
   	private String mSheetsOrRollsState = SHEETS_MODE;
   	
@@ -72,6 +72,8 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		View rootView = inflater.inflate(R.layout.dialog_sheets_per_minute, null);
 		builder.setView(rootView);
 
+		mLbl_speedFactor = (TextView) rootView.findViewById(R.id.lbl_speed_factor);
+		
 		mEdit_gauge = (EditText) rootView.findViewById(R.id.edit_gauge);
 		mEdit_sheetWidth = (EditText) rootView.findViewById(R.id.edit_sheet_width);
 		mEdit_sheetLength = (EditText) rootView.findViewById(R.id.edit_sheet_length);
@@ -99,6 +101,12 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 				mSheetsOrRollsState = prodtype;
 				setSheetsOrRollsState(mSheetsOrRollsState);
 			}
+			
+			if (!MainActivity.DEBUG) {
+				mLbl_speedFactor.setVisibility(TextView.GONE);
+				mEdit_speedFactor.setVisibility(EditText.GONE);
+			}
+		
 		}
 		
 		mImgbtnSheetsOrRolls.setOnClickListener(this);
@@ -149,10 +157,12 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.roll_slider120);
 			this.mEdit_sheetLength.setText("12");
 			this.mEdit_sheetLength.setEnabled(false);
+			this.mEdit_sheetWidth.setNextFocusDownId(R.id.edit_line_speed);
 		} else if (state.equals(SHEETS_MODE)) {
 			this.mSheetsOrRollsState = SHEETS_MODE;
 			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.sheet_slider120);
 			this.mEdit_sheetLength.setEnabled(true);
+			this.mEdit_sheetWidth.setNextFocusForwardId(R.id.edit_sheet_length);
 		}
 	}
 
