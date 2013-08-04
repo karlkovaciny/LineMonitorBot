@@ -32,13 +32,12 @@
 
             <TextView
                 android:id="@+id/lbl_gauge"
-                style="@style/Label"
+                style="@style/Label.FirstTableColumn"
                 android:layout_width="0dip"
                 android:layout_gravity="center_vertical"
                 android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:singleLine="false"
-                android:layout_weight="4"
                 android:maxWidth="150dp"
                 android:text="Gauge" />
 
@@ -47,7 +46,6 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:layout_weight="2.5"
                 android:inputType="numberDecimal"
                 android:maxLength="5"
                 android:text=".010" />
@@ -61,20 +59,19 @@
 
             <TextView
                 android:id="@+id/lbl_sheet_width"
-                style="@style/Label"
+                style="@style/Label.FirstTableColumn"
                 android:layout_gravity="center_vertical"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
                 android:maxLines="3"
                 android:maxWidth="150dp"
                 android:text="Width" />
 
             <EditText
                 android:id="@+id/edit_sheet_width"
+                style="@style/EditText.SecondTableColumn"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:layout_weight="2.5"
                 android:inputType="numberDecimal"
                 android:maxLength="6" />
             
@@ -83,27 +80,26 @@
         <TableRow
             android:id="@+id/tableRow1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content" 
+            android:paddingBottom="30dip">
 
             <TextView
                 android:id="@+id/lbl_sheet_length"
-                style="@style/Label"
+                style="@style/Label.FirstTableColumn"
                 android:layout_width="0dip"
                 android:layout_gravity="center_vertical"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
                 android:maxLines="3"
                 android:maxWidth="150dp"
                 android:text="Length" />
 
             <EditText
                 android:id="@+id/edit_sheet_length"
-                style="@style/EditText"
+                style="@style/EditText.SecondTableColumn"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:selectAllOnFocus="true"
-                android:layout_weight="2.5"
-				android:maxLength="6"
+                android:maxLength="6"
                 android:inputType="numberDecimal"
                 android:nextFocusForward="@+id/edit_line_speed" />
 
@@ -116,18 +112,17 @@
 
             <TextView
                 android:id="@+id/lbl_line_speed"
-                style="@style/Label"
+                style="@style/Label.FirstTableColumn"
                 android:layout_gravity="center_vertical"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
                 android:text="Line speed" />
 
             <EditText
                 android:id="@id/edit_line_speed"
+                style="@style/EditText.SecondTableColumn"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:layout_weight="2.5"
                 android:maxLength="5"
                 android:ems="10"
                 android:inputType="numberDecimal" >
@@ -143,18 +138,17 @@
 
             <TextView
                 android:id="@+id/lbl_differential_speed"
-                style="@style/Label"
+                style="@style/Label.FirstTableColumn"
                 android:layout_gravity="center_vertical"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
                 android:text="Differential" />
 
             <EditText
                 android:id="@+id/edit_differential_speed"
+                style="@style/EditText.SecondTableColumn"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:layout_weight="2.5"
                 android:ems="10"
                 android:inputType="numberDecimal"
                 android:maxLength="10"/>
@@ -167,18 +161,17 @@
 
             <TextView
                 android:id="@+id/lbl_speed_factor"
-                style="@style/Label"
+                style="@style/Label.FirstTableColumn"
                 android:layout_width="0dip"
                 android:layout_gravity="center_vertical"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
                 android:text="Speed factor" />
 
             <EditText
                 android:id="@+id/edit_speed_factor"
+                style="@style/EditText.SecondTableColumn"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:layout_weight="2.5"
                 android:ems="10"
                 android:maxLength="6"
                 android:inputType="numberDecimal" />
