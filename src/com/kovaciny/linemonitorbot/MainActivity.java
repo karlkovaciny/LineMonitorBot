@@ -50,7 +50,7 @@ public class MainActivity extends FragmentActivity implements
 	public static final int RATES_FRAGMENT_POSITION = 1;
 	public static final int DRAINING_FRAGMENT_POSITION = 2;
 	
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
