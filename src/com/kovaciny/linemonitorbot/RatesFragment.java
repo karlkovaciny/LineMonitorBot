@@ -3,10 +3,14 @@ package com.kovaciny.linemonitorbot;
 import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.LightingColorFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +38,7 @@ public class RatesFragment extends Fragment implements OnClickListener{
 	Button mBtn_calculateColorPercent;
 	TextView mTxt_colorPercent;
 	TextView mLbl_novatecSetpoint;
+	private ImageButton mImgBtn_calculator;
 	private List<EditText> mEditableGroup = new ArrayList<EditText>();
 	
 	@Override
@@ -74,12 +80,17 @@ public class RatesFragment extends Fragment implements OnClickListener{
 		mBtn_calculateColorPercent = (Button) rootView.findViewById(R.id.btn_calculate_rates);
 		mBtn_calculateColorPercent.setOnClickListener(this);
 		mBtn_calculateColorPercent.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
+		
+		mImgBtn_calculator = (ImageButton) rootView.findViewById(R.id.btn_calculator);
+		mImgBtn_calculator.setOnClickListener(this);
+		
 		return rootView;
 	}
 		
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.btn_calculate_rates) {
+		switch (v.getId()) {
+		case (R.id.btn_calculate_rates): 
 			boolean validInputs = true;
 			for (EditText et : mEditableGroup) {
 				String value = et.getText().toString();
@@ -108,6 +119,47 @@ public class RatesFragment extends Fragment implements OnClickListener{
 					}
 				}
 			}
+			break;
+		case (R.id.btn_calculator):
+			ArrayList<HashMap<String,Object>> items =new ArrayList<HashMap<String,Object>>();
+			final PackageManager pm = getActivity().getPackageManager();
+			List<PackageInfo> packs = pm.getInstalledPackages(0);  
+			for (PackageInfo pi : packs) {
+				if( pi.packageName.toString().toLowerCase().contains("calcul")){
+					HashMap<String, Object> map = new HashMap<String, Object>();
+					map.put("appName", pi.applicationInfo.loadLabel(pm));
+					map.put("packageName", pi.packageName);
+					items.add(map);
+				}
+			}
+			if(items.size()>=1){
+				//Search the list for the first calculator whose name starts with just plain "Calculator".
+				//If you don't find one, take the first app in the list.
+				boolean found = false;
+				String packageName = "";
+				for (HashMap<String, Object> hm : items) {
+					if (!found) {
+						String appName = (String) hm.get("appName");
+						if (appName.toLowerCase().startsWith("calc")) {
+							packageName = (String) hm.get("packageName");
+							found = true;
+						}
+					}
+				}
+				if (!found) {
+					packageName = (String) items.get(0).get("packageName");
+				}
+				Intent i = pm.getLaunchIntentForPackage(packageName);
+				if (i != null)
+					startActivity(i);
+			} 
+			else{
+				// Application not found
+		    	Toast.makeText(getActivity(), "No calculator found", Toast.LENGTH_SHORT).show();
+			}
+	
+			break;
+
 		}
 	}
 

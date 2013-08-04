@@ -172,7 +172,20 @@
             <TextView style="@style/BlankThirdColumn"/>
 
         </TableRow>
-
-    </TableLayout>
         
+    </TableLayout>
+        	    
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:paddingTop="40dip"
+	        android:gravity="bottom|right" >
+
+	        <ImageButton
+	            android:id="@+id/btn_calculator"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/calculator" />
+
+	    </LinearLayout>
 </LinearLayout>
