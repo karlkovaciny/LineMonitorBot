@@ -73,7 +73,6 @@ android.support.v4.app.Fragment:
     760:766:public void setHasOptionsMenu(boolean)
     812:812:public boolean getUserVisibleHint()
     819:827:public android.support.v4.app.LoaderManager getLoaderManager()
-    835:839:public void startActivity(android.content.Intent)
     846:850:public void startActivityForResult(android.content.Intent,int)
     1288:1289:public void registerForContextMenu(android.view.View)
     1299:1300:public void unregisterForContextMenu(android.view.View)
@@ -87,7 +86,6 @@ android.support.v4.app.FragmentActivity:
     static final int MSG_REALLY_STOPPED
     static final int MSG_RESUME_PENDING
     612:614:public java.lang.Object getLastCustomNonConfigurationInstance()
-    825:833:public void startActivityFromFragment(android.support.v4.app.Fragment,android.content.Intent,int)
     854:859:public android.support.v4.app.LoaderManager getSupportLoaderManager()
 android.support.v4.app.FragmentActivity$FragmentTag:
     public static final int Fragment_id
@@ -958,8 +956,9 @@ com.kovaciny.database.PrimexSQLiteOpenHelper:
     private static final java.lang.String SQL_DELETE_PRODUCTION_LINES
     private static final java.lang.String SQL_DELETE_WORK_ORDERS
     private static final java.lang.String SQL_DELETE_MODEL_STATE
-    357:357:public void saveState()
-    717:736:public int getProductType(int)
+    361:361:public void saveState()
+    676:693:public java.util.Date getLatestWoCreateDate()
+    746:765:public int getProductType(int)
 com.kovaciny.helperfunctions.HelperFunction:
     public static final long ONE_HOUR_IN_MILLIS
     public static final long ONE_MINUTE_IN_MILLIS
@@ -978,7 +977,8 @@ com.kovaciny.linemonitorbot.MainActivity:
     public static final int SKID_TIMES_FRAGMENT_POSITION
     public static final int RATES_FRAGMENT_POSITION
     public static final int DRAINING_FRAGMENT_POSITION
-    544:546:void showDummyDialog(java.lang.String)
+    public static final boolean DEBUG
+    574:576:void showDummyDialog(java.lang.String)
 com.kovaciny.linemonitorbot.MyDialogFragment
 com.kovaciny.linemonitorbot.R
 com.kovaciny.linemonitorbot.R$array
@@ -1001,8 +1001,8 @@ com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver:
 com.kovaciny.linemonitorbot.SkidTimesFragment:
     private java.util.List mSkidList
     private android.widget.TextView mLbl_totalProducts
-    183:183:public java.util.List getSkidList()
-    187:188:public void setSkidList(java.util.List)
+    187:187:public java.util.List getSkidList()
+    191:192:public void setSkidList(java.util.List)
 com.kovaciny.linemonitorbot.TimePickerFragment
 com.kovaciny.linemonitorbot.ViewEventResponder
 com.kovaciny.primexmodel.Concentrate
@@ -1047,12 +1047,14 @@ com.kovaciny.primexmodel.PrimexModel:
     public static final java.lang.String ERROR_NO_PRODUCT_SELECTED
     public static final java.lang.String ERROR_NO_SKID_SELECTED
     public static final java.lang.String ERROR_ZERO_LINE_SPEED
+    public static final java.lang.String ERROR_NO_PPM_VALUE
     private java.util.List mJobList
     private com.kovaciny.linemonitorbot.Job mSelectedJob
-    65:66:public void removePropertyChangeListener(java.beans.PropertyChangeListener)
-    223:231:public void changeNovatecSetpoint(java.lang.Double)
-    431:432:public void closeDb()
-    461:461:public java.util.List getWoNumbers()
+    66:67:public void removePropertyChangeListener(java.beans.PropertyChangeListener)
+    224:232:public void changeNovatecSetpoint(java.lang.Double)
+    457:458:public void closeDb()
+    487:487:public java.util.List getWoNumbers()
+    491:491:public java.util.Date getLatestWoCreateDate()
 com.kovaciny.primexmodel.Product:
     public static final java.lang.String SHEETS_TYPE
     public static final java.lang.String ROLLS_TYPE
@@ -1335,6 +1337,10 @@ tests.MainActivityTest
 tests.MainActivityTest$1
 tests.MainActivityTest$2
 tests.MainActivityTest$3
+tests.MainActivityTest$4
+tests.MainActivityTest$5
+tests.MainActivityTest$6
+tests.MainActivityTest$7
 tests.PrimexModelTest
 tests.PrimexModelTest$1
 tests.RatesFragmentTest

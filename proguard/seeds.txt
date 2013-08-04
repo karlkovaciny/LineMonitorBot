@@ -215,6 +215,8 @@ com.kovaciny.linemonitorbot.R$dimen: int activity_vertical_margin
 com.kovaciny.linemonitorbot.R$dimen: int fragment_divider_padding
 com.kovaciny.linemonitorbot.R$dimen: int fragment_horizontal_margin
 com.kovaciny.linemonitorbot.R$dimen: int fragment_vertical_margin
+com.kovaciny.linemonitorbot.R$dimen: int label_row_height
+com.kovaciny.linemonitorbot.R$dimen: int sheets_label_width
 com.kovaciny.linemonitorbot.R$dimen: int table_column_padding
 com.kovaciny.linemonitorbot.R$drawable: int border_rectangle
 com.kovaciny.linemonitorbot.R$drawable: int calculator
@@ -233,6 +235,7 @@ com.kovaciny.linemonitorbot.R$id: int action_settings
 com.kovaciny.linemonitorbot.R$id: int action_view_database
 com.kovaciny.linemonitorbot.R$id: int btn_calculate_rates
 com.kovaciny.linemonitorbot.R$id: int btn_calculate_times
+com.kovaciny.linemonitorbot.R$id: int btn_calculator
 com.kovaciny.linemonitorbot.R$id: int btn_cancel_alarm
 com.kovaciny.linemonitorbot.R$id: int btn_enter_product
 com.kovaciny.linemonitorbot.R$id: int clear_wos
@@ -314,6 +317,7 @@ com.kovaciny.linemonitorbot.R$layout: int dummy_dialog
 com.kovaciny.linemonitorbot.R$layout: int fragment_database_viewer
 com.kovaciny.linemonitorbot.R$layout: int fragment_rates
 com.kovaciny.linemonitorbot.R$layout: int fragment_skid_times
+com.kovaciny.linemonitorbot.R$layout: int skid_times_fragment
 com.kovaciny.linemonitorbot.R$layout: int spinnerriffic_textview
 com.kovaciny.linemonitorbot.R$menu: int main
 com.kovaciny.linemonitorbot.R$string: int action_pick_job_title
@@ -327,8 +331,10 @@ com.kovaciny.linemonitorbot.R$string: int clear_wos
 com.kovaciny.linemonitorbot.R$string: int confirm_clear_wos
 com.kovaciny.linemonitorbot.R$string: int database_viewer_activity_name
 com.kovaciny.linemonitorbot.R$string: int debug_display
+com.kovaciny.linemonitorbot.R$string: int default_sheet_weight
 com.kovaciny.linemonitorbot.R$string: int error_empty_field
 com.kovaciny.linemonitorbot.R$string: int error_need_nonzero
+com.kovaciny.linemonitorbot.R$string: int error_net_less_than_gross
 com.kovaciny.linemonitorbot.R$string: int label_novatec_setpoint
 com.kovaciny.linemonitorbot.R$string: int new_wo
 com.kovaciny.linemonitorbot.R$string: int ok
