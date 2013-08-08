@@ -9,4 +9,6 @@
 	<dimen name="table_column_padding">8dp</dimen>
 	<dimen name="sheets_label_width">62dp</dimen>
 	<dimen name="label_row_height">70px</dimen>
+	<dimen name="up_arrow_top_padding">10dp</dimen>
+	<dimen name="up_arrow_bottom_padding">6dp</dimen>
 </resources>
