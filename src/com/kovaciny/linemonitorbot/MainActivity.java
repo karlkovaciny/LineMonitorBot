@@ -52,7 +52,7 @@ public class MainActivity extends FragmentActivity implements
 	public static final int DRAINING_FRAGMENT_POSITION = 2;
 	public static final int CALCULATOR_FRAGMENT_POSITION = POSITION_NONE;
 	
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -539,7 +539,17 @@ public class MainActivity extends FragmentActivity implements
 	
 	public Fragment findFragmentByPosition(int pos) {
 		String tag = "android:switcher:" + mViewPager.getId() + ":" + pos;
-		return getSupportFragmentManager().findFragmentByTag(tag);
+		Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+		if (fragment == null) {
+			throw new RuntimeException("Fragment " + tag + " is null");
+		} 
+		if (!fragment.isInLayout()) {
+			Log.e("MainActivity.class", "Fragment " + tag + " is not in layout");
+		}
+		if (fragment.isHidden()) {
+			Log.e("MainActivity.class", "Fragment " + tag + " is hidden");
+		}
+		return fragment;
 	}
 	
 /*

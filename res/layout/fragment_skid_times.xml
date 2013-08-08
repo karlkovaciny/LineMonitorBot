@@ -37,7 +37,7 @@
                 android:layout_toLeftOf="@+id/textView123"
                 android:imeOptions="actionNext"
                 android:inputType="number"
-                android:maxLength="4"
+                android:maxLength="3"
                 android:text="1" />
 
             <TextView

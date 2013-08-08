@@ -442,6 +442,7 @@ public class PrimexModel {
 		while (mSelectedWorkOrder.getNumberOfSkids() < num) {
 			currentSkid = addSkid(0, mSelectedSkid.getTotalItems());
 			mSelectedWorkOrder.addOrUpdateSkid(currentSkid);
+			Log.v("bbcc", "Just added skid #" + String.valueOf(currentSkid.getSkidNumber())); 
 			mDbHelper.insertOrReplaceSkid(currentSkid, mSelectedWorkOrder.getWoNumber());
 		}
 		while (mSelectedWorkOrder.getNumberOfSkids() > num) {

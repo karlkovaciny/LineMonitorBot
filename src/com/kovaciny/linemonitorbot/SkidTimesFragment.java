@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -16,13 +15,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.LightingColorFilter;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +31,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -218,16 +216,17 @@ public class SkidTimesFragment extends Fragment implements
 			String skidNumText = mEdit_currentSkidNumber.getText().toString();
 			Integer skidNum = Integer.valueOf(skidNumText);
 			
-			if (mEdit_numSkidsInJob.getText().toString().equals("")) {
+			String numSkidsText = mEdit_numSkidsInJob.getText().toString();
+			if (numSkidsText.equals("")) {
 				mEdit_numSkidsInJob.setText(skidNumText);
 			}
-			String numSkidsText = mEdit_numSkidsInJob.getText().toString();
+			
 			Integer numSkids = Integer.valueOf(numSkidsText);
 			if (numSkids <= 0) {
 				mEdit_numSkidsInJob.setText("1");
 			}
 			if (skidNum > numSkids) {
-				mEdit_numSkidsInJob.setText(skidNum);
+				mEdit_numSkidsInJob.setText(skidNumText);
 			}
 			
 			//Process the entries only if all the necessary ones are filled.
