@@ -20,8 +20,6 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.text.InputFilter;
-import android.text.Spanned;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -49,7 +48,8 @@ public class SkidTimesFragment extends Fragment implements
 	private Button mBtn_enterProduct;
 	private Button mBtn_cancelAlarm;
 	private Button mBtn_calculateTimes;
-	
+	private ImageButton mBtn_skidNumberUp;
+	private ImageButton mBtn_totalSkidsUp;
 	private List<EditText> mEditableGroup;
 	private List<TextView> mTimesDisplayList;
 	
@@ -109,6 +109,14 @@ public class SkidTimesFragment extends Fragment implements
 		}
 
 		//set up buttons
+		mBtn_skidNumberUp = (ImageButton) rootView.findViewById(R.id.btn_skid_number_up);
+		mBtn_skidNumberUp.setOnClickListener(this);
+		mBtn_skidNumberUp.setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
+		
+		mBtn_totalSkidsUp = (ImageButton) rootView.findViewById(R.id.btn_total_skids_up);
+		mBtn_totalSkidsUp.setOnClickListener(this);
+		mBtn_totalSkidsUp.setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
+		
 		mBtn_enterProduct = (Button) rootView
 				.findViewById(R.id.btn_enter_product);
 		mBtn_enterProduct.setOnClickListener(this);
@@ -196,11 +204,19 @@ public class SkidTimesFragment extends Fragment implements
 
 	@Override
 	public void onNothingSelected(AdapterView<?> arg0) {
-	}
+	}	
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case (R.id.btn_skid_number_up):
+			incrementEditText(mEdit_currentSkidNumber);
+			mEdit_currentSkidNumber.clearFocus();
+			break;
+		case (R.id.btn_total_skids_up):
+			incrementEditText(mEdit_numSkidsInJob);
+			mEdit_numSkidsInJob.clearFocus();
+			break;
 		case (R.id.btn_enter_product):
 			mBtn_enterProduct.setError(null);
 			for (EditText et : mEditableGroup) {
@@ -274,6 +290,25 @@ public class SkidTimesFragment extends Fragment implements
 		}
 	}
 
+	/*
+	 * Can handle both double and integer formats
+	 */
+	public void incrementEditText(EditText et) {
+		String current = et.getText().toString();
+		if (current.length() == 0) {
+			et.setText("1");
+		}
+		double doubleValue = Double.valueOf(et.getText().toString());
+		int intValue = (int) doubleValue;
+		if (doubleValue == intValue) {
+			String incremented = String.valueOf(intValue + 1);
+			et.setText(incremented);
+		} else {
+			String incremented = String. valueOf(doubleValue + 1d);
+			et.setText(incremented);
+		}		
+	}
+	
 	public void onetimeTimer(View v, long interval) {
 
 		Context context = getActivity();

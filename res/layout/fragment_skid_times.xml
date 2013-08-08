@@ -23,17 +23,31 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/btn_enter_product"
                 android:layout_alignRight="@+id/lbl_products"
+                android:layout_below="@+id/btn_skid_number_up"
                 android:gravity="center"
                 android:paddingRight="12dip"
                 android:text="Skid:"
                 android:width="@dimen/sheets_label_width" />
 
+            <ImageButton
+                android:id="@id/btn_skid_number_up"
+                android:layout_width="0px"
+                android:paddingTop="@dimen/up_arrow_top_padding"
+                android:paddingBottom="@dimen/up_arrow_bottom_padding"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/edit_skid_number"
+                android:layout_alignRight="@+id/edit_skid_number"
+                android:src="@drawable/numberpicker_up_btn_holo_dark"
+                android:background="#00000000"
+                android:layout_alignParentTop="true" />
+            
             <EditText
-                android:id="@+id/edit_skid_number"
+                android:id="@id/edit_skid_number"
                 style="@style/EditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/lbl_skid_number"
+                android:layout_below="@id/btn_skid_number_up"
                 android:layout_toLeftOf="@+id/textView123"
                 android:imeOptions="actionNext"
                 android:inputType="number"
@@ -46,10 +60,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/textView124"
+                android:layout_below="@id/btn_skid_number_up"
                 android:layout_alignBaseline="@id/lbl_skid_number"
                 android:layout_alignLeft="@id/textView124"
                 android:text="of" />
 
+            <ImageButton
+                android:id="@+id/btn_total_skids_up"
+                android:layout_width="0px"
+                android:paddingTop="@dimen/up_arrow_top_padding"
+                android:paddingBottom="@dimen/up_arrow_bottom_padding"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/edit_num_skids_in_job"
+                android:layout_alignRight="@+id/edit_num_skids_in_job"
+                android:src="@drawable/numberpicker_up_btn_holo_dark"
+                android:background="#00000000"
+                android:layout_alignParentTop="true" />
+            
             <EditText
                 android:id="@+id/edit_num_skids_in_job"
                 style="@style/EditText"
@@ -66,6 +93,7 @@
                 android:id="@id/btn_enter_product"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/btn_skid_number_up"
                 android:layout_alignParentRight="true"
                 android:gravity="right"
                 android:text="Enter Product" />
@@ -120,6 +148,7 @@
                 android:layout_below="@id/btn_enter_product"
                 android:gravity="right"
                 android:text="Get Times" />
+
         </RelativeLayout>
     </LinearLayout>
 
