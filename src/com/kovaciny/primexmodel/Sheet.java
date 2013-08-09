@@ -6,8 +6,9 @@ public class Sheet implements Product {
 	private double mWidth; //traverse direction in inches
 	private double mLength; //machine direction in inches
 	private double mDensity;
-	private String mUnitSingular = "sheet";
-	private String mUnitPlural = "sheets";
+	private static final String mUnitSingular = "sheet";
+	private static final String mUnitPlural = "sheets";
+	private static final String mGrouping = "skid";
 	
 	/*
 	 * 
@@ -80,11 +81,15 @@ public class Sheet implements Product {
 	}
 	
 	public String getUnit() {
-		return this.mUnitSingular;
+		return mUnitSingular;
 	}
 	
 	public String getUnits() {
-		return this.mUnitPlural;
+		return mUnitPlural;
+	}
+	
+	public String getGrouping() {
+		return mGrouping;
 	}
 	public String getType() {
 		return Product.SHEETS_TYPE;

@@ -32,7 +32,7 @@ public class PrimexModel {
 	public static final String SELECTED_LINE_CHANGE_EVENT = "PrimexModel.LINE_CHANGE";
 	public static final String SELECTED_WO_CHANGE_EVENT = "PrimexModel.WO_CHANGE";
 	public static final String NEW_WORK_ORDER_EVENT = "PrimexModel.NEW_WORK_ORDER"; 
-	public static final String PRODUCT_CHANGE_EVENT = "PrimexModel.NEW_PRODUCT"; 
+	public static final String PRODUCT_CHANGE_EVENT = "PrimexModel.PRODUCT_CHANGE"; 
 	public static final String PRODUCTS_PER_MINUTE_CHANGE_EVENT = "PrimexModel.PPM_CHANGE"; 
 	public static final String CURRENT_SKID_FINISH_TIME_CHANGE_EVENT = "PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE"; 
 	public static final String CURRENT_SKID_START_TIME_CHANGE_EVENT = "PrimexModel.CURRENT_SKID_START_TIME_CHANGE"; 
@@ -233,6 +233,7 @@ public class PrimexModel {
 	public void changeProduct (Product p) {
 		mSelectedWorkOrder.setProduct(p);
 		addProduct(p);
+		propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, p);
 		mProductChanged = true;
 	}
 	

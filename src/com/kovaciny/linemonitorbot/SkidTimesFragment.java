@@ -58,17 +58,21 @@ public class SkidTimesFragment extends Fragment implements
 	private EditText mEdit_totalCountPerSkid;
 	private EditText mEdit_numSkidsInJob;
 
+	private TextView mLbl_skidNumber;
+	private TextView mLbl_skidFinishTime;
+	private TextView mTxt_skidFinishTime;
+	private TextView mLbl_jobFinishTime;
+	private TextView mTxt_jobFinishTime;
+	private TextView mLbl_skidStartTime;
+	private TextView mTxt_skidStartTime;
+	private TextView mLbl_timePerSkid;
 	private TextView mTxt_timePerSkid;
 	private TextView mLbl_productsPerMinute;
 	private TextView mTxt_productsPerMinute;
 	private TextView mLbl_totalProducts;
 	private TextView mLbl_products;
-	private TextView mTxt_jobFinishTime;
-	private TextView mLbl_jobFinishTime;
 	private TextView mLbl_timeToMaxson;
 	private TextView mTxt_timeToMaxson;
-	private TextView mTxt_skidStartTime;
-	private TextView mTxt_skidFinishTime;
 	
 	private long mMillisPerSkid;
 	
@@ -131,11 +135,15 @@ public class SkidTimesFragment extends Fragment implements
 		mBtn_calculateTimes.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF,0xFF0000FF));
 		
 		//set up textViews
+		mLbl_skidNumber = (TextView) rootView.findViewById(R.id.lbl_skid_number);
 		mTxt_timePerSkid = (TextView) rootView.findViewById(R.id.txt_time_per_skid);		
+		mLbl_timePerSkid = (TextView) rootView.findViewById(R.id.lbl_time_per_skid);		
 		mTxt_jobFinishTime = (TextView) rootView.findViewById(R.id.txt_job_finish_time);
 		mTxt_timeToMaxson = (TextView) rootView.findViewById(R.id.txt_time_to_maxson);
 		mTxt_productsPerMinute = (TextView) rootView.findViewById(R.id.txt_products_per_minute);
+		mLbl_skidStartTime = (TextView) rootView.findViewById(R.id.lbl_skid_start_time);
 		mTxt_skidStartTime = (TextView) rootView.findViewById(R.id.txt_skid_start_time);
+		mLbl_skidFinishTime = (TextView) rootView.findViewById(R.id.lbl_skid_finish_time);
 		mTxt_skidFinishTime = (TextView) rootView.findViewById(R.id.txt_skid_finish_time);
 		
 		mTimesDisplayList = Arrays.asList(new TextView[]{mTxt_timePerSkid, mTxt_jobFinishTime, mTxt_timeToMaxson,
@@ -211,7 +219,10 @@ public class SkidTimesFragment extends Fragment implements
 		switch (v.getId()) {
 		case (R.id.btn_skid_number_up):
 			incrementEditText(mEdit_currentSkidNumber);
-			mEdit_currentSkidNumber.clearFocus();
+			if (Double.valueOf(mEdit_currentSkidNumber.getText().toString()) >
+					Double.valueOf(mEdit_numSkidsInJob.getText().toString())) {
+				incrementEditText(mEdit_numSkidsInJob);
+			}
 			break;
 		case (R.id.btn_total_skids_up):
 			incrementEditText(mEdit_numSkidsInJob);
@@ -307,6 +318,7 @@ public class SkidTimesFragment extends Fragment implements
 			String incremented = String. valueOf(doubleValue + 1d);
 			et.setText(incremented);
 		}		
+		et.clearFocus();
 	}
 	
 	public void onetimeTimer(View v, long interval) {
@@ -349,11 +361,16 @@ public class SkidTimesFragment extends Fragment implements
 		Object newProperty = event.getNewValue();
 		
 		if (propertyName == PrimexModel.PRODUCT_CHANGE_EVENT) {
-			String units = ((Product)newProperty).getUnits();
-			StringBuilder capUnits = new StringBuilder(units);
-			capUnits.setCharAt(0, Character.toUpperCase(units.charAt(0)));
-			this.mLbl_productsPerMinute.setText(capUnits.toString() + " per minute");
-			this.mLbl_products.setText(capUnits.toString() + ":");
+			Product p = (Product)newProperty;
+			String capitalUnits = HelperFunction.capitalizeFirstChar(p.getUnits());
+			String capitalGrouping = HelperFunction.capitalizeFirstChar(p.getGrouping());
+			
+			mLbl_skidNumber.setText(capitalGrouping + ":");
+			mLbl_productsPerMinute.setText(capitalUnits + " per minute");
+			mLbl_products.setText(capitalUnits + ":");
+			mLbl_skidFinishTime.setText(capitalGrouping + " finish");
+			mLbl_skidStartTime.setText(capitalGrouping + " start");
+			mLbl_timePerSkid.setText("Time per " + p.getGrouping());			
 			
 		} else if (propertyName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {
 			if ( (newProperty == null) || ((Double)newProperty <= 0) ) {
