@@ -13,6 +13,7 @@ public interface Product {
 	boolean setMaterialType();
 	String getUnit(); //singular
 	String getUnits(); //plural
+	String getGrouping(); //name for a collection of units
 	String getType(); //TODO hope this is not bad polymorphism	
 	
 	public static String SHEETS_TYPE="Sheet";

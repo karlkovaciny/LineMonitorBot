@@ -7,8 +7,9 @@ public class Roll implements Product {
 	private double mWidth; //traverse direction in inches
 	private double mLength = 12d; //one linear foot
 	private double mDensity;
-	private String mUnitSingular = "foot";
-	private String mUnitPlural = "feet";
+	private static final String mUnitSingular = "foot";
+	private static final String mUnitPlural = "feet";
+	private static final String mGrouping = "roll";
 	public int mLineNumber;
 	
 	/*
@@ -72,11 +73,15 @@ public class Roll implements Product {
 		return false;
 	}
 	public String getUnit() {
-		return this.mUnitSingular;
+		return mUnitSingular;
 	}
 	
 	public String getUnits() {
-		return this.mUnitPlural;
+		return mUnitPlural;
+	}
+	
+	public String getGrouping() {
+		return mGrouping;
 	}
 	
 	public String getType() {

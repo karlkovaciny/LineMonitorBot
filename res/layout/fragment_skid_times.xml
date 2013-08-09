@@ -19,19 +19,19 @@
             <TextView
                 android:id="@+id/lbl_skid_number"
                 style="@style/Label"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/btn_enter_product"
-                android:layout_alignRight="@+id/lbl_products"
+                android:layout_alignLeft="@+id/lbl_products"
+                android:layout_alignRight="@id/lbl_products"
                 android:layout_below="@+id/btn_skid_number_up"
                 android:gravity="center"
-                android:paddingRight="12dip"
                 android:text="Skid:"
                 android:width="@dimen/sheets_label_width" />
 
             <ImageButton
                 android:id="@id/btn_skid_number_up"
-                android:layout_width="0px"
+                android:layout_width="0dp"
                 android:paddingTop="@dimen/up_arrow_top_padding"
                 android:paddingBottom="@dimen/up_arrow_bottom_padding"
                 android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             <EditText
                 android:id="@id/edit_skid_number"
                 style="@style/EditText"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/sheets_label_width"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/lbl_skid_number"
                 android:layout_below="@id/btn_skid_number_up"
@@ -87,6 +87,7 @@
                 android:imeOptions="actionNext"
                 android:inputType="number"
                 android:maxLength="3"
+                android:minEms="3"
                 android:nextFocusForward="@+id/edit_current_count" />
 
             <Button
@@ -103,6 +104,7 @@
                 style="@style/Label"
                 android:layout_alignBaseline="@+id/btn_calculate_times"
                 android:layout_alignParentLeft="true"
+                android:gravity="center_horizontal"
                 android:text="Sheets:"
                 android:width="@dimen/sheets_label_width" />
 

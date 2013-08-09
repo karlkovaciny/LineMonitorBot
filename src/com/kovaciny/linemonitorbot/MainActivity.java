@@ -229,7 +229,7 @@ public class MainActivity extends FragmentActivity implements
 			lineSpeedSetpoint = mModel.getSelectedLine().getSpeedValues().lineSpeedSetpoint;
 		}
 		args.putDouble("LineSpeed", lineSpeedSetpoint);
-		Log.v("Verbose", "Just sent line speed " + mModel.getSelectedWorkOrder().getLineSpeedSetpoint() + "from line " + 
+		Log.v("MainActivity.showSheetsPerMinuteDialog()", "Just sent line speed " + mModel.getSelectedWorkOrder().getLineSpeedSetpoint() + "from line " + 
 			mModel.getSelectedLine().getLineNumber() +	"to dialog");
 		
 		Double differentialSpeed = mModel.getSelectedWorkOrder().getDifferentialSetpoint();

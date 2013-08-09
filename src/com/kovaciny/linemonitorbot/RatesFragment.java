@@ -24,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.Novatec;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
@@ -31,6 +32,7 @@ import com.kovaciny.primexmodel.Product;
 public class RatesFragment extends Fragment implements OnClickListener{
 	EditText mEdit_grossWidth;
 	TextView mTxt_edgeTrimPercent;
+	TextView mLbl_sheetWeight;
 	EditText mEdit_sheetWeight;
 	TextView mTxt_netPph;
 	TextView mTxt_grossPph;
@@ -59,6 +61,7 @@ public class RatesFragment extends Fragment implements OnClickListener{
 		mEditableGroup.add(mEdit_novatecSetpoint);
 		
 		mTxt_edgeTrimPercent = (TextView) rootView.findViewById(R.id.txt_edge_trim_percent);
+		mLbl_sheetWeight = (TextView) rootView.findViewById(R.id.lbl_sheet_weight);
 		mTxt_netPph = (TextView) rootView.findViewById(R.id.txt_net_pph);
 		mTxt_grossPph = (TextView) rootView.findViewById(R.id.txt_gross_pph);
 		mTxt_colorPercent = (TextView) rootView.findViewById(R.id.txt_color_percent);	
@@ -125,6 +128,7 @@ public class RatesFragment extends Fragment implements OnClickListener{
 		Object newProperty = event.getNewValue();
 		if (propertyName == PrimexModel.PRODUCT_CHANGE_EVENT) {
 			Product p = (Product)newProperty;
+			mLbl_sheetWeight.setText(HelperFunction.capitalizeFirstChar(p.getUnit()) + " weight");
 			Double sheetWeight = p.getUnitWeight();
 			if (sheetWeight <= 0) {
 				mEdit_sheetWeight.setText(getString(R.string.default_sheet_weight));

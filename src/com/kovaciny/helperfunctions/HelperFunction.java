@@ -22,4 +22,10 @@ final public class HelperFunction {
         long remainingSeconds = seconds % 60;
         return String.format("%d:%02d", minutes, remainingSeconds);
     }
+	
+	public static String capitalizeFirstChar(String target) {
+		StringBuilder capitalized = new StringBuilder(target);
+		capitalized.setCharAt(0, Character.toUpperCase(capitalized.charAt(0)));
+		return capitalized.toString();
+	}
 }
