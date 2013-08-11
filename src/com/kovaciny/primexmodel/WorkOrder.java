@@ -96,6 +96,7 @@ public class WorkOrder {
 			mSkidsList.set(newSkid.getSkidNumber() - 1, newSkid);
 		} else {
 			mSkidsList.add(newSkid);
+			Log.v("WorkOrder.class", "Just added skid #" + String.valueOf(newSkid.getSkidNumber())); 
 			newSkid.setSkidNumber(mSkidsList.size());	
 		}		
 		return newSkid;
@@ -108,6 +109,7 @@ public class WorkOrder {
 	public int removeLastSkid() {
 		int skidNumber = mSkidsList.size();
 		mSkidsList.remove(mSkidsList.size()-1);
+		Log.v("WorkOrder.class", "deleting skid" + String.valueOf(skidNumber));
 		return skidNumber;
 	}
 	
