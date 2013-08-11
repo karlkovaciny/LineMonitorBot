@@ -443,14 +443,11 @@ public class PrimexModel {
 		while (mSelectedWorkOrder.getNumberOfSkids() < num) {
 			currentSkid = addSkid(0, mSelectedSkid.getTotalItems());
 			mSelectedWorkOrder.addOrUpdateSkid(currentSkid);
-			Log.v("bbcc", "Just added skid #" + String.valueOf(currentSkid.getSkidNumber())); 
 			mDbHelper.insertOrReplaceSkid(currentSkid, mSelectedWorkOrder.getWoNumber());
 		}
 		while (mSelectedWorkOrder.getNumberOfSkids() > num) {
 			int deletedSkidNo = mSelectedWorkOrder.removeLastSkid();
-			Log.v("PrimexModel.class", "deleting skid" + String.valueOf(deletedSkidNo));
-			mDbHelper.deleteSkid(mSelectedWorkOrder.getWoNumber(), deletedSkidNo);
-			
+			mDbHelper.deleteSkid(mSelectedWorkOrder.getWoNumber(), deletedSkidNo);			
 		}
 		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, null, mSelectedWorkOrder.getNumberOfSkids());		
 	}
