@@ -5,11 +5,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Instrumentation.ActivityMonitor;
 import android.support.v4.view.ViewPager;
 import android.test.ActivityInstrumentationTestCase2;
-import android.util.Log;
+import android.test.TouchUtils;
+import android.test.mock.MockDialogInterface;
 import android.view.KeyEvent;
+import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -30,6 +35,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	SectionsPagerAdapter mSectionsPagerAdapter;
 	ViewPager mViewPager;
 	TextView mTxt_sheetsPerMinute;
+	TextView mTxt_timePerSkid;
 	EditText mEdit_currentCount;
 	EditText mEdit_numSkidsInJob;
 	Button mBtn_calculateTimes;
@@ -44,10 +50,11 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	@Before
 	public void setUp() throws Exception {
 		setActivityInitialTouchMode(false);
-		
+
 		mActivity = (MainActivity)getActivity();
-	    mSkidTimesFragment = (SkidTimesFragment)mActivity.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
+		mSkidTimesFragment = (SkidTimesFragment)mActivity.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
 	    mRatesFragment = (RatesFragment)mActivity.findFragmentByPosition(MainActivity.RATES_FRAGMENT_POSITION);
+	    mTxt_timePerSkid = (TextView) mActivity.findViewById(R.id.txt_time_per_skid);
 	    mTxt_sheetsPerMinute = (TextView)mActivity.findViewById(R.id.txt_products_per_minute);
 	    mEdit_currentCount = (EditText)mActivity.findViewById(R.id.edit_current_count);
 	    mEdit_numSkidsInJob = (EditText)mActivity.findViewById(R.id.edit_num_skids_in_job);
@@ -231,6 +238,83 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		clickButton(R.id.btn_enter_product);
 		SheetsPerMinuteDialogFragment spmd = (SheetsPerMinuteDialogFragment) mActivity.getFragmentManager().findFragmentByTag("SheetsPerMinuteDialog");
 		assertTrue(spmd != null);
+	}
+	
+	@Test
+	public void testIncrementNumberOfSkids() {
+		Double currentNumSkids = Double.valueOf(mEdit_numSkidsInJob.getText().toString());
+		changeNumberOfSkidsAndCalcTimes(currentNumSkids + 1d);
+		assertEquals("failed to increment", (Double)(currentNumSkids + 1), Double.valueOf(mEdit_numSkidsInJob.getText().toString()));
+	}
+	
+	@Test
+	public void testAddQuarterSkid() {
+		Double currentNumSkids = Double.valueOf(mEdit_numSkidsInJob.getText().toString());
+		changeNumberOfSkidsAndCalcTimes(currentNumSkids + 1d);
+		assertEquals("failed to increment", (Double)(currentNumSkids + 1), Double.valueOf(mEdit_numSkidsInJob.getText().toString()));
+	}
+	
+	public void changeNumberOfSkidsAndCalcTimes(double number) {
+		final double newNumber = number;
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				String newNumSkids = String.valueOf(newNumber);
+				mEdit_numSkidsInJob.setText(newNumSkids);
+				mBtn_calculateTimes.requestFocus();
+			}
+		});
+		getInstrumentation().waitForIdleSync();
+		//asserts and this.sendKeys() OK here
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);		
+	}
+	
+	@Test
+	public void testSpmDialog() {
+		final double NEW_WIDTH_SETPOINT = 40d;
+		final double NEW_LENGTH_SETPOINT = 12d;
+		final double NEW_LINE_SPEED_SETPOINT = 16.67d; //for line 18
+		final double NEW_DIFFERENTIAL = 1d;
+		
+		clickButton(R.id.btn_enter_product);
+		SheetsPerMinuteDialogFragment spmdf = (SheetsPerMinuteDialogFragment)getActivity().getFragmentManager().findFragmentByTag("SheetsPerMinuteDialog");
+		final EditText spmEdit_sheetWidth = (EditText) spmdf.getDialog().findViewById(R.id.edit_sheet_width);
+		final EditText spmEdit_sheetLength = (EditText) spmdf.getDialog().findViewById(R.id.edit_sheet_length);
+		final EditText spmEdit_lineSpeed = (EditText) spmdf.getDialog().findViewById(R.id.edit_line_speed);
+		final EditText spmEdit_diffSpeed = (EditText) spmdf.getDialog().findViewById(R.id.edit_differential_speed);
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				spmEdit_sheetWidth.setText(String.valueOf(NEW_WIDTH_SETPOINT));
+				spmEdit_sheetLength.setText(String.valueOf(NEW_LENGTH_SETPOINT));
+				spmEdit_lineSpeed.setText(String.valueOf(NEW_LINE_SPEED_SETPOINT));
+				spmEdit_diffSpeed.setText(String.valueOf(NEW_DIFFERENTIAL));
+			}
+		});
+		Button bpos = ((AlertDialog)spmdf.getDialog()).getButton(Dialog.BUTTON_POSITIVE);
+		TouchUtils.clickView(this, bpos);
+		assertEquals("did we correctly set the sheet width in the dialog", NEW_WIDTH_SETPOINT, spmdf.getSheetWidthValue());
+		assertEquals("did we correctly set the line speed in the dialog", NEW_LINE_SPEED_SETPOINT, spmdf.getLineSpeedValue());
+		TouchUtils.clickView(this, mBtn_calculateTimes);
+	}
+	
+	@Test
+	public void testCheckTimePerSkid() {
+		testSpmDialog();
+		assertEquals("is the time equal to one hour per skid", "1:00", mTxt_timePerSkid.getText().toString());
+	}
+	
+	@Test
+	public void testCalcFinishTime() {
+		MockSheetsPerMinuteDialogInterface mock = new MockSheetsPerMinuteDialogInterface();
+		
+	}
+	
+	public class MockSheetsPerMinuteDialogInterface extends MockDialogInterface {
+		MockSheetsPerMinuteDialogInterface() {
+		}
+		
+		public double getSheetWidthValue() {
+			return 40d;
+		}
 	}
 	/*
 	@Test
