@@ -24,8 +24,6 @@ android.support.v4.app.BackStackRecord:
     357:360:public java.lang.CharSequence getBreadCrumbShortTitle()
     379:380:public android.support.v4.app.FragmentTransaction add(android.support.v4.app.Fragment,java.lang.String)
     384:385:public android.support.v4.app.FragmentTransaction add(int,android.support.v4.app.Fragment)
-    421:421:public android.support.v4.app.FragmentTransaction replace(int,android.support.v4.app.Fragment)
-    425:430:public android.support.v4.app.FragmentTransaction replace(int,android.support.v4.app.Fragment,java.lang.String)
     434:439:public android.support.v4.app.FragmentTransaction remove(android.support.v4.app.Fragment)
     443:448:public android.support.v4.app.FragmentTransaction hide(android.support.v4.app.Fragment)
     452:457:public android.support.v4.app.FragmentTransaction show(android.support.v4.app.Fragment)
@@ -65,7 +63,6 @@ android.support.v4.app.Fragment:
     628:640:public final android.support.v4.app.FragmentManager getChildFragmentManager()
     648:648:public final android.support.v4.app.Fragment getParentFragment()
     673:673:public final boolean isRemoving()
-    684:684:public final boolean isInLayout()
     692:692:public final boolean isResumed()
     701:701:public final boolean isVisible()
     741:746:public void setRetainInstance(boolean)
@@ -165,7 +162,6 @@ android.support.v4.app.FragmentTransaction:
     public static final int TRANSIT_FRAGMENT_FADE
     public abstract android.support.v4.app.FragmentTransaction add(android.support.v4.app.Fragment,java.lang.String)
     public abstract android.support.v4.app.FragmentTransaction add(int,android.support.v4.app.Fragment)
-    public abstract android.support.v4.app.FragmentTransaction replace(int,android.support.v4.app.Fragment)
     public abstract android.support.v4.app.FragmentTransaction replace(int,android.support.v4.app.Fragment,java.lang.String)
     public abstract android.support.v4.app.FragmentTransaction remove(android.support.v4.app.Fragment)
     public abstract android.support.v4.app.FragmentTransaction hide(android.support.v4.app.Fragment)
@@ -974,11 +970,13 @@ com.kovaciny.linemonitorbot.MainActivity:
     private static final int LINE_LIST_ID_RANDOMIZER
     private static final int JOB_LIST_MENU_GROUP
     private static final int JOB_OPTIONS_MENU_GROUP
+    public static final int POSITION_NONE
     public static final int SKID_TIMES_FRAGMENT_POSITION
     public static final int RATES_FRAGMENT_POSITION
     public static final int DRAINING_FRAGMENT_POSITION
+    public static final int CALCULATOR_FRAGMENT_POSITION
     public static final boolean DEBUG
-    574:576:void showDummyDialog(java.lang.String)
+    603:605:void showDummyDialog(java.lang.String)
 com.kovaciny.linemonitorbot.MyDialogFragment
 com.kovaciny.linemonitorbot.R
 com.kovaciny.linemonitorbot.R$array
@@ -1001,8 +999,8 @@ com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver:
 com.kovaciny.linemonitorbot.SkidTimesFragment:
     private java.util.List mSkidList
     private android.widget.TextView mLbl_totalProducts
-    187:187:public java.util.List getSkidList()
-    191:192:public void setSkidList(java.util.List)
+    204:204:public java.util.List getSkidList()
+    208:209:public void setSkidList(java.util.List)
 com.kovaciny.linemonitorbot.TimePickerFragment
 com.kovaciny.linemonitorbot.ViewEventResponder
 com.kovaciny.primexmodel.Concentrate
@@ -1052,9 +1050,9 @@ com.kovaciny.primexmodel.PrimexModel:
     private com.kovaciny.linemonitorbot.Job mSelectedJob
     66:67:public void removePropertyChangeListener(java.beans.PropertyChangeListener)
     224:232:public void changeNovatecSetpoint(java.lang.Double)
-    457:458:public void closeDb()
-    487:487:public java.util.List getWoNumbers()
-    491:491:public java.util.Date getLatestWoCreateDate()
+    471:472:public void closeDb()
+    501:501:public java.util.List getWoNumbers()
+    505:505:public java.util.Date getLatestWoCreateDate()
 com.kovaciny.primexmodel.Product:
     public static final java.lang.String SHEETS_TYPE
     public static final java.lang.String ROLLS_TYPE
@@ -1063,31 +1061,34 @@ com.kovaciny.primexmodel.Product:
     public abstract double getEstimatedWeight()
     public abstract java.lang.String getMaterialType()
     public abstract boolean setMaterialType()
-    public abstract java.lang.String getUnit()
 com.kovaciny.primexmodel.ProductionLine:
     public static final java.lang.String SPEED_CONTROLLER_TYPE_DIRECT
     public static final java.lang.String SPEED_CONTROLLER_TYPE_GEARED
 com.kovaciny.primexmodel.Products:
     3:3:public Products()
 com.kovaciny.primexmodel.Roll:
+    private static final java.lang.String mUnitSingular
+    private static final java.lang.String mUnitPlural
+    private static final java.lang.String mGrouping
     public int mLineNumber
-    28:28:public double getEstimatedWeight()
-    33:33:public double getHeight()
-    52:55:public void setLength(double)
-    57:57:public int getLinearFeet()
-    61:62:public void setLinearFeet(int)
-    68:68:public java.lang.String getMaterialType()
-    72:72:public boolean setMaterialType()
-    75:75:public java.lang.String getUnit()
+    29:29:public double getEstimatedWeight()
+    34:34:public double getHeight()
+    53:56:public void setLength(double)
+    58:58:public int getLinearFeet()
+    62:63:public void setLinearFeet(int)
+    69:69:public java.lang.String getMaterialType()
+    73:73:public boolean setMaterialType()
 com.kovaciny.primexmodel.Sheet:
-    31:31:public double getHeight()
-    53:55:public void setLength(double)
-    62:63:public void setGauge(double)
-    66:67:public void setWidth(double)
-    70:70:public double getEstimatedWeight()
-    74:74:public java.lang.String getMaterialType()
-    79:79:public boolean setMaterialType()
-    83:83:public java.lang.String getUnit()
+    private static final java.lang.String mUnitSingular
+    private static final java.lang.String mUnitPlural
+    private static final java.lang.String mGrouping
+    32:32:public double getHeight()
+    54:56:public void setLength(double)
+    63:64:public void setGauge(double)
+    67:68:public void setWidth(double)
+    71:71:public double getEstimatedWeight()
+    75:75:public java.lang.String getMaterialType()
+    80:80:public boolean setMaterialType()
 com.kovaciny.primexmodel.Skid:
     double mFinishedNetWeight
     double mFinishedGrossWeight
@@ -1341,6 +1342,9 @@ tests.MainActivityTest$4
 tests.MainActivityTest$5
 tests.MainActivityTest$6
 tests.MainActivityTest$7
+tests.MainActivityTest$8
+tests.MainActivityTest$9
+tests.MainActivityTest$MockSheetsPerMinuteDialogInterface
 tests.PrimexModelTest
 tests.PrimexModelTest$1
 tests.RatesFragmentTest
