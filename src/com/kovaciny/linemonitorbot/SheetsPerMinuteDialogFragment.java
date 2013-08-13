@@ -41,6 +41,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
   	EditText mEdit_differentialSpeed;
   	EditText mEdit_speedFactor;
   	TextView mLbl_speedFactor;
+  	TextView mLbl_differentialSpeed;
   	ImageButton mImgbtnSheetsOrRolls;
   	private String mSheetsOrRollsState = SHEETS_MODE;
   	
@@ -75,6 +76,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		builder.setView(rootView);
 
 		mLbl_speedFactor = (TextView) rootView.findViewById(R.id.lbl_speed_factor);
+		mLbl_differentialSpeed = (TextView) rootView.findViewById(R.id.lbl_differential_speed);
 		
 		mEdit_gauge = (EditText) rootView.findViewById(R.id.edit_gauge);
 		mEdit_sheetWidth = (EditText) rootView.findViewById(R.id.edit_sheet_width);
@@ -92,6 +94,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 			double diff = getArguments().getDouble("DifferentialSpeed", 0);
 			double factor = getArguments().getDouble("SpeedFactor", 0);
 			String prodtype = getArguments().getString("ProductType");
+			boolean isLine12 = getArguments().getBoolean("IsLine12", false);
 			
 			if (gauge > 0) mEdit_gauge.setText(String.valueOf(gauge));
 			if (width > 0) mEdit_sheetWidth.setText(String.valueOf(width));
@@ -102,6 +105,10 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 			if (prodtype != null) {
 				mSheetsOrRollsState = prodtype;
 				setSheetsOrRollsState(mSheetsOrRollsState);
+			}
+			if (isLine12) {
+				mEdit_differentialSpeed.setEnabled(false);
+				mLbl_differentialSpeed.setEnabled(false);
 			}
 			
 			if (!MainActivity.DEBUG) {
