@@ -1,6 +1,9 @@
 package com.kovaciny.linemonitorbot;
 
 import java.beans.PropertyChangeEvent;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -221,8 +224,9 @@ public class SkidTimesFragment extends Fragment implements
 			((MainActivity)getActivity()).hideKeyboard();
 			incrementEditText(mEdit_currentSkidNumber);
 			if (Double.valueOf(mEdit_currentSkidNumber.getText().toString()) >
-					Double.valueOf(mEdit_numSkidsInJob.getText().toString())) {
-				incrementEditText(mEdit_numSkidsInJob);
+					Math.ceil(Double.valueOf(mEdit_numSkidsInJob.getText().toString()))) { 
+				//it's OK for this to be higher than a fractional number of skids
+				incrementEditText(mEdit_numSkidsInJob); 
 			}
 			break;
 		case (R.id.btn_total_skids_up):
@@ -242,20 +246,31 @@ public class SkidTimesFragment extends Fragment implements
 			if (mEdit_currentSkidNumber.getText().toString().equals("")) {
 				mEdit_currentSkidNumber.setText("1");
 			}
-			String skidNumText = mEdit_currentSkidNumber.getText().toString();
-			Integer skidNum = Integer.valueOf(skidNumText);
+			String currentSkidNumText = mEdit_currentSkidNumber.getText().toString();
+			Integer currentSkidNum = Integer.valueOf(currentSkidNumText);
 			
-			String numSkidsText = mEdit_numSkidsInJob.getText().toString();
-			if (numSkidsText.equals("")) {
-				mEdit_numSkidsInJob.setText(skidNumText);
+			String totalSkidsText = mEdit_numSkidsInJob.getText().toString();
+			if (totalSkidsText.equals("")) {
+				mEdit_numSkidsInJob.setText(currentSkidNumText);
 			}
 			
-			Integer numSkids = Integer.valueOf(numSkidsText);
-			if (numSkids <= 0) {
+			Double totalSkids = Double.valueOf(totalSkidsText);
+			if (totalSkids <= 0d) {
 				mEdit_numSkidsInJob.setText("1");
 			}
-			if (skidNum > numSkids) {
-				mEdit_numSkidsInJob.setText(skidNumText);
+			if (currentSkidNum > Math.ceil(totalSkids)) {
+				mEdit_numSkidsInJob.setText(currentSkidNumText);
+			}
+			
+			BigDecimal fractionalSkid = new BigDecimal(totalSkids).remainder(BigDecimal.ONE);
+			if (fractionalSkid.compareTo(BigDecimal.ZERO) != 0) {
+				int wholeSkids = (int) Math.ceil(totalSkids);
+				if (currentSkidNum == wholeSkids) {
+					BigDecimal fractionalSheetCount = fractionalSkid.multiply(new BigDecimal(mEdit_totalCountPerSkid.getText().toString()));
+					String roundedString = String.valueOf(fractionalSheetCount.toBigInteger());
+					mEdit_totalCountPerSkid.setText(roundedString);
+					mEdit_numSkidsInJob.setText(String.valueOf(wholeSkids));
+				}				  
 			}
 			
 			//Process the entries only if all the necessary ones are filled.
@@ -281,7 +296,7 @@ public class SkidTimesFragment extends Fragment implements
 							Integer.valueOf(mEdit_currentSkidNumber.getText().toString()),
 							Integer.valueOf(mEdit_currentCount.getText().toString()),
 							Integer.valueOf(mEdit_totalCountPerSkid.getText().toString()),
-							Integer.valueOf(mEdit_numSkidsInJob.getText().toString())
+							Double.valueOf(mEdit_numSkidsInJob.getText().toString())
 							);
 				} catch (IllegalStateException e) {
 					if (e.getCause().getMessage().equals(PrimexModel.ERROR_NO_PRODUCT_SELECTED)) {
@@ -322,7 +337,7 @@ public class SkidTimesFragment extends Fragment implements
 		}		
 		et.clearFocus();
 	}
-	
+		
 	public void onetimeTimer(View v, long interval) {
 
 		Context context = getActivity();
@@ -425,7 +440,8 @@ public class SkidTimesFragment extends Fragment implements
 			}
 			
 		} else if (propertyName == PrimexModel.NUMBER_OF_SKIDS_CHANGE_EVENT) {
-			mEdit_numSkidsInJob.setText(String.valueOf(newProperty));
+			String number = new DecimalFormat("#.###").format(newProperty);
+			mEdit_numSkidsInJob.setText(number);
 			
 		} else if (propertyName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) {
 			if (newProperty == null) {

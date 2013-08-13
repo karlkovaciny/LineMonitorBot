@@ -85,8 +85,8 @@
                 android:layout_alignBaseline="@id/lbl_skid_number"
                 android:layout_toRightOf="@id/textView123"
                 android:imeOptions="actionNext"
-                android:inputType="number"
-                android:maxLength="3"
+                android:inputType="numberDecimal"
+                android:maxLength="6"
                 android:minEms="3"
                 android:nextFocusForward="@+id/edit_current_count" />
 

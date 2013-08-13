@@ -241,7 +241,6 @@ public class PrimexModel {
 		//TODO this function fires twice in a row. Catch index out of bounds exceptions.
 		//maybe this should call changeNumber of skids to make sure the skid exists you're changing to?
 		//You should not have to check the WO has the right skids list to use this!
-		Skid<Product> oldSkid = mSelectedSkid;
 		if (mSelectedWorkOrder.getSkidsList().isEmpty()) {
 			List<Skid<Product>> savedSkids = mDbHelper.getSkidList(mSelectedWorkOrder.getWoNumber());
 			if (!savedSkids.isEmpty() ) {
@@ -437,17 +436,33 @@ public class PrimexModel {
 	public int getDatabaseVersion() {
 		return PrimexSQLiteOpenHelper.DATABASE_VERSION;
 	}
-	public void changeNumberOfSkids(int num) {
-		if (num <= 0) throw new IllegalArgumentException("Number of skids not positive");
+	public void changeNumberOfSkids(double num) {
+		if (num <= 0d) throw new IllegalArgumentException("Number of skids not positive");
+		double totalSkids = Math.ceil(num);
+		double fractionalSkid = num % 1.0; //TODO bigdecimal
 		Skid<Product> currentSkid = mSelectedWorkOrder.getSelectedSkid();
-		while (mSelectedWorkOrder.getNumberOfSkids() < num) {
+		while (mSelectedWorkOrder.getNumberOfSkids() < totalSkids) {
 			currentSkid = addSkid(0, mSelectedSkid.getTotalItems());
 			mSelectedWorkOrder.addOrUpdateSkid(currentSkid);
 			mDbHelper.insertOrReplaceSkid(currentSkid, mSelectedWorkOrder.getWoNumber());
 		}
-		while (mSelectedWorkOrder.getNumberOfSkids() > num) {
+		while (mSelectedWorkOrder.getNumberOfSkids() > totalSkids) {
 			int deletedSkidNo = mSelectedWorkOrder.removeLastSkid();
 			mDbHelper.deleteSkid(mSelectedWorkOrder.getWoNumber(), deletedSkidNo);			
+		}
+		
+		if (fractionalSkid > 0.001) {
+			int fractionalSheetCount = (int) (mSelectedSkid.getTotalItems() * fractionalSkid); 
+			mSelectedWorkOrder.removeLastSkid();
+			Skid<Product> partialSkid = addSkid(0, fractionalSheetCount);
+			mSelectedWorkOrder.addOrUpdateSkid(partialSkid);
+			mDbHelper.insertOrReplaceSkid(partialSkid, mSelectedWorkOrder.getWoNumber());
+		} else {
+			//make sure the last skid has full sheet count if not fractional
+			mSelectedWorkOrder.removeLastSkid();
+			currentSkid = addSkid(0, mSelectedSkid.getTotalItems());
+			mSelectedWorkOrder.addOrUpdateSkid(currentSkid);
+			mDbHelper.insertOrReplaceSkid(currentSkid, mSelectedWorkOrder.getWoNumber());
 		}
 		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, null, mSelectedWorkOrder.getNumberOfSkids());		
 	}

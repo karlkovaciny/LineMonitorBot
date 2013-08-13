@@ -118,9 +118,7 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 	public void testChangeProduct() {
 		Product p = new Sheet(.010, 40, 28);
 		p.setUnitWeight(1.5);
-		mModel.changeProduct(p);
-		
-		
+		mModel.changeProduct(p);		
 	}
 
 	@Test

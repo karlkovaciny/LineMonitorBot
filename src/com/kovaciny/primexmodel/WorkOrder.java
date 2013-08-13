@@ -69,9 +69,9 @@ public class WorkOrder {
 		} else {
 			Skid<Product> currentSkid = mSkidsList.get(mSelectedSkidPosition);
 			Date currentFinishTime = currentSkid.calculateFinishTimeWhileRunning(productsPerMinute);
-			int skidsRemaining = mSkidsList.size() - currentSkid.getSkidNumber();
+			double skidsRemaining = getNumberOfSkids() - currentSkid.getSkidNumber();
 			long millisPerSkid = Math.round(currentSkid.calculateMinutesPerSkid(productsPerMinute) * HelperFunction.ONE_MINUTE_IN_MILLIS);
-			long millisRemaining = skidsRemaining * millisPerSkid;
+			long millisRemaining = (long) (skidsRemaining * millisPerSkid);
 			mFinishDate = new Date(currentFinishTime.getTime() + millisRemaining);
 		}
 		return mFinishDate;
@@ -163,9 +163,25 @@ public class WorkOrder {
 		Collections.sort(numbers);
 		return numbers;
 	}
-	public int getNumberOfSkids() {
-		Log.v("WorkOrder.class", "returning number of skids: " + String.valueOf(mSkidsList.size()));
-		return mSkidsList.size();
+	public double getNumberOfSkids() {
+		if (mSkidsList.size() < 2 ) return mSkidsList.size();
+		
+		//check for last skid being partial
+		Skid<Product> lastSkid = mSkidsList.get(mSkidsList.size() - 1); 
+		Skid<Product> penultSkid = mSkidsList.get(mSkidsList.size() - 2);
+		double fraction = (double)lastSkid.getTotalItems() / (double) penultSkid.getTotalItems();
+		if (fraction > 1) {
+			Log.e("WorkOrder.getNumberOfSkids()", "the penult skid has fewer items than the last skid");
+			//that is not a good state, but at least we know the last skid is not "partial" compared to it
+			return mSkidsList.size();
+		} else if ((1 - fraction) < .0001) { //ie, equal sheet counts, so not a partial
+			Log.v("WorkOrder.class", "returning number of skids: " + String.valueOf(mSkidsList.size()));
+			return mSkidsList.size();
+		} else {
+			double totalSkids = mSkidsList.size() - 1 + fraction;
+			Log.v("WorkOrder.class", "returning number of skids: " + String.valueOf(totalSkids));
+			return totalSkids;
+		}	
 	}
 
 	public Skid<Product> getSelectedSkid() {
@@ -173,7 +189,7 @@ public class WorkOrder {
 	}
 
 	public Skid<Product> selectSkid(Integer skidNumber) {
-		if ( (skidNumber > getNumberOfSkids()) || !(skidNumber > 0) ) {
+		if ( (skidNumber > Math.ceil(getNumberOfSkids())) || !(skidNumber > 0) ) {
 			throw new IllegalArgumentException("tried to change to a skid number outside the range of skids -- " + String.valueOf(skidNumber));
 		}
 		mSelectedSkidPosition = skidNumber - 1; //because we're storing this in an array... for now.
@@ -231,7 +247,7 @@ public class WorkOrder {
 	public String toString() {
 		String finish = (mFinishDate == null) ? "n/a" : mFinishDate.toString();
 		return "W0" + mWoNumber + ": selected skid " + String.valueOf(mSelectedSkidPosition + 1) + " of " + 
-				String.valueOf(mSkidsList.size()) + ", finish time " + finish + "\nRates: net " + mNetPph + 
+				String.valueOf(getNumberOfSkids()) + ", finish time " + finish + "\nRates: net " + mNetPph + 
 				", gross " + mGrossPph + ", line speed setpoint " + String.valueOf(mLineSpeedSetpoint) + ", differential " +
 				String.valueOf(mDifferentialSetpoint);
 	}
