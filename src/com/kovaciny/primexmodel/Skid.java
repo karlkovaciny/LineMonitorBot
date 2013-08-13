@@ -172,9 +172,9 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 		SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US);
 		if (mStartTime != null) start = formatter.format(mStartTime);
 		if (mFinishTime != null) finish = formatter.format(mFinishTime);
-		return "Skid " + mSkidNumber + ": Start time " + start + ", finish time " + finish + ", current sheets " + 
-				String.valueOf(mCurrentItems) + ", total sheets " + String.valueOf(mTotalItems) + ", time per skid " + 
-				String.valueOf(mMinutesPerSkid) + " minutes";
+		return "Skid " + mSkidNumber + ": Start " + start + ", finish " + finish + ", current sheets " + 
+				String.valueOf(mCurrentItems) + " of " + String.valueOf(mTotalItems) + ", " + 
+				String.valueOf(mMinutesPerSkid) + " minutes per skid";
 	}
 	@Override
 	public int compareTo(Skid arg0) {

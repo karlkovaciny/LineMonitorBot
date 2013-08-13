@@ -81,7 +81,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		//see if the database has only your new number of skids.
 		getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				Integer currentNumSkids = Integer.valueOf(mEdit_numSkidsInJob.getText().toString());
+				Double currentNumSkids = Double.valueOf(mEdit_numSkidsInJob.getText().toString());
 				String newNumSkids = String.valueOf(currentNumSkids + 3);
 				mEdit_numSkidsInJob.setText(newNumSkids);
 				mBtn_calculateTimes.requestFocus();
@@ -93,7 +93,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		
 		getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				Integer currentNumSkids = Integer.valueOf(mEdit_numSkidsInJob.getText().toString());
+				Double currentNumSkids = Double.valueOf(mEdit_numSkidsInJob.getText().toString());
 				String newLowerNumSkids = String.valueOf(currentNumSkids - 1);
 				mEdit_numSkidsInJob.setText(newLowerNumSkids);
 				mEdit_currentCount.setText("69");
@@ -147,7 +147,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
 		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
 		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
-		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER); //click line 99
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER); //click line 9
 		
 		mActivity.runOnUiThread(new Runnable() {
 		     public void run() {
@@ -250,8 +250,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	@Test
 	public void testAddQuarterSkid() {
 		Double currentNumSkids = Double.valueOf(mEdit_numSkidsInJob.getText().toString());
-		changeNumberOfSkidsAndCalcTimes(currentNumSkids + 1d);
-		assertEquals("failed to increment", (Double)(currentNumSkids + 1), Double.valueOf(mEdit_numSkidsInJob.getText().toString()));
+		changeNumberOfSkidsAndCalcTimes(currentNumSkids + .25d);
+		assertEquals("failed to increment", (Double)(currentNumSkids + .25), Double.valueOf(mEdit_numSkidsInJob.getText().toString()));
 	}
 	
 	public void changeNumberOfSkidsAndCalcTimes(double number) {
@@ -272,7 +272,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	public void testSpmDialog() {
 		final double NEW_WIDTH_SETPOINT = 40d;
 		final double NEW_LENGTH_SETPOINT = 12d;
-		final double NEW_LINE_SPEED_SETPOINT = 16.67d; //for line 18
+		final double NEW_LINE_SPEED_SETPOINT = 16.84d; //for line 9 -- equals 16.67 / factors, 2 decimal place.
 		final double NEW_DIFFERENTIAL = 1d;
 		
 		clickButton(R.id.btn_enter_product);

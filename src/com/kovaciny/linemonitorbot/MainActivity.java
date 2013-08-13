@@ -331,7 +331,7 @@ public class MainActivity extends FragmentActivity implements
 				(eventName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) ||
 				(eventName == PrimexModel.LINE_SPEED_CHANGE_EVENT) ||
 				(eventName == PrimexModel.SECONDS_TO_MAXSON_CHANGE_EVENT) ||
-				(eventName == PrimexModel.SKID_CHANGE_EVENT)) {
+				(eventName == PrimexModel.SKID_CHANGE_EVENT )) {
 			skidTimesFrag.modelPropertyChange(event);
 		} else if (eventName == PrimexModel.CURRENT_SKID_START_TIME_CHANGE_EVENT) {
 			skidTimesFrag.modelPropertyChange(event);
@@ -394,7 +394,7 @@ public class MainActivity extends FragmentActivity implements
 		mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());
 	}
 		
-	public void updateSkidData(Integer skidNumber, Integer currentCount, Integer totalCount, Integer numberOfSkids) {
+	public void updateSkidData(Integer skidNumber, Integer currentCount, Integer totalCount, Double numberOfSkids) {
 		mModel.changeNumberOfSkids(numberOfSkids);
 		
 		Skid<Product> skid = new Skid<Product>(
