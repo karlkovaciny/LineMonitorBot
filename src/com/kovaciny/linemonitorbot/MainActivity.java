@@ -238,6 +238,12 @@ public class MainActivity extends FragmentActivity implements
 		}
 		args.putDouble("DifferentialSpeed", differentialSpeed);
 		
+		if (mModel.getSelectedLine().getLineNumber() == 12) {
+			//hard code the differential speed for this line TODO
+			args.putDouble("DifferentialSpeed", 1d);
+			args.putBoolean("IsLine12", true);
+		} 		
+		
 		if (currentProd != null) {
 			args.putDouble("Gauge", currentProd.getGauge());
 			args.putDouble("SheetWidth", currentProd.getWidth());
