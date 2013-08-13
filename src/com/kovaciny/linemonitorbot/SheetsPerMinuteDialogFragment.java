@@ -10,9 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kovaciny.primexmodel.Product;
 
@@ -81,7 +83,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		mEdit_differentialSpeed = (EditText) rootView.findViewById(R.id.edit_differential_speed);
 		mEdit_speedFactor = (EditText) rootView.findViewById(R.id.edit_speed_factor);
 		mImgbtnSheetsOrRolls = (ImageButton) rootView.findViewById(R.id.imgbtn_sheets_or_rolls);
-	  	
+		
 		if (getArguments() != null) {
 			double gauge = getArguments().getDouble("Gauge", 0);
 			double width = getArguments().getDouble("SheetWidth", 0);
@@ -114,11 +116,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		// Add action buttons
 		builder.setPositiveButton(R.string.calculate, new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
-		        	   //hide keyboard
-		        	   getActivity().getWindow().setSoftInputMode(
-		        	         WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		        	   
-		        	   mListener.onClickPositiveButton(SheetsPerMinuteDialogFragment.this);
+		        	   //do nothing; override in onShowListener
 		           }
 		       });
 		builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -131,13 +129,46 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		       });
 		
 		// Create the AlertDialog
-		AlertDialog alertDialog = builder.create();
+		final AlertDialog alertDialog = builder.create();
+		final EditText copy = mEdit_differentialSpeed;
+		alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+			@Override
+			public void onShow(DialogInterface dialog) {
+
+				Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+				b.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View view) {
+						String diffText = copy.getText().toString();
+						if (diffText.length() == 0) {
+							copy.setError(getString(R.string.error_empty_field));
+						} else {
+							double diffValue = Double.valueOf(diffText);
+							if (diffValue > 80) {//TODO magic constant
+								copy.setText(String.valueOf(diffValue/100));
+								Toast.makeText(getActivity(), getString(R.string.reminder_differential_format), Toast.LENGTH_LONG).show();		            			
+							}
+							//hide keyboard
+							getActivity().getWindow().setSoftInputMode(
+									WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+							mListener.onClickPositiveButton(SheetsPerMinuteDialogFragment.this);
+
+							//Dismiss once everything is OK.
+							alertDialog.dismiss();
+
+						}
+					}
+				});
+			}
+		});
 		alertDialog.show();
 		alertDialog.getWindow().setLayout(500,850); //TODO make this expand to fit contents
 		return alertDialog;
 	}
 
-		/* (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see android.view.View.OnClickListener#onClick(android.view.View)
 	 */
 	@Override
