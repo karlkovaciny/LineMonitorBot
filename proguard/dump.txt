@@ -64158,7 +64158,7 @@ _____________________________________________________________________
 Interfaces (count = 1):
   + Class [android/view/View$OnClickListener]
 
-Constant Pool (count = 394):
+Constant Pool (count = 396):
   + Integer [2130837514]
   + Integer [2130837515]
   + Integer [2130903043]
@@ -64167,6 +64167,7 @@ Constant Pool (count = 394):
   + Integer [2131427330]
   + Integer [2131427334]
   + Integer [2131427337]
+  + Integer [2131427339]
   + Integer [2131427340]
   + Integer [2131427341]
   + Integer [2131427345]
@@ -64242,6 +64243,7 @@ Constant Pool (count = 394):
   + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mImgbtnSheetsOrRolls Landroid/widget/ImageButton;]
   + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mLbl_differentialSpeed Landroid/widget/TextView;]
   + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mLbl_reminderNoDifferentialSpeed Landroid/widget/TextView;]
+  + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mLbl_sheetLength Landroid/widget/TextView;]
   + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mLbl_speedFactor Landroid/widget/TextView;]
   + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mListener Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$SheetsPerMinuteDialogListener;]
   + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSheetsOrRollsState Ljava/lang/String;]
@@ -64268,11 +64270,11 @@ Constant Pool (count = 394):
   + Methodref [android/widget/EditText.setEnabled (Z)V]
   + Methodref [android/widget/EditText.setHint (Ljava/lang/CharSequence;)V]
   + Methodref [android/widget/EditText.setNextFocusDownId (I)V]
-  + Methodref [android/widget/EditText.setNextFocusForwardId (I)V]
   + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
   + Methodref [android/widget/EditText.setVisibility (I)V]
   + Methodref [android/widget/ImageButton.setBackgroundResource (I)V]
   + Methodref [android/widget/ImageButton.setOnClickListener (Landroid/view/View$OnClickListener;)V]
+  + Methodref [android/widget/TextView.setEnabled (Z)V]
   + Methodref [android/widget/TextView.setVisibility (I)V]
   + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getActivity ()Landroid/app/Activity;]
   + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
@@ -64330,6 +64332,7 @@ Constant Pool (count = 394):
   + NameAndType [mImgbtnSheetsOrRolls Landroid/widget/ImageButton;]
   + NameAndType [mLbl_differentialSpeed Landroid/widget/TextView;]
   + NameAndType [mLbl_reminderNoDifferentialSpeed Landroid/widget/TextView;]
+  + NameAndType [mLbl_sheetLength Landroid/widget/TextView;]
   + NameAndType [mLbl_speedFactor Landroid/widget/TextView;]
   + NameAndType [mListener Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$SheetsPerMinuteDialogListener;]
   + NameAndType [mSheetsOrRollsState Ljava/lang/String;]
@@ -64341,7 +64344,6 @@ Constant Pool (count = 394):
   + NameAndType [setLayout (II)V]
   + NameAndType [setNegativeButton (ILandroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
   + NameAndType [setNextFocusDownId (I)V]
-  + NameAndType [setNextFocusForwardId (I)V]
   + NameAndType [setOnClickListener (Landroid/view/View$OnClickListener;)V]
   + NameAndType [setOnShowListener (Landroid/content/DialogInterface$OnShowListener;)V]
   + NameAndType [setPositiveButton (ILandroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
@@ -64517,6 +64519,7 @@ Constant Pool (count = 394):
   + Utf8 [mImgbtnSheetsOrRolls]
   + Utf8 [mLbl_differentialSpeed]
   + Utf8 [mLbl_reminderNoDifferentialSpeed]
+  + Utf8 [mLbl_sheetLength]
   + Utf8 [mLbl_speedFactor]
   + Utf8 [mListener]
   + Utf8 [mSheetsOrRollsState]
@@ -64533,7 +64536,6 @@ Constant Pool (count = 394):
   + Utf8 [setLayout]
   + Utf8 [setNegativeButton]
   + Utf8 [setNextFocusDownId]
-  + Utf8 [setNextFocusForwardId]
   + Utf8 [setOnClickListener]
   + Utf8 [setOnShowListener]
   + Utf8 [setPositiveButton]
@@ -64552,7 +64554,7 @@ Constant Pool (count = 394):
   + Utf8 [valueOf]
   + Utf8 [width]
 
-Fields (count = 15):
+Fields (count = 16):
   + Field:        mEdit_gauge Landroid/widget/EditText;
     Access flags: 0x0
       = android.widget.EditText mEdit_gauge
@@ -64571,6 +64573,9 @@ Fields (count = 15):
   + Field:        mEdit_speedFactor Landroid/widget/EditText;
     Access flags: 0x0
       = android.widget.EditText mEdit_speedFactor
+  + Field:        mLbl_sheetLength Landroid/widget/TextView;
+    Access flags: 0x0
+      = android.widget.TextView mLbl_sheetLength
   + Field:        mLbl_speedFactor Landroid/widget/TextView;
     Access flags: 0x0
       = android.widget.TextView mLbl_speedFactor
@@ -64606,25 +64611,25 @@ Methods (count = 14):
     Class member attributes (count = 1):
     - Code attribute instructions (code length = 17, locals = 1, stack = 2):
       [0] aload_0 v0
-      [1] invokespecial #98
+      [1] invokespecial #100
         + Methodref [android/app/DialogFragment.<init> ()V]
       [4] aload_0 v0
-      [5] ldc #37
+      [5] ldc #38
         + String [Sheet]
-      [7] putfield #87
+      [7] putfield #89
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSheetsOrRollsState Ljava/lang/String;]
       [10] aload_0 v0
-      [11] ldc #33
+      [11] ldc #34
         + String [ProductionLine.None]
-      [13] putfield #88
+      [13] putfield #90
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSpeedControllerType Ljava/lang/String;]
       [16] return
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 2):
       - Line number table attribute (count = 4)
         [0] -> line 29
-        [4] -> line 52
-        [10] -> line 53
+        [4] -> line 53
+        [10] -> line 54
         [16] -> line 30
       - Local variable table attribute (count = 1)
         v0: 0 -> 11 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment; this]
@@ -64635,36 +64640,36 @@ Methods (count = 14):
     - Code attribute instructions (code length = 45, locals = 2, stack = 5):
       [0] aload_0 v0
       [1] aload_1 v1
-      [2] invokespecial #99
+      [2] invokespecial #101
         + Methodref [android/app/DialogFragment.onAttach (Landroid/app/Activity;)V]
       [5] aload_0 v0
       [6] aload_1 v1
-      [7] checkcast #64
+      [7] checkcast #65
         + Class [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$SheetsPerMinuteDialogListener]
-      [10] putfield #86
+      [10] putfield #88
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mListener Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$SheetsPerMinuteDialogListener;]
       [13] return
       [14] pop
-      [15] new #65
+      [15] new #66
         + Class [java/lang/ClassCastException]
       [18] dup
-      [19] new #70
+      [19] new #71
         + Class [java/lang/StringBuilder]
       [22] dup
       [23] aload_1 v1
-      [24] invokevirtual #127
+      [24] invokevirtual #129
         + Methodref [java/lang/Object.toString ()Ljava/lang/String;]
-      [27] invokestatic #133
+      [27] invokestatic #135
         + Methodref [java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;]
-      [30] invokespecial #134
+      [30] invokespecial #136
         + Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
-      [33] ldc #17
+      [33] ldc #18
         + String [ must implement SheetsPerMinuteDialogListener]
-      [35] invokevirtual #135
+      [35] invokevirtual #137
         + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [38] invokevirtual #136
+      [38] invokevirtual #138
         + Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
-      [41] invokespecial #123
+      [41] invokespecial #125
         + Methodref [java/lang/ClassCastException.<init> (Ljava/lang/String;)V]
       [44] athrow
       Code attribute exceptions (count = 1):
@@ -64672,12 +64677,12 @@ Methods (count = 14):
       + Class [java/lang/ClassCastException]
       Code attribute attributes (attribute count = 3):
       - Line number table attribute (count = 6)
-        [0] -> line 63
-        [5] -> line 67
-        [14] -> line 68
-        [15] -> line 70
-        [33] -> line 71
-        [41] -> line 70
+        [0] -> line 64
+        [5] -> line 68
+        [14] -> line 69
+        [15] -> line 71
+        [33] -> line 72
+        [41] -> line 71
       - Local variable table attribute (count = 2)
         v0: 0 -> 6 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment; this]
         v1: 0 -> 24 [Landroid/app/Activity; activity]
@@ -64688,695 +64693,706 @@ Methods (count = 14):
     Access flags: 0x11
       = public final android.app.Dialog onCreateDialog(android.os.Bundle)
     Class member attributes (count = 1):
-    - Code attribute instructions (code length = 756, locals = 18, stack = 5):
-      [0] new #45
+    - Code attribute instructions (code length = 769, locals = 18, stack = 5):
+      [0] new #46
         + Class [android/app/AlertDialog$Builder]
       [3] dup
       [4] aload_0 v0
-      [5] invokevirtual #117
+      [5] invokevirtual #119
         + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getActivity ()Landroid/app/Activity;]
-      [8] invokespecial #93
+      [8] invokespecial #95
         + Methodref [android/app/AlertDialog$Builder.<init> (Landroid/content/Context;)V]
       [11] astore_1 v1
       [12] aload_0 v0
-      [13] invokevirtual #117
+      [13] invokevirtual #119
         + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getActivity ()Landroid/app/Activity;]
-      [16] invokevirtual #89
+      [16] invokevirtual #91
         + Methodref [android/app/Activity.getLayoutInflater ()Landroid/view/LayoutInflater;]
       [19] ldc #3
         + Integer [2130903043]
       [21] aconst_null
-      [22] invokevirtual #103
+      [22] invokevirtual #105
         + Methodref [android/view/LayoutInflater.inflate (ILandroid/view/ViewGroup;)Landroid/view/View;]
       [25] astore_2 v2
       [26] aload_1 v1
       [27] aload_2 v2
-      [28] invokevirtual #97
+      [28] invokevirtual #99
         + Methodref [android/app/AlertDialog$Builder.setView (Landroid/view/View;)Landroid/app/AlertDialog$Builder;]
       [31] pop
       [32] aload_0 v0
       [33] aload_2 v2
-      [34] ldc #14
+      [34] ldc #15
         + Integer [2131427350]
-      [36] invokevirtual #104
+      [36] invokevirtual #106
         + Methodref [android/view/View.findViewById (I)Landroid/view/View;]
-      [39] checkcast #59
+      [39] checkcast #60
         + Class [android/widget/TextView]
-      [42] putfield #85
+      [42] putfield #87
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mLbl_speedFactor Landroid/widget/TextView;]
       [45] aload_0 v0
       [46] aload_2 v2
-      [47] ldc #11
+      [47] ldc #12
         + Integer [2131427345]
-      [49] invokevirtual #104
+      [49] invokevirtual #106
         + Methodref [android/view/View.findViewById (I)Landroid/view/View;]
-      [52] checkcast #59
+      [52] checkcast #60
         + Class [android/widget/TextView]
-      [55] putfield #83
+      [55] putfield #84
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mLbl_differentialSpeed Landroid/widget/TextView;]
       [58] aload_0 v0
       [59] aload_2 v2
-      [60] ldc #13
+      [60] ldc #14
         + Integer [2131427348]
-      [62] invokevirtual #104
+      [62] invokevirtual #106
         + Methodref [android/view/View.findViewById (I)Landroid/view/View;]
-      [65] checkcast #59
+      [65] checkcast #60
         + Class [android/widget/TextView]
-      [68] putfield #84
+      [68] putfield #85
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mLbl_reminderNoDifferentialSpeed Landroid/widget/TextView;]
       [71] aload_0 v0
       [72] aload_2 v2
-      [73] ldc #7
-        + Integer [2131427334]
-      [75] invokevirtual #104
+      [73] ldc #9
+        + Integer [2131427339]
+      [75] invokevirtual #106
         + Methodref [android/view/View.findViewById (I)Landroid/view/View;]
-      [78] checkcast #57
-        + Class [android/widget/EditText]
-      [81] putfield #77
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_gauge Landroid/widget/EditText;]
+      [78] checkcast #60
+        + Class [android/widget/TextView]
+      [81] putfield #86
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mLbl_sheetLength Landroid/widget/TextView;]
       [84] aload_0 v0
       [85] aload_2 v2
-      [86] ldc #8
-        + Integer [2131427337]
-      [88] invokevirtual #104
+      [86] ldc #7
+        + Integer [2131427334]
+      [88] invokevirtual #106
         + Methodref [android/view/View.findViewById (I)Landroid/view/View;]
-      [91] checkcast #57
+      [91] checkcast #58
         + Class [android/widget/EditText]
-      [94] putfield #80
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetWidth Landroid/widget/EditText;]
+      [94] putfield #78
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_gauge Landroid/widget/EditText;]
       [97] aload_0 v0
       [98] aload_2 v2
-      [99] ldc #9
-        + Integer [2131427340]
-      [101] invokevirtual #104
+      [99] ldc #8
+        + Integer [2131427337]
+      [101] invokevirtual #106
         + Methodref [android/view/View.findViewById (I)Landroid/view/View;]
-      [104] checkcast #57
+      [104] checkcast #58
         + Class [android/widget/EditText]
-      [107] putfield #79
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetLength Landroid/widget/EditText;]
+      [107] putfield #81
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetWidth Landroid/widget/EditText;]
       [110] aload_0 v0
       [111] aload_2 v2
       [112] ldc #10
-        + Integer [2131427341]
-      [114] invokevirtual #104
+        + Integer [2131427340]
+      [114] invokevirtual #106
         + Methodref [android/view/View.findViewById (I)Landroid/view/View;]
-      [117] checkcast #57
+      [117] checkcast #58
         + Class [android/widget/EditText]
-      [120] putfield #78
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_lineSpeed Landroid/widget/EditText;]
+      [120] putfield #80
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetLength Landroid/widget/EditText;]
       [123] aload_0 v0
       [124] aload_2 v2
-      [125] ldc #12
-        + Integer [2131427346]
-      [127] invokevirtual #104
+      [125] ldc #11
+        + Integer [2131427341]
+      [127] invokevirtual #106
         + Methodref [android/view/View.findViewById (I)Landroid/view/View;]
-      [130] checkcast #57
+      [130] checkcast #58
         + Class [android/widget/EditText]
-      [133] putfield #76
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_differentialSpeed Landroid/widget/EditText;]
+      [133] putfield #79
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_lineSpeed Landroid/widget/EditText;]
       [136] aload_0 v0
       [137] aload_2 v2
-      [138] ldc #15
-        + Integer [2131427351]
-      [140] invokevirtual #104
+      [138] ldc #13
+        + Integer [2131427346]
+      [140] invokevirtual #106
         + Methodref [android/view/View.findViewById (I)Landroid/view/View;]
-      [143] checkcast #57
+      [143] checkcast #58
         + Class [android/widget/EditText]
-      [146] putfield #81
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_speedFactor Landroid/widget/EditText;]
+      [146] putfield #77
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_differentialSpeed Landroid/widget/EditText;]
       [149] aload_0 v0
       [150] aload_2 v2
-      [151] ldc #6
-        + Integer [2131427330]
-      [153] invokevirtual #104
+      [151] ldc #16
+        + Integer [2131427351]
+      [153] invokevirtual #106
         + Methodref [android/view/View.findViewById (I)Landroid/view/View;]
       [156] checkcast #58
-        + Class [android/widget/ImageButton]
+        + Class [android/widget/EditText]
       [159] putfield #82
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mImgbtnSheetsOrRolls Landroid/widget/ImageButton;]
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_speedFactor Landroid/widget/EditText;]
       [162] aload_0 v0
-      [163] invokevirtual #118
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
-      [166] ifnull +510 (target=676)
-      [169] aload_0 v0
-      [170] aload_0 v0
-      [171] invokevirtual #118
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
-      [174] ldc #27
-        + String [DifferentialLowValue]
-      [176] dconst_0
-      [177] invokevirtual #100
-        + Methodref [android/os/Bundle.getDouble (Ljava/lang/String;D)D]
-      [180] invokestatic #125
-        + Methodref [java/lang/Double.valueOf (D)Ljava/lang/Double;]
-      [183] putfield #75
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mDifferentialRangeLow Ljava/lang/Double;]
-      [186] aload_0 v0
-      [187] aload_0 v0
-      [188] invokevirtual #118
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
-      [191] ldc #26
-        + String [DifferentialHighValue]
-      [193] dconst_0
-      [194] invokevirtual #100
-        + Methodref [android/os/Bundle.getDouble (Ljava/lang/String;D)D]
-      [197] invokestatic #125
-        + Methodref [java/lang/Double.valueOf (D)Ljava/lang/Double;]
-      [200] putfield #74
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mDifferentialRangeHigh Ljava/lang/Double;]
-      [203] aload_0 v0
-      [204] invokevirtual #118
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
-      [207] ldc #29
-        + String [Gauge]
-      [209] dconst_0
-      [210] invokevirtual #100
-        + Methodref [android/os/Bundle.getDouble (Ljava/lang/String;D)D]
-      [213] dstore v4
-      [215] aload_0 v0
-      [216] invokevirtual #118
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
-      [219] ldc #39
-        + String [SheetWidth]
-      [221] dconst_0
-      [222] invokevirtual #100
-        + Methodref [android/os/Bundle.getDouble (Ljava/lang/String;D)D]
-      [225] dstore v6
-      [227] aload_0 v0
-      [228] invokevirtual #118
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
-      [231] ldc #38
-        + String [SheetLength]
-      [233] dconst_0
-      [234] invokevirtual #100
-        + Methodref [android/os/Bundle.getDouble (Ljava/lang/String;D)D]
-      [237] dstore v8
-      [239] aload_0 v0
-      [240] invokevirtual #118
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
-      [243] ldc #30
-        + String [LineSpeed]
-      [245] dconst_0
-      [246] invokevirtual #100
-        + Methodref [android/os/Bundle.getDouble (Ljava/lang/String;D)D]
-      [249] dstore v10
-      [251] aload_0 v0
-      [252] invokevirtual #118
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
-      [255] ldc #28
-        + String [DifferentialSpeed]
-      [257] dconst_0
-      [258] invokevirtual #100
-        + Methodref [android/os/Bundle.getDouble (Ljava/lang/String;D)D]
-      [261] dstore v12
-      [263] aload_0 v0
-      [264] aload_0 v0
-      [265] invokevirtual #118
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
-      [268] ldc #40
-        + String [SpeedControllerType]
-      [270] invokevirtual #101
-        + Methodref [android/os/Bundle.getString (Ljava/lang/String;)Ljava/lang/String;]
-      [273] putfield #88
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSpeedControllerType Ljava/lang/String;]
-      [276] aload_0 v0
-      [277] invokevirtual #118
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
-      [280] ldc #41
-        + String [SpeedFactor]
-      [282] dconst_0
-      [283] invokevirtual #100
-        + Methodref [android/os/Bundle.getDouble (Ljava/lang/String;D)D]
-      [286] dstore v14
-      [288] aload_0 v0
-      [289] invokevirtual #118
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
-      [292] ldc #31
-        + String [ProductType]
-      [294] invokevirtual #101
-        + Methodref [android/os/Bundle.getString (Ljava/lang/String;)Ljava/lang/String;]
-      [297] astore_2 v2
-      [298] dload v4
-      [300] dconst_0
-      [301] dcmpl
-      [302] ifle +15 (target=317)
-      [305] aload_0 v0
-      [306] getfield #77
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_gauge Landroid/widget/EditText;]
-      [309] dload v4
-      [311] invokestatic #132
-        + Methodref [java/lang/String.valueOf (D)Ljava/lang/String;]
-      [314] invokevirtual #112
-        + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
-      [317] dload v6
-      [319] dconst_0
-      [320] dcmpl
-      [321] ifle +15 (target=336)
-      [324] aload_0 v0
-      [325] getfield #80
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetWidth Landroid/widget/EditText;]
-      [328] dload v6
-      [330] invokestatic #132
-        + Methodref [java/lang/String.valueOf (D)Ljava/lang/String;]
-      [333] invokevirtual #112
-        + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
-      [336] dload v8
-      [338] dconst_0
-      [339] dcmpl
-      [340] ifle +15 (target=355)
-      [343] aload_0 v0
-      [344] getfield #79
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetLength Landroid/widget/EditText;]
-      [347] dload v8
-      [349] invokestatic #132
-        + Methodref [java/lang/String.valueOf (D)Ljava/lang/String;]
-      [352] invokevirtual #112
-        + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
-      [355] dload v10
-      [357] dconst_0
-      [358] dcmpl
-      [359] ifle +15 (target=374)
-      [362] aload_0 v0
-      [363] getfield #78
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_lineSpeed Landroid/widget/EditText;]
-      [366] dload v10
-      [368] invokestatic #132
-        + Methodref [java/lang/String.valueOf (D)Ljava/lang/String;]
-      [371] invokevirtual #112
-        + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
-      [374] dload v12
-      [376] dconst_0
-      [377] dcmpl
-      [378] ifle +18 (target=396)
-      [381] aload_0 v0
-      [382] getfield #76
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_differentialSpeed Landroid/widget/EditText;]
-      [385] dload v12
-      [387] invokestatic #132
-        + Methodref [java/lang/String.valueOf (D)Ljava/lang/String;]
-      [390] invokevirtual #112
-        + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
-      [393] goto +184 (target=577)
-      [396] aload_0 v0
-      [397] getfield #88
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSpeedControllerType Ljava/lang/String;]
-      [400] ldc #33
-        + String [ProductionLine.None]
-      [402] invokevirtual #129
-        + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
-      [405] ifeq +12 (target=417)
-      [408] aload_0 v0
-      [409] getfield #76
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_differentialSpeed Landroid/widget/EditText;]
-      [412] ldc #22
-        + String [1]
-      [414] invokevirtual #112
-        + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
-      [417] aload_0 v0
-      [418] getfield #75
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mDifferentialRangeLow Ljava/lang/Double;]
-      [421] invokevirtual #124
-        + Methodref [java/lang/Double.doubleValue ()D]
-      [424] aload_0 v0
-      [425] getfield #74
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mDifferentialRangeHigh Ljava/lang/Double;]
-      [428] invokevirtual #124
-        + Methodref [java/lang/Double.doubleValue ()D]
-      [431] dadd
-      [432] ldc2_w #72
-        + Double [2.0]
-      [435] ddiv
-      [436] dstore v16
-      [438] ldc #16
-        + String []
-      [440] astore_3 v3
-      [441] aload_0 v0
-      [442] getfield #88
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSpeedControllerType Ljava/lang/String;]
-      [445] ldc #32
-        + String [ProductionLine.Geared]
-      [447] invokevirtual #129
-        + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
-      [450] ifeq +21 (target=471)
-      [453] new #71
-        + Class [java/text/DecimalFormat]
-      [456] dup
-      [457] ldc #19
-        + String [#0.000]
-      [459] invokespecial #137
-        + Methodref [java/text/DecimalFormat.<init> (Ljava/lang/String;)V]
-      [462] dload v16
-      [464] invokevirtual #138
-        + Methodref [java/text/DecimalFormat.format (D)Ljava/lang/String;]
-      [467] astore_3 v3
-      [468] goto +78 (target=546)
-      [471] aload_0 v0
-      [472] getfield #88
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSpeedControllerType Ljava/lang/String;]
-      [475] ldc #34
-        + String [ProductionLine.Percent]
-      [477] invokevirtual #129
-        + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
-      [480] ifeq +39 (target=519)
-      [483] new #70
-        + Class [java/lang/StringBuilder]
-      [486] dup
-      [487] new #71
-        + Class [java/text/DecimalFormat]
-      [490] dup
-      [491] ldc #18
-        + String [###.0]
-      [493] invokespecial #137
-        + Methodref [java/text/DecimalFormat.<init> (Ljava/lang/String;)V]
-      [496] dload v16
-      [498] invokevirtual #138
-        + Methodref [java/text/DecimalFormat.format (D)Ljava/lang/String;]
-      [501] invokestatic #133
-        + Methodref [java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;]
-      [504] invokespecial #134
-        + Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
-      [507] ldc #20
-        + String [%]
-      [509] invokevirtual #135
-        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [512] invokevirtual #136
-        + Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
-      [515] astore_3 v3
-      [516] goto +30 (target=546)
-      [519] aload_0 v0
-      [520] getfield #88
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSpeedControllerType Ljava/lang/String;]
-      [523] ldc #35
-        + String [ProductionLine.Ratio]
-      [525] invokevirtual #129
-        + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
-      [528] ifeq +18 (target=546)
-      [531] new #71
-        + Class [java/text/DecimalFormat]
-      [534] dup
-      [535] ldc #21
-        + String [0.00]
-      [537] invokespecial #137
-        + Methodref [java/text/DecimalFormat.<init> (Ljava/lang/String;)V]
-      [540] dload v16
-      [542] invokevirtual #138
-        + Methodref [java/text/DecimalFormat.format (D)Ljava/lang/String;]
-      [545] astore_3 v3
-      [546] aload_0 v0
-      [547] getfield #76
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_differentialSpeed Landroid/widget/EditText;]
-      [550] new #70
-        + Class [java/lang/StringBuilder]
-      [553] dup
-      [554] ldc #25
-        + String [<i>]
-      [556] invokespecial #134
-        + Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
-      [559] aload_3 v3
-      [560] invokevirtual #135
-        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [563] ldc #24
-        + String [</i>]
-      [565] invokevirtual #135
-        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [568] invokevirtual #136
-        + Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
-      [571] invokestatic #102
-        + Methodref [android/text/Html.fromHtml (Ljava/lang/String;)Landroid/text/Spanned;]
-      [574] invokevirtual #109
-        + Methodref [android/widget/EditText.setHint (Ljava/lang/CharSequence;)V]
-      [577] aload_0 v0
-      [578] getfield #88
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSpeedControllerType Ljava/lang/String;]
-      [581] ifnull +41 (target=622)
-      [584] aload_0 v0
-      [585] getfield #88
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSpeedControllerType Ljava/lang/String;]
-      [588] ldc #33
-        + String [ProductionLine.None]
-      [590] invokevirtual #129
-        + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
-      [593] ifeq +29 (target=622)
-      [596] aload_0 v0
-      [597] getfield #76
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_differentialSpeed Landroid/widget/EditText;]
-      [600] bipush 8
-      [602] invokevirtual #113
-        + Methodref [android/widget/EditText.setVisibility (I)V]
-      [605] aload_0 v0
-      [606] getfield #83
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mLbl_differentialSpeed Landroid/widget/TextView;]
-      [609] bipush 8
-      [611] invokevirtual #116
-        + Methodref [android/widget/TextView.setVisibility (I)V]
-      [614] aload_0 v0
-      [615] getfield #84
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mLbl_reminderNoDifferentialSpeed Landroid/widget/TextView;]
-      [618] iconst_0
-      [619] invokevirtual #116
-        + Methodref [android/widget/TextView.setVisibility (I)V]
-      [622] dload v14
-      [624] dconst_0
-      [625] dcmpl
-      [626] ifle +15 (target=641)
-      [629] aload_0 v0
-      [630] getfield #81
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_speedFactor Landroid/widget/EditText;]
-      [633] dload v14
-      [635] invokestatic #132
-        + Methodref [java/lang/String.valueOf (D)Ljava/lang/String;]
-      [638] invokevirtual #112
-        + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
-      [641] aload_2 v2
-      [642] ifnull +16 (target=658)
-      [645] aload_0 v0
-      [646] aload_2 v2
-      [647] putfield #87
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSheetsOrRollsState Ljava/lang/String;]
-      [650] aload_0 v0
-      [651] aload_0 v0
-      [652] getfield #87
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSheetsOrRollsState Ljava/lang/String;]
-      [655] invokespecial #119
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.setSheetsOrRollsState (Ljava/lang/String;)V]
-      [658] aload_0 v0
-      [659] getfield #85
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mLbl_speedFactor Landroid/widget/TextView;]
-      [662] bipush 8
-      [664] invokevirtual #116
-        + Methodref [android/widget/TextView.setVisibility (I)V]
-      [667] aload_0 v0
-      [668] getfield #81
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_speedFactor Landroid/widget/EditText;]
-      [671] bipush 8
-      [673] invokevirtual #113
-        + Methodref [android/widget/EditText.setVisibility (I)V]
-      [676] aload_0 v0
-      [677] getfield #82
+      [163] aload_2 v2
+      [164] ldc #6
+        + Integer [2131427330]
+      [166] invokevirtual #106
+        + Methodref [android/view/View.findViewById (I)Landroid/view/View;]
+      [169] checkcast #59
+        + Class [android/widget/ImageButton]
+      [172] putfield #83
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mImgbtnSheetsOrRolls Landroid/widget/ImageButton;]
+      [175] aload_0 v0
+      [176] invokevirtual #120
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
+      [179] ifnull +510 (target=689)
+      [182] aload_0 v0
+      [183] aload_0 v0
+      [184] invokevirtual #120
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
+      [187] ldc #28
+        + String [DifferentialLowValue]
+      [189] dconst_0
+      [190] invokevirtual #102
+        + Methodref [android/os/Bundle.getDouble (Ljava/lang/String;D)D]
+      [193] invokestatic #127
+        + Methodref [java/lang/Double.valueOf (D)Ljava/lang/Double;]
+      [196] putfield #76
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mDifferentialRangeLow Ljava/lang/Double;]
+      [199] aload_0 v0
+      [200] aload_0 v0
+      [201] invokevirtual #120
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
+      [204] ldc #27
+        + String [DifferentialHighValue]
+      [206] dconst_0
+      [207] invokevirtual #102
+        + Methodref [android/os/Bundle.getDouble (Ljava/lang/String;D)D]
+      [210] invokestatic #127
+        + Methodref [java/lang/Double.valueOf (D)Ljava/lang/Double;]
+      [213] putfield #75
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mDifferentialRangeHigh Ljava/lang/Double;]
+      [216] aload_0 v0
+      [217] invokevirtual #120
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
+      [220] ldc #30
+        + String [Gauge]
+      [222] dconst_0
+      [223] invokevirtual #102
+        + Methodref [android/os/Bundle.getDouble (Ljava/lang/String;D)D]
+      [226] dstore v4
+      [228] aload_0 v0
+      [229] invokevirtual #120
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
+      [232] ldc #40
+        + String [SheetWidth]
+      [234] dconst_0
+      [235] invokevirtual #102
+        + Methodref [android/os/Bundle.getDouble (Ljava/lang/String;D)D]
+      [238] dstore v6
+      [240] aload_0 v0
+      [241] invokevirtual #120
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
+      [244] ldc #39
+        + String [SheetLength]
+      [246] dconst_0
+      [247] invokevirtual #102
+        + Methodref [android/os/Bundle.getDouble (Ljava/lang/String;D)D]
+      [250] dstore v8
+      [252] aload_0 v0
+      [253] invokevirtual #120
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
+      [256] ldc #31
+        + String [LineSpeed]
+      [258] dconst_0
+      [259] invokevirtual #102
+        + Methodref [android/os/Bundle.getDouble (Ljava/lang/String;D)D]
+      [262] dstore v10
+      [264] aload_0 v0
+      [265] invokevirtual #120
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
+      [268] ldc #29
+        + String [DifferentialSpeed]
+      [270] dconst_0
+      [271] invokevirtual #102
+        + Methodref [android/os/Bundle.getDouble (Ljava/lang/String;D)D]
+      [274] dstore v12
+      [276] aload_0 v0
+      [277] aload_0 v0
+      [278] invokevirtual #120
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
+      [281] ldc #41
+        + String [SpeedControllerType]
+      [283] invokevirtual #103
+        + Methodref [android/os/Bundle.getString (Ljava/lang/String;)Ljava/lang/String;]
+      [286] putfield #90
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSpeedControllerType Ljava/lang/String;]
+      [289] aload_0 v0
+      [290] invokevirtual #120
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
+      [293] ldc #42
+        + String [SpeedFactor]
+      [295] dconst_0
+      [296] invokevirtual #102
+        + Methodref [android/os/Bundle.getDouble (Ljava/lang/String;D)D]
+      [299] dstore v14
+      [301] aload_0 v0
+      [302] invokevirtual #120
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getArguments ()Landroid/os/Bundle;]
+      [305] ldc #32
+        + String [ProductType]
+      [307] invokevirtual #103
+        + Methodref [android/os/Bundle.getString (Ljava/lang/String;)Ljava/lang/String;]
+      [310] astore_2 v2
+      [311] dload v4
+      [313] dconst_0
+      [314] dcmpl
+      [315] ifle +15 (target=330)
+      [318] aload_0 v0
+      [319] getfield #78
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_gauge Landroid/widget/EditText;]
+      [322] dload v4
+      [324] invokestatic #134
+        + Methodref [java/lang/String.valueOf (D)Ljava/lang/String;]
+      [327] invokevirtual #113
+        + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
+      [330] dload v6
+      [332] dconst_0
+      [333] dcmpl
+      [334] ifle +15 (target=349)
+      [337] aload_0 v0
+      [338] getfield #81
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetWidth Landroid/widget/EditText;]
+      [341] dload v6
+      [343] invokestatic #134
+        + Methodref [java/lang/String.valueOf (D)Ljava/lang/String;]
+      [346] invokevirtual #113
+        + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
+      [349] dload v8
+      [351] dconst_0
+      [352] dcmpl
+      [353] ifle +15 (target=368)
+      [356] aload_0 v0
+      [357] getfield #80
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetLength Landroid/widget/EditText;]
+      [360] dload v8
+      [362] invokestatic #134
+        + Methodref [java/lang/String.valueOf (D)Ljava/lang/String;]
+      [365] invokevirtual #113
+        + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
+      [368] dload v10
+      [370] dconst_0
+      [371] dcmpl
+      [372] ifle +15 (target=387)
+      [375] aload_0 v0
+      [376] getfield #79
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_lineSpeed Landroid/widget/EditText;]
+      [379] dload v10
+      [381] invokestatic #134
+        + Methodref [java/lang/String.valueOf (D)Ljava/lang/String;]
+      [384] invokevirtual #113
+        + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
+      [387] dload v12
+      [389] dconst_0
+      [390] dcmpl
+      [391] ifle +18 (target=409)
+      [394] aload_0 v0
+      [395] getfield #77
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_differentialSpeed Landroid/widget/EditText;]
+      [398] dload v12
+      [400] invokestatic #134
+        + Methodref [java/lang/String.valueOf (D)Ljava/lang/String;]
+      [403] invokevirtual #113
+        + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
+      [406] goto +184 (target=590)
+      [409] aload_0 v0
+      [410] getfield #90
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSpeedControllerType Ljava/lang/String;]
+      [413] ldc #34
+        + String [ProductionLine.None]
+      [415] invokevirtual #131
+        + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
+      [418] ifeq +12 (target=430)
+      [421] aload_0 v0
+      [422] getfield #77
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_differentialSpeed Landroid/widget/EditText;]
+      [425] ldc #23
+        + String [1]
+      [427] invokevirtual #113
+        + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
+      [430] aload_0 v0
+      [431] getfield #76
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mDifferentialRangeLow Ljava/lang/Double;]
+      [434] invokevirtual #126
+        + Methodref [java/lang/Double.doubleValue ()D]
+      [437] aload_0 v0
+      [438] getfield #75
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mDifferentialRangeHigh Ljava/lang/Double;]
+      [441] invokevirtual #126
+        + Methodref [java/lang/Double.doubleValue ()D]
+      [444] dadd
+      [445] ldc2_w #73
+        + Double [2.0]
+      [448] ddiv
+      [449] dstore v16
+      [451] ldc #17
+        + String []
+      [453] astore_3 v3
+      [454] aload_0 v0
+      [455] getfield #90
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSpeedControllerType Ljava/lang/String;]
+      [458] ldc #33
+        + String [ProductionLine.Geared]
+      [460] invokevirtual #131
+        + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
+      [463] ifeq +21 (target=484)
+      [466] new #72
+        + Class [java/text/DecimalFormat]
+      [469] dup
+      [470] ldc #20
+        + String [#0.000]
+      [472] invokespecial #139
+        + Methodref [java/text/DecimalFormat.<init> (Ljava/lang/String;)V]
+      [475] dload v16
+      [477] invokevirtual #140
+        + Methodref [java/text/DecimalFormat.format (D)Ljava/lang/String;]
+      [480] astore_3 v3
+      [481] goto +78 (target=559)
+      [484] aload_0 v0
+      [485] getfield #90
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSpeedControllerType Ljava/lang/String;]
+      [488] ldc #35
+        + String [ProductionLine.Percent]
+      [490] invokevirtual #131
+        + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
+      [493] ifeq +39 (target=532)
+      [496] new #71
+        + Class [java/lang/StringBuilder]
+      [499] dup
+      [500] new #72
+        + Class [java/text/DecimalFormat]
+      [503] dup
+      [504] ldc #19
+        + String [###.0]
+      [506] invokespecial #139
+        + Methodref [java/text/DecimalFormat.<init> (Ljava/lang/String;)V]
+      [509] dload v16
+      [511] invokevirtual #140
+        + Methodref [java/text/DecimalFormat.format (D)Ljava/lang/String;]
+      [514] invokestatic #135
+        + Methodref [java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;]
+      [517] invokespecial #136
+        + Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
+      [520] ldc #21
+        + String [%]
+      [522] invokevirtual #137
+        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
+      [525] invokevirtual #138
+        + Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
+      [528] astore_3 v3
+      [529] goto +30 (target=559)
+      [532] aload_0 v0
+      [533] getfield #90
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSpeedControllerType Ljava/lang/String;]
+      [536] ldc #36
+        + String [ProductionLine.Ratio]
+      [538] invokevirtual #131
+        + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
+      [541] ifeq +18 (target=559)
+      [544] new #72
+        + Class [java/text/DecimalFormat]
+      [547] dup
+      [548] ldc #22
+        + String [0.00]
+      [550] invokespecial #139
+        + Methodref [java/text/DecimalFormat.<init> (Ljava/lang/String;)V]
+      [553] dload v16
+      [555] invokevirtual #140
+        + Methodref [java/text/DecimalFormat.format (D)Ljava/lang/String;]
+      [558] astore_3 v3
+      [559] aload_0 v0
+      [560] getfield #77
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_differentialSpeed Landroid/widget/EditText;]
+      [563] new #71
+        + Class [java/lang/StringBuilder]
+      [566] dup
+      [567] ldc #26
+        + String [<i>]
+      [569] invokespecial #136
+        + Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
+      [572] aload_3 v3
+      [573] invokevirtual #137
+        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
+      [576] ldc #25
+        + String [</i>]
+      [578] invokevirtual #137
+        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
+      [581] invokevirtual #138
+        + Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
+      [584] invokestatic #104
+        + Methodref [android/text/Html.fromHtml (Ljava/lang/String;)Landroid/text/Spanned;]
+      [587] invokevirtual #111
+        + Methodref [android/widget/EditText.setHint (Ljava/lang/CharSequence;)V]
+      [590] aload_0 v0
+      [591] getfield #90
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSpeedControllerType Ljava/lang/String;]
+      [594] ifnull +41 (target=635)
+      [597] aload_0 v0
+      [598] getfield #90
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSpeedControllerType Ljava/lang/String;]
+      [601] ldc #34
+        + String [ProductionLine.None]
+      [603] invokevirtual #131
+        + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
+      [606] ifeq +29 (target=635)
+      [609] aload_0 v0
+      [610] getfield #77
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_differentialSpeed Landroid/widget/EditText;]
+      [613] bipush 8
+      [615] invokevirtual #114
+        + Methodref [android/widget/EditText.setVisibility (I)V]
+      [618] aload_0 v0
+      [619] getfield #84
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mLbl_differentialSpeed Landroid/widget/TextView;]
+      [622] bipush 8
+      [624] invokevirtual #118
+        + Methodref [android/widget/TextView.setVisibility (I)V]
+      [627] aload_0 v0
+      [628] getfield #85
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mLbl_reminderNoDifferentialSpeed Landroid/widget/TextView;]
+      [631] iconst_0
+      [632] invokevirtual #118
+        + Methodref [android/widget/TextView.setVisibility (I)V]
+      [635] dload v14
+      [637] dconst_0
+      [638] dcmpl
+      [639] ifle +15 (target=654)
+      [642] aload_0 v0
+      [643] getfield #82
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_speedFactor Landroid/widget/EditText;]
+      [646] dload v14
+      [648] invokestatic #134
+        + Methodref [java/lang/String.valueOf (D)Ljava/lang/String;]
+      [651] invokevirtual #113
+        + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
+      [654] aload_2 v2
+      [655] ifnull +16 (target=671)
+      [658] aload_0 v0
+      [659] aload_2 v2
+      [660] putfield #89
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSheetsOrRollsState Ljava/lang/String;]
+      [663] aload_0 v0
+      [664] aload_0 v0
+      [665] getfield #89
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSheetsOrRollsState Ljava/lang/String;]
+      [668] invokespecial #121
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.setSheetsOrRollsState (Ljava/lang/String;)V]
+      [671] aload_0 v0
+      [672] getfield #87
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mLbl_speedFactor Landroid/widget/TextView;]
+      [675] bipush 8
+      [677] invokevirtual #118
+        + Methodref [android/widget/TextView.setVisibility (I)V]
       [680] aload_0 v0
-      [681] invokevirtual #115
+      [681] getfield #82
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_speedFactor Landroid/widget/EditText;]
+      [684] bipush 8
+      [686] invokevirtual #114
+        + Methodref [android/widget/EditText.setVisibility (I)V]
+      [689] aload_0 v0
+      [690] getfield #83
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mImgbtnSheetsOrRolls Landroid/widget/ImageButton;]
+      [693] aload_0 v0
+      [694] invokevirtual #116
         + Methodref [android/widget/ImageButton.setOnClickListener (Landroid/view/View$OnClickListener;)V]
-      [684] aload_1 v1
-      [685] ldc #5
+      [697] aload_1 v1
+      [698] ldc #5
         + Integer [2131165202]
-      [687] new #61
+      [700] new #62
         + Class [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$1]
-      [690] dup
-      [691] aload_0 v0
-      [692] invokespecial #120
+      [703] dup
+      [704] aload_0 v0
+      [705] invokespecial #122
         + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$1.<init> (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;)V]
-      [695] invokevirtual #96
+      [708] invokevirtual #98
         + Methodref [android/app/AlertDialog$Builder.setPositiveButton (ILandroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
-      [698] pop
-      [699] aload_1 v1
-      [700] ldc #4
+      [711] pop
+      [712] aload_1 v1
+      [713] ldc #4
         + Integer [2131165197]
-      [702] new #62
+      [715] new #63
         + Class [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$2]
-      [705] dup
-      [706] aload_0 v0
-      [707] invokespecial #121
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$2.<init> (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;)V]
-      [710] invokevirtual #95
-        + Methodref [android/app/AlertDialog$Builder.setNegativeButton (ILandroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
-      [713] pop
-      [714] aload_1 v1
-      [715] invokevirtual #94
-        + Methodref [android/app/AlertDialog$Builder.create ()Landroid/app/AlertDialog;]
       [718] dup
-      [719] astore v4
-      [721] new #63
+      [719] aload_0 v0
+      [720] invokespecial #123
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$2.<init> (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;)V]
+      [723] invokevirtual #97
+        + Methodref [android/app/AlertDialog$Builder.setNegativeButton (ILandroid/content/DialogInterface$OnClickListener;)Landroid/app/AlertDialog$Builder;]
+      [726] pop
+      [727] aload_1 v1
+      [728] invokevirtual #96
+        + Methodref [android/app/AlertDialog$Builder.create ()Landroid/app/AlertDialog;]
+      [731] dup
+      [732] astore v4
+      [734] new #64
         + Class [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3]
-      [724] dup
-      [725] aload_0 v0
-      [726] aload v4
-      [728] invokespecial #122
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3.<init> (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;Landroid/app/AlertDialog;)V]
-      [731] invokevirtual #91
-        + Methodref [android/app/AlertDialog.setOnShowListener (Landroid/content/DialogInterface$OnShowListener;)V]
-      [734] aload v4
-      [736] invokevirtual #92
-        + Methodref [android/app/AlertDialog.show ()V]
+      [737] dup
+      [738] aload_0 v0
       [739] aload v4
-      [741] invokevirtual #90
+      [741] invokespecial #124
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3.<init> (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;Landroid/app/AlertDialog;)V]
+      [744] invokevirtual #93
+        + Methodref [android/app/AlertDialog.setOnShowListener (Landroid/content/DialogInterface$OnShowListener;)V]
+      [747] aload v4
+      [749] invokevirtual #94
+        + Methodref [android/app/AlertDialog.show ()V]
+      [752] aload v4
+      [754] invokevirtual #92
         + Methodref [android/app/AlertDialog.getWindow ()Landroid/view/Window;]
-      [744] sipush 500
-      [747] sipush 850
-      [750] invokevirtual #106
+      [757] sipush 500
+      [760] sipush 850
+      [763] invokevirtual #108
         + Methodref [android/view/Window.setLayout (II)V]
-      [753] aload v4
-      [755] areturn
+      [766] aload v4
+      [768] areturn
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 3):
-      - Line number table attribute (count = 60)
-        [0] -> line 81
-        [12] -> line 83
-        [19] -> line 84
-        [26] -> line 85
-        [32] -> line 87
-        [45] -> line 88
-        [58] -> line 89
+      - Line number table attribute (count = 61)
+        [0] -> line 82
+        [12] -> line 84
+        [19] -> line 85
+        [26] -> line 86
+        [32] -> line 88
+        [45] -> line 89
+        [58] -> line 90
         [71] -> line 91
-        [84] -> line 92
-        [97] -> line 93
-        [110] -> line 94
-        [123] -> line 95
-        [136] -> line 96
-        [149] -> line 97
+        [84] -> line 93
+        [97] -> line 94
+        [110] -> line 95
+        [123] -> line 96
+        [136] -> line 97
+        [149] -> line 98
         [162] -> line 99
-        [169] -> line 100
-        [186] -> line 101
-        [203] -> line 103
-        [215] -> line 104
-        [227] -> line 105
-        [239] -> line 106
-        [251] -> line 107
-        [263] -> line 108
-        [276] -> line 109
-        [288] -> line 110
-        [298] -> line 112
-        [317] -> line 113
-        [336] -> line 114
-        [355] -> line 115
-        [374] -> line 116
-        [381] -> line 117
-        [396] -> line 119
-        [408] -> line 120
-        [417] -> line 122
-        [438] -> line 123
-        [441] -> line 124
-        [453] -> line 125
-        [471] -> line 126
-        [483] -> line 127
-        [519] -> line 128
-        [531] -> line 129
-        [546] -> line 131
-        [577] -> line 133
-        [596] -> line 134
-        [605] -> line 135
-        [614] -> line 136
-        [622] -> line 138
-        [641] -> line 139
-        [645] -> line 140
-        [650] -> line 141
-        [658] -> line 145
-        [667] -> line 146
-        [676] -> line 151
-        [684] -> line 154
-        [699] -> line 159
-        [714] -> line 169
-        [719] -> line 170
-        [734] -> line 225
-        [739] -> line 226
-        [753] -> line 227
+        [175] -> line 101
+        [182] -> line 102
+        [199] -> line 103
+        [216] -> line 105
+        [228] -> line 106
+        [240] -> line 107
+        [252] -> line 108
+        [264] -> line 109
+        [276] -> line 110
+        [289] -> line 111
+        [301] -> line 112
+        [311] -> line 114
+        [330] -> line 115
+        [349] -> line 116
+        [368] -> line 117
+        [387] -> line 118
+        [394] -> line 119
+        [409] -> line 121
+        [421] -> line 122
+        [430] -> line 124
+        [451] -> line 125
+        [454] -> line 126
+        [466] -> line 127
+        [484] -> line 128
+        [496] -> line 129
+        [532] -> line 130
+        [544] -> line 131
+        [559] -> line 133
+        [590] -> line 135
+        [609] -> line 136
+        [618] -> line 137
+        [627] -> line 138
+        [635] -> line 140
+        [654] -> line 141
+        [658] -> line 142
+        [663] -> line 143
+        [671] -> line 147
+        [680] -> line 148
+        [689] -> line 153
+        [697] -> line 156
+        [712] -> line 161
+        [727] -> line 171
+        [732] -> line 172
+        [747] -> line 229
+        [752] -> line 230
+        [766] -> line 231
       - Local variable table attribute (count = 13)
-        v0: 0 -> 726 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment; this]
-        v1: 12 -> 715 [Landroid/app/AlertDialog$Builder; builder]
-        v2: 26 -> 151 [Landroid/view/View; rootView]
-        v4: 215 -> 311 [D gauge]
-        v6: 227 -> 330 [D width]
-        v8: 239 -> 349 [D length]
-        v10: 251 -> 368 [D speed]
-        v12: 263 -> 387 [D diff]
-        v14: 288 -> 635 [D factor]
-        v2: 298 -> 647 [Ljava/lang/String; prodtype]
-        v16: 438 -> 542 [D averageDiffSpeed]
-        v3: 441 -> 560 [Ljava/lang/String; hint]
-        v4: 721 -> 755 [Landroid/app/AlertDialog; alertDialog]
+        v0: 0 -> 739 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment; this]
+        v1: 12 -> 728 [Landroid/app/AlertDialog$Builder; builder]
+        v2: 26 -> 164 [Landroid/view/View; rootView]
+        v4: 228 -> 324 [D gauge]
+        v6: 240 -> 343 [D width]
+        v8: 252 -> 362 [D length]
+        v10: 264 -> 381 [D speed]
+        v12: 276 -> 400 [D diff]
+        v14: 301 -> 648 [D factor]
+        v2: 311 -> 660 [Ljava/lang/String; prodtype]
+        v16: 451 -> 555 [D averageDiffSpeed]
+        v3: 454 -> 573 [Ljava/lang/String; hint]
+        v4: 734 -> 768 [Landroid/app/AlertDialog; alertDialog]
       - Stack map table attribute (count = 14):
-        - [317] Var: [a:com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment][a:android/os/Bundle][a:android/app/AlertDialog$Builder][a:android/view/LayoutInflater][a:android/view/View][d][d][d][d][d][d][a:java/lang/String], Stack: 
-        - [336] Var: ..., Stack: (empty)
-        - [355] Var: ..., Stack: (empty)
-        - [374] Var: ..., Stack: (empty)
-        - [396] Var: ..., Stack: (empty)
-        - [417] Var: ..., Stack: (empty)
-        - [471] Var: ...[d][a:java/lang/String], Stack: (empty)
-        - [519] Var: ..., Stack: (empty)
-        - [546] Var: ..., Stack: (empty)
-        - [577] Var: -2, Stack: (empty)
-        - [622] Var: ..., Stack: (empty)
-        - [641] Var: ..., Stack: (empty)
-        - [658] Var: ..., Stack: (empty)
-        - [676] Var: [a:com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment][a:android/os/Bundle][a:android/app/AlertDialog$Builder][a:android/view/LayoutInflater][a:android/view/View], Stack: 
+        - [330] Var: [a:com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment][a:android/os/Bundle][a:android/app/AlertDialog$Builder][a:android/view/LayoutInflater][a:android/view/View][d][d][d][d][d][d][a:java/lang/String], Stack: 
+        - [349] Var: ..., Stack: (empty)
+        - [368] Var: ..., Stack: (empty)
+        - [387] Var: ..., Stack: (empty)
+        - [409] Var: ..., Stack: (empty)
+        - [430] Var: ..., Stack: (empty)
+        - [484] Var: ...[d][a:java/lang/String], Stack: (empty)
+        - [532] Var: ..., Stack: (empty)
+        - [559] Var: ..., Stack: (empty)
+        - [590] Var: -2, Stack: (empty)
+        - [635] Var: ..., Stack: (empty)
+        - [654] Var: ..., Stack: (empty)
+        - [671] Var: ..., Stack: (empty)
+        - [689] Var: [a:com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment][a:android/os/Bundle][a:android/app/AlertDialog$Builder][a:android/view/LayoutInflater][a:android/view/View], Stack: 
   + Method:       onClick(Landroid/view/View;)V
     Access flags: 0x11
       = public final void onClick(android.view.View)
     Class member attributes (count = 1):
     - Code attribute instructions (code length = 58, locals = 2, stack = 3):
       [0] aload_1 v1
-      [1] invokevirtual #105
+      [1] invokevirtual #107
         + Methodref [android/view/View.getId ()I]
       [4] ldc #6
         + Integer [2131427330]
       [6] ificmpne +51 (target=57)
       [9] aload_0 v0
-      [10] getfield #87
+      [10] getfield #89
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSheetsOrRollsState Ljava/lang/String;]
-      [13] ldc #37
+      [13] ldc #38
         + String [Sheet]
-      [15] invokevirtual #129
+      [15] invokevirtual #131
         + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
       [18] ifeq +10 (target=28)
       [21] aload_0 v0
-      [22] ldc #36
+      [22] ldc #37
         + String [Roll]
-      [24] invokespecial #119
+      [24] invokespecial #121
         + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.setSheetsOrRollsState (Ljava/lang/String;)V]
       [27] return
       [28] aload_0 v0
-      [29] getfield #87
+      [29] getfield #89
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSheetsOrRollsState Ljava/lang/String;]
-      [32] ldc #36
+      [32] ldc #37
         + String [Roll]
-      [34] invokevirtual #129
+      [34] invokevirtual #131
         + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
       [37] ifeq +10 (target=47)
       [40] aload_0 v0
-      [41] ldc #37
+      [41] ldc #38
         + String [Sheet]
-      [43] invokespecial #119
+      [43] invokespecial #121
         + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.setSheetsOrRollsState (Ljava/lang/String;)V]
       [46] return
-      [47] new #68
+      [47] new #69
         + Class [java/lang/RuntimeException]
       [50] dup
-      [51] ldc #42
+      [51] ldc #43
         + String [unknown sheet or rolls state]
-      [53] invokespecial #128
+      [53] invokespecial #130
         + Methodref [java/lang/RuntimeException.<init> (Ljava/lang/String;)V]
       [56] athrow
       [57] return
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 3):
       - Line number table attribute (count = 7)
-        [0] -> line 235
-        [9] -> line 236
-        [21] -> line 237
-        [28] -> line 238
-        [40] -> line 239
-        [47] -> line 240
-        [57] -> line 242
+        [0] -> line 239
+        [9] -> line 240
+        [21] -> line 241
+        [28] -> line 242
+        [40] -> line 243
+        [47] -> line 244
+        [57] -> line 246
       - Local variable table attribute (count = 2)
         v1: 0 -> 1 [Landroid/view/View; v]
         v0: 0 -> 41 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment; this]
@@ -65388,122 +65404,136 @@ Methods (count = 14):
     Access flags: 0x2
       = private void setSheetsOrRollsState(java.lang.String)
     Class member attributes (count = 1):
-    - Code attribute instructions (code length = 93, locals = 2, stack = 2):
+    - Code attribute instructions (code length = 109, locals = 2, stack = 2):
       [0] aload_1 v1
-      [1] ldc #36
+      [1] ldc #37
         + String [Roll]
-      [3] invokevirtual #129
+      [3] invokevirtual #131
         + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
-      [6] ifeq +45 (target=51)
+      [6] ifeq +53 (target=59)
       [9] aload_0 v0
-      [10] ldc #36
+      [10] ldc #37
         + String [Roll]
-      [12] putfield #87
+      [12] putfield #89
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSheetsOrRollsState Ljava/lang/String;]
       [15] aload_0 v0
-      [16] getfield #82
+      [16] getfield #83
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mImgbtnSheetsOrRolls Landroid/widget/ImageButton;]
       [19] ldc #1
         + Integer [2130837514]
-      [21] invokevirtual #114
+      [21] invokevirtual #115
         + Methodref [android/widget/ImageButton.setBackgroundResource (I)V]
       [24] aload_0 v0
-      [25] getfield #79
+      [25] getfield #80
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetLength Landroid/widget/EditText;]
-      [28] ldc #23
+      [28] ldc #24
         + String [12]
-      [30] invokevirtual #112
+      [30] invokevirtual #113
         + Methodref [android/widget/EditText.setText (Ljava/lang/CharSequence;)V]
       [33] aload_0 v0
-      [34] getfield #79
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetLength Landroid/widget/EditText;]
+      [34] getfield #86
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mLbl_sheetLength Landroid/widget/TextView;]
       [37] iconst_0
-      [38] invokevirtual #108
-        + Methodref [android/widget/EditText.setEnabled (Z)V]
+      [38] invokevirtual #117
+        + Methodref [android/widget/TextView.setEnabled (Z)V]
       [41] aload_0 v0
       [42] getfield #80
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetWidth Landroid/widget/EditText;]
-      [45] ldc #10
-        + Integer [2131427341]
-      [47] invokevirtual #110
-        + Methodref [android/widget/EditText.setNextFocusDownId (I)V]
-      [50] return
-      [51] aload_1 v1
-      [52] ldc #37
-        + String [Sheet]
-      [54] invokevirtual #129
-        + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
-      [57] ifeq +35 (target=92)
-      [60] aload_0 v0
-      [61] ldc #37
-        + String [Sheet]
-      [63] putfield #87
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSheetsOrRollsState Ljava/lang/String;]
-      [66] aload_0 v0
-      [67] getfield #82
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mImgbtnSheetsOrRolls Landroid/widget/ImageButton;]
-      [70] ldc #2
-        + Integer [2130837515]
-      [72] invokevirtual #114
-        + Methodref [android/widget/ImageButton.setBackgroundResource (I)V]
-      [75] aload_0 v0
-      [76] getfield #79
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetLength Landroid/widget/EditText;]
-      [79] iconst_1
-      [80] invokevirtual #108
+      [45] iconst_0
+      [46] invokevirtual #110
         + Methodref [android/widget/EditText.setEnabled (Z)V]
-      [83] aload_0 v0
-      [84] getfield #80
+      [49] aload_0 v0
+      [50] getfield #81
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetWidth Landroid/widget/EditText;]
-      [87] ldc #9
+      [53] ldc #11
+        + Integer [2131427341]
+      [55] invokevirtual #112
+        + Methodref [android/widget/EditText.setNextFocusDownId (I)V]
+      [58] return
+      [59] aload_1 v1
+      [60] ldc #38
+        + String [Sheet]
+      [62] invokevirtual #131
+        + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
+      [65] ifeq +43 (target=108)
+      [68] aload_0 v0
+      [69] ldc #38
+        + String [Sheet]
+      [71] putfield #89
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSheetsOrRollsState Ljava/lang/String;]
+      [74] aload_0 v0
+      [75] getfield #83
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mImgbtnSheetsOrRolls Landroid/widget/ImageButton;]
+      [78] ldc #2
+        + Integer [2130837515]
+      [80] invokevirtual #115
+        + Methodref [android/widget/ImageButton.setBackgroundResource (I)V]
+      [83] aload_0 v0
+      [84] getfield #86
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mLbl_sheetLength Landroid/widget/TextView;]
+      [87] iconst_1
+      [88] invokevirtual #117
+        + Methodref [android/widget/TextView.setEnabled (Z)V]
+      [91] aload_0 v0
+      [92] getfield #80
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetLength Landroid/widget/EditText;]
+      [95] iconst_1
+      [96] invokevirtual #110
+        + Methodref [android/widget/EditText.setEnabled (Z)V]
+      [99] aload_0 v0
+      [100] getfield #81
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetWidth Landroid/widget/EditText;]
+      [103] ldc #10
         + Integer [2131427340]
-      [89] invokevirtual #111
-        + Methodref [android/widget/EditText.setNextFocusForwardId (I)V]
-      [92] return
+      [105] invokevirtual #112
+        + Methodref [android/widget/EditText.setNextFocusDownId (I)V]
+      [108] return
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 3):
-      - Line number table attribute (count = 12)
-        [0] -> line 245
-        [9] -> line 246
-        [15] -> line 247
-        [24] -> line 248
-        [33] -> line 249
-        [41] -> line 250
-        [51] -> line 251
-        [60] -> line 252
-        [66] -> line 253
-        [75] -> line 254
-        [83] -> line 255
-        [92] -> line 257
+      - Line number table attribute (count = 14)
+        [0] -> line 249
+        [9] -> line 250
+        [15] -> line 251
+        [24] -> line 252
+        [33] -> line 253
+        [41] -> line 254
+        [49] -> line 255
+        [59] -> line 256
+        [68] -> line 257
+        [74] -> line 258
+        [83] -> line 259
+        [91] -> line 260
+        [99] -> line 261
+        [108] -> line 263
       - Local variable table attribute (count = 2)
-        v1: 0 -> 52 [Ljava/lang/String; state]
-        v0: 0 -> 84 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment; this]
+        v1: 0 -> 60 [Ljava/lang/String; state]
+        v0: 0 -> 100 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment; this]
       - Stack map table attribute (count = 2):
-        - [51] Var: ..., Stack: (empty)
-        - [92] Var: ..., Stack: (empty)
+        - [59] Var: ..., Stack: (empty)
+        - [108] Var: ..., Stack: (empty)
   + Method:       getLineSpeedValue()D
     Access flags: 0x11
       = public final double getLineSpeedValue()
     Class member attributes (count = 1):
     - Code attribute instructions (code length = 33, locals = 2, stack = 2):
       [0] aload_0 v0
-      [1] getfield #78
+      [1] getfield #79
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_lineSpeed Landroid/widget/EditText;]
-      [4] invokevirtual #107
+      [4] invokevirtual #109
         + Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
-      [7] invokeinterface #139
+      [7] invokeinterface #141
         + InterfaceMethodref [android/text/Editable.toString ()Ljava/lang/String;]
-      [12] invokevirtual #131
+      [12] invokevirtual #133
         + Methodref [java/lang/String.trim ()Ljava/lang/String;]
       [15] dup
       [16] astore_1 v1
-      [17] invokevirtual #130
+      [17] invokevirtual #132
         + Methodref [java/lang/String.length ()I]
       [20] ifle +11 (target=31)
       [23] aload_1 v1
-      [24] invokestatic #126
+      [24] invokestatic #128
         + Methodref [java/lang/Double.valueOf (Ljava/lang/String;)Ljava/lang/Double;]
-      [27] invokevirtual #124
+      [27] invokevirtual #126
         + Methodref [java/lang/Double.doubleValue ()D]
       [30] dreturn
       [31] dconst_0
@@ -65511,10 +65541,10 @@ Methods (count = 14):
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 3):
       - Line number table attribute (count = 4)
-        [0] -> line 260
-        [16] -> line 261
-        [23] -> line 262
-        [31] -> line 263
+        [0] -> line 266
+        [16] -> line 267
+        [23] -> line 268
+        [31] -> line 269
       - Local variable table attribute (count = 2)
         v0: 0 -> 1 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment; this]
         v1: 17 -> 24 [Ljava/lang/String; s]
@@ -65526,68 +65556,27 @@ Methods (count = 14):
     Class member attributes (count = 1):
     - Code attribute instructions (code length = 35, locals = 2, stack = 2):
       [0] aload_0 v0
-      [1] getfield #77
+      [1] getfield #78
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_gauge Landroid/widget/EditText;]
-      [4] invokevirtual #107
+      [4] invokevirtual #109
         + Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
-      [7] invokeinterface #139
+      [7] invokeinterface #141
         + InterfaceMethodref [android/text/Editable.toString ()Ljava/lang/String;]
-      [12] invokevirtual #131
+      [12] invokevirtual #133
         + Methodref [java/lang/String.trim ()Ljava/lang/String;]
       [15] dup
       [16] astore_1 v1
-      [17] ldc #16
+      [17] ldc #17
         + String []
-      [19] invokevirtual #129
+      [19] invokevirtual #131
         + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
       [22] ifeq +5 (target=27)
       [25] dconst_0
       [26] dreturn
       [27] aload_1 v1
-      [28] invokestatic #126
+      [28] invokestatic #128
         + Methodref [java/lang/Double.valueOf (Ljava/lang/String;)Ljava/lang/Double;]
-      [31] invokevirtual #124
-        + Methodref [java/lang/Double.doubleValue ()D]
-      [34] dreturn
-      Code attribute exceptions (count = 0):
-      Code attribute attributes (attribute count = 3):
-      - Line number table attribute (count = 4)
-        [0] -> line 266
-        [16] -> line 267
-        [25] -> line 268
-        [27] -> line 269
-      - Local variable table attribute (count = 2)
-        v0: 0 -> 1 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment; this]
-        v1: 17 -> 28 [Ljava/lang/String; gauge]
-      - Stack map table attribute (count = 1):
-        - [27] Var: ...[a:java/lang/String], Stack: (empty)
-  + Method:       getSheetWidthValue()D
-    Access flags: 0x11
-      = public final double getSheetWidthValue()
-    Class member attributes (count = 1):
-    - Code attribute instructions (code length = 35, locals = 2, stack = 2):
-      [0] aload_0 v0
-      [1] getfield #80
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetWidth Landroid/widget/EditText;]
-      [4] invokevirtual #107
-        + Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
-      [7] invokeinterface #139
-        + InterfaceMethodref [android/text/Editable.toString ()Ljava/lang/String;]
-      [12] invokevirtual #131
-        + Methodref [java/lang/String.trim ()Ljava/lang/String;]
-      [15] dup
-      [16] astore_1 v1
-      [17] ldc #16
-        + String []
-      [19] invokevirtual #129
-        + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
-      [22] ifeq +5 (target=27)
-      [25] dconst_0
-      [26] dreturn
-      [27] aload_1 v1
-      [28] invokestatic #126
-        + Methodref [java/lang/Double.valueOf (Ljava/lang/String;)Ljava/lang/Double;]
-      [31] invokevirtual #124
+      [31] invokevirtual #126
         + Methodref [java/lang/Double.doubleValue ()D]
       [34] dreturn
       Code attribute exceptions (count = 0):
@@ -65599,36 +65588,36 @@ Methods (count = 14):
         [27] -> line 275
       - Local variable table attribute (count = 2)
         v0: 0 -> 1 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment; this]
-        v1: 17 -> 28 [Ljava/lang/String; width]
+        v1: 17 -> 28 [Ljava/lang/String; gauge]
       - Stack map table attribute (count = 1):
         - [27] Var: ...[a:java/lang/String], Stack: (empty)
-  + Method:       getSheetLengthValue()D
+  + Method:       getSheetWidthValue()D
     Access flags: 0x11
-      = public final double getSheetLengthValue()
+      = public final double getSheetWidthValue()
     Class member attributes (count = 1):
     - Code attribute instructions (code length = 35, locals = 2, stack = 2):
       [0] aload_0 v0
-      [1] getfield #79
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetLength Landroid/widget/EditText;]
-      [4] invokevirtual #107
+      [1] getfield #81
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetWidth Landroid/widget/EditText;]
+      [4] invokevirtual #109
         + Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
-      [7] invokeinterface #139
+      [7] invokeinterface #141
         + InterfaceMethodref [android/text/Editable.toString ()Ljava/lang/String;]
-      [12] invokevirtual #131
+      [12] invokevirtual #133
         + Methodref [java/lang/String.trim ()Ljava/lang/String;]
       [15] dup
       [16] astore_1 v1
-      [17] ldc #16
+      [17] ldc #17
         + String []
-      [19] invokevirtual #129
+      [19] invokevirtual #131
         + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
       [22] ifeq +5 (target=27)
       [25] dconst_0
       [26] dreturn
       [27] aload_1 v1
-      [28] invokestatic #126
+      [28] invokestatic #128
         + Methodref [java/lang/Double.valueOf (Ljava/lang/String;)Ljava/lang/Double;]
-      [31] invokevirtual #124
+      [31] invokevirtual #126
         + Methodref [java/lang/Double.doubleValue ()D]
       [34] dreturn
       Code attribute exceptions (count = 0):
@@ -65640,36 +65629,36 @@ Methods (count = 14):
         [27] -> line 281
       - Local variable table attribute (count = 2)
         v0: 0 -> 1 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment; this]
-        v1: 17 -> 28 [Ljava/lang/String; length]
+        v1: 17 -> 28 [Ljava/lang/String; width]
       - Stack map table attribute (count = 1):
         - [27] Var: ...[a:java/lang/String], Stack: (empty)
-  + Method:       getDifferentialSpeedValue()D
+  + Method:       getSheetLengthValue()D
     Access flags: 0x11
-      = public final double getDifferentialSpeedValue()
+      = public final double getSheetLengthValue()
     Class member attributes (count = 1):
     - Code attribute instructions (code length = 35, locals = 2, stack = 2):
       [0] aload_0 v0
-      [1] getfield #76
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_differentialSpeed Landroid/widget/EditText;]
-      [4] invokevirtual #107
+      [1] getfield #80
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_sheetLength Landroid/widget/EditText;]
+      [4] invokevirtual #109
         + Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
-      [7] invokeinterface #139
+      [7] invokeinterface #141
         + InterfaceMethodref [android/text/Editable.toString ()Ljava/lang/String;]
-      [12] invokevirtual #131
+      [12] invokevirtual #133
         + Methodref [java/lang/String.trim ()Ljava/lang/String;]
       [15] dup
       [16] astore_1 v1
-      [17] ldc #16
+      [17] ldc #17
         + String []
-      [19] invokevirtual #129
+      [19] invokevirtual #131
         + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
       [22] ifeq +5 (target=27)
       [25] dconst_0
       [26] dreturn
       [27] aload_1 v1
-      [28] invokestatic #126
+      [28] invokestatic #128
         + Methodref [java/lang/Double.valueOf (Ljava/lang/String;)Ljava/lang/Double;]
-      [31] invokevirtual #124
+      [31] invokevirtual #126
         + Methodref [java/lang/Double.doubleValue ()D]
       [34] dreturn
       Code attribute exceptions (count = 0):
@@ -65681,36 +65670,36 @@ Methods (count = 14):
         [27] -> line 287
       - Local variable table attribute (count = 2)
         v0: 0 -> 1 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment; this]
-        v1: 17 -> 28 [Ljava/lang/String; diff]
+        v1: 17 -> 28 [Ljava/lang/String; length]
       - Stack map table attribute (count = 1):
         - [27] Var: ...[a:java/lang/String], Stack: (empty)
-  + Method:       getSpeedFactorValue()D
+  + Method:       getDifferentialSpeedValue()D
     Access flags: 0x11
-      = public final double getSpeedFactorValue()
+      = public final double getDifferentialSpeedValue()
     Class member attributes (count = 1):
     - Code attribute instructions (code length = 35, locals = 2, stack = 2):
       [0] aload_0 v0
-      [1] getfield #81
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_speedFactor Landroid/widget/EditText;]
-      [4] invokevirtual #107
+      [1] getfield #77
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_differentialSpeed Landroid/widget/EditText;]
+      [4] invokevirtual #109
         + Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
-      [7] invokeinterface #139
+      [7] invokeinterface #141
         + InterfaceMethodref [android/text/Editable.toString ()Ljava/lang/String;]
-      [12] invokevirtual #131
+      [12] invokevirtual #133
         + Methodref [java/lang/String.trim ()Ljava/lang/String;]
       [15] dup
       [16] astore_1 v1
-      [17] ldc #16
+      [17] ldc #17
         + String []
-      [19] invokevirtual #129
+      [19] invokevirtual #131
         + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
       [22] ifeq +5 (target=27)
       [25] dconst_0
       [26] dreturn
       [27] aload_1 v1
-      [28] invokestatic #126
+      [28] invokestatic #128
         + Methodref [java/lang/Double.valueOf (Ljava/lang/String;)Ljava/lang/Double;]
-      [31] invokevirtual #124
+      [31] invokevirtual #126
         + Methodref [java/lang/Double.doubleValue ()D]
       [34] dreturn
       Code attribute exceptions (count = 0):
@@ -65722,6 +65711,47 @@ Methods (count = 14):
         [27] -> line 293
       - Local variable table attribute (count = 2)
         v0: 0 -> 1 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment; this]
+        v1: 17 -> 28 [Ljava/lang/String; diff]
+      - Stack map table attribute (count = 1):
+        - [27] Var: ...[a:java/lang/String], Stack: (empty)
+  + Method:       getSpeedFactorValue()D
+    Access flags: 0x11
+      = public final double getSpeedFactorValue()
+    Class member attributes (count = 1):
+    - Code attribute instructions (code length = 35, locals = 2, stack = 2):
+      [0] aload_0 v0
+      [1] getfield #82
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mEdit_speedFactor Landroid/widget/EditText;]
+      [4] invokevirtual #109
+        + Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
+      [7] invokeinterface #141
+        + InterfaceMethodref [android/text/Editable.toString ()Ljava/lang/String;]
+      [12] invokevirtual #133
+        + Methodref [java/lang/String.trim ()Ljava/lang/String;]
+      [15] dup
+      [16] astore_1 v1
+      [17] ldc #17
+        + String []
+      [19] invokevirtual #131
+        + Methodref [java/lang/String.equals (Ljava/lang/Object;)Z]
+      [22] ifeq +5 (target=27)
+      [25] dconst_0
+      [26] dreturn
+      [27] aload_1 v1
+      [28] invokestatic #128
+        + Methodref [java/lang/Double.valueOf (Ljava/lang/String;)Ljava/lang/Double;]
+      [31] invokevirtual #126
+        + Methodref [java/lang/Double.doubleValue ()D]
+      [34] dreturn
+      Code attribute exceptions (count = 0):
+      Code attribute attributes (attribute count = 3):
+      - Line number table attribute (count = 4)
+        [0] -> line 296
+        [16] -> line 297
+        [25] -> line 298
+        [27] -> line 299
+      - Local variable table attribute (count = 2)
+        v0: 0 -> 1 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment; this]
         v1: 17 -> 28 [Ljava/lang/String; factor]
       - Stack map table attribute (count = 1):
         - [27] Var: ...[a:java/lang/String], Stack: (empty)
@@ -65731,13 +65761,13 @@ Methods (count = 14):
     Class member attributes (count = 1):
     - Code attribute instructions (code length = 5, locals = 1, stack = 1):
       [0] aload_0 v0
-      [1] getfield #87
+      [1] getfield #89
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mSheetsOrRollsState Ljava/lang/String;]
       [4] areturn
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 2):
       - Line number table attribute (count = 1)
-        [0] -> line 296
+        [0] -> line 302
       - Local variable table attribute (count = 1)
         v0: 0 -> 1 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment; this]
   + Method:       access$0(Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;)Ljava/lang/Double;
@@ -65746,26 +65776,26 @@ Methods (count = 14):
     Class member attributes (count = 1):
     - Code attribute instructions (code length = 5, locals = 1, stack = 1):
       [0] aload_0 v0
-      [1] getfield #75
+      [1] getfield #76
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mDifferentialRangeLow Ljava/lang/Double;]
       [4] areturn
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 1):
       - Line number table attribute (count = 1)
-        [0] -> line 54
+        [0] -> line 55
   + Method:       access$1(Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;)Ljava/lang/Double;
     Access flags: 0x1008
       = static synthetic java.lang.Double access$1(com.kovaciny.linemonitorbot.SheetsPerMinuteDialogFragment)
     Class member attributes (count = 1):
     - Code attribute instructions (code length = 5, locals = 1, stack = 1):
       [0] aload_0 v0
-      [1] getfield #74
+      [1] getfield #75
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mDifferentialRangeHigh Ljava/lang/Double;]
       [4] areturn
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 1):
       - Line number table attribute (count = 1)
-        [0] -> line 55
+        [0] -> line 56
 
 Class file attributes (count = 2):
   - Inner classes attribute (count = 8)
@@ -65876,7 +65906,7 @@ Methods (count = 2):
       Code attribute attributes (attribute count = 2):
       - Line number table attribute (count = 2)
         [0] -> line 1
-        [5] -> line 154
+        [5] -> line 156
       - Local variable table attribute (count = 1)
         v0: 0 -> 9 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$1; this]
   + Method:       onClick(Landroid/content/DialogInterface;I)V
@@ -65888,7 +65918,7 @@ Methods (count = 2):
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 1):
       - Line number table attribute (count = 1)
-        [0] -> line 157
+        [0] -> line 159
 
 Class file attributes (count = 3):
   - Enclosing method attribute:
@@ -65992,7 +66022,7 @@ Methods (count = 2):
       Code attribute attributes (attribute count = 2):
       - Line number table attribute (count = 2)
         [0] -> line 1
-        [5] -> line 159
+        [5] -> line 161
       - Local variable table attribute (count = 1)
         v0: 0 -> 9 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$2; this]
   + Method:       onClick(Landroid/content/DialogInterface;I)V
@@ -66014,10 +66044,10 @@ Methods (count = 2):
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 2):
       - Line number table attribute (count = 4)
-        [0] -> line 163
-        [10] -> line 164
-        [11] -> line 163
-        [14] -> line 165
+        [0] -> line 165
+        [10] -> line 166
+        [11] -> line 165
+        [14] -> line 167
       - Local variable table attribute (count = 1)
         v0: 0 -> 1 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$2; this]
 
@@ -66142,7 +66172,7 @@ Methods (count = 3):
       Code attribute attributes (attribute count = 2):
       - Line number table attribute (count = 2)
         [0] -> line 1
-        [10] -> line 170
+        [10] -> line 172
       - Local variable table attribute (count = 1)
         v0: 0 -> 14 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3; this]
   + Method:       onShow(Landroid/content/DialogInterface;)V
@@ -66171,9 +66201,9 @@ Methods (count = 3):
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 2):
       - Line number table attribute (count = 3)
-        [0] -> line 175
-        [8] -> line 176
-        [23] -> line 223
+        [0] -> line 177
+        [8] -> line 178
+        [23] -> line 227
       - Local variable table attribute (count = 1)
         v0: 0 -> 14 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3; this]
   + Method:       access$0(Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;)Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;
@@ -66188,7 +66218,7 @@ Methods (count = 3):
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 1):
       - Line number table attribute (count = 1)
-        [0] -> line 170
+        [0] -> line 172
 
 Class file attributes (count = 3):
   - Enclosing method attribute:
@@ -66225,7 +66255,7 @@ _____________________________________________________________________
 Interfaces (count = 1):
   + Class [android/view/View$OnClickListener]
 
-Constant Pool (count = 178):
+Constant Pool (count = 179):
   + Integer [2131165205]
   + Integer [2131165206]
   + Integer [2131165208]
@@ -66274,6 +66304,7 @@ Constant Pool (count = 178):
   + Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
   + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
   + Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
+  + InterfaceMethodref [android/text/Editable.length ()I]
   + InterfaceMethodref [android/text/Editable.toString ()Ljava/lang/String;]
   + InterfaceMethodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$SheetsPerMinuteDialogListener.onClickPositiveButton (Landroid/app/DialogFragment;)V]
   + NameAndType [<init> ()V]
@@ -66434,14 +66465,14 @@ Methods (count = 2):
       Code attribute attributes (attribute count = 2):
       - Line number table attribute (count = 2)
         [0] -> line 1
-        [10] -> line 176
+        [10] -> line 178
       - Local variable table attribute (count = 1)
         v0: 0 -> 14 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1; this]
   + Method:       onClick(Landroid/view/View;)V
     Access flags: 0x11
       = public final void onClick(android.view.View)
     Class member attributes (count = 1):
-    - Code attribute instructions (code length = 397, locals = 11, stack = 5):
+    - Code attribute instructions (code length = 410, locals = 11, stack = 5):
       [0] aload_1 v1
       [1] invokevirtual #30
         + Methodref [android/view/View.getRootView ()Landroid/view/View;]
@@ -66499,7 +66530,7 @@ Methods (count = 2):
       [86] astore v9
       [88] invokevirtual #34
         + Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
-      [91] invokeinterface #49
+      [91] invokeinterface #50
         + InterfaceMethodref [android/text/Editable.toString ()Ljava/lang/String;]
       [96] dup
       [97] astore v10
@@ -66563,185 +66594,192 @@ Methods (count = 2):
       [191] invokevirtual #34
         + Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
       [194] invokeinterface #49
+        + InterfaceMethodref [android/text/Editable.length ()I]
+      [199] ifeq +160 (target=359)
+      [202] aload v4
+      [204] invokevirtual #34
+        + Methodref [android/widget/EditText.getText ()Landroid/text/Editable;]
+      [207] invokeinterface #50
         + InterfaceMethodref [android/text/Editable.toString ()Ljava/lang/String;]
-      [199] invokestatic #42
+      [212] invokestatic #42
         + Methodref [java/lang/Double.valueOf (Ljava/lang/String;)Ljava/lang/Double;]
-      [202] dup
-      [203] astore v5
-      [205] invokevirtual #41
-        + Methodref [java/lang/Double.doubleValue ()D]
-      [208] aload_0 v0
-      [209] getfield #25
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1.this$1 Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;]
-      [212] invokestatic #40
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3.access$0 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;)Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;]
-      [215] invokestatic #36
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.access$0 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;)Ljava/lang/Double;]
+      [215] dup
+      [216] astore v5
       [218] invokevirtual #41
         + Methodref [java/lang/Double.doubleValue ()D]
-      [221] dcmpg
-      [222] ifge +54 (target=276)
-      [225] aload v4
-      [227] new #23
-        + Class [java/lang/StringBuilder]
-      [230] dup
-      [231] aload_0 v0
-      [232] getfield #25
+      [221] aload_0 v0
+      [222] getfield #25
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1.this$1 Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;]
-      [235] invokestatic #40
+      [225] invokestatic #40
         + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3.access$0 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;)Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;]
-      [238] ldc #3
-        + Integer [2131165208]
-      [240] invokevirtual #39
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getString (I)Ljava/lang/String;]
-      [243] invokestatic #45
-        + Methodref [java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;]
-      [246] invokespecial #46
-        + Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
-      [249] aload_0 v0
-      [250] getfield #25
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1.this$1 Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;]
-      [253] invokestatic #40
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3.access$0 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;)Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;]
-      [256] invokestatic #36
+      [228] invokestatic #36
         + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.access$0 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;)Ljava/lang/Double;]
-      [259] invokestatic #45
-        + Methodref [java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;]
-      [262] invokevirtual #47
-        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [265] invokevirtual #48
-        + Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
-      [268] invokevirtual #35
-        + Methodref [android/widget/EditText.setError (Ljava/lang/CharSequence;)V]
-      [271] iconst_0
-      [272] istore_3 v3
-      [273] goto +73 (target=346)
-      [276] aload v5
-      [278] invokevirtual #41
+      [231] invokevirtual #41
         + Methodref [java/lang/Double.doubleValue ()D]
-      [281] aload_0 v0
-      [282] getfield #25
+      [234] dcmpg
+      [235] ifge +54 (target=289)
+      [238] aload v4
+      [240] new #23
+        + Class [java/lang/StringBuilder]
+      [243] dup
+      [244] aload_0 v0
+      [245] getfield #25
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1.this$1 Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;]
-      [285] invokestatic #40
+      [248] invokestatic #40
         + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3.access$0 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;)Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;]
-      [288] invokestatic #37
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.access$1 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;)Ljava/lang/Double;]
+      [251] ldc #3
+        + Integer [2131165208]
+      [253] invokevirtual #39
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getString (I)Ljava/lang/String;]
+      [256] invokestatic #45
+        + Methodref [java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;]
+      [259] invokespecial #46
+        + Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
+      [262] aload_0 v0
+      [263] getfield #25
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1.this$1 Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;]
+      [266] invokestatic #40
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3.access$0 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;)Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;]
+      [269] invokestatic #36
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.access$0 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;)Ljava/lang/Double;]
+      [272] invokestatic #45
+        + Methodref [java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;]
+      [275] invokevirtual #47
+        + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
+      [278] invokevirtual #48
+        + Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
+      [281] invokevirtual #35
+        + Methodref [android/widget/EditText.setError (Ljava/lang/CharSequence;)V]
+      [284] iconst_0
+      [285] istore_3 v3
+      [286] goto +73 (target=359)
+      [289] aload v5
       [291] invokevirtual #41
         + Methodref [java/lang/Double.doubleValue ()D]
-      [294] dcmpl
-      [295] ifle +51 (target=346)
-      [298] aload v4
-      [300] new #23
-        + Class [java/lang/StringBuilder]
-      [303] dup
-      [304] aload_0 v0
-      [305] getfield #25
+      [294] aload_0 v0
+      [295] getfield #25
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1.this$1 Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;]
-      [308] invokestatic #40
+      [298] invokestatic #40
         + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3.access$0 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;)Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;]
-      [311] ldc #4
-        + Integer [2131165209]
-      [313] invokevirtual #39
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getString (I)Ljava/lang/String;]
-      [316] invokestatic #45
-        + Methodref [java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;]
-      [319] invokespecial #46
-        + Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
-      [322] aload_0 v0
-      [323] getfield #25
-        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1.this$1 Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;]
-      [326] invokestatic #40
-        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3.access$0 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;)Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;]
-      [329] invokestatic #37
+      [301] invokestatic #37
         + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.access$1 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;)Ljava/lang/Double;]
-      [332] invokestatic #45
+      [304] invokevirtual #41
+        + Methodref [java/lang/Double.doubleValue ()D]
+      [307] dcmpl
+      [308] ifle +51 (target=359)
+      [311] aload v4
+      [313] new #23
+        + Class [java/lang/StringBuilder]
+      [316] dup
+      [317] aload_0 v0
+      [318] getfield #25
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1.this$1 Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;]
+      [321] invokestatic #40
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3.access$0 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;)Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;]
+      [324] ldc #4
+        + Integer [2131165209]
+      [326] invokevirtual #39
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getString (I)Ljava/lang/String;]
+      [329] invokestatic #45
         + Methodref [java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;]
-      [335] invokevirtual #47
+      [332] invokespecial #46
+        + Methodref [java/lang/StringBuilder.<init> (Ljava/lang/String;)V]
+      [335] aload_0 v0
+      [336] getfield #25
+        + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1.this$1 Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;]
+      [339] invokestatic #40
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3.access$0 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;)Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;]
+      [342] invokestatic #37
+        + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.access$1 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;)Ljava/lang/Double;]
+      [345] invokestatic #45
+        + Methodref [java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;]
+      [348] invokevirtual #47
         + Methodref [java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;]
-      [338] invokevirtual #48
+      [351] invokevirtual #48
         + Methodref [java/lang/StringBuilder.toString ()Ljava/lang/String;]
-      [341] invokevirtual #35
+      [354] invokevirtual #35
         + Methodref [android/widget/EditText.setError (Ljava/lang/CharSequence;)V]
-      [344] iconst_0
-      [345] istore_3 v3
-      [346] iload_3 v3
-      [347] ifeq +49 (target=396)
-      [350] aload_0 v0
-      [351] getfield #25
+      [357] iconst_0
+      [358] istore_3 v3
+      [359] iload_3 v3
+      [360] ifeq +49 (target=409)
+      [363] aload_0 v0
+      [364] getfield #25
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1.this$1 Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;]
-      [354] invokestatic #40
+      [367] invokestatic #40
         + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3.access$0 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;)Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;]
-      [357] invokevirtual #38
+      [370] invokevirtual #38
         + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.getActivity ()Landroid/app/Activity;]
-      [360] invokevirtual #27
+      [373] invokevirtual #27
         + Methodref [android/app/Activity.getWindow ()Landroid/view/Window;]
-      [363] iconst_3
-      [364] invokevirtual #33
+      [376] iconst_3
+      [377] invokevirtual #33
         + Methodref [android/view/Window.setSoftInputMode (I)V]
-      [367] aload_0 v0
-      [368] getfield #25
+      [380] aload_0 v0
+      [381] getfield #25
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1.this$1 Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;]
-      [371] invokestatic #40
+      [384] invokestatic #40
         + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3.access$0 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;)Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;]
-      [374] getfield #24
+      [387] getfield #24
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment.mListener Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$SheetsPerMinuteDialogListener;]
-      [377] aload_0 v0
-      [378] getfield #25
+      [390] aload_0 v0
+      [391] getfield #25
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1.this$1 Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;]
-      [381] invokestatic #40
+      [394] invokestatic #40
         + Methodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3.access$0 (Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3;)Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment;]
-      [384] invokeinterface #50
+      [397] invokeinterface #51
         + InterfaceMethodref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$SheetsPerMinuteDialogListener.onClickPositiveButton (Landroid/app/DialogFragment;)V]
-      [389] aload_0 v0
-      [390] getfield #26
+      [402] aload_0 v0
+      [403] getfield #26
         + Fieldref [com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1.val$alertDialog Landroid/app/AlertDialog;]
-      [393] invokevirtual #28
+      [406] invokevirtual #28
         + Methodref [android/app/AlertDialog.dismiss ()V]
-      [396] return
+      [409] return
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 3):
-      - Line number table attribute (count = 35)
-        [0] -> line 180
-        [5] -> line 181
-        [15] -> line 182
-        [17] -> line 183
-        [21] -> line 184
-        [33] -> line 185
-        [43] -> line 186
-        [51] -> line 187
-        [64] -> line 188
-        [72] -> line 189
-        [80] -> line 190
-        [86] -> line 191
-        [97] -> line 192
-        [105] -> line 193
-        [122] -> line 194
-        [127] -> line 195
-        [140] -> line 196
-        [157] -> line 197
-        [159] -> line 187
-        [169] -> line 184
-        [179] -> line 204
-        [189] -> line 205
-        [203] -> line 206
-        [225] -> line 207
-        [271] -> line 208
-        [276] -> line 209
-        [298] -> line 210
-        [344] -> line 211
-        [346] -> line 214
-        [350] -> line 216
-        [363] -> line 217
-        [364] -> line 216
-        [367] -> line 218
-        [389] -> line 219
-        [396] -> line 221
+      - Line number table attribute (count = 36)
+        [0] -> line 182
+        [5] -> line 183
+        [15] -> line 184
+        [17] -> line 185
+        [21] -> line 186
+        [33] -> line 187
+        [43] -> line 188
+        [51] -> line 189
+        [64] -> line 190
+        [72] -> line 191
+        [80] -> line 192
+        [86] -> line 193
+        [97] -> line 194
+        [105] -> line 195
+        [122] -> line 196
+        [127] -> line 197
+        [140] -> line 198
+        [157] -> line 199
+        [159] -> line 189
+        [169] -> line 186
+        [179] -> line 206
+        [189] -> line 207
+        [202] -> line 208
+        [216] -> line 209
+        [238] -> line 210
+        [284] -> line 211
+        [289] -> line 212
+        [311] -> line 213
+        [357] -> line 214
+        [359] -> line 218
+        [363] -> line 220
+        [376] -> line 221
+        [377] -> line 220
+        [380] -> line 222
+        [402] -> line 223
+        [409] -> line 225
       - Local variable table attribute (count = 15)
         v1: 0 -> 1 [Landroid/view/View; v]
-        v0: 0 -> 390 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1; this]
+        v0: 0 -> 403 [Lcom/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1; this]
         v1: 6 -> 180 [Landroid/view/View; parent]
         v2: 15 -> 179 [Landroid/view/ViewGroup; table]
-        v3: 17 -> 347 [Z validInputs]
+        v3: 17 -> 360 [Z validInputs]
         v4: 24 -> 179 [I i]
         v5: 30 -> 179 [I n]
         v6: 45 -> 169 [Landroid/view/ViewGroup; nextRow]
@@ -66750,8 +66788,8 @@ Methods (count = 2):
         v9: 74 -> 82 [Landroid/view/View; nextChild]
         v9: 88 -> 142 [Landroid/widget/EditText; et]
         v10: 99 -> 129 [Ljava/lang/String; text]
-        v4: 191 -> 300 [Landroid/widget/EditText; diffSpeed]
-        v5: 205 -> 278 [Ljava/lang/Double; diffSpeedValue]
+        v4: 191 -> 313 [Landroid/widget/EditText; diffSpeed]
+        v5: 218 -> 291 [Ljava/lang/Double; diffSpeedValue]
       - Stack map table attribute (count = 11):
         - [33] Var: [a:com/kovaciny/linemonitorbot/SheetsPerMinuteDialogFragment$3$1][a:android/view/View][a:android/view/View][a:android/view/ViewGroup][i][i][i], Stack: 
         - [64] Var: ...[a:android/view/ViewGroup][i][i], Stack: (empty)
@@ -66761,9 +66799,9 @@ Methods (count = 2):
         - [169] Var: -3, Stack: (empty)
         - [172] Var: ..., Stack: (empty)
         - [179] Var: -2, Stack: (empty)
-        - [276] Var: ...[a:android/widget/EditText][a:java/lang/Double], Stack: (empty)
-        - [346] Var: ..., Stack: (empty)
-        - [396] Var: ..., Stack: (empty)
+        - [289] Var: ...[a:android/widget/EditText][a:java/lang/Double], Stack: (empty)
+        - [359] Var: -1, Stack: (empty)
+        - [409] Var: ..., Stack: (empty)
 
 Class file attributes (count = 3):
   - Enclosing method attribute:
