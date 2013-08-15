@@ -45,6 +45,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
   	EditText mEdit_lineSpeed;
   	EditText mEdit_differentialSpeed;
   	EditText mEdit_speedFactor;
+  	TextView mLbl_sheetLength;
   	TextView mLbl_speedFactor;
   	TextView mLbl_differentialSpeed;
   	TextView mLbl_reminderNoDifferentialSpeed;
@@ -87,6 +88,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		mLbl_speedFactor = (TextView) rootView.findViewById(R.id.lbl_speed_factor);
 		mLbl_differentialSpeed = (TextView) rootView.findViewById(R.id.lbl_differential_speed);
 		mLbl_reminderNoDifferentialSpeed = (TextView) rootView.findViewById(R.id.lbl_reminder_no_differential_speed);
+		mLbl_sheetLength = (TextView) rootView.findViewById(R.id.lbl_sheet_length);
 		
 		mEdit_gauge = (EditText) rootView.findViewById(R.id.edit_gauge);
 		mEdit_sheetWidth = (EditText) rootView.findViewById(R.id.edit_sheet_width);
@@ -202,13 +204,15 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 							} 
 						}
 						EditText diffSpeed = (EditText) parent.findViewById(R.id.edit_differential_speed);
-						Double diffSpeedValue = Double.valueOf(diffSpeed.getText().toString());
-						if (diffSpeedValue < mDifferentialRangeLow) {
-							diffSpeed.setError(getString(R.string.error_differential_too_low) + String.valueOf(mDifferentialRangeLow));
-							validInputs = false;
-						} else if (diffSpeedValue > mDifferentialRangeHigh) {
-							diffSpeed.setError(getString(R.string.error_differential_too_high) + String.valueOf(mDifferentialRangeHigh));
-							validInputs = false;
+						if (diffSpeed.getText().length() != 0) {
+							Double diffSpeedValue = Double.valueOf(diffSpeed.getText().toString());
+							if (diffSpeedValue < mDifferentialRangeLow) {
+								diffSpeed.setError(getString(R.string.error_differential_too_low) + String.valueOf(mDifferentialRangeLow));
+								validInputs = false;
+							} else if (diffSpeedValue > mDifferentialRangeHigh) {
+								diffSpeed.setError(getString(R.string.error_differential_too_high) + String.valueOf(mDifferentialRangeHigh));
+								validInputs = false;
+							}
 						}
 						
 						if (validInputs) {
@@ -246,13 +250,15 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 			this.mSheetsOrRollsState = ROLLS_MODE;
 			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.roll_slider120);
 			this.mEdit_sheetLength.setText("12");
+			this.mLbl_sheetLength.setEnabled(false);
 			this.mEdit_sheetLength.setEnabled(false);
 			this.mEdit_sheetWidth.setNextFocusDownId(R.id.edit_line_speed);
 		} else if (state.equals(SHEETS_MODE)) {
 			this.mSheetsOrRollsState = SHEETS_MODE;
 			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.sheet_slider120);
+			this.mLbl_sheetLength.setEnabled(true);
 			this.mEdit_sheetLength.setEnabled(true);
-			this.mEdit_sheetWidth.setNextFocusForwardId(R.id.edit_sheet_length);
+			this.mEdit_sheetWidth.setNextFocusDownId(R.id.edit_sheet_length);
 		}
 	}
 
