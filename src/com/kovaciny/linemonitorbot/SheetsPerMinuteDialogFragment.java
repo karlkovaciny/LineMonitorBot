@@ -135,9 +135,8 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		           }
 		       });
 		
-		// Create the AlertDialog
+		// Create the AlertDialog and set an onClickListener for the positive button
 		final AlertDialog alertDialog = builder.create();
-		final EditText copy = mEdit_differentialSpeed;
 		alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
 			@Override
@@ -147,25 +146,27 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 				b.setOnClickListener(new View.OnClickListener() {
 
 					@Override
-					public void onClick(View view) {
-						String diffText = copy.getText().toString();
-						if (diffText.length() == 0) {
-							copy.setError(getString(R.string.error_empty_field));
-						} else {
-							double diffValue = Double.valueOf(diffText);
-							if (diffValue > 80) {//TODO magic constant
-								copy.setText(String.valueOf(diffValue/100));
-								Toast.makeText(getActivity(), getString(R.string.reminder_differential_format), Toast.LENGTH_LONG).show();		            			
+					public void onClick(View v) {
+						View parent = (View)v.getRootView();
+						if (parent != null) {
+							EditText edit_diffSpeed = (EditText) parent.findViewById(R.id.edit_differential_speed);
+							String diffText = edit_diffSpeed.getText().toString();
+							if (diffText.length() == 0) {
+								edit_diffSpeed.setError(getString(R.string.error_empty_field));
+							} else {
+								double diffValue = Double.valueOf(diffText);
+								if (diffValue > 80) {//TODO magic constant
+									edit_diffSpeed.setText(String.valueOf(diffValue/100));
+									Toast.makeText(getActivity(), getString(R.string.reminder_differential_format), Toast.LENGTH_LONG).show();		            			
+								}
 							}
-							//hide keyboard
-							getActivity().getWindow().setSoftInputMode(
-									WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-							mListener.onClickPositiveButton(SheetsPerMinuteDialogFragment.this);
-
-							//Dismiss once everything is OK.
-							alertDialog.dismiss();
-
 						}
+
+						//Click processed, hide keyboard and dismiss dialog.
+						getActivity().getWindow().setSoftInputMode(
+								WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+						mListener.onClickPositiveButton(SheetsPerMinuteDialogFragment.this);
+						alertDialog.dismiss();						
 					}
 				});
 			}
