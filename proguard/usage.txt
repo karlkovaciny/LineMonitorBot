@@ -952,9 +952,9 @@ com.kovaciny.database.PrimexSQLiteOpenHelper:
     private static final java.lang.String SQL_DELETE_PRODUCTION_LINES
     private static final java.lang.String SQL_DELETE_WORK_ORDERS
     private static final java.lang.String SQL_DELETE_MODEL_STATE
-    361:361:public void saveState()
-    676:693:public java.util.Date getLatestWoCreateDate()
-    746:765:public int getProductType(int)
+    376:376:public void saveState()
+    695:712:public java.util.Date getLatestWoCreateDate()
+    765:784:public int getProductType(int)
 com.kovaciny.helperfunctions.HelperFunction:
     public static final long ONE_HOUR_IN_MILLIS
     public static final long ONE_MINUTE_IN_MILLIS
@@ -976,7 +976,7 @@ com.kovaciny.linemonitorbot.MainActivity:
     public static final int DRAINING_FRAGMENT_POSITION
     public static final int CALCULATOR_FRAGMENT_POSITION
     public static final boolean DEBUG
-    603:605:void showDummyDialog(java.lang.String)
+    591:593:void showDummyDialog(java.lang.String)
 com.kovaciny.linemonitorbot.MyDialogFragment
 com.kovaciny.linemonitorbot.R
 com.kovaciny.linemonitorbot.R$array
@@ -1062,8 +1062,10 @@ com.kovaciny.primexmodel.Product:
     public abstract java.lang.String getMaterialType()
     public abstract boolean setMaterialType()
 com.kovaciny.primexmodel.ProductionLine:
-    public static final java.lang.String SPEED_CONTROLLER_TYPE_DIRECT
     public static final java.lang.String SPEED_CONTROLLER_TYPE_GEARED
+    public static final java.lang.String SPEED_CONTROLLER_TYPE_PERCENT
+    public static final java.lang.String SPEED_CONTROLLER_TYPE_RATIO
+    public static final java.lang.String SPEED_CONTROLLER_TYPE_NONE
 com.kovaciny.primexmodel.Products:
     3:3:public Products()
 com.kovaciny.primexmodel.Roll:

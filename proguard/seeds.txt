@@ -249,6 +249,8 @@ com.kovaciny.linemonitorbot.R$id: int btn_enter_product
 com.kovaciny.linemonitorbot.R$id: int btn_skid_number_up
 com.kovaciny.linemonitorbot.R$id: int btn_total_skids_up
 com.kovaciny.linemonitorbot.R$id: int clear_wos
+com.kovaciny.linemonitorbot.R$id: int container_sheets_per_minute_dialog
+com.kovaciny.linemonitorbot.R$id: int container_skid_times_fragment
 com.kovaciny.linemonitorbot.R$id: int dummy_dialog_text
 com.kovaciny.linemonitorbot.R$id: int edit_current_count
 com.kovaciny.linemonitorbot.R$id: int edit_differential_speed
@@ -276,6 +278,7 @@ com.kovaciny.linemonitorbot.R$id: int lbl_net_pph
 com.kovaciny.linemonitorbot.R$id: int lbl_novatec_setpoint
 com.kovaciny.linemonitorbot.R$id: int lbl_products
 com.kovaciny.linemonitorbot.R$id: int lbl_products_per_minute
+com.kovaciny.linemonitorbot.R$id: int lbl_reminder_no_differential_speed
 com.kovaciny.linemonitorbot.R$id: int lbl_sheet_length
 com.kovaciny.linemonitorbot.R$id: int lbl_sheet_weight
 com.kovaciny.linemonitorbot.R$id: int lbl_sheet_width
@@ -291,7 +294,6 @@ com.kovaciny.linemonitorbot.R$id: int pager
 com.kovaciny.linemonitorbot.R$id: int pick_job_submenu
 com.kovaciny.linemonitorbot.R$id: int pick_line_submenu
 com.kovaciny.linemonitorbot.R$id: int rl_data_entry_group
-com.kovaciny.linemonitorbot.R$id: int skid_times_fragment_container
 com.kovaciny.linemonitorbot.R$id: int tableRow1
 com.kovaciny.linemonitorbot.R$id: int tableRow10
 com.kovaciny.linemonitorbot.R$id: int tableRow2
@@ -303,6 +305,7 @@ com.kovaciny.linemonitorbot.R$id: int tableRow7
 com.kovaciny.linemonitorbot.R$id: int tableRow8
 com.kovaciny.linemonitorbot.R$id: int tableRow9
 com.kovaciny.linemonitorbot.R$id: int table_name_spinner
+com.kovaciny.linemonitorbot.R$id: int table_spm_dialog
 com.kovaciny.linemonitorbot.R$id: int textView1
 com.kovaciny.linemonitorbot.R$id: int textView123
 com.kovaciny.linemonitorbot.R$id: int textView124
@@ -342,6 +345,8 @@ com.kovaciny.linemonitorbot.R$string: int confirm_clear_wos
 com.kovaciny.linemonitorbot.R$string: int database_viewer_activity_name
 com.kovaciny.linemonitorbot.R$string: int debug_display
 com.kovaciny.linemonitorbot.R$string: int default_sheet_weight
+com.kovaciny.linemonitorbot.R$string: int error_differential_too_high
+com.kovaciny.linemonitorbot.R$string: int error_differential_too_low
 com.kovaciny.linemonitorbot.R$string: int error_empty_field
 com.kovaciny.linemonitorbot.R$string: int error_need_nonzero
 com.kovaciny.linemonitorbot.R$string: int error_net_less_than_gross
@@ -349,9 +354,11 @@ com.kovaciny.linemonitorbot.R$string: int label_novatec_setpoint
 com.kovaciny.linemonitorbot.R$string: int new_wo
 com.kovaciny.linemonitorbot.R$string: int ok
 com.kovaciny.linemonitorbot.R$string: int placeholder
+com.kovaciny.linemonitorbot.R$string: int placeholder_coming_soon
 com.kovaciny.linemonitorbot.R$string: int pref_timer_default
 com.kovaciny.linemonitorbot.R$string: int prompt_need_product
 com.kovaciny.linemonitorbot.R$string: int reminder_differential_format
+com.kovaciny.linemonitorbot.R$string: int reminder_no_differential_speed
 com.kovaciny.linemonitorbot.R$string: int settings_activity_name
 com.kovaciny.linemonitorbot.R$string: int title_activity_alarm_manager
 com.kovaciny.linemonitorbot.R$string: int title_fragment_calculator_button
@@ -365,6 +372,7 @@ com.kovaciny.linemonitorbot.R$style: int BlankThirdColumn_Unused
 com.kovaciny.linemonitorbot.R$style: int Button
 com.kovaciny.linemonitorbot.R$style: int EditText
 com.kovaciny.linemonitorbot.R$style: int EditText_SecondTableColumn
+com.kovaciny.linemonitorbot.R$style: int Hint
 com.kovaciny.linemonitorbot.R$style: int Label
 com.kovaciny.linemonitorbot.R$style: int Label_FirstTableColumn
 com.kovaciny.linemonitorbot.R$style: int Label_SecondTableColumn
