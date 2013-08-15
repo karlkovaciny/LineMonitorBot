@@ -237,12 +237,9 @@ public class MainActivity extends FragmentActivity implements
 			differentialSpeed = mModel.getSelectedLine().getSpeedValues().differentialSpeed;
 		}
 		args.putDouble("DifferentialSpeed", differentialSpeed);
-		
-		if (mModel.getSelectedLine().getLineNumber() == 12) {
-			//hard code the differential speed for this line TODO
-			args.putDouble("DifferentialSpeed", 1d);
-			args.putBoolean("IsLine12", true);
-		} 		
+		args.putDouble("DifferentialLowValue", mModel.getSelectedLine().getDifferentialRangeLow());
+		args.putDouble("DifferentialHighValue", mModel.getSelectedLine().getDifferentialRangeHigh());
+		args.putString("SpeedControllerType", mModel.getSelectedLine().getSpeedControllerType());
 		
 		if (currentProd != null) {
 			args.putDouble("Gauge", currentProd.getGauge());
@@ -267,24 +264,15 @@ public class MainActivity extends FragmentActivity implements
     		double lineSpeed = spmd.getLineSpeedValue();
     		double diffSpeed = spmd.getDifferentialSpeedValue();
     		double speedFactor = spmd.getSpeedFactorValue();
-    		if ( !(lineSpeed > 0) ||
-    				!(diffSpeed > 0) ||
-    				!(speedFactor > 0) ||
-    				!(gauge > 0) ||
-    				!(width > 0) ||
-    				!(length > 0)) {
-    			Button btn_enterProduct = (Button) this.findViewById(R.id.btn_enter_product);
-    			btn_enterProduct.setError(getString(R.string.error_empty_field));
+    		
+    		updateSpeedData(lineSpeed, diffSpeed, speedFactor);
+    		String productType;
+    		if (spmd.getSheetsOrRollsState().equals(SheetsPerMinuteDialogFragment.ROLLS_MODE)) {
+    			productType = Product.ROLLS_TYPE;
     		} else {
-    			updateSpeedData(lineSpeed, diffSpeed, speedFactor);
-        		String productType;
-        		if (spmd.getSheetsOrRollsState().equals(SheetsPerMinuteDialogFragment.ROLLS_MODE)) {
-        			productType = Product.ROLLS_TYPE;
-        		} else {
-        			productType = Product.SHEETS_TYPE;
-        		}
-        		updateProductData(productType, gauge, width, length);
+    			productType = Product.SHEETS_TYPE;
     		}
+    		updateProductData(productType, gauge, width, length);
     	}
     }	
     

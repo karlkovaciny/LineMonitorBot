@@ -8,12 +8,15 @@ public class ProductionLine {
 	private int mDieWidth; //in inches
 	private double mWebWidth;
 	private SpeedValues mSpeedValues;
+	private double[] mDifferentialRange;
 	private String mSpeedControllerType;
 	private String mTakeoffEquipmentType;
 	private Novatec mNovatec;
 	
-	public static final String SPEED_CONTROLLER_TYPE_DIRECT = "Direct";
-	public static final String SPEED_CONTROLLER_TYPE_GEARED = "Geared";
+	public static final String SPEED_CONTROLLER_TYPE_GEARED = "ProductionLine.Geared";
+	public static final String SPEED_CONTROLLER_TYPE_PERCENT = "ProductionLine.Percent";
+	public static final String SPEED_CONTROLLER_TYPE_RATIO = "ProductionLine.Ratio";
+	public static final String SPEED_CONTROLLER_TYPE_NONE = "ProductionLine.None";
 	
 	public ProductionLine(int lineNumber, int lineLength, int dieWidth, String speedControllerType, String takeoffEquipmentType) {
 		setLineNumber(lineNumber);
@@ -68,7 +71,21 @@ public class ProductionLine {
 		return mSpeedValues;
 	}
 	public void setSpeedValues(SpeedValues sv) {
+		if (mSpeedControllerType == SPEED_CONTROLLER_TYPE_NONE) {
+			sv.differentialSpeed = 1;
+		}
 		mSpeedValues = sv;
+	}
+	public double getDifferentialRangeLow() {
+		return mDifferentialRange[0];
+	}
+	public double getDifferentialRangeHigh() {
+		return mDifferentialRange[1];
+	}
+	private void setDifferentialRange(double low, double high) {
+		if (low > high) throw new IllegalArgumentException("low greater than high");
+		if ((low < 0) || (high < 0)) throw new IllegalArgumentException("Negative differential range");
+		mDifferentialRange = new double[] {low, high};
 	}
 	public void setLineLength(int mLineLength) {
 		this.mLineLength = mLineLength;
@@ -82,8 +99,17 @@ public class ProductionLine {
 	public String getSpeedControllerType() {
 		return mSpeedControllerType;
 	}
-	public void setSpeedControllerType(String mSpeedControllerType) {
-		this.mSpeedControllerType = mSpeedControllerType;
+	public void setSpeedControllerType(String speedControllerType) {
+		if (speedControllerType.equals(SPEED_CONTROLLER_TYPE_GEARED)) {
+			setDifferentialRange(0d, 1.1d);
+		} else if (speedControllerType.equals(SPEED_CONTROLLER_TYPE_PERCENT)) {
+			setDifferentialRange(90d, 110d);
+		} else if (speedControllerType.equals(SPEED_CONTROLLER_TYPE_RATIO)) {
+			setDifferentialRange(.9d, 1.1d);
+		} else if (speedControllerType.equals(SPEED_CONTROLLER_TYPE_NONE)) {
+			setDifferentialRange(1d, 1d);
+		} else throw new IllegalArgumentException("unknown speed controller type");
+		this.mSpeedControllerType = speedControllerType;
 	}
 	public String getTakeoffEquipmentType() {
 		return mTakeoffEquipmentType;

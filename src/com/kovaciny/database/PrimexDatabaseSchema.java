@@ -20,6 +20,8 @@ public class PrimexDatabaseSchema {
 	    public static final String COLUMN_NAME_SPEED_CONTROLLER_TYPE = "speed_controller_type";
 	    public static final String COLUMN_NAME_SPEED_SETPOINT = "speed_setpoint";
 	    public static final String COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT = "differential_speed";
+	    public static final String COLUMN_NAME_DIFFERENTIAL_RANGE_LOW = "differential_range_low";
+	    public static final String COLUMN_NAME_DIFFERENTIAL_RANGE_HIGH = "differential_range_high";
 	    public static final String COLUMN_NAME_SPEED_FACTOR = "speed_factor";
 	    public static final String COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE = "takeoff_equipment_type";
 	}

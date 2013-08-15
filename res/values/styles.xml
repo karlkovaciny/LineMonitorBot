@@ -98,4 +98,9 @@
         <item name="android:layout_weight">0.0</item>
     </style>
 
+    <style name="Hint">
+		<item name="android:textColor">@color/SlateGray</item>
+		<item name="android:textStyle">italic</item>
+    </style>
+        
 </resources>
