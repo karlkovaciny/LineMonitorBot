@@ -1,22 +1,27 @@
 package com.kovaciny.linemonitorbot;
 
+import java.text.DecimalFormat;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kovaciny.primexmodel.Product;
+import com.kovaciny.primexmodel.ProductionLine;
 
 public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnClickListener {
 
@@ -42,8 +47,12 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
   	EditText mEdit_speedFactor;
   	TextView mLbl_speedFactor;
   	TextView mLbl_differentialSpeed;
+  	TextView mLbl_reminderNoDifferentialSpeed;
   	ImageButton mImgbtnSheetsOrRolls;
   	private String mSheetsOrRollsState = SHEETS_MODE;
+  	private String mSpeedControllerType = ProductionLine.SPEED_CONTROLLER_TYPE_NONE;
+  	private Double mDifferentialRangeLow;
+  	private Double mDifferentialRangeHigh;
   	
     // Use this instance of the interface to deliver action events
     SheetsPerMinuteDialogListener mListener;
@@ -77,6 +86,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 
 		mLbl_speedFactor = (TextView) rootView.findViewById(R.id.lbl_speed_factor);
 		mLbl_differentialSpeed = (TextView) rootView.findViewById(R.id.lbl_differential_speed);
+		mLbl_reminderNoDifferentialSpeed = (TextView) rootView.findViewById(R.id.lbl_reminder_no_differential_speed);
 		
 		mEdit_gauge = (EditText) rootView.findViewById(R.id.edit_gauge);
 		mEdit_sheetWidth = (EditText) rootView.findViewById(R.id.edit_sheet_width);
@@ -87,28 +97,48 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		mImgbtnSheetsOrRolls = (ImageButton) rootView.findViewById(R.id.imgbtn_sheets_or_rolls);
 		
 		if (getArguments() != null) {
-			double gauge = getArguments().getDouble("Gauge", 0);
-			double width = getArguments().getDouble("SheetWidth", 0);
-			double length = getArguments().getDouble("SheetLength", 0);
-			double speed = getArguments().getDouble("LineSpeed", 0);
-			double diff = getArguments().getDouble("DifferentialSpeed", 0);
-			double factor = getArguments().getDouble("SpeedFactor", 0);
+			mDifferentialRangeLow = getArguments().getDouble("DifferentialLowValue", 0d);
+			mDifferentialRangeHigh = getArguments().getDouble("DifferentialHighValue", 0d);
+			
+			double gauge = getArguments().getDouble("Gauge", 0d);
+			double width = getArguments().getDouble("SheetWidth", 0d);
+			double length = getArguments().getDouble("SheetLength", 0d);
+			double speed = getArguments().getDouble("LineSpeed", 0d);
+			double diff = getArguments().getDouble("DifferentialSpeed", 0d);
+			mSpeedControllerType = getArguments().getString("SpeedControllerType");
+			double factor = getArguments().getDouble("SpeedFactor", 0d);
 			String prodtype = getArguments().getString("ProductType");
-			boolean isLine12 = getArguments().getBoolean("IsLine12", false);
 			
 			if (gauge > 0) mEdit_gauge.setText(String.valueOf(gauge));
 			if (width > 0) mEdit_sheetWidth.setText(String.valueOf(width));
 			if (length > 0) mEdit_sheetLength.setText(String.valueOf(length));
 			if (speed > 0) mEdit_lineSpeed.setText(String.valueOf(speed));
-			if (diff > 0) mEdit_differentialSpeed.setText(String.valueOf(diff));
+			if (diff > 0) {
+				mEdit_differentialSpeed.setText(String.valueOf(diff));
+				} else {
+					if (mSpeedControllerType.equals(ProductionLine.SPEED_CONTROLLER_TYPE_NONE)) {
+						mEdit_differentialSpeed.setText("1"); //TODO just to not produce error on submit
+					}
+					double averageDiffSpeed = (mDifferentialRangeLow + mDifferentialRangeHigh) / 2d;
+					String hint = "";
+					if (mSpeedControllerType.equals(ProductionLine.SPEED_CONTROLLER_TYPE_GEARED)) {
+						hint = new DecimalFormat("#0.000").format(averageDiffSpeed);
+					} else if (mSpeedControllerType.equals(ProductionLine.SPEED_CONTROLLER_TYPE_PERCENT)) {
+						hint = new DecimalFormat("###.0").format(averageDiffSpeed) + "%";
+					} else if (mSpeedControllerType.equals(ProductionLine.SPEED_CONTROLLER_TYPE_RATIO)) {
+						hint = new DecimalFormat("0.00").format(averageDiffSpeed);
+					}
+					mEdit_differentialSpeed.setHint(Html.fromHtml("<i>" + hint + "</i>"));
+				}
+			if ((mSpeedControllerType != null) && (mSpeedControllerType.equals(ProductionLine.SPEED_CONTROLLER_TYPE_NONE))) {
+				mEdit_differentialSpeed.setVisibility(EditText.GONE);
+				mLbl_differentialSpeed.setVisibility(EditText.GONE);
+				mLbl_reminderNoDifferentialSpeed.setVisibility(EditText.VISIBLE);
+			}
 			if (factor > 0) mEdit_speedFactor.setText(String.valueOf(factor));
 			if (prodtype != null) {
 				mSheetsOrRollsState = prodtype;
 				setSheetsOrRollsState(mSheetsOrRollsState);
-			}
-			if (isLine12) {
-				mEdit_differentialSpeed.setEnabled(false);
-				mLbl_differentialSpeed.setEnabled(false);
 			}
 			
 			if (!MainActivity.DEBUG) {
@@ -148,25 +178,46 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 					@Override
 					public void onClick(View v) {
 						View parent = (View)v.getRootView();
-						if (parent != null) {
-							EditText edit_diffSpeed = (EditText) parent.findViewById(R.id.edit_differential_speed);
-							String diffText = edit_diffSpeed.getText().toString();
-							if (diffText.length() == 0) {
-								edit_diffSpeed.setError(getString(R.string.error_empty_field));
-							} else {
-								double diffValue = Double.valueOf(diffText);
-								if (diffValue > 80) {//TODO magic constant
-									edit_diffSpeed.setText(String.valueOf(diffValue/100));
-									Toast.makeText(getActivity(), getString(R.string.reminder_differential_format), Toast.LENGTH_LONG).show();		            			
+						ViewGroup table = (ViewGroup)parent.findViewById(R.id.table_spm_dialog);
+						boolean validInputs = true;
+						if (table != null) {					
+							for (int i = 0, n = table.getChildCount(); i < n; i++) {
+								ViewGroup nextRow = (ViewGroup)table.getChildAt(i);
+								if (nextRow instanceof TableRow) {
+									for (int j = 0, m = nextRow.getChildCount(); j < m; j++) {
+										View nextChild = nextRow.getChildAt(j);
+										if (nextChild instanceof EditText) {
+											EditText et = (EditText) nextChild;
+											String text = et.getText().toString();
+											if (text.length() == 0) {
+												et.setError(getString(R.string.error_empty_field));
+												validInputs = false;
+											} else if (Double.valueOf(text) <= 0) {
+												et.setError(getString(R.string.error_need_nonzero));
+												validInputs = false;
+											}
+										}
+									}
 								}
-							}
+							} 
 						}
-
-						//Click processed, hide keyboard and dismiss dialog.
-						getActivity().getWindow().setSoftInputMode(
-								WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-						mListener.onClickPositiveButton(SheetsPerMinuteDialogFragment.this);
-						alertDialog.dismiss();						
+						EditText diffSpeed = (EditText) parent.findViewById(R.id.edit_differential_speed);
+						Double diffSpeedValue = Double.valueOf(diffSpeed.getText().toString());
+						if (diffSpeedValue < mDifferentialRangeLow) {
+							diffSpeed.setError(getString(R.string.error_differential_too_low) + String.valueOf(mDifferentialRangeLow));
+							validInputs = false;
+						} else if (diffSpeedValue > mDifferentialRangeHigh) {
+							diffSpeed.setError(getString(R.string.error_differential_too_high) + String.valueOf(mDifferentialRangeHigh));
+							validInputs = false;
+						}
+						
+						if (validInputs) {
+							//Click processed, hide keyboard and dismiss dialog.
+							getActivity().getWindow().setSoftInputMode(
+									WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+							mListener.onClickPositiveButton(SheetsPerMinuteDialogFragment.this);
+							alertDialog.dismiss();						
+						}
 					}
 				});
 			}

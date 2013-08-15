@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/skid_times_fragment_container"
+    android:id="@+id/container_skid_times_fragment"
     style="@style/ParentFragment.HorizontallyDivided"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
