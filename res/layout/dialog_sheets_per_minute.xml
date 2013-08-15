@@ -162,7 +162,7 @@
             android:layout_height="wrap_content" >
         
             <TextView 
-                android:id="@+id/lbl_hint_line_speed"
+                android:id="@+id/lbl_reminder_no_differential_speed"
                 style="@style/Hint"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
