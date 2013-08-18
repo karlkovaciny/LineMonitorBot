@@ -7,8 +7,12 @@
     <dimen name="fragment_vertical_margin">4dp</dimen>
     <dimen name="fragment_divider_padding">8dp</dimen>
 	<dimen name="table_column_padding">8dp</dimen>
+	<dimen name="borderless_row_padding">4dp</dimen>
+	<dimen name="dialog_sheets_per_minute_width">250dp</dimen>
+	<dimen name="dialog_sheets_per_minute_height">425dp</dimen>
+	<dimen name="touch_target_default">45dp</dimen>
 	<dimen name="sheets_label_width">62dp</dimen>
 	<dimen name="label_row_height">70px</dimen>
 	<dimen name="up_arrow_top_padding">10dp</dimen>
-	<dimen name="up_arrow_bottom_padding">6dp</dimen>
+	<dimen name="up_arrow_bottom_padding">10dp</dimen>
 </resources>

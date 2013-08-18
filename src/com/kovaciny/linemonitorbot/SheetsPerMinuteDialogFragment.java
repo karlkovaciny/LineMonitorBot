@@ -227,7 +227,8 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 			}
 		});
 		alertDialog.show();
-		alertDialog.getWindow().setLayout(500,850); //TODO make this expand to fit contents
+		alertDialog.getWindow().setLayout((int)getResources().getDimension(R.dimen.dialog_sheets_per_minute_width),
+				(int)getResources().getDimension(R.dimen.dialog_sheets_per_minute_height)); //TODO make this expand to fit contents
 		return alertDialog;
 	}
 
