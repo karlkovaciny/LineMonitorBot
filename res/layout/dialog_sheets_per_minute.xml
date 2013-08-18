@@ -9,15 +9,85 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal" >
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
 
         <ImageButton
             android:id="@+id/imgbtn_sheets_or_rolls"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="6dip"
-            android:background="@drawable/sheet_slider120"/>
+            android:background="@drawable/sheet_slider120"
+            android:paddingBottom="6dip" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" >
+
+            <ImageButton
+                android:id="@+id/button1"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_width="@dimen/touch_target_default"
+                android:layout_height="@dimen/touch_target_default"
+                android:src="@drawable/ic_minus" />
+
+            
+            <View 
+                android:layout_width="1dip" 
+                android:layout_height="match_parent" 
+                android:layout_marginBottom="8dp" 
+                android:layout_marginTop="8dp" 
+                android:background="?android:attr/dividerVertical" />
+                    
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/borderless_row_padding"
+                android:paddingRight="@dimen/borderless_row_padding" >
+
+                <ImageView
+                    android:id="@+id/imgview111"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha=".6"
+                    android:paddingTop="@dimen/up_arrow_top_padding"
+                    android:src="@drawable/ic_1sheet" />
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="1-up "
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </LinearLayout>
+
+            <View 
+                android:id="@+id/vertical_divider" 
+                android:layout_width="1dip" 
+                android:layout_height="match_parent" 
+                android:layout_marginBottom="8dp" 
+                android:layout_marginTop="8dp" 
+                android:background="?android:attr/dividerVertical" />
+            
+            <ImageButton
+                android:id="@+id/button2"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_width="@dimen/touch_target_default"
+                android:layout_height="@dimen/touch_target_default"
+                android:src="@drawable/ic_plus" />
+            
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" >
+        </RelativeLayout>
     </LinearLayout>
 
     <TableLayout
@@ -191,7 +261,7 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:maxLength="6"
+                android:maxLength="9"
                 android:inputType="numberDecimal" />
 
         </TableRow>
