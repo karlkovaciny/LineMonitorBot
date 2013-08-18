@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -39,12 +40,16 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
   	public static final String SHEETS_MODE = Product.SHEETS_TYPE;
   	public static final String ROLLS_MODE = Product.ROLLS_TYPE;
   	
+  	ImageButton mBtn_addWeb;
+  	ImageButton mBtn_subtractWeb;
   	EditText mEdit_gauge;
   	EditText mEdit_sheetWidth;
   	EditText mEdit_sheetLength;
   	EditText mEdit_lineSpeed;
   	EditText mEdit_differentialSpeed;
   	EditText mEdit_speedFactor;
+  	ImageView mImg_numberOfWebs;
+  	TextView mLbl_numberOfWebs;
   	TextView mLbl_sheetLength;
   	TextView mLbl_speedFactor;
   	TextView mLbl_differentialSpeed;
@@ -54,6 +59,8 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
   	private String mSpeedControllerType = ProductionLine.SPEED_CONTROLLER_TYPE_NONE;
   	private Double mDifferentialRangeLow;
   	private Double mDifferentialRangeHigh;
+  	private int mNumberOfWebs = 1;
+  	public static final int MAXIMUM_NUMBER_OF_WEBS = 5;
   	
     // Use this instance of the interface to deliver action events
     SheetsPerMinuteDialogListener mListener;
@@ -85,6 +92,14 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		View rootView = inflater.inflate(R.layout.dialog_sheets_per_minute, null);
 		builder.setView(rootView);
 
+		mBtn_addWeb = (ImageButton) rootView.findViewById(R.id.btn_add_web);
+		mBtn_addWeb.setOnClickListener(this);
+		
+		mBtn_subtractWeb = (ImageButton) rootView.findViewById(R.id.btn_subtract_web);
+		mBtn_subtractWeb.setOnClickListener(this);
+		
+		mImg_numberOfWebs = (ImageView) rootView.findViewById(R.id.img_number_of_webs);
+		mLbl_numberOfWebs = (TextView) rootView.findViewById(R.id.lbl_number_of_webs);
 		mLbl_speedFactor = (TextView) rootView.findViewById(R.id.lbl_speed_factor);
 		mLbl_differentialSpeed = (TextView) rootView.findViewById(R.id.lbl_differential_speed);
 		mLbl_reminderNoDifferentialSpeed = (TextView) rootView.findViewById(R.id.lbl_reminder_no_differential_speed);
@@ -126,7 +141,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 					if (mSpeedControllerType.equals(ProductionLine.SPEED_CONTROLLER_TYPE_GEARED)) {
 						hint = new DecimalFormat("#0.000").format(averageDiffSpeed);
 					} else if (mSpeedControllerType.equals(ProductionLine.SPEED_CONTROLLER_TYPE_PERCENT)) {
-						hint = new DecimalFormat("###.0").format(averageDiffSpeed) + "%";
+						hint = new DecimalFormat("###.0").format(averageDiffSpeed);
 					} else if (mSpeedControllerType.equals(ProductionLine.SPEED_CONTROLLER_TYPE_RATIO)) {
 						hint = new DecimalFormat("0.00").format(averageDiffSpeed);
 					}
@@ -237,13 +252,21 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 	 */
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.imgbtn_sheets_or_rolls) {
+		switch (v.getId()) {
+		case R.id.imgbtn_sheets_or_rolls:
 			if (mSheetsOrRollsState.equals(SHEETS_MODE)) {
 				setSheetsOrRollsState(ROLLS_MODE);
 			} else if (mSheetsOrRollsState.equals(ROLLS_MODE)) {
 				setSheetsOrRollsState(SHEETS_MODE);
 			} else throw new RuntimeException ("unknown sheet or rolls state"); //debug
+			break;
+		case R.id.btn_subtract_web:
+			setNumberOfWebs(mNumberOfWebs - 1);
+			break;
+		case R.id.btn_add_web:
+			setNumberOfWebs(mNumberOfWebs + 1);
 		}
+		
 	}
  
 	private void setSheetsOrRollsState (String state) {
@@ -261,6 +284,25 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 			this.mEdit_sheetLength.setEnabled(true);
 			this.mEdit_sheetWidth.setNextFocusDownId(R.id.edit_sheet_length);
 		}
+	}
+	
+	private void setNumberOfWebs(int numWebs) {
+		if ((numWebs < 1) || (numWebs > MAXIMUM_NUMBER_OF_WEBS)) throw new RuntimeException("Invalid number of webs: " + String.valueOf(numWebs));
+		
+		mNumberOfWebs = numWebs;
+		
+		if (numWebs == MAXIMUM_NUMBER_OF_WEBS) {
+			mBtn_addWeb.setEnabled(false);
+		} else mBtn_addWeb.setEnabled(true);
+		
+		if (numWebs == 1) {
+			mBtn_subtractWeb.setEnabled(false);
+		} else mBtn_subtractWeb.setEnabled(true);
+		
+		mLbl_numberOfWebs.setText(String.valueOf(numWebs) + "-up ");
+		
+		int resId = getResources().getIdentifier("ic_" + String.valueOf(numWebs) + "sheet", "drawable", getActivity().getPackageName());
+		mImg_numberOfWebs.setImageDrawable(getResources().getDrawable(resId));
 	}
 
 	public double getLineSpeedValue() {

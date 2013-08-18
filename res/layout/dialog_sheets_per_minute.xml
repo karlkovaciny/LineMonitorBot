@@ -25,7 +25,7 @@
             android:gravity="center_horizontal" >
 
             <ImageButton
-                android:id="@+id/button1"
+                android:id="@+id/btn_subtract_web"
                 android:background="?android:attr/selectableItemBackground"
                 android:layout_width="@dimen/touch_target_default"
                 android:layout_height="@dimen/touch_target_default"
@@ -49,17 +49,18 @@
                 android:paddingRight="@dimen/borderless_row_padding" >
 
                 <ImageView
-                    android:id="@+id/imgview111"
+                    android:id="@+id/img_number_of_webs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:alpha=".6"
+                    android:alpha=".5"
                     android:paddingTop="@dimen/up_arrow_top_padding"
                     android:src="@drawable/ic_1sheet" />
 
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/lbl_number_of_webs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:alpha=".7"
                     android:gravity="center_horizontal"
                     android:text="1-up "
                     android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -75,7 +76,7 @@
                 android:background="?android:attr/dividerVertical" />
             
             <ImageButton
-                android:id="@+id/button2"
+                android:id="@+id/btn_add_web"
                 android:background="?android:attr/selectableItemBackground"
                 android:layout_width="@dimen/touch_target_default"
                 android:layout_height="@dimen/touch_target_default"
