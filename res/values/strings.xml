@@ -42,8 +42,9 @@
 	<string name="error_empty_field">Please enter a value</string>
 	<string name="error_need_nonzero">Value must be greater than zero</string>
 	<string name="error_net_less_than_gross">Gross width must be larger than sheet width</string>
-	<string name="error_differential_too_low">Differential should be greater than </string>
-	<string name="error_differential_too_high">Differential should be less than </string>
+	<string name="error_differential_too_low">Differential should be greater than\u0020</string>
+	<string name="error_differential_too_high">Differential should be less than\u0020</string>
+	<string name="error_over_maximum_skids">Maximum of %1 skids per job</string>
 	<string name="prompt_need_product">Please enter a product</string>
 	<string name="reminder_no_differential_speed">Enter the low value from the line speed readout.</string>
 	<string name="confirm_clear_wos">Delete all work orders?</string>

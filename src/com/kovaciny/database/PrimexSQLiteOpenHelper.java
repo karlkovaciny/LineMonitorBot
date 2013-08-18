@@ -32,7 +32,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 128;
+    public static final int DATABASE_VERSION = 129;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -179,7 +179,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         	List<Double> dieWidthsList = Arrays.asList(new Double[]{130d,58d,53d,58d,64d, 64d,78d,75d,75d,64d, 64d, 58.5d, 53d});
         	Iterator<Double> dieWidthsIterator = dieWidthsList.iterator();
         	
-        	List<Double> speedFactorsList = Arrays.asList(new Double[]{.995d,.0771d,.01d,.99d,.0102d,  1d,1d,.0098d,.0098d,1.01d, 1d,.0347d,.01003d});        	
+        	List<Double> speedFactorsList = Arrays.asList(new Double[]{.995d,.0771d,.01d,.99d,.0102d,  1d,1d,.0098d,.0098d,1.01d, 1.01d,.0347d,.01003d});        	
         	Iterator<Double> speedFactorsIterator = speedFactorsList.iterator();
         	
         	List<String> speedControllerTypesList = Arrays.asList(

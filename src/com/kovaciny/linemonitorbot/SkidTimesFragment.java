@@ -46,15 +46,11 @@ import com.kovaciny.primexmodel.WorkOrder;
 
 public class SkidTimesFragment extends Fragment implements
 		OnClickListener, OnEditorActionListener, OnItemSelectedListener, View.OnFocusChangeListener, ViewEventResponder	{
-	private SkidFinishedBroadcastReceiver mAlarmReceiver;
-	private List<Skid<Product>> mSkidList;
 	private Button mBtn_enterProduct;
 	private Button mBtn_cancelAlarm;
 	private Button mBtn_calculateTimes;
 	private ImageButton mBtn_skidNumberUp;
 	private ImageButton mBtn_totalSkidsUp;
-	private List<EditText> mEditableGroup;
-	private List<TextView> mTimesDisplayList;
 	
 	private EditText mEdit_currentSkidNumber;
 	private EditText mEdit_currentCount;
@@ -77,7 +73,13 @@ public class SkidTimesFragment extends Fragment implements
 	private TextView mLbl_timeToMaxson;
 	private TextView mTxt_timeToMaxson;
 	
+	private SkidFinishedBroadcastReceiver mAlarmReceiver;
+	private List<Skid<Product>> mSkidList;
+	private List<EditText> mEditableGroup;
+	private List<TextView> mTimesDisplayList;
 	private long mMillisPerSkid;
+	
+	public static final int MAXIMUM_NUMBER_OF_SKIDS = 100;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -278,6 +280,9 @@ public class SkidTimesFragment extends Fragment implements
 			boolean validInputs = true;
 			if (mEdit_totalCountPerSkid.getText().toString().equals("0")) {
 				mEdit_totalCountPerSkid.setError(getString(R.string.error_need_nonzero));
+				validInputs = false;
+			} else if (Double.valueOf(mEdit_numSkidsInJob.getText().toString()) > MAXIMUM_NUMBER_OF_SKIDS) {
+				mEdit_numSkidsInJob.setError(getString(R.string.error_over_maximum_skids).replace("%1", String.valueOf(MAXIMUM_NUMBER_OF_SKIDS)));
 				validInputs = false;
 			} else {
 				while (itr.hasNext()) {
