@@ -33,8 +33,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 134;
+    public static final int DATABASE_VERSION = 135;
     public static final String DATABASE_NAME = "Primex.db";
+    
     public static final int DEFAULT_INITIAL_WO_NUM = 123;
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -57,6 +58,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_DIFFERENTIAL_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_PRODUCTS_PER_MINUTE + DOUBLE_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_WEBS + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_SKIDS + INTEGER_TYPE + COMMA_SEP +
 					"UNIQUE (" + PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER + ")" +
 					")";
 
@@ -396,6 +398,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NET_PPH, model.getNetPph());
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_PRODUCTS_PER_MINUTE, model.getProductsPerMinute());
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_WEBS, model.getSelectedLine().getNumberOfWebs());
+    	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_SKIDS, model.getNumberOfSkids());
 
     	long rowId;
     	try {

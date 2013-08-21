@@ -23,7 +23,9 @@ public class PrimexModel {
 			throw new RuntimeException("database didn't find any lines");
 		}
 		mWoNumbersList = mDbHelper.getWoNumbers();
+		setNumberOfSkids(1);
 	}
+	
 	public static final String LINE_SPEED_CHANGE_EVENT = "PrimexModel.SPEED_CHANGE";
 	public static final String SELECTED_LINE_CHANGE_EVENT = "PrimexModel.LINE_CHANGE";
 	public static final String SELECTED_WO_CHANGE_EVENT = "PrimexModel.WO_CHANGE";
@@ -69,6 +71,7 @@ public class PrimexModel {
 	private double mNetPph;
 	private double mProductsPerMinute;
 	private int mNumberOfWebs;
+	private int mNumberOfSkids;
 	
 	/*
 	 * Used to save speed changes until we're ready to fire them to the view.
@@ -297,8 +300,7 @@ public class PrimexModel {
 		try {
 			if (cursor.moveToFirst()) {
 				int lineNumber = cursor.getInt(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE));
-				setSelectedLine(lineNumber);
-		    	long create = cursor.getLong(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE));
+				long create = cursor.getLong(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE));
 		    	mCreateDate = new Date(create);
 		    	mProductsPerMinute = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_PRODUCTS_PER_MINUTE));
 		    	mEdgeTrimRatio = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_EDGE_TRIM_PERCENT));
@@ -308,6 +310,7 @@ public class PrimexModel {
 		    	mLineSpeedSetpoint = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_LINE_SPEED_SETPOINT));
 		    	mDifferentialSetpoint = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_DIFFERENTIAL_SETPOINT));
 		    	mNumberOfWebs = cursor.getInt(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_WEBS));
+		    	mNumberOfSkids = cursor.getInt(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_SKIDS));
 		    	return true;
 		    } else return false;
 	    } finally {
@@ -575,6 +578,15 @@ public class PrimexModel {
 	public void setNumberOfWebs(int numberOfWebs) {
 		this.mNumberOfWebs = numberOfWebs;
 		mSelectedLine.setNumberOfWebs(numberOfWebs);
+	}
+
+	public int getNumberOfSkids() {
+		return mNumberOfSkids;
+	}
+
+	public void setNumberOfSkids(int numberOfSkids) {
+		if (numberOfSkids <= 0) throw new IllegalArgumentException("Number of skids must be positive");
+		this.mNumberOfSkids = numberOfSkids;
 	}
 
 	@Override

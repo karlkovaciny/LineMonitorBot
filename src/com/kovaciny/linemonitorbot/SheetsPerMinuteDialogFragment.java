@@ -7,7 +7,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -19,6 +21,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -40,7 +45,9 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
   	
   	public static final String SHEETS_MODE = Product.SHEETS_TYPE;
   	public static final String ROLLS_MODE = Product.ROLLS_TYPE;
-  	
+
+  	LinearLayout mContainerProductDetails;
+  	LinearLayout mContainerSkidsOnTable;
   	ImageButton mBtn_addWeb;
   	ImageButton mBtn_subtractWeb;
   	EditText mEdit_gauge;
@@ -56,7 +63,10 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
   	TextView mLbl_differentialSpeed;
   	TextView mLbl_reminderNoDifferentialSpeed;
   	ImageButton mImgbtnSheetsOrRolls;
-  	private String mSheetsOrRollsState = SHEETS_MODE;
+  	RadioGroup mRadioGroup_skidsOnTable;
+  	RadioButton mRadioButton_oneSkid;
+  	RadioButton mRadioButton_twoSkids;
+  	private String mSheetsOrRollsState;
   	private String mSpeedControllerType = ProductionLine.SPEED_CONTROLLER_TYPE_NONE;
   	private Double mDifferentialRangeLow;
   	private Double mDifferentialRangeHigh;
@@ -92,7 +102,14 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View rootView = inflater.inflate(R.layout.enter_product_dialog, null);
 		builder.setView(rootView);
-
+		mContainerSkidsOnTable = (LinearLayout) inflater.inflate(R.layout.container_skids_on_table, null);
+		
+		mContainerProductDetails = (LinearLayout) rootView.findViewById(R.id.container_product_details);
+		mRadioGroup_skidsOnTable = (RadioGroup) mContainerSkidsOnTable.findViewById(R.id.radio_group_skids_on_table);
+		
+		mRadioButton_oneSkid = (RadioButton) mContainerSkidsOnTable.findViewById(R.id.radio_one_skid);
+		mRadioButton_twoSkids = (RadioButton) mContainerSkidsOnTable.findViewById(R.id.radio_two_skids);
+		
 		mBtn_addWeb = (ImageButton) rootView.findViewById(R.id.btn_add_web);
 		mBtn_addWeb.setOnClickListener(this);
 		
@@ -115,7 +132,8 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		mImgbtnSheetsOrRolls = (ImageButton) rootView.findViewById(R.id.imgbtn_sheets_or_rolls);
 		
 		markRequiredFields();
-		setNumberOfWebs(1);
+		
+		SharedPreferences settings = getActivity().getPreferences(Context.MODE_PRIVATE);
 		
 		if (getArguments() != null) {
 			mDifferentialRangeLow = getArguments().getDouble("DifferentialLowValue", 0d);
@@ -127,10 +145,17 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 			double speed = getArguments().getDouble("LineSpeed", 0d);
 			double diff = getArguments().getDouble("DifferentialSpeed", 0d);
 			mSpeedControllerType = getArguments().getString("SpeedControllerType");
-			mNumberOfWebs = getArguments().getInt("NumberOfWebs");
+			mNumberOfWebs = getArguments().getInt("NumberOfWebs", 1);
+			int numberOfSkids = getArguments().getInt("NumberOfSkids", 0);
 			double factor = getArguments().getDouble("SpeedFactor", 0d);
 			String prodtype = getArguments().getString("ProductType");
-			
+			if (prodtype == null) {
+				prodtype = settings.getString("savedMode", "");
+				if (prodtype.length() == 0) {
+					prodtype = SHEETS_MODE;
+				}
+			}
+						
 			if (gauge > 0) mEdit_gauge.setText(String.valueOf(gauge));
 			if (width > 0) mEdit_sheetWidth.setText(String.valueOf(width));
 			if (length > 0) mEdit_sheetLength.setText(String.valueOf(length));
@@ -147,20 +172,20 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 				mLbl_differentialSpeed.setVisibility(EditText.GONE);
 				mLbl_reminderNoDifferentialSpeed.setVisibility(EditText.VISIBLE);
 			}
-			if (mNumberOfWebs > 0) {
-				setNumberOfWebs(mNumberOfWebs);
-			}
+			
 			if (factor > 0) mEdit_speedFactor.setText(String.valueOf(factor));
-			if (prodtype != null) {
-				mSheetsOrRollsState = prodtype;
-				setSheetsOrRollsState(mSheetsOrRollsState);
-			}
+			setSheetsOrRollsState(prodtype);
+
+			setNumberOfWebs(mNumberOfWebs);
+			
+			if (numberOfSkids == 1) mRadioButton_oneSkid.setChecked(true);
+			if (numberOfSkids == 2) mRadioButton_twoSkids.setChecked(true);
 			
 			if (!MainActivity.DEBUG) {
 				mLbl_speedFactor.setVisibility(TextView.GONE);
 				mEdit_speedFactor.setVisibility(EditText.GONE);
 			}
-		}
+		} else setNumberOfWebs(1);
 		
 		mImgbtnSheetsOrRolls.setOnClickListener(this);
 		
@@ -228,9 +253,14 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 						}
 						
 						if (validInputs) {
-							//Click processed, hide keyboard and dismiss dialog.
+							//Click processed, hide keyboard, save state, and dismiss dialog.
 							getActivity().getWindow().setSoftInputMode(
 									WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+							SharedPreferences settings = getActivity().getPreferences(Context.MODE_PRIVATE);
+							SharedPreferences.Editor editor = settings.edit();
+							editor.putString("savedMode", getSheetsOrRollsState()).commit();
+							editor.commit();
+							
 							mListener.onClickPositiveButton(SheetsPerMinuteDialogFragment.this);
 							alertDialog.dismiss();						
 						}
@@ -274,12 +304,14 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 			this.mLbl_sheetLength.setEnabled(false);
 			this.mEdit_sheetLength.setEnabled(false);
 			this.mEdit_sheetWidth.setNextFocusDownId(R.id.edit_line_speed);
+			mContainerProductDetails.removeView(mContainerSkidsOnTable);
 		} else if (state.equals(SHEETS_MODE)) {
 			this.mSheetsOrRollsState = SHEETS_MODE;
 			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.sheet_slider120);
 			this.mLbl_sheetLength.setEnabled(true);
 			this.mEdit_sheetLength.setEnabled(true);
 			this.mEdit_sheetWidth.setNextFocusDownId(R.id.edit_sheet_length);
+			setNumberOfWebs(getNumberOfWebs()); //to trigger the check for added views TODO ugly
 		}
 	}
 	
@@ -311,6 +343,10 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		
 		int resId = getResources().getIdentifier("ic_" + String.valueOf(numWebs) + "sheet", "drawable", getActivity().getPackageName());
 		mImg_numberOfWebs.setImageDrawable(getResources().getDrawable(resId));
+		
+		if ((numWebs == 2) && (getSheetsOrRollsState() == SHEETS_MODE)) {
+			mContainerProductDetails.addView(mContainerSkidsOnTable);
+		} else mContainerProductDetails.removeView(mContainerSkidsOnTable);
 	}
 	
 	public int getNumberOfWebs() {
@@ -355,5 +391,10 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 	}
 	public String getSheetsOrRollsState() {
 		return mSheetsOrRollsState;
+	}
+	public int getNumberOfSkids() {
+		if (mRadioGroup_skidsOnTable.getCheckedRadioButtonId() == R.id.radio_two_skids) {
+			return 2;
+		} else return 1;
 	}
 }

@@ -24,6 +24,7 @@ public class PrimexDatabaseSchema {
 		public static final String COLUMN_NAME_DIFFERENTIAL_SETPOINT = "differential_setpoint";
 		public static final String COLUMN_NAME_PRODUCTS_PER_MINUTE = "products_per_minute";
 		public static final String COLUMN_NAME_NUMBER_OF_WEBS = "number_of_webs";
+		public static final String COLUMN_NAME_NUMBER_OF_SKIDS = "number_of_skids";
 	}
 	
 	public static abstract class ProductionLines implements BaseColumns {

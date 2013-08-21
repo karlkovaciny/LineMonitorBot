@@ -155,8 +155,8 @@ public class MainActivity extends FragmentActivity implements
 		
 		if (!mModel.hasSelectedLine()) {
 			SharedPreferences settings = getPreferences(MODE_PRIVATE);
-			int woNum = settings.getInt("lastSelectedWorkOrder", PrimexSQLiteOpenHelper.DEFAULT_INITIAL_WO_NUM);
-			mModel.loadState(woNum);
+			int lineNum = settings.getInt("lastSelectedLine", 18);
+			mModel.setSelectedLine(lineNum);
 		}
 		
 		//populate the job picker with jobs
@@ -245,6 +245,7 @@ public class MainActivity extends FragmentActivity implements
 			numberOfWebs = mModel.getSelectedLine().getNumberOfWebs();
 		}
 		args.putInt("NumberOfWebs", numberOfWebs);
+		args.putInt("NumberOfSkids", mModel.getNumberOfSkids());
 		
 		args.putDouble("DifferentialSpeed", differentialSpeed);
 		args.putDouble("DifferentialLowValue", mModel.getSelectedLine().getDifferentialRangeLow());
@@ -274,9 +275,9 @@ public class MainActivity extends FragmentActivity implements
     		double lineSpeed = spmd.getLineSpeedValue();
     		double diffSpeed = spmd.getDifferentialSpeedValue();
     		double speedFactor = spmd.getSpeedFactorValue();
-    		int numberOfWebs = spmd.getNumberOfWebs();
     		
-    		mModel.setNumberOfWebs(numberOfWebs);
+    		mModel.setNumberOfWebs(spmd.getNumberOfWebs());
+    		mModel.setNumberOfSkids(spmd.getNumberOfSkids());
     		updateSpeedData(lineSpeed, diffSpeed, speedFactor);
     		String productType;
     		if (spmd.getSheetsOrRollsState().equals(SheetsPerMinuteDialogFragment.ROLLS_MODE)) {
@@ -587,7 +588,9 @@ public class MainActivity extends FragmentActivity implements
 	    SharedPreferences.Editor editor = settings.edit();
 	    
 	    editor.putInt("databaseVersion", mModel.getDatabaseVersion());
-	    editor.putInt("lastSelectedWorkOrder", mModel.getSelectedWorkOrder().getWoNumber());
+	    if (mModel.hasSelectedLine()) {
+	    	editor.putInt("lastSelectedLine", mModel.getSelectedLine().getLineNumber());
+	    }
 
 	    // Commit the edits!
 	    editor.commit();
@@ -601,7 +604,7 @@ public class MainActivity extends FragmentActivity implements
 		try { 
 			mModel.saveState();
 		} catch (IllegalStateException e) {
-			if (DEBUG) Toast.makeText(this, "Saving state error: " + e.getCause().getMessage(), Toast.LENGTH_SHORT).show();
+			if (DEBUG) Toast.makeText(this, "Saving state error: " + e.getCause().getMessage(), Toast.LENGTH_LONG).show();
 			else throw e;
 		}
 		super.onStop();		
