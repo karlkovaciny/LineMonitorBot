@@ -128,24 +128,19 @@ public class PrimexModel {
 		}
 		if (woNumber <= 0) throw new IllegalArgumentException("Work order number must be positive");
 		
-		//save data from old WO
-		if (hasSelectedWorkOrder()) {
-			mDbHelper.insertOrUpdateWorkOrder(mSelectedWorkOrder);
-			if (mSelectedWorkOrder.hasSelectedSkid()) {
-				saveSkid(mSelectedWorkOrder.getSelectedSkid());
-			}
-		}
-		
-		WorkOrder lookedUpWo = mDbHelper.getWorkOrder(woNumber);
-		if (lookedUpWo == null) throw new RuntimeException("WorkOrder not found even though it is in woNumbersList");
-		mSelectedWorkOrder = lookedUpWo;
+		if (hasSelectedWorkOrder()) saveState();
+	
+		mSelectedWorkOrder = mDbHelper.getWorkOrder(woNumber);
 		mDbHelper.updateLineWorkOrderLink(mSelectedLine.getLineNumber(), woNumber);
 		changeSelectedSkid(mSelectedWorkOrder.getSelectedSkid().getSkidNumber());
 		
 		Product p = mDbHelper.getProduct(woNumber);
 		mSelectedWorkOrder.setProduct(p);
 		if (p != null) propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, p);
-
+		
+		loadState(woNumber);
+		
+		//Now that everything is loaded up, notify listeners of all the changes.
 		propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, null, mSelectedWorkOrder.getFinishDate());
 		if (mSelectedSkid != null) {
 			propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, null, mSelectedSkid);
@@ -287,28 +282,19 @@ public class PrimexModel {
     		saveProduct(mSelectedWorkOrder.getProduct());
     		Log.v("saveState", "Saved state of selected product.");
     	}
-		mDbHelper.saveState(this);
+		mDbHelper.saveModelState(this);
 	}
 
 	/*
 	 * Returns whether state was successfully loaded.
 	 */
-	public boolean loadState() {
-		String lineNum = mDbHelper.getFieldAsString(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
-				PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, null, null);
-		try {
-			if ( (lineNum == null)) {
-				throw new IllegalStateException("line number is null");
-			}
-		} catch (IllegalStateException e) {
-			Log.e("ERROR!", "Loaded a null line number from loadState");
-			lineNum = "18";
-		}
-		setSelectedLine(Integer.valueOf(lineNum));
-		Cursor cursor = mDbHelper.loadState(mSelectedWorkOrder.getWoNumber());
+	public boolean loadState(int woNumber) {
+		Cursor cursor = mDbHelper.loadModelState(woNumber);
 		
 		try {
 			if (cursor.moveToFirst()) {
+				int lineNumber = cursor.getInt(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE));
+				setSelectedLine(lineNumber);
 		    	long create = cursor.getLong(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE));
 		    	mCreateDate = new Date(create);
 		    	mProductsPerMinute = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_PRODUCTS_PER_MINUTE));
@@ -318,6 +304,8 @@ public class PrimexModel {
 		    	mColorPercent= cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_COLOR_PERCENT));
 		    	mLineSpeedSetpoint = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_LINE_SPEED_SETPOINT));
 		    	mDifferentialSetpoint = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_DIFFERENTIAL_SETPOINT));
+		    	int numWebs = cursor.getInt(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_WEBS));
+		    	if (numWebs > 0) mSelectedLine.setNumberOfWebs(numWebs);
 		    	return true;
 		    } else return false;
 	    } finally {

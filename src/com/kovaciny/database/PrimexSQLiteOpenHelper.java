@@ -33,8 +33,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 133;
+    public static final int DATABASE_VERSION = 134;
     public static final String DATABASE_NAME = "Primex.db";
+    public static final int DEFAULT_INITIAL_WO_NUM = 123;
     
 	private static final String TEXT_TYPE = " TEXT";
 	private static final String DOUBLE_TYPE = " DOUBLE";
@@ -55,6 +56,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_LINE_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_DIFFERENTIAL_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_PRODUCTS_PER_MINUTE + DOUBLE_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_WEBS + INTEGER_TYPE + COMMA_SEP +
 					"UNIQUE (" + PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER + ")" +
 					")";
 
@@ -169,9 +171,26 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			"DROP TABLE IF EXISTS " + TABLE_NAME_MODEL_STATE;
 	
     public void onCreate(SQLiteDatabase db) {
-    	final List<Integer> lineNumbers = Arrays.asList(1,6,7,9,10,  11,12,13,14,15,  16,17,18); //13 lines
-    	db.execSQL(SQL_CREATE_PRODUCTION_LINES);
+        db.execSQL(SQL_CREATE_MODEL_STATE);
         //Batch insert to SQLite database on Android
+        try {
+        	db.beginTransaction();
+        	Integer lineNum = 12;
+        	Integer woNum = DEFAULT_INITIAL_WO_NUM;
+        	ContentValues modvalues = new ContentValues();
+        	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, lineNum);
+        	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, woNum);
+        	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE,0);
+
+        	long rowId = db.insertOrThrow(PrimexDatabaseSchema.ModelState.TABLE_NAME, null, modvalues);
+
+        	db.setTransactionSuccessful();
+        } finally {
+        	db.endTransaction();
+        }
+
+    	db.execSQL(SQL_CREATE_PRODUCTION_LINES);
+    	final List<Integer> lineNumbers = Arrays.asList(1,6,7,9,10,  11,12,13,14,15,  16,17,18); //13 lines
         try {
         	List<Double> lengthsList = 
         			Arrays.asList(new Double[] {99.0d, 51.5d, 34.2d, 46.0d, 44.7d,  45.7d,56.7d,56.3d,64.3d,46.5d, 45.0d,61.9d, 71d});
@@ -306,22 +325,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         } finally {
         	db.endTransaction();
         }
-        db.execSQL(SQL_CREATE_MODEL_STATE);
-        try {
-        	db.beginTransaction();
-        	Integer lineNum = 12;
-        	Integer woNum = 123;
-        	ContentValues modvalues = new ContentValues();
-        	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, lineNum);
-        	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, woNum);
-        	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE,0);
-
-        	long rowId = db.insertOrThrow(PrimexDatabaseSchema.ModelState.TABLE_NAME, null, modvalues);
-
-        	db.setTransactionSuccessful();
-        } finally {
-        	db.endTransaction();
-        }
     }
     
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -372,7 +375,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
      * Just Ctrl+F for the name of the class
      */
     
-    public long saveState(PrimexModel model) {
+    public long saveModelState(PrimexModel model) {
     	SQLiteDatabase db = getWritableDatabase();
 
     	//TODO not sure if these lines are necessary
@@ -392,6 +395,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_LINE_SPEED_SETPOINT, model.getLineSpeedSetpoint());
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NET_PPH, model.getNetPph());
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_PRODUCTS_PER_MINUTE, model.getProductsPerMinute());
+    	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_WEBS, model.getSelectedLine().getNumberOfWebs());
 
     	long rowId;
     	try {
@@ -408,7 +412,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	return rowId;    
     }
   
-    public Cursor loadState(int woNumber) {
+    public Cursor loadModelState(int woNumber) {
     	SQLiteDatabase db = getReadableDatabase();
 
 		Cursor resultCursor = db.rawQuery("SELECT * FROM " + PrimexDatabaseSchema.ModelState.TABLE_NAME + " WHERE " + 

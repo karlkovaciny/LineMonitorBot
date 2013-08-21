@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.kovaciny.database.PrimexSQLiteOpenHelper;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Products;
@@ -153,7 +154,9 @@ public class MainActivity extends FragmentActivity implements
 		}
 		
 		if (!mModel.hasSelectedLine()) {
-			mModel.loadState();
+			SharedPreferences settings = getPreferences(MODE_PRIVATE);
+			int woNum = settings.getInt("lastSelectedWorkOrder", PrimexSQLiteOpenHelper.DEFAULT_INITIAL_WO_NUM);
+			mModel.loadState(woNum);
 		}
 		
 		//populate the job picker with jobs
@@ -234,7 +237,7 @@ public class MainActivity extends FragmentActivity implements
 		
 		Double differentialSpeed = mModel.getDifferentialSetpoint();
 		if (differentialSpeed == 0d) {
-			differentialSpeed = mModel.getSelectedLine().getSpeedValues().differentialSpeed;
+			differentialSpeed = mModel.getSelectedLine().getSpeedValues().differentialSpeed; //TODO seems ugly
 		}
 		args.putDouble("DifferentialSpeed", differentialSpeed);
 		args.putDouble("DifferentialLowValue", mModel.getSelectedLine().getDifferentialRangeLow());
@@ -546,12 +549,6 @@ public class MainActivity extends FragmentActivity implements
 		if (fragment == null) {
 			throw new IllegalStateException(new Throwable(ERROR_FRAGMENT_NOT_FOUND));
 		} 
-		if (!fragment.isInLayout()) {
-			Log.e("MainActivity.class", "Fragment " + tag + " is not in layout");
-		}
-		if (fragment.isHidden()) {
-			Log.e("MainActivity.class", "Fragment " + tag + " is hidden");
-		}
 		return fragment;
 	}
 	
@@ -581,6 +578,7 @@ public class MainActivity extends FragmentActivity implements
 	    SharedPreferences.Editor editor = settings.edit();
 	    
 	    editor.putInt("databaseVersion", mModel.getDatabaseVersion());
+	    editor.putInt("lastSelectedWorkOrder", mModel.getSelectedWorkOrder().getWoNumber());
 
 	    // Commit the edits!
 	    editor.commit();
