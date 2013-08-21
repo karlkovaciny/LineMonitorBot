@@ -7,6 +7,7 @@ public class ProductionLine {
 	private int mLineLength; //in feet
 	private int mDieWidth; //in inches
 	private double mWebWidth;
+	private int mNumberOfWebs;
 	private SpeedValues mSpeedValues;
 	private double[] mDifferentialRange;
 	private String mSpeedControllerType;
@@ -26,6 +27,7 @@ public class ProductionLine {
 		setTakeoffEquipmentType(takeoffEquipmentType);
 		//TODO default settings
 		mSpeedValues = new SpeedValues(0,1,1);
+		mNumberOfWebs = 1;
 		mNovatec = new Novatec(50,0,1); 
 	}
 	
@@ -129,4 +131,12 @@ public class ProductionLine {
 	public void setWebWidth(double width) {
 		this.mWebWidth = width;
 	}
+	public int getNumberOfWebs() {
+		return mNumberOfWebs;
+	}
+	public void setNumberOfWebs(int numberOfWebs) {
+		if (numberOfWebs <= 0) throw new IllegalArgumentException("Need a positive number of webs");
+		this.mNumberOfWebs = numberOfWebs;
+	}
+
 }

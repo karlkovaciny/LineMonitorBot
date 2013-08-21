@@ -26,10 +26,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.Toast;
 
-import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Products;
@@ -51,6 +49,8 @@ public class MainActivity extends FragmentActivity implements
 	public static final int RATES_FRAGMENT_POSITION = 1;
 	public static final int DRAINING_FRAGMENT_POSITION = 2;
 	public static final int CALCULATOR_FRAGMENT_POSITION = POSITION_NONE;
+	
+	public static final String ERROR_FRAGMENT_NOT_FOUND = "MainActivity.Fragment not found";
 	
 	public static final boolean DEBUG = true;
 	
@@ -224,15 +224,15 @@ public class MainActivity extends FragmentActivity implements
 		args.putDouble("SpeedFactor", mModel.getSelectedLine().getSpeedValues().speedFactor); //TODO it will bite me that these aren't all in WO
 		
 		//Load the line speed numbers for this work order or if none, the last ones used on this line.
-		Double lineSpeedSetpoint = mModel.getSelectedWorkOrder().getLineSpeedSetpoint();
+		Double lineSpeedSetpoint = mModel.getLineSpeedSetpoint();
 		if (lineSpeedSetpoint == 0d) {
 			lineSpeedSetpoint = mModel.getSelectedLine().getSpeedValues().lineSpeedSetpoint;
 		}
 		args.putDouble("LineSpeed", lineSpeedSetpoint);
-		Log.v("MainActivity.showSheetsPerMinuteDialog()", "Just sent line speed " + mModel.getSelectedWorkOrder().getLineSpeedSetpoint() + "from line " + 
+		Log.v("MainActivity.showSheetsPerMinuteDialog()", "Just sent line speed " + mModel.getLineSpeedSetpoint() + "from line " + 
 			mModel.getSelectedLine().getLineNumber() +	"to dialog");
 		
-		Double differentialSpeed = mModel.getSelectedWorkOrder().getDifferentialSetpoint();
+		Double differentialSpeed = mModel.getDifferentialSetpoint();
 		if (differentialSpeed == 0d) {
 			differentialSpeed = mModel.getSelectedLine().getSpeedValues().differentialSpeed;
 		}
@@ -285,14 +285,23 @@ public class MainActivity extends FragmentActivity implements
 			throw new RuntimeException("something threw a null event");
 		}
 		
+		SkidTimesFragment skidTimesFrag;
+		RatesFragment ratesFrag;
+		try {
+			skidTimesFrag = (SkidTimesFragment) this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
+			ratesFrag = (RatesFragment) this.findFragmentByPosition(MainActivity.RATES_FRAGMENT_POSITION);
+		} catch (IllegalStateException e) {
+			if (e.getCause().getMessage() == ERROR_FRAGMENT_NOT_FOUND) {
+				return; //too early to handle events
+			} else throw e;
+		}
+		
 		String eventName = event.getPropertyName();
 		Log.v("Event", eventName);
 		Object newProperty = event.getNewValue();
 		String objectDescription = (newProperty == null) ? "null" : newProperty.toString();
 		Log.v("Event value", objectDescription);
 		
-		SkidTimesFragment skidTimesFrag = (SkidTimesFragment) this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
-		RatesFragment ratesFrag = (RatesFragment) this.findFragmentByPosition(MainActivity.RATES_FRAGMENT_POSITION);
 		
 		if (eventName == PrimexModel.SELECTED_LINE_CHANGE_EVENT) {
 			CharSequence lineTitle = "Line " + String.valueOf(mModel.getSelectedLine().getLineNumber());
@@ -535,7 +544,7 @@ public class MainActivity extends FragmentActivity implements
 		String tag = "android:switcher:" + mViewPager.getId() + ":" + pos;
 		Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
 		if (fragment == null) {
-			throw new RuntimeException("Fragment " + tag + " is null");
+			throw new IllegalStateException(new Throwable(ERROR_FRAGMENT_NOT_FOUND));
 		} 
 		if (!fragment.isInLayout()) {
 			Log.e("MainActivity.class", "Fragment " + tag + " is not in layout");
@@ -582,7 +591,12 @@ public class MainActivity extends FragmentActivity implements
 	
 	@Override
 	protected void onStop() {
-		mModel.saveState();
+		try { 
+			mModel.saveState();
+		} catch (IllegalStateException e) {
+			if (DEBUG) Toast.makeText(this, "Saving state error: " + e.getCause().getMessage(), Toast.LENGTH_SHORT).show();
+			else throw e;
+		}
 		super.onStop();		
 	}
 
