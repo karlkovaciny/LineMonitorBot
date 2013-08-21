@@ -1,5 +1,8 @@
 package tests;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,6 +46,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	Button mBtn_enterProduct;
 
 	public static final String TEST_STATE_DESTROY_TEXT = "666";
+	public static final int TEST_SWITCH_LINES_LINE_NUMBER = 10;
 	
 	public MainActivityTest() {
 		super(MainActivity.class);
@@ -142,22 +146,18 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	}
 	
 	public void testSwitchLines() {
+		switchLines(TEST_SWITCH_LINES_LINE_NUMBER);
+		assertEquals(TEST_SWITCH_LINES_LINE_NUMBER, mActivity.mModel.getSelectedLine().getLineNumber());
+	}
+	
+	public void switchLines(int lineNumber) {
 		getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
 		getInstrumentation().invokeMenuActionSync(mActivity, R.id.action_pick_line, 0);
-		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
-		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
-		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
-		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER); //click line 9
-		
-		mActivity.runOnUiThread(new Runnable() {
-		     public void run() {
-		    	 
-		     }
-		});
+		final List<Integer> lineNumbers = Arrays.asList(1,6,7,9,10,  11,12,13,14,15,  16,17,18); //13 lines
+		int lineNumberPosition = lineNumbers.indexOf(lineNumber);
+		sendRepeatedKeys(lineNumberPosition, KeyEvent.KEYCODE_DPAD_DOWN);
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
 		getInstrumentation().waitForIdleSync();
-		
-		assertEquals(9, mActivity.mModel.getSelectedLine().getLineNumber()); 
-
 	}
 //		String afterClick = mTxt_sheetsPerMinute.getText().toString();
 //		assertEquals("beforeClick = " + beforeClick + ", afterClick = " + afterClick, beforeClick, afterClick);
@@ -274,7 +274,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		final double NEW_LENGTH_SETPOINT = 12d;
 		final double NEW_LINE_SPEED_SETPOINT = 16.84d; //for line 9 -- equals 16.67 / factors, 2 decimal place.
 		final double NEW_DIFFERENTIAL = 1d;
-		
+		switchLines(9);
 		clickButton(R.id.btn_enter_product);
 		SheetsPerMinuteDialogFragment spmdf = (SheetsPerMinuteDialogFragment)getActivity().getFragmentManager().findFragmentByTag("SheetsPerMinuteDialog");
 		final EditText spmEdit_sheetWidth = (EditText) spmdf.getDialog().findViewById(R.id.edit_sheet_width);

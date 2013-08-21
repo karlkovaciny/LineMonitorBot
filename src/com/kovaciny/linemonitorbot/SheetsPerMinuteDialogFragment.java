@@ -1,6 +1,7 @@
 package com.kovaciny.linemonitorbot;
 
-import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -59,7 +60,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
   	private String mSpeedControllerType = ProductionLine.SPEED_CONTROLLER_TYPE_NONE;
   	private Double mDifferentialRangeLow;
   	private Double mDifferentialRangeHigh;
-  	private int mNumberOfWebs = 1;
+  	private int mNumberOfWebs;
   	public static final int MAXIMUM_NUMBER_OF_WEBS = 5;
   	
     // Use this instance of the interface to deliver action events
@@ -113,6 +114,9 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		mEdit_speedFactor = (EditText) rootView.findViewById(R.id.edit_speed_factor);
 		mImgbtnSheetsOrRolls = (ImageButton) rootView.findViewById(R.id.imgbtn_sheets_or_rolls);
 		
+		markRequiredFields();
+		setNumberOfWebs(1);
+		
 		if (getArguments() != null) {
 			mDifferentialRangeLow = getArguments().getDouble("DifferentialLowValue", 0d);
 			mDifferentialRangeHigh = getArguments().getDouble("DifferentialHighValue", 0d);
@@ -136,16 +140,6 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 					if (mSpeedControllerType.equals(ProductionLine.SPEED_CONTROLLER_TYPE_NONE)) {
 						mEdit_differentialSpeed.setText("1"); //TODO just to not produce error on submit
 					}
-					double averageDiffSpeed = (mDifferentialRangeLow + mDifferentialRangeHigh) / 2d;
-					String hint = "";
-					if (mSpeedControllerType.equals(ProductionLine.SPEED_CONTROLLER_TYPE_GEARED)) {
-						hint = new DecimalFormat("#0.000").format(averageDiffSpeed);
-					} else if (mSpeedControllerType.equals(ProductionLine.SPEED_CONTROLLER_TYPE_PERCENT)) {
-						hint = new DecimalFormat("###.0").format(averageDiffSpeed);
-					} else if (mSpeedControllerType.equals(ProductionLine.SPEED_CONTROLLER_TYPE_RATIO)) {
-						hint = new DecimalFormat("0.00").format(averageDiffSpeed);
-					}
-					mEdit_differentialSpeed.setHint(Html.fromHtml("<i>" + hint + "</i>"));
 				}
 			if ((mSpeedControllerType != null) && (mSpeedControllerType.equals(ProductionLine.SPEED_CONTROLLER_TYPE_NONE))) {
 				mEdit_differentialSpeed.setVisibility(EditText.GONE);
@@ -162,7 +156,6 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 				mLbl_speedFactor.setVisibility(TextView.GONE);
 				mEdit_speedFactor.setVisibility(EditText.GONE);
 			}
-		
 		}
 		
 		mImgbtnSheetsOrRolls.setOnClickListener(this);
@@ -283,6 +276,17 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 			this.mLbl_sheetLength.setEnabled(true);
 			this.mEdit_sheetLength.setEnabled(true);
 			this.mEdit_sheetWidth.setNextFocusDownId(R.id.edit_sheet_length);
+		}
+	}
+	
+	private void markRequiredFields() {
+		List<EditText> required = new ArrayList<EditText>();
+		required.add(mEdit_differentialSpeed);
+		required.add(mEdit_lineSpeed);
+		required.add(mEdit_sheetLength);
+		required.add(mEdit_sheetWidth);
+		for (EditText et : required) {
+			et.setHint(Html.fromHtml("<i>Required</i>"));
 		}
 	}
 	

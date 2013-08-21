@@ -7,13 +7,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.util.Log;
 
 import com.kovaciny.database.PrimexDatabaseSchema;
 import com.kovaciny.database.PrimexSQLiteOpenHelper;
 import com.kovaciny.helperfunctions.HelperFunction;
-import com.kovaciny.linemonitorbot.Job;
-
 
 public class PrimexModel {
 	
@@ -25,9 +24,6 @@ public class PrimexModel {
 		}
 		mWoNumbersList = mDbHelper.getWoNumbers();
 	}
-	/*
-	 * This section sets up notifying observers about changes.
-	 */
 	public static final String LINE_SPEED_CHANGE_EVENT = "PrimexModel.SPEED_CHANGE";
 	public static final String SELECTED_LINE_CHANGE_EVENT = "PrimexModel.LINE_CHANGE";
 	public static final String SELECTED_WO_CHANGE_EVENT = "PrimexModel.WO_CHANGE";
@@ -49,10 +45,39 @@ public class PrimexModel {
 	public static final String NOVATEC_CHANGE_EVENT = "PrimexModel.NOVATEC_CHANGE"; 
 	 
 	public static final String ERROR_NET_LESS_THAN_GROSS = "PrimexModel.Net width less than gross width";
+	public static final String ERROR_NO_LINE_SELECTED = "PrimexModel.No line selected";
 	public static final String ERROR_NO_PRODUCT_SELECTED = "PrimexModel.No product selected";
 	public static final String ERROR_NO_SKID_SELECTED = "PrimexModel.No skid selected";
+	public static final String ERROR_NO_WORK_ORDER_SELECTED = "PrimexModel.No work order selected";
 	public static final String ERROR_ZERO_LINE_SPEED = "PrimexModel.Dividing by zero line speed";
 	public static final String ERROR_NO_PPM_VALUE = "PrimexModel.Products per minute is null";
+	
+	private List<Integer> mLineNumbersList;
+	private List<Integer> mWoNumbersList;
+	private ProductionLine mSelectedLine;
+	private WorkOrder mSelectedWorkOrder;
+	private Skid<Product> mSelectedSkid;
+	private PrimexSQLiteOpenHelper mDbHelper;
+	
+	private double mColorPercent;
+	private Date mCreateDate;
+	private double mDifferentialSetpoint;
+	private double mEdgeTrimRatio;
+	private double mGrossPph;
+	private double mLineSpeedSetpoint;
+	private double mNetPph;
+	private double mProductsPerMinute;
+
+	/*
+	 * Used to save speed changes until we're ready to fire them to the view.
+	 */
+	private boolean mSpeedChanged = false;
+	private boolean mProductChanged = false;
+	private boolean mSkidChanged = false;
+
+	/*
+	 * This section sets up notifying observers about changes.
+	 */
 		
 	// Create PropertyChangeSupport to manage listeners and fire events.
 	private final PropertyChangeSupport propChangeSupport = new PropertyChangeSupport(this);
@@ -65,26 +90,6 @@ public class PrimexModel {
 	public void removePropertyChangeListener(PropertyChangeListener l) {
 	    propChangeSupport.removePropertyChangeListener(l);
 	}
-
-	/*
-	 * This section holds the different objects and their relation to each other, getters and setters.
-	 */
-	private List<Integer> mLineNumbersList;
-	private List<Integer> mWoNumbersList;
-	private ProductionLine mSelectedLine;
-	private WorkOrder mSelectedWorkOrder;
-	private Skid<Product> mSelectedSkid;
-	private PrimexSQLiteOpenHelper mDbHelper;
-	private List<Job> mJobList;
-	
-	private Job mSelectedJob;
-	
-	/*
-	 * Used to save speed changes until we're ready to fire them to the view.
-	 */
-	private boolean mSpeedChanged = false;
-	private boolean mProductChanged = false;
-	private boolean mSkidChanged = false;
 
 	public void setSelectedLine (Integer lineNumber) {
 		if (lineNumber == null) throw new NullPointerException("need to select a line");
@@ -152,11 +157,11 @@ public class PrimexModel {
 		if (mSelectedLine.getLineSpeed() > 0) {
 			propChangeSupport.firePropertyChange(SECONDS_TO_MAXSON_CHANGE_EVENT, null, mSelectedLine.getSecondsToMaxson());
 		}
-		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, mSelectedWorkOrder.getProductsPerMinute()); 
-		propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, null, mSelectedWorkOrder.getEdgeTrimPercent()); 
-		propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, null, mSelectedWorkOrder.getNetPph()); 
-		propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, null, mSelectedWorkOrder.getGrossPph()); 
-		propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, null, mSelectedWorkOrder.getColorPercent()); 
+		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, getProductsPerMinute()); 
+		propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, null, getEdgeTrimPercent()); 
+		propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, null, getNetPph()); 
+		propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, null, getGrossPph()); 
+		propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, null, getColorPercent()); 
 		propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, null, mSelectedWorkOrder); 
 	}
 
@@ -183,7 +188,7 @@ public class PrimexModel {
 	}
 	
 	public WorkOrder addWorkOrder(WorkOrder newWo) {
-		newWo.setCreateDate(new Date());
+		mCreateDate = new Date();
 		mDbHelper.insertOrUpdateWorkOrder(newWo);
 		mWoNumbersList.add(newWo.getWoNumber());
 		if (newWo.getSkidsList().isEmpty()) { //Doing this after inserting the WO so that the WO will be in the table so I can look up its id. TODO stop exposing the skids list.
@@ -199,8 +204,8 @@ public class PrimexModel {
 		
 	public void setCurrentSpeed (SpeedValues values) { 
 		mSelectedLine.setSpeedValues(values);
-		mSelectedWorkOrder.setLineSpeedSetpoint(values.lineSpeedSetpoint);
-		mSelectedWorkOrder.setDifferentialSetpoint(values.differentialSpeed);
+		setLineSpeedSetpoint(values.lineSpeedSetpoint);
+		setDifferentialSetpoint(values.differentialSpeed);
 		String[] lineNum = new String[]{String.valueOf(mSelectedLine.getLineNumber())};
 		mDbHelper.updateColumn(PrimexDatabaseSchema.ProductionLines.TABLE_NAME,
 				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT,
@@ -222,7 +227,6 @@ public class PrimexModel {
  
 	public void changeNovatecSetpoint (Double setpoint) {
 		Novatec n = mSelectedLine.getNovatec();
-		Double oldSetpoint = n.getControllerSetpoint();
 		n.setControllerSetpoint(setpoint);
 		mDbHelper.updateColumn(PrimexDatabaseSchema.Novatecs.TABLE_NAME, 
 				PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT, 
@@ -270,44 +274,26 @@ public class PrimexModel {
 	
 	
 	/*
-	 * Saves the selected line number and work order number.
+	 * Saves the selected line number and work order number, and other settings
 	 */
 	public void saveState() {
-		if (hasSelectedLine()) {
-			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, 
-					null, null, String.valueOf(getSelectedLine().getLineNumber()));
-			Log.v("saveState", "Saved state of line number " + String.valueOf(mSelectedLine.getLineNumber()));
-		} else {
-			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, 
-					null, null, null);
-			Log.e("saveState", "saved state with no selected line somehow.");
-		}
-		
-		if (hasSelectedWorkOrder()) {
-			mDbHelper.insertOrUpdateWorkOrder(mSelectedWorkOrder);
-			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, 
-					null, null, String.valueOf(getSelectedWorkOrder().getWoNumber()));
-			if (mSelectedSkid != null) {
-				saveSkid(mSelectedSkid);
-				Log.v("saveState", "Saved state of selected skid");
-			}
-		} else {
-			mDbHelper.updateColumn(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, 
-					null, null, null);
-			Log.e("saveState", "saved state with no selected work order somehow.");
-		}
-		
-		if (hasSelectedProduct()){
-			saveProduct(mSelectedWorkOrder.getProduct());
-			Log.v("saveState", "Saved state of selected product.");
-		}
+		if (!hasSelectedLine()) throw new IllegalStateException(new Throwable(ERROR_NO_LINE_SELECTED));
+		if (!hasSelectedWorkOrder()) throw new IllegalStateException (new Throwable(ERROR_NO_WORK_ORDER_SELECTED));
+    	if (mSelectedSkid != null) {
+    		saveSkid(mSelectedSkid);
+    		Log.v("saveState", "Saved state of selected skid");
+    	}
+    	if (hasSelectedProduct()){
+    		saveProduct(mSelectedWorkOrder.getProduct());
+    		Log.v("saveState", "Saved state of selected product.");
+    	}
+		mDbHelper.saveState(this);
 	}
 
-	public void loadState() {
+	/*
+	 * Returns whether state was successfully loaded.
+	 */
+	public boolean loadState() {
 		String lineNum = mDbHelper.getFieldAsString(PrimexDatabaseSchema.ModelState.TABLE_NAME, 
 				PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, null, null);
 		try {
@@ -319,6 +305,24 @@ public class PrimexModel {
 			lineNum = "18";
 		}
 		setSelectedLine(Integer.valueOf(lineNum));
+		Cursor cursor = mDbHelper.loadState(mSelectedWorkOrder.getWoNumber());
+		
+		try {
+			if (cursor.moveToFirst()) {
+		    	long create = cursor.getLong(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE));
+		    	mCreateDate = new Date(create);
+		    	mProductsPerMinute = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_PRODUCTS_PER_MINUTE));
+		    	mEdgeTrimRatio = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_EDGE_TRIM_PERCENT));
+		    	mNetPph = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NET_PPH));
+		    	mGrossPph = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_GROSS_PPH));
+		    	mColorPercent= cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_COLOR_PERCENT));
+		    	mLineSpeedSetpoint = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_LINE_SPEED_SETPOINT));
+		    	mDifferentialSetpoint = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_DIFFERENTIAL_SETPOINT));
+		    	return true;
+		    } else return false;
+	    } finally {
+	    	if (cursor != null) cursor.close();
+		}
 	}
 	
 	/*
@@ -343,22 +347,19 @@ public class PrimexModel {
 			mSkidChanged = false;
 		}
 		
-		double productsPerMinute = mSelectedWorkOrder.getProductsPerMinute();
-		if (productsPerMinute == 0) {
+		if (mProductsPerMinute == 0) {
 			//TODO duplicated code
 			double productLength = mSelectedWorkOrder.getProduct().getLength();
 			double lineSpeed = mSelectedLine.getLineSpeed();
 			if ( (productLength > 0) && (lineSpeed > 0) ) {
-				productsPerMinute = HelperFunction.INCHES_PER_FOOT / productLength * lineSpeed;
-				mSelectedWorkOrder.setProductsPerMinute(productsPerMinute);
-				propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, productsPerMinute);
+				mProductsPerMinute = HelperFunction.INCHES_PER_FOOT / productLength * lineSpeed;
+				propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, mProductsPerMinute);
 			} else throw new IllegalStateException(new Throwable(ERROR_NO_PPM_VALUE));
 		}
 		
 		Double oldNet = null; //mNetPph;
-		double netPph = productsPerMinute * mSelectedWorkOrder.getProduct().getUnitWeight() * HelperFunction.MINUTES_PER_HOUR;
-		mSelectedWorkOrder.setNetPph(netPph);
-		propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, oldNet, netPph);
+		mNetPph = mProductsPerMinute * mSelectedWorkOrder.getProduct().getUnitWeight() * HelperFunction.MINUTES_PER_HOUR;
+		propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, oldNet, mNetPph);
 		
 		double grossWidth = mSelectedLine.getWebWidth();
 		if (grossWidth > 0) {
@@ -367,19 +368,16 @@ public class PrimexModel {
 			if (netWidth >= grossWidth) {
 				throw new IllegalStateException(new Throwable(ERROR_NET_LESS_THAN_GROSS));
 			}
-			double edgeTrimRatio = (grossWidth - netWidth) / grossWidth;
-			mSelectedWorkOrder.setEdgeTrimPercent(edgeTrimRatio);
-			propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, oldEt, edgeTrimRatio);
+			mEdgeTrimRatio = (grossWidth - netWidth) / grossWidth;
+			propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, oldEt, mEdgeTrimRatio);
 			
-			if (edgeTrimRatio < 1) {
-				double grossPph = netPph / (1 - edgeTrimRatio);
-				mSelectedWorkOrder.setGrossPph(grossPph);
-				propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, null, grossPph);
+			if (mEdgeTrimRatio < 1) {
+				mGrossPph = mNetPph / (1 - mEdgeTrimRatio);
+				propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, null, mGrossPph);
 				
-				if (grossPph > 0) {
-					double colorPercent =  mSelectedLine.getNovatec().getRate() / grossPph;
-					mSelectedWorkOrder.setColorPercent(colorPercent);
-					propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, null, colorPercent);
+				if (mGrossPph > 0) {
+					mColorPercent =  mSelectedLine.getNovatec().getRate() / mGrossPph;
+					propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, null, mColorPercent);
 				}
 
 			}
@@ -405,27 +403,26 @@ public class PrimexModel {
 			mSkidChanged = false;
 		}
 		
-		double productsPerMinute = HelperFunction.INCHES_PER_FOOT / mSelectedWorkOrder.getProduct().getLength() * mSelectedLine.getLineSpeed();
-		mSelectedWorkOrder.setProductsPerMinute(productsPerMinute);
-		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, productsPerMinute);
+		mProductsPerMinute = HelperFunction.INCHES_PER_FOOT / mSelectedWorkOrder.getProduct().getLength() * mSelectedLine.getLineSpeed();
+		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, mProductsPerMinute);
 		
-		if ( (productsPerMinute > 0 ) && (mSelectedSkid.getTotalItems() > 0) ) {			
+		if ( (mProductsPerMinute > 0 ) && (mSelectedSkid.getTotalItems() > 0) ) {			
 			//calculate total time per skid. 
 			Double oldMinutes = null; //mSelectedSkid.getMinutesPerSkid();
-			double newMinutes = mSelectedSkid.calculateMinutesPerSkid(productsPerMinute);
+			double newMinutes = mSelectedSkid.calculateMinutesPerSkid(mProductsPerMinute);
 			propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, oldMinutes, newMinutes);
 			
 			//calculate skid start and finish time
 			Date oldStartTime = null; //mSelectedSkid.getStartTime(); 
-			Date newStartTime = mSelectedSkid.calculateStartTime(productsPerMinute);
+			Date newStartTime = mSelectedSkid.calculateStartTime(mProductsPerMinute);
 			Date oldFinishTime = mSelectedSkid.getFinishTime();
-			Date newFinishTime = mSelectedSkid.calculateFinishTimeWhileRunning(productsPerMinute);			
+			Date newFinishTime = mSelectedSkid.calculateFinishTimeWhileRunning(mProductsPerMinute);			
 			propChangeSupport.firePropertyChange(CURRENT_SKID_START_TIME_CHANGE_EVENT, oldStartTime, newStartTime);
 			propChangeSupport.firePropertyChange(CURRENT_SKID_FINISH_TIME_CHANGE_EVENT, oldFinishTime, newFinishTime);
 			
 			//calculate job finish times
 			Date oldJobFinishTime = null; //mSelectedWorkOrder.getFinishTime();
-			Date newJobFinishTime = mSelectedWorkOrder.calculateFinishTimes(productsPerMinute);
+			Date newJobFinishTime = mSelectedWorkOrder.calculateFinishTimes(mProductsPerMinute);
 			propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, oldJobFinishTime, newJobFinishTime);
 		}
 		if (mSelectedLine.getLineSpeed() > 0) {
@@ -517,4 +514,73 @@ public class PrimexModel {
 		mDbHelper.clearWorkOrders();		
 	}
 
+	public double getProductsPerMinute() {
+		return mProductsPerMinute;
+	}
+
+	public void setProductsPerMinute(double productsPerMinute) {
+		this.mProductsPerMinute = productsPerMinute;
+	}
+
+	public double getEdgeTrimPercent() {
+		return mEdgeTrimRatio;
+	}
+
+	public void setEdgeTrimPercent(double edgeTrimPercent) {
+		this.mEdgeTrimRatio = edgeTrimPercent;
+	}
+
+	public double getNetPph() {
+		return mNetPph;
+	}
+
+	public void setNetPph(double netPph) {
+		this.mNetPph = netPph;
+	}
+
+	public double getGrossPph() {
+		return mGrossPph;
+	}
+
+	public void setGrossPph(double grossPph) {
+		this.mGrossPph = grossPph;
+	}
+
+	public double getColorPercent() {
+		return mColorPercent;
+	}
+
+	public void setColorPercent(double colorPercent) {
+		this.mColorPercent = colorPercent;
+	}
+
+	public void setLineSpeedSetpoint(double setpoint) {
+		mLineSpeedSetpoint = setpoint;
+	}
+	
+	public double getLineSpeedSetpoint() {
+		return mLineSpeedSetpoint;
+	}
+
+	public double getDifferentialSetpoint() {
+		return mDifferentialSetpoint;
+	}
+
+	public void setDifferentialSetpoint(double differentialSetpoint) {
+		this.mDifferentialSetpoint = differentialSetpoint;
+	}
+	
+	public Date getCreateDate() {
+		return mCreateDate;
+	}
+	
+	public void setCreateDate(Date createDate) {
+		this.mCreateDate = createDate;
+	}	
+	@Override
+	public String toString() {
+		return "Model. State: " + "\nRates: net " + mNetPph + 
+				", gross " + mGrossPph + ", line speed setpoint " + String.valueOf(mLineSpeedSetpoint) + ", differential " +
+				String.valueOf(mDifferentialSetpoint);
+	}
 }

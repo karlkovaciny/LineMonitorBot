@@ -11,6 +11,20 @@ public class PrimexDatabaseSchema {
 	private PrimexDatabaseSchema() {} //to keep from being instantiated
 	
 	//inner classes for each table
+	public static abstract class ModelState implements BaseColumns {
+		public static final String TABLE_NAME = "model_state";
+		public static final String COLUMN_NAME_SELECTED_LINE = "selected_line";
+		public static final String COLUMN_NAME_SELECTED_WORK_ORDER = "selected_wo";
+		public static final String COLUMN_NAME_CREATE_DATE = "create_date";
+		public static final String COLUMN_NAME_EDGE_TRIM_PERCENT = "edge_trim_percent";
+		public static final String COLUMN_NAME_NET_PPH = "net_pph";
+		public static final String COLUMN_NAME_GROSS_PPH = "gross_pph";
+		public static final String COLUMN_NAME_COLOR_PERCENT = "color_percent";
+		public static final String COLUMN_NAME_LINE_SPEED_SETPOINT = "line_speed_setpoint";
+		public static final String COLUMN_NAME_DIFFERENTIAL_SETPOINT = "differential_setpoint";
+		public static final String COLUMN_NAME_PRODUCTS_PER_MINUTE = "products_per_minute";
+	}
+	
 	public static abstract class ProductionLines implements BaseColumns {
 	    public static final String TABLE_NAME = "production_lines";
 	    public static final String COLUMN_NAME_LINE_NUMBER = "line_number";
@@ -24,24 +38,16 @@ public class PrimexDatabaseSchema {
 	    public static final String COLUMN_NAME_DIFFERENTIAL_RANGE_HIGH = "differential_range_high";
 	    public static final String COLUMN_NAME_SPEED_FACTOR = "speed_factor";
 	    public static final String COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE = "takeoff_equipment_type";
-	}
+	}	
 	
 	public static abstract class WorkOrders implements BaseColumns {
 		public static final String TABLE_NAME = "work_orders";
-		public static final String COLUMN_NAME_WO_NUMBER = "WO_number";	
-		public static final String COLUMN_NAME_CREATE_DATE = "create_date";	
+		public static final String COLUMN_NAME_WO_NUMBER = "WO_number";		
 		public static final String COLUMN_NAME_SELECTED_PRODUCT_ID = "product_id";
-		public static final String COLUMN_NAME_TOTAL_PRODUCTS_ORDERED = "products_ordered";	
 		public static final String COLUMN_NAME_SELECTED_SKID_NUMBER = "skid_number";	
+		public static final String COLUMN_NAME_TOTAL_PRODUCTS_ORDERED = "products_ordered";	
 		public static final String COLUMN_NAME_MAXIMUM_STACK_HEIGHT = "max_stack_height";
 		public static final String COLUMN_NAME_FINISH_TIME = "finish_time";
-		public static final String COLUMN_NAME_PRODUCTS_PER_MINUTE = "products_per_minute";
-		public static final String COLUMN_NAME_EDGE_TRIM_PERCENT = "edge_trim_percent";
-		public static final String COLUMN_NAME_NET_PPH = "net_pph";
-		public static final String COLUMN_NAME_GROSS_PPH = "gross_pph";
-		public static final String COLUMN_NAME_COLOR_PERCENT = "color_percent";
-		public static final String COLUMN_NAME_LINE_SPEED_SETPOINT = "line_speed_setpoint";
-		public static final String COLUMN_NAME_DIFFERENTIAL_SETPOINT = "differential_setpoint";
 	}
 	
 	public static abstract class LineWorkOrderLink implements BaseColumns {
@@ -83,11 +89,5 @@ public class PrimexDatabaseSchema {
 	public static abstract class ProductTypes implements BaseColumns {
 		public static final String TABLE_NAME = "product_types";
 		public static final String COLUMN_NAME_TYPES = "types";		
-	}
-	
-	public static abstract class ModelState implements BaseColumns {
-		public static final String TABLE_NAME = "model_state";
-		public static final String COLUMN_NAME_SELECTED_LINE = "selected_line";
-		public static final String COLUMN_NAME_SELECTED_WORK_ORDER = "selected_wo";
 	}
 }

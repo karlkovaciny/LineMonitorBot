@@ -17,6 +17,7 @@ import android.util.Log;
 
 import com.kovaciny.primexmodel.Novatec;
 import com.kovaciny.primexmodel.Pallet;
+import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.ProductionLine;
 import com.kovaciny.primexmodel.Roll;
@@ -32,7 +33,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 129;
+    public static final int DATABASE_VERSION = 133;
     public static final String DATABASE_NAME = "Primex.db";
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -40,115 +41,115 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	private static final String INTEGER_TYPE = " INTEGER";
 	private static final String COMMA_SEP = ",";
 	private static final String REAL_TYPE = " REAL";
-		
+	
+	private static final String SQL_CREATE_MODEL_STATE = 
+			"CREATE TABLE " + PrimexDatabaseSchema.ModelState.TABLE_NAME + " (" +
+					PrimexDatabaseSchema.ModelState._ID + " INTEGER PRIMARY KEY," +
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_EDGE_TRIM_PERCENT + DOUBLE_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_NET_PPH + DOUBLE_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_GROSS_PPH + DOUBLE_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_COLOR_PERCENT + DOUBLE_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_LINE_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_DIFFERENTIAL_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_PRODUCTS_PER_MINUTE + DOUBLE_TYPE + COMMA_SEP +
+					"UNIQUE (" + PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER + ")" +
+					")";
+
 	private static final String SQL_CREATE_PRODUCTION_LINES =
-    	    "CREATE TABLE " + PrimexDatabaseSchema.ProductionLines.TABLE_NAME + " (" +
-    	    PrimexDatabaseSchema.ProductionLines._ID + " INTEGER PRIMARY KEY," +
-    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + INTEGER_TYPE + COMMA_SEP +
-    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LENGTH + INTEGER_TYPE + COMMA_SEP +
-    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH + INTEGER_TYPE + COMMA_SEP +
-    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_WEB_WIDTH + REAL_TYPE + COMMA_SEP +
-    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE + TEXT_TYPE + COMMA_SEP +
-    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
-    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
-    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_RANGE_LOW + DOUBLE_TYPE + COMMA_SEP +
-    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_RANGE_HIGH + DOUBLE_TYPE + COMMA_SEP +
-    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR + DOUBLE_TYPE + COMMA_SEP +
-    	    PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE + TEXT_TYPE + COMMA_SEP +
-    	    " UNIQUE (" + PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + ")" +
-    	    " )";
-    
-    private static final String SQL_CREATE_WORK_ORDERS =
-    	    "CREATE TABLE " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + " (" +
-    	    PrimexDatabaseSchema.WorkOrders._ID + " INTEGER PRIMARY KEY," +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + INTEGER_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_CREATE_DATE + INTEGER_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_PRODUCT_ID + INTEGER_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED + DOUBLE_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER + INTEGER_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT + DOUBLE_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME + INTEGER_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_PRODUCTS_PER_MINUTE + DOUBLE_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_EDGE_TRIM_PERCENT + DOUBLE_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NET_PPH + DOUBLE_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_GROSS_PPH + DOUBLE_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_COLOR_PERCENT + DOUBLE_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_LINE_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
-	    	PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_DIFFERENTIAL_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
-	    	" UNIQUE (" + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + ")" +
-	    	" )";
-    
-    private static final String SQL_CREATE_LINE_WORK_ORDER_LINK = 
-    		"CREATE TABLE " + PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME + " (" +
-    		PrimexDatabaseSchema.LineWorkOrderLink._ID + " INTEGER PRIMARY KEY, " + 
-    		PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID + INTEGER_TYPE + COMMA_SEP + 
-    		PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID + INTEGER_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_IS_SELECTED + INTEGER_TYPE + COMMA_SEP +
-    		" UNIQUE (" + PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID + ")" +
-    		")";
-    		
+			"CREATE TABLE " + PrimexDatabaseSchema.ProductionLines.TABLE_NAME + " (" +
+					PrimexDatabaseSchema.ProductionLines._ID + " INTEGER PRIMARY KEY," +
+					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LENGTH + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_WEB_WIDTH + REAL_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE + TEXT_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_RANGE_LOW + DOUBLE_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_RANGE_HIGH + DOUBLE_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR + DOUBLE_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE + TEXT_TYPE + COMMA_SEP +
+					" UNIQUE (" + PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + ")" +
+					" )";
 
-    private static final String SQL_CREATE_PRODUCTS = 
-    		"CREATE TABLE " + PrimexDatabaseSchema.Products.TABLE_NAME + " (" +
-    		PrimexDatabaseSchema.Products._ID + " INTEGER PRIMARY KEY," +
-    		PrimexDatabaseSchema.Products.COLUMN_NAME_GAUGE + REAL_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.Products.COLUMN_NAME_WIDTH + REAL_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.Products.COLUMN_NAME_LENGTH + REAL_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE + INTEGER_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + INTEGER_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.Products.COLUMN_NAME_UNIT_WEIGHT + REAL_TYPE + COMMA_SEP +
-    		" UNIQUE ("  + PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + ")" +
-    		" )";
-    
-    private static final String SQL_CREATE_NOVATECS = 
-    		"CREATE TABLE " + PrimexDatabaseSchema.Novatecs.TABLE_NAME + " (" +
-    		PrimexDatabaseSchema.Novatecs._ID + " INTEGER PRIMARY KEY," +
-    		PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO + REAL_TYPE + COMMA_SEP + 
-    		PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT + REAL_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID + INTEGER_TYPE + COMMA_SEP +
-    		" UNIQUE (" + PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID + ")" +
+	private static final String SQL_CREATE_WORK_ORDERS =
+			"CREATE TABLE " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + " (" +
+					PrimexDatabaseSchema.WorkOrders._ID + " INTEGER PRIMARY KEY," +
+					PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_PRODUCT_ID + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED + DOUBLE_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT + DOUBLE_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME + INTEGER_TYPE + COMMA_SEP +
+					" UNIQUE (" + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + ")" +
+					" )";
+
+	private static final String SQL_CREATE_LINE_WORK_ORDER_LINK = 
+			"CREATE TABLE " + PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME + " (" +
+					PrimexDatabaseSchema.LineWorkOrderLink._ID + " INTEGER PRIMARY KEY, " + 
+					PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID + INTEGER_TYPE + COMMA_SEP + 
+					PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_IS_SELECTED + INTEGER_TYPE + COMMA_SEP +
+					" UNIQUE (" + PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID + ")" +
+					")";
+
+	private static final String SQL_CREATE_PRODUCTS = 
+			"CREATE TABLE " + PrimexDatabaseSchema.Products.TABLE_NAME + " (" +
+					PrimexDatabaseSchema.Products._ID + " INTEGER PRIMARY KEY," +
+					PrimexDatabaseSchema.Products.COLUMN_NAME_GAUGE + REAL_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.Products.COLUMN_NAME_WIDTH + REAL_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.Products.COLUMN_NAME_LENGTH + REAL_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.Products.COLUMN_NAME_UNIT_WEIGHT + REAL_TYPE + COMMA_SEP +
+					" UNIQUE ("  + PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + ")" +
+					" )";
+
+	private static final String SQL_CREATE_NOVATECS = 
+			"CREATE TABLE " + PrimexDatabaseSchema.Novatecs.TABLE_NAME + " (" +
+					PrimexDatabaseSchema.Novatecs._ID + " INTEGER PRIMARY KEY," +
+					PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO + REAL_TYPE + COMMA_SEP + 
+					PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT + REAL_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID + INTEGER_TYPE + COMMA_SEP +
+					" UNIQUE (" + PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID + ")" +
 
     		" )";
-    
-    private static final String SQL_CREATE_SKIDS = 
-    		"CREATE TABLE " + PrimexDatabaseSchema.Skids.TABLE_NAME + " (" +
-    		PrimexDatabaseSchema.Skids._ID + " INTEGER PRIMARY KEY," +
-    		PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER + INTEGER_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.Skids.COLUMN_NAME_CURRENT_ITEMS + INTEGER_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.Skids.COLUMN_NAME_TOTAL_ITEMS + INTEGER_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.Skids.COLUMN_NAME_STACKS + INTEGER_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.Skids.COLUMN_NAME_START_DATE + INTEGER_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.Skids.COLUMN_NAME_FINISH_DATE + INTEGER_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.Skids.COLUMN_NAME_TIME_PER_SKID + REAL_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID + INTEGER_TYPE + COMMA_SEP +
-    		" UNIQUE (" + PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER + ", " + PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID + ")" +
-    		" )";
-    
-    private static final String SQL_CREATE_PRODUCT_TYPES = 
-    		"CREATE TABLE " + PrimexDatabaseSchema.ProductTypes.TABLE_NAME + " (" +
-    		PrimexDatabaseSchema.ProductTypes._ID + " INTEGER PRIMARY KEY," +
-    		PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES + TEXT_TYPE +
-    		//I'm just gonna be careful cause I don't want to turn foreign keys on.
-    		//"FOREIGN KEY(" + PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES + ") REFERENCES +" +
-    		//		PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES +
-    		" )";
-    
-    private static final String SQL_CREATE_MODEL_STATE = 
-    		"CREATE TABLE " + PrimexDatabaseSchema.ModelState.TABLE_NAME + " (" +
-    		PrimexDatabaseSchema.ModelState._ID + " INTEGER PRIMARY KEY," +
-    		PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE + INTEGER_TYPE + COMMA_SEP +
-    		PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER + INTEGER_TYPE +
-    		" )";
-    
+
+	private static final String SQL_CREATE_SKIDS = 
+			"CREATE TABLE " + PrimexDatabaseSchema.Skids.TABLE_NAME + " (" +
+					PrimexDatabaseSchema.Skids._ID + " INTEGER PRIMARY KEY," +
+					PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.Skids.COLUMN_NAME_CURRENT_ITEMS + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.Skids.COLUMN_NAME_TOTAL_ITEMS + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.Skids.COLUMN_NAME_STACKS + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.Skids.COLUMN_NAME_START_DATE + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.Skids.COLUMN_NAME_FINISH_DATE + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.Skids.COLUMN_NAME_TIME_PER_SKID + REAL_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID + INTEGER_TYPE + COMMA_SEP +
+					" UNIQUE (" + PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER + ", " + PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID + ")" +
+					" )";
+
+	private static final String SQL_CREATE_PRODUCT_TYPES = 
+			"CREATE TABLE " + PrimexDatabaseSchema.ProductTypes.TABLE_NAME + " (" +
+					PrimexDatabaseSchema.ProductTypes._ID + " INTEGER PRIMARY KEY," +
+					PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES + TEXT_TYPE +
+					//I'm just gonna be careful cause I don't want to turn foreign keys on.
+					//"FOREIGN KEY(" + PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES + ") REFERENCES +" +
+					//		PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES +
+					" )";
+
 	//list "child" tables, which have a foreign key, before their parent, so drop table works
-    private static final String TABLE_NAME_NOVATECS = PrimexDatabaseSchema.Novatecs.TABLE_NAME;
-    private static final String TABLE_NAME_SKIDS = PrimexDatabaseSchema.Skids.TABLE_NAME;
-    private static final String TABLE_NAME_LINE_WORK_ORDER_LINK = PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME;
-    private static final String TABLE_NAME_PRODUCT_TYPES = PrimexDatabaseSchema.ProductTypes.TABLE_NAME;
-    private static final String TABLE_NAME_PRODUCTS = PrimexDatabaseSchema.Products.TABLE_NAME;
-    private static final String TABLE_NAME_WORK_ORDERS = PrimexDatabaseSchema.WorkOrders.TABLE_NAME;
-    private static final String TABLE_NAME_PRODUCTION_LINES = PrimexDatabaseSchema.ProductionLines.TABLE_NAME;
-    private static final String TABLE_NAME_MODEL_STATE = PrimexDatabaseSchema.ModelState.TABLE_NAME;
+	private static final String TABLE_NAME_NOVATECS = PrimexDatabaseSchema.Novatecs.TABLE_NAME;
+	private static final String TABLE_NAME_SKIDS = PrimexDatabaseSchema.Skids.TABLE_NAME;
+	private static final String TABLE_NAME_LINE_WORK_ORDER_LINK = PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME;
+	private static final String TABLE_NAME_PRODUCT_TYPES = PrimexDatabaseSchema.ProductTypes.TABLE_NAME;
+	private static final String TABLE_NAME_PRODUCTS = PrimexDatabaseSchema.Products.TABLE_NAME;
+	private static final String TABLE_NAME_WORK_ORDERS = PrimexDatabaseSchema.WorkOrders.TABLE_NAME;
+	private static final String TABLE_NAME_PRODUCTION_LINES = PrimexDatabaseSchema.ProductionLines.TABLE_NAME;
+	private static final String TABLE_NAME_MODEL_STATE = PrimexDatabaseSchema.ModelState.TABLE_NAME;
 
     private static final String SQL_DELETE_NOVATECS =
     		"DROP TABLE IF EXISTS " + TABLE_NAME_NOVATECS;
@@ -200,39 +201,38 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         			ProductionLine.SPEED_CONTROLLER_TYPE_PERCENT
         			);
         	Iterator<String> speedControllerTypesIterator = speedControllerTypesList.iterator();
-        	
-	        db.beginTransaction();
-	        for (Integer lineNum : lineNumbers) {
-	        	ContentValues values = new ContentValues();
-	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, lineNum);
-	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LENGTH, lengthsIterator.next());
-	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH, dieWidthsIterator.next());
-	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT, 0);
-	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT, 0);
-	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR, speedFactorsIterator.next());
-	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE, speedControllerTypesIterator.next());
-	        	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE, "Maxson");
-	        	
-	        	long rowId = db.insertOrThrow(
-	        			PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
-	        			null, 
-	        			values);	        	
-	        }
-	        db.setTransactionSuccessful();
+
+        	db.beginTransaction();
+        	for (Integer lineNum : lineNumbers) {
+        		ContentValues values = new ContentValues();
+        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, lineNum);
+        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LENGTH, lengthsIterator.next());
+        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH, dieWidthsIterator.next());
+        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT, 0);
+        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT, 0);
+        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR, speedFactorsIterator.next());
+        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE, speedControllerTypesIterator.next());
+        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE, "Maxson");
+
+        		long rowId = db.insertOrThrow(
+        				PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
+        				null, 
+        				values);	        	
+        	}
+        	db.setTransactionSuccessful();
         } finally {
-          db.endTransaction();
+        	db.endTransaction();
         }
-        
+
         db.execSQL(SQL_CREATE_WORK_ORDERS);
         try {
         	db.beginTransaction();
         	ContentValues values = new ContentValues();
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER,1);
-        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_CREATE_DATE,0);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED,69);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT,0);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER,1);
-        	
+
         	db.insertOrThrow(PrimexDatabaseSchema.WorkOrders.TABLE_NAME, null, values);
         	db.setTransactionSuccessful();
         } finally {
@@ -256,23 +256,23 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         	db.beginTransaction();
         	String[] types = {Product.SHEETS_TYPE, Product.ROLLS_TYPE};
         	for (int j = 0; j < 2; j++) {
-	        	ContentValues ptvalues = new ContentValues();
-	        	ptvalues.put(PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES, types[j]);
-	        	
-	        	long rowId = db.insertOrThrow(PrimexDatabaseSchema.ProductTypes.TABLE_NAME, null, ptvalues);
+        		ContentValues ptvalues = new ContentValues();
+        		ptvalues.put(PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES, types[j]);
+
+        		long rowId = db.insertOrThrow(PrimexDatabaseSchema.ProductTypes.TABLE_NAME, null, ptvalues);
         	}
-	        db.setTransactionSuccessful();
+        	db.setTransactionSuccessful();
         } finally {
         	db.endTransaction();
         }
-        
+
         db.execSQL(SQL_CREATE_NOVATECS);
         try {
         	db.beginTransaction();
         	Integer defaultSetpoint = 0;
         	List<Integer> linesWithBigNovatecs = Arrays.asList(new Integer[] {1,12,13,14});
         	double screwRatio;
-        	
+
         	ContentValues novatecValues = new ContentValues();
         	for (Integer lineNum : lineNumbers) {
         		int lineId = getIdOfValue(PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
@@ -287,12 +287,12 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         		novatecValues.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO, screwRatio);
         		long rowId = db.insertOrThrow(PrimexDatabaseSchema.Novatecs.TABLE_NAME, null, novatecValues);
         	}
-        	
-            db.setTransactionSuccessful();
+
+        	db.setTransactionSuccessful();
         } finally {
         	db.endTransaction();
         }
-        
+
         db.execSQL(SQL_CREATE_PRODUCTS);
         db.execSQL(SQL_CREATE_SKIDS);
         try {
@@ -314,10 +314,11 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         	ContentValues modvalues = new ContentValues();
         	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, lineNum);
         	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, woNum);
-        	
+        	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE,0);
+
         	long rowId = db.insertOrThrow(PrimexDatabaseSchema.ModelState.TABLE_NAME, null, modvalues);
-        	
-	        db.setTransactionSuccessful();
+
+        	db.setTransactionSuccessful();
         } finally {
         	db.endTransaction();
         }
@@ -371,11 +372,50 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
      * Just Ctrl+F for the name of the class
      */
     
-    public void saveState() {
+    public long saveState(PrimexModel model) {
+    	SQLiteDatabase db = getWritableDatabase();
+
+    	//TODO not sure if these lines are necessary
+    	insertOrUpdateLine(model.getSelectedLine());
+    	insertOrUpdateWorkOrder(model.getSelectedWorkOrder());
     	
+    	ContentValues values = new ContentValues();
+    	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, model.getSelectedLine().getLineNumber());
+    	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, model.getSelectedWorkOrder().getWoNumber());
+    	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_COLOR_PERCENT, model.getColorPercent());
+    	if (model.getCreateDate() != null) {
+    		values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE, model.getCreateDate().getTime());
+    	} 
+    	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_DIFFERENTIAL_SETPOINT, model.getDifferentialSetpoint());
+    	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_EDGE_TRIM_PERCENT, model.getEdgeTrimPercent());
+    	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_GROSS_PPH, model.getGrossPph());
+    	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_LINE_SPEED_SETPOINT, model.getLineSpeedSetpoint());
+    	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NET_PPH, model.getNetPph());
+    	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_PRODUCTS_PER_MINUTE, model.getProductsPerMinute());
+
+    	long rowId;
+    	try {
+    		rowId = db.insertWithOnConflict(PrimexDatabaseSchema.ModelState.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_ABORT);
+    	} catch (SQLiteConstraintException sqle) {
+    		rowId = db.updateWithOnConflict(
+    				PrimexDatabaseSchema.ModelState.TABLE_NAME, 
+    				values,
+    				PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER + "=?",
+    				new String[]{String.valueOf(model.getSelectedWorkOrder().getWoNumber())},
+    				SQLiteDatabase.CONFLICT_REPLACE);
+    	}
+    	
+    	return rowId;    
     }
   
+    public Cursor loadState(int woNumber) {
+    	SQLiteDatabase db = getReadableDatabase();
 
+		Cursor resultCursor = db.rawQuery("SELECT * FROM " + PrimexDatabaseSchema.ModelState.TABLE_NAME + " WHERE " + 
+				PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER + "=?", new String[]{String.valueOf(woNumber)});
+		
+		return resultCursor;
+    }
     /*
      * Also updates Novatec
      */
@@ -465,8 +505,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	    	String tet = resultCursor.getString(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE));
 	    	double sp = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT));
 	    	double diff = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT));
-	    	double difflow = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_RANGE_LOW));
-	    	double diffhigh = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_RANGE_HIGH));
 	    	double sf = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR));
 	    	
 	    	ProductionLine newLine = new ProductionLine(ln,ll,dw,sct,tet);
@@ -562,7 +600,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		
 		ContentValues values = new ContentValues();
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, newWo.getWoNumber());
-		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_CREATE_DATE, newWo.getCreateDate().getTime());
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED, 
 				newWo.getTotalProductsOrdered());
 		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT, newWo.getMaximumStackHeight());
@@ -572,13 +609,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		if (newWo.getFinishDate() != null) {
 			values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME, newWo.getFinishDate().getTime());	
 		}
-		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_PRODUCTS_PER_MINUTE, newWo.getProductsPerMinute());
-		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_EDGE_TRIM_PERCENT, newWo.getEdgeTrimPercent());
-		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NET_PPH, newWo.getNetPph());
-		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_GROSS_PPH, newWo.getGrossPph());
-		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_COLOR_PERCENT, newWo.getColorPercent());
-		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_LINE_SPEED_SETPOINT, newWo.getLineSpeedSetpoint());
-		values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_DIFFERENTIAL_SETPOINT, newWo.getDifferentialSetpoint());
 		long rowId;
 		try {
 			rowId = db.insertWithOnConflict(
@@ -605,38 +635,21 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		Cursor resultCursor = db.rawQuery("SELECT * FROM " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + " WHERE " + 
 				PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + "=?", new String[]{String.valueOf(woNumber)});
 		int wonum = -1;
-		long create;
 		int prod_id = -1;
 		double ordered = -1d;
 		int selected = -1;
 		double height = -1d;
 		long finish;
-		double ppm;
-		double etpct;
-		double netpph;
-		double grosspph;
-		double colorpct;
-		double linespeed;
-		double differential;
 		try {
 			if (resultCursor.moveToFirst()) {
 		    	wonum = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER));
-		    	create = resultCursor.getLong(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_CREATE_DATE));
 		    	prod_id = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_PRODUCT_ID));
 		    	ordered = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED));
 		    	selected = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER));
 		    	height = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT));
 		    	finish = resultCursor.getLong(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME));
-		    	ppm = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_PRODUCTS_PER_MINUTE));
-		    	etpct = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_EDGE_TRIM_PERCENT));
-		    	netpph = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_NET_PPH));
-		    	grosspph = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_GROSS_PPH));
-		    	colorpct = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_COLOR_PERCENT));
-		    	linespeed = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_LINE_SPEED_SETPOINT));
-		    	differential = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_DIFFERENTIAL_SETPOINT));
 		    	
 		    	WorkOrder wo = new WorkOrder(wonum);
-		    	wo.setCreateDate(new Date(create));
 				if (prod_id != -1) {
 					wo.setProduct(getProduct(wonum));
 				}
@@ -655,13 +668,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				if (finish > 0) {
 					wo.setFinishDate(new Date(finish));	
 				}
-				wo.setProductsPerMinute(ppm);
-				wo.setEdgeTrimPercent(etpct);
-				wo.setNetPph(netpph);
-				wo.setGrossPph(grosspph);
-				wo.setColorPercent(colorpct);
-				wo.setLineSpeedSetpoint(linespeed);
-				wo.setDifferentialSetpoint(differential);
 				Log.v("Verbose", "just loaded this work order: " + wo.toString());
 				return wo;
 			} else return null;
@@ -696,7 +702,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 
 		Cursor c = db.query(
 				PrimexDatabaseSchema.WorkOrders.TABLE_NAME,  // The table to query
-				new String[] {"MAX(" + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_CREATE_DATE + ")"}, // The columns to return
+				new String[] {"MAX(" + PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE + ")"}, // The columns to return
 				null,                                // The columns for the WHERE clause
 				null,                            // The values for the WHERE clause
 				null,                                     // don't group the rows

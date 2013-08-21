@@ -16,17 +16,7 @@ public class WorkOrder {
 	private double mTotalProductsOrdered;
 	private double mMaximumStackHeight; // in inches, not including pallet
 	private int mSelectedSkidPosition = -1;
-	private Date mCreateDate;
 	private Date mFinishDate;
-	
-	private double mProductsPerMinute;
-	private double mEdgeTrimPercent;
-	private double mNetPph;
-	private double mGrossPph;
-	private double mColorPercent;
-	private double mLineSpeedSetpoint;
-	private double mDifferentialSetpoint;
-	
 	
 	static final double MAX_STACK_HEIGHT_OLEFINS = 24d;
 	static final double MAX_STACK_HEIGHT_STYRENE = 30d;
@@ -45,13 +35,6 @@ public class WorkOrder {
 				this.mWoNumber = woNumber;
 	}	
 	
-	public Date getCreateDate() {
-		return mCreateDate;
-	}
-	
-	public void setCreateDate(Date createDate) {
-		this.mCreateDate = createDate;
-	}
 	public Date getFinishDate() {
 		return mFinishDate;
 	}
@@ -203,68 +186,10 @@ public class WorkOrder {
 		return mProduct;
 	}	
 
-	public double getProductsPerMinute() {
-		return mProductsPerMinute;
-	}
-
-	public void setProductsPerMinute(double productsPerMinute) {
-		this.mProductsPerMinute = productsPerMinute;
-	}
-
-	public double getEdgeTrimPercent() {
-		return mEdgeTrimPercent;
-	}
-
-	public void setEdgeTrimPercent(double edgeTrimPercent) {
-		this.mEdgeTrimPercent = edgeTrimPercent;
-	}
-
-	public double getNetPph() {
-		return mNetPph;
-	}
-
-	public void setNetPph(double netPph) {
-		this.mNetPph = netPph;
-	}
-
-	public double getGrossPph() {
-		return mGrossPph;
-	}
-
-	public void setGrossPph(double grossPph) {
-		this.mGrossPph = grossPph;
-	}
-
-	public double getColorPercent() {
-		return mColorPercent;
-	}
-
-	public void setColorPercent(double colorPercent) {
-		this.mColorPercent = colorPercent;
-	}
-
 	@Override
 	public String toString() {
 		String finish = (mFinishDate == null) ? "n/a" : mFinishDate.toString();
 		return "W0" + mWoNumber + ": selected skid " + String.valueOf(mSelectedSkidPosition + 1) + " of " + 
-				String.valueOf(getNumberOfSkids()) + ", finish time " + finish + "\nRates: net " + mNetPph + 
-				", gross " + mGrossPph + ", line speed setpoint " + String.valueOf(mLineSpeedSetpoint) + ", differential " +
-				String.valueOf(mDifferentialSetpoint);
-	}
-
-	public void setLineSpeedSetpoint(double setpoint) {
-		mLineSpeedSetpoint = setpoint;
-	}
-	
-	public double getLineSpeedSetpoint() {
-		return mLineSpeedSetpoint;
-	}
-
-	public double getDifferentialSetpoint() {
-		return mDifferentialSetpoint;
-	}
-
-	public void setDifferentialSetpoint(double differentialSetpoint) {
-		this.mDifferentialSetpoint = differentialSetpoint;
+				String.valueOf(getNumberOfSkids()) + ", finish time " + finish;
 	}
 }
