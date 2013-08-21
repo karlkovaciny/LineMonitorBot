@@ -23,7 +23,7 @@ public class CalculatorFragment extends Fragment implements View.OnClickListener
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View rootView = inflater.inflate(R.layout.fragment_calculator_button, container, false);
+		View rootView = inflater.inflate(R.layout.calculator_button_fragment, container, false);
 
 		mImgBtn_calculator = (ImageButton) rootView.findViewById(R.id.btn_calculator);
 		mImgBtn_calculator.setOnClickListener(this);

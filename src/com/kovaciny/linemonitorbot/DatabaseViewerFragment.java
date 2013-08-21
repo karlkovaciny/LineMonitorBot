@@ -25,7 +25,7 @@ public class DatabaseViewerFragment extends Fragment implements OnItemSelectedLi
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View rootView = inflater.inflate(R.layout.fragment_database_viewer, container, false);
+		View rootView = inflater.inflate(R.layout.database_viewer_fragment, container, false);
 
 		mTableViewer = (GridView) rootView.findViewById(R.id.gridview_database);
 
