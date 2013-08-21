@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container_skids_on_table"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal" >
+
+<RadioGroup 
+    android:id="@+id/radio_group_skids_on_table"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <RadioButton android:id="@+id/radio_one_skid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="10dp"
+        android:checked="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="1 skid"/>
+    <RadioButton android:id="@+id/radio_two_skids"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="2 skids"/>
+</RadioGroup>
+
+
+</LinearLayout>
