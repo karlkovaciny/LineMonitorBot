@@ -40,7 +40,7 @@ public class ProductionLine {
 		sb.append(
 				getLineNumber()).append(", length ").append(getLineLength()).append(", die width ").append(getDieWidth())
 				.append (", speed controller type: ").append(getSpeedControllerType()).append(", takeoff equipment: ")
-				.append(getTakeoffEquipmentType());
+				.append(getTakeoffEquipmentType()).append(", number of webs: ").append(getNumberOfWebs());
 		sb.append(" (").append(super.toString()).append(")");
 		sb.append("\n").append("Speed values: ").append(mSpeedValues.toString());
 		return sb.toString();
