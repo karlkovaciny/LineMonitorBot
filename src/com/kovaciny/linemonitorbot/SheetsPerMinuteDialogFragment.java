@@ -127,6 +127,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 			double speed = getArguments().getDouble("LineSpeed", 0d);
 			double diff = getArguments().getDouble("DifferentialSpeed", 0d);
 			mSpeedControllerType = getArguments().getString("SpeedControllerType");
+			mNumberOfWebs = getArguments().getInt("NumberOfWebs");
 			double factor = getArguments().getDouble("SpeedFactor", 0d);
 			String prodtype = getArguments().getString("ProductType");
 			
@@ -145,6 +146,9 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 				mEdit_differentialSpeed.setVisibility(EditText.GONE);
 				mLbl_differentialSpeed.setVisibility(EditText.GONE);
 				mLbl_reminderNoDifferentialSpeed.setVisibility(EditText.VISIBLE);
+			}
+			if (mNumberOfWebs > 0) {
+				setNumberOfWebs(mNumberOfWebs);
 			}
 			if (factor > 0) mEdit_speedFactor.setText(String.valueOf(factor));
 			if (prodtype != null) {
@@ -307,6 +311,10 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		
 		int resId = getResources().getIdentifier("ic_" + String.valueOf(numWebs) + "sheet", "drawable", getActivity().getPackageName());
 		mImg_numberOfWebs.setImageDrawable(getResources().getDrawable(resId));
+	}
+	
+	public int getNumberOfWebs() {
+		return mNumberOfWebs;
 	}
 
 	public double getLineSpeedValue() {

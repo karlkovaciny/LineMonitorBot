@@ -38,7 +38,8 @@ public class PrimexModel {
 	public static final String SKID_CHANGE_EVENT = "PrimexModel.SKID_CHANGE"; 
 	public static final String SECONDS_TO_MAXSON_CHANGE_EVENT = "PrimexModel.SECONDS_TO_MAXSON_CHANGE"; 
 	public static final String NET_PPH_CHANGE_EVENT = "PrimexModel.NET_PPH_CHANGE"; 
-	public static final String GROSS_PPH_CHANGE_EVENT = "PrimexModel.GROSS_PPH_CHANGE"; 
+	public static final String GROSS_PPH_CHANGE_EVENT = "PrimexModel.GROSS_PPH_CHANGE";
+	public static final String NUMBER_OF_WEBS_CHANGE_EVENT = "PrimexModel.NUMBER_OF_WEBS_CHANGE";
 	public static final String GROSS_WIDTH_CHANGE_EVENT = "PrimexModel.GROSS_WIDTH_CHANGE"; //TODO not fired 
 	public static final String COLOR_PERCENT_CHANGE_EVENT = "PrimexModel.NOVATEC_LETDOWN_CHANGE"; 
 	public static final String EDGE_TRIM_RATIO_CHANGE_EVENT = "PrimexModel.EDGE_TRIM_PERCENT_CHANGE"; 
@@ -67,7 +68,8 @@ public class PrimexModel {
 	private double mLineSpeedSetpoint;
 	private double mNetPph;
 	private double mProductsPerMinute;
-
+	private int mNumberOfWebs;
+	
 	/*
 	 * Used to save speed changes until we're ready to fire them to the view.
 	 */
@@ -157,7 +159,8 @@ public class PrimexModel {
 		propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, null, getNetPph()); 
 		propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, null, getGrossPph()); 
 		propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, null, getColorPercent()); 
-		propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, null, mSelectedWorkOrder); 
+		propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, null, mSelectedWorkOrder);
+		propChangeSupport.firePropertyChange(NUMBER_OF_WEBS_CHANGE_EVENT, null, getNumberOfWebs());
 	}
 
 	/*
@@ -304,8 +307,7 @@ public class PrimexModel {
 		    	mColorPercent= cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_COLOR_PERCENT));
 		    	mLineSpeedSetpoint = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_LINE_SPEED_SETPOINT));
 		    	mDifferentialSetpoint = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_DIFFERENTIAL_SETPOINT));
-		    	int numWebs = cursor.getInt(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_WEBS));
-		    	if (numWebs > 0) mSelectedLine.setNumberOfWebs(numWebs);
+		    	mNumberOfWebs = cursor.getInt(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_WEBS));
 		    	return true;
 		    } else return false;
 	    } finally {
@@ -565,6 +567,16 @@ public class PrimexModel {
 	public void setCreateDate(Date createDate) {
 		this.mCreateDate = createDate;
 	}	
+	
+	public int getNumberOfWebs() {
+		return mNumberOfWebs;
+	}
+
+	public void setNumberOfWebs(int numberOfWebs) {
+		this.mNumberOfWebs = numberOfWebs;
+		mSelectedLine.setNumberOfWebs(numberOfWebs);
+	}
+
 	@Override
 	public String toString() {
 		return "Model. State: " + "\nRates: net " + mNetPph + 

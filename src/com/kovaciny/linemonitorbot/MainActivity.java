@@ -226,7 +226,7 @@ public class MainActivity extends FragmentActivity implements
 		Bundle args = new Bundle();
 		args.putDouble("SpeedFactor", mModel.getSelectedLine().getSpeedValues().speedFactor); //TODO it will bite me that these aren't all in WO
 		
-		//Load the line speed numbers for this work order or if none, the last ones used on this line.
+		//Load the line setpoints for this work order or if none, the last ones used on this line.
 		Double lineSpeedSetpoint = mModel.getLineSpeedSetpoint();
 		if (lineSpeedSetpoint == 0d) {
 			lineSpeedSetpoint = mModel.getSelectedLine().getSpeedValues().lineSpeedSetpoint;
@@ -239,6 +239,13 @@ public class MainActivity extends FragmentActivity implements
 		if (differentialSpeed == 0d) {
 			differentialSpeed = mModel.getSelectedLine().getSpeedValues().differentialSpeed; //TODO seems ugly
 		}
+		
+		int numberOfWebs = mModel.getNumberOfWebs();
+		if (numberOfWebs == 0) {
+			numberOfWebs = mModel.getSelectedLine().getNumberOfWebs();
+		}
+		args.putInt("NumberOfWebs", numberOfWebs);
+		
 		args.putDouble("DifferentialSpeed", differentialSpeed);
 		args.putDouble("DifferentialLowValue", mModel.getSelectedLine().getDifferentialRangeLow());
 		args.putDouble("DifferentialHighValue", mModel.getSelectedLine().getDifferentialRangeHigh());
@@ -267,7 +274,9 @@ public class MainActivity extends FragmentActivity implements
     		double lineSpeed = spmd.getLineSpeedValue();
     		double diffSpeed = spmd.getDifferentialSpeedValue();
     		double speedFactor = spmd.getSpeedFactorValue();
+    		int numberOfWebs = spmd.getNumberOfWebs();
     		
+    		mModel.setNumberOfWebs(numberOfWebs);
     		updateSpeedData(lineSpeed, diffSpeed, speedFactor);
     		String productType;
     		if (spmd.getSheetsOrRollsState().equals(SheetsPerMinuteDialogFragment.ROLLS_MODE)) {
