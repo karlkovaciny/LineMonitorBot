@@ -90,7 +90,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		// Set other dialog properties
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View rootView = inflater.inflate(R.layout.dialog_sheets_per_minute, null);
+		View rootView = inflater.inflate(R.layout.enter_product_dialog, null);
 		builder.setView(rootView);
 
 		mBtn_addWeb = (ImageButton) rootView.findViewById(R.id.btn_add_web);

@@ -51,7 +51,7 @@ public class RatesFragment extends Fragment implements OnClickListener{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		View rootView = inflater.inflate(R.layout.fragment_rates, container, false);
+		View rootView = inflater.inflate(R.layout.rates_fragment, container, false);
 		
 		mEdit_grossWidth = (EditText)  rootView.findViewById(R.id.edit_gross_width);
 		mEditableGroup.add(mEdit_grossWidth);

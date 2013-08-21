@@ -92,7 +92,7 @@ public class SkidTimesFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View rootView = inflater.inflate(R.layout.fragment_skid_times, container,
+		View rootView = inflater.inflate(R.layout.skid_times_fragment, container,
 				false);
 
 		//set up editTexts		
