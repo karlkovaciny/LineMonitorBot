@@ -17,7 +17,7 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/lbl_skid_number"
+                android:id="@+id/lbl_product_type"
                 style="@style/Label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
                 style="@style/EditText"
                 android:layout_width="@dimen/sheets_label_width"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/lbl_skid_number"
+                android:layout_alignBaseline="@id/lbl_product_type"
                 android:layout_below="@id/btn_skid_number_up"
                 android:layout_toLeftOf="@+id/textView123"
                 android:imeOptions="actionNext"
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/textView124"
                 android:layout_below="@id/btn_skid_number_up"
-                android:layout_alignBaseline="@id/lbl_skid_number"
+                android:layout_alignBaseline="@id/lbl_product_type"
                 android:layout_alignLeft="@id/textView124"
                 android:text="of" />
 
@@ -82,7 +82,7 @@
                 style="@style/EditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/lbl_skid_number"
+                android:layout_alignBaseline="@id/lbl_product_type"
                 android:layout_toRightOf="@id/textView123"
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"

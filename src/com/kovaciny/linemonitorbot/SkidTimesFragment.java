@@ -57,7 +57,7 @@ public class SkidTimesFragment extends Fragment implements
 	private EditText mEdit_totalCountPerSkid;
 	private EditText mEdit_numSkidsInJob;
 
-	private TextView mLbl_skidNumber;
+	private TextView mLbl_productType;
 	private TextView mLbl_skidFinishTime;
 	private TextView mTxt_skidFinishTime;
 	private TextView mLbl_jobFinishTime;
@@ -78,6 +78,9 @@ public class SkidTimesFragment extends Fragment implements
 	private List<EditText> mEditableGroup;
 	private List<TextView> mTimesDisplayList;
 	private long mMillisPerSkid;
+	private int mNumTableSkids;
+	private String mProductUnits = "Sheets";
+	private String mProductGrouping = "Skid";
 	
 	public static final int MAXIMUM_NUMBER_OF_SKIDS = 100;
 	
@@ -140,7 +143,7 @@ public class SkidTimesFragment extends Fragment implements
 		mBtn_calculateTimes.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF,0xFF0000FF));
 		
 		//set up textViews
-		mLbl_skidNumber = (TextView) rootView.findViewById(R.id.lbl_skid_number);
+		mLbl_productType = (TextView) rootView.findViewById(R.id.lbl_product_type);
 		mTxt_timePerSkid = (TextView) rootView.findViewById(R.id.txt_time_per_skid);		
 		mLbl_timePerSkid = (TextView) rootView.findViewById(R.id.lbl_time_per_skid);		
 		mTxt_jobFinishTime = (TextView) rootView.findViewById(R.id.txt_job_finish_time);
@@ -384,19 +387,17 @@ public class SkidTimesFragment extends Fragment implements
 		
 		if (propertyName == PrimexModel.PRODUCT_CHANGE_EVENT) {
 			Product p = (Product)newProperty;
-			String capitalUnits = HelperFunction.capitalizeFirstChar(p.getUnits());
-			String capitalGrouping = HelperFunction.capitalizeFirstChar(p.getGrouping());
-			
-			mLbl_skidNumber.setText(capitalGrouping + ":");
-			mLbl_productsPerMinute.setText(capitalUnits + " per minute");
-			mLbl_products.setText(capitalUnits + ":");
-			mLbl_skidFinishTime.setText(capitalGrouping + " finish");
-			mLbl_skidStartTime.setText(capitalGrouping + " start");
-			mLbl_timePerSkid.setText("Time per " + p.getGrouping());			
+			mProductUnits = HelperFunction.capitalizeFirstChar(p.getUnits());
+			mProductGrouping = HelperFunction.capitalizeFirstChar(p.getGrouping());
+			updateLabels();
 			
 		} else if (propertyName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {
 			if ( (newProperty == null) || ((Double)newProperty <= 0) ) {
 				mTxt_productsPerMinute.setText("");
+			} else if (mNumTableSkids > 1) {
+				//TODO this is business logic, representing that 2-up is half the cuts
+				double ppm = (Double)newProperty / mNumTableSkids;
+				mTxt_productsPerMinute.setText(String.valueOf(ppm));
 			} else {
 				mTxt_productsPerMinute.setText(String.valueOf(newProperty));
 			}
@@ -448,6 +449,10 @@ public class SkidTimesFragment extends Fragment implements
 			String number = new DecimalFormat("#.###").format(newProperty);
 			mEdit_numSkidsInJob.setText(number);
 			
+		} else if (propertyName == PrimexModel.NUMBER_OF_TABLE_SKIDS_CHANGE_EVENT) {
+			mNumTableSkids = (Integer)newProperty;
+			updateLabels();
+			
 		} else if (propertyName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) {
 			if (newProperty == null) {
 				mTxt_jobFinishTime.setText("");
@@ -494,6 +499,20 @@ public class SkidTimesFragment extends Fragment implements
 		} 
 	}
 
+	private void updateLabels() {
+		if ((mNumTableSkids > 1) && (mProductGrouping.equals("Skid"))) {
+			mProductGrouping = "Skidset";
+			mProductUnits = "Cuts";
+		}
+		mLbl_productType.setText(mProductGrouping + ":");
+		mLbl_productsPerMinute.setText(mProductUnits + " per minute");
+		mLbl_products.setText(mProductUnits + ":");
+		mLbl_skidFinishTime.setText(mProductGrouping + " finish");
+		mLbl_skidStartTime.setText(mProductGrouping + " start");
+		mLbl_timePerSkid.setText("Time per " + mProductGrouping.toLowerCase(Locale.getDefault()));
+
+	}
+	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		//save the user's current state

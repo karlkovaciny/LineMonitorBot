@@ -1,7 +1,5 @@
 package tests;
 
-import java.beans.PropertyChangeEvent;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +10,7 @@ import com.kovaciny.linemonitorbot.MainActivity;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Sheet;
+import com.kovaciny.primexmodel.SpeedValues;
 
 public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -37,6 +36,43 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 		super.tearDown();
 	}
 
+	@Test
+	public void test2Up() {
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				// UI affecting code here
+				// no asserts allowed in here! junit.framework.AssertionFailedError.
+				mModel.setSelectedLine(12);
+				Product p = new Sheet(.010, 20, 24);
+				p.setUnitWeight(1.5);
+				mModel.setCurrentSpeed(new SpeedValues(20,1,1));
+				mModel.changeProduct(p);
+				mModel.setNumberOfWebs(2);
+				mModel.calculateTimes();
+			}
+		});
+		getInstrumentation().waitForIdleSync();
+		assertEquals(2, mModel.getNumberOfWebs());
+		assertEquals(20d, mModel.getProductsPerMinute());
+		mModel.setNumberOfWebs(1);
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				mModel.calculateTimes();
+			}
+		});
+		getInstrumentation().waitForIdleSync();
+		assertEquals(10d, mModel.getProductsPerMinute());
+		
+		mModel.setNumberOfWebs(2);
+		mModel.setNumberOfTableSkids(2);
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				mModel.calculateTimes();
+			}
+		});
+		
+	}
+	
 	@Test
 	public void testLineRoundTrip() {
 		getActivity().runOnUiThread(new Runnable() {
