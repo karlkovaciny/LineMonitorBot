@@ -23,7 +23,7 @@ public class PrimexModel {
 			throw new RuntimeException("database didn't find any lines");
 		}
 		mWoNumbersList = mDbHelper.getWoNumbers();
-		setNumberOfSkids(1);
+		setNumberOfTableSkids(1);
 	}
 	
 	public static final String LINE_SPEED_CHANGE_EVENT = "PrimexModel.SPEED_CHANGE";
@@ -35,7 +35,8 @@ public class PrimexModel {
 	public static final String CURRENT_SKID_FINISH_TIME_CHANGE_EVENT = "PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE"; 
 	public static final String CURRENT_SKID_START_TIME_CHANGE_EVENT = "PrimexModel.CURRENT_SKID_START_TIME_CHANGE"; 
 	public static final String MINUTES_PER_SKID_CHANGE_EVENT = "PrimexModel.MINUTES_PER_SKID_CHANGE"; 
-	public static final String NUMBER_OF_SKIDS_CHANGE_EVENT = "PrimexModel.NUMBER_OF_SKIDS_CHANGE"; 
+ 	public static final String NUMBER_OF_SKIDS_CHANGE_EVENT = "PrimexModel.NUMBER_OF_SKIDS_CHANGE"; 
+ 	public static final String NUMBER_OF_TABLE_SKIDS_CHANGE_EVENT = "PrimexModel.NUMBER_OF_TABLE_SKIDS_CHANGE"; 
 	public static final String JOB_FINISH_TIME_CHANGE_EVENT = "PrimexModel.JOB_FINISH_TIME_CHANGE"; 
 	public static final String SKID_CHANGE_EVENT = "PrimexModel.SKID_CHANGE"; 
 	public static final String SECONDS_TO_MAXSON_CHANGE_EVENT = "PrimexModel.SECONDS_TO_MAXSON_CHANGE"; 
@@ -71,7 +72,7 @@ public class PrimexModel {
 	private double mNetPph;
 	private double mProductsPerMinute;
 	private int mNumberOfWebs;
-	private int mNumberOfSkids;
+	private int mNumberOfTableSkids;
 	
 	/*
 	 * Used to save speed changes until we're ready to fire them to the view.
@@ -164,6 +165,7 @@ public class PrimexModel {
 		propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, null, getColorPercent()); 
 		propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, null, mSelectedWorkOrder);
 		propChangeSupport.firePropertyChange(NUMBER_OF_WEBS_CHANGE_EVENT, null, getNumberOfWebs());
+		propChangeSupport.firePropertyChange(NUMBER_OF_TABLE_SKIDS_CHANGE_EVENT, null, getNumberOfTableSkids());
 	}
 
 	/*
@@ -310,7 +312,7 @@ public class PrimexModel {
 		    	mLineSpeedSetpoint = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_LINE_SPEED_SETPOINT));
 		    	mDifferentialSetpoint = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_DIFFERENTIAL_SETPOINT));
 		    	mNumberOfWebs = cursor.getInt(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_WEBS));
-		    	mNumberOfSkids = cursor.getInt(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_SKIDS));
+		    	mNumberOfTableSkids = cursor.getInt(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_TABLE_SKIDS));
 		    	return true;
 		    } else return false;
 	    } finally {
@@ -340,24 +342,15 @@ public class PrimexModel {
 			mSkidChanged = false;
 		}
 		
-		if (mProductsPerMinute == 0) {
-			//TODO duplicated code
-			double productLength = mSelectedWorkOrder.getProduct().getLength();
-			double lineSpeed = mSelectedLine.getLineSpeed();
-			if ( (productLength > 0) && (lineSpeed > 0) ) {
-				mProductsPerMinute = HelperFunction.INCHES_PER_FOOT / productLength * lineSpeed;
-				propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, mProductsPerMinute);
-			} else throw new IllegalStateException(new Throwable(ERROR_NO_PPM_VALUE));
-		}
+		calculateProductsPerMinute();
 		
-		Double oldNet = null; //mNetPph;
 		mNetPph = mProductsPerMinute * mSelectedWorkOrder.getProduct().getUnitWeight() * HelperFunction.MINUTES_PER_HOUR;
-		propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, oldNet, mNetPph);
+		propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, null, mNetPph);
 		
 		double grossWidth = mSelectedLine.getWebWidth();
 		if (grossWidth > 0) {
 			Double oldEt = null; //mEdgeTrimRatio;
-			double netWidth = getSelectedWorkOrder().getProduct().getWidth();
+			double netWidth = getSelectedWorkOrder().getProduct().getWidth() * mNumberOfWebs;
 			if (netWidth >= grossWidth) {
 				throw new IllegalStateException(new Throwable(ERROR_NET_LESS_THAN_GROSS));
 			}
@@ -395,37 +388,46 @@ public class PrimexModel {
 			this.propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, null, mSelectedSkid);
 			mSkidChanged = false;
 		}
-		
-		mProductsPerMinute = HelperFunction.INCHES_PER_FOOT / mSelectedWorkOrder.getProduct().getLength() * mSelectedLine.getLineSpeed();
-		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, mProductsPerMinute);
+	
+		calculateProductsPerMinute();
 		
 		if ( (mProductsPerMinute > 0 ) && (mSelectedSkid.getTotalItems() > 0) ) {			
 			//calculate total time per skid. 
-			Double oldMinutes = null; //mSelectedSkid.getMinutesPerSkid();
-			double newMinutes = mSelectedSkid.calculateMinutesPerSkid(mProductsPerMinute);
-			propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, oldMinutes, newMinutes);
+			double minutes = mSelectedSkid.calculateMinutesPerSkid(mProductsPerMinute);
+			propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, null, minutes);
 			
 			//calculate skid start and finish time
-			Date oldStartTime = null; //mSelectedSkid.getStartTime(); 
 			Date newStartTime = mSelectedSkid.calculateStartTime(mProductsPerMinute);
 			Date oldFinishTime = mSelectedSkid.getFinishTime();
 			Date newFinishTime = mSelectedSkid.calculateFinishTimeWhileRunning(mProductsPerMinute);			
-			propChangeSupport.firePropertyChange(CURRENT_SKID_START_TIME_CHANGE_EVENT, oldStartTime, newStartTime);
+			propChangeSupport.firePropertyChange(CURRENT_SKID_START_TIME_CHANGE_EVENT, null, newStartTime);
 			propChangeSupport.firePropertyChange(CURRENT_SKID_FINISH_TIME_CHANGE_EVENT, oldFinishTime, newFinishTime);
 			
 			//calculate job finish times
 			Date oldJobFinishTime = null; //mSelectedWorkOrder.getFinishTime();
 			Date newJobFinishTime = mSelectedWorkOrder.calculateFinishTimes(mProductsPerMinute);
 			propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, oldJobFinishTime, newJobFinishTime);
+			
+			if (mSelectedLine.getLineSpeed() > 0) {
+				propChangeSupport.firePropertyChange(SECONDS_TO_MAXSON_CHANGE_EVENT, null, mSelectedLine.getSecondsToMaxson());
+			}
 		}
-		if (mSelectedLine.getLineSpeed() > 0) {
-			propChangeSupport.firePropertyChange(SECONDS_TO_MAXSON_CHANGE_EVENT, null, mSelectedLine.getSecondsToMaxson());
-		}
+	}
+	
+	private double calculateProductsPerMinute() {
+		double productLength = mSelectedWorkOrder.getProduct().getLength();
+		if (productLength < 0) throw new IllegalStateException(new Throwable(ERROR_NO_PPM_VALUE));
+
+		double lineSpeed = mSelectedLine.getLineSpeed();
+		mProductsPerMinute = HelperFunction.INCHES_PER_FOOT / productLength * lineSpeed * mNumberOfWebs;
+		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, mProductsPerMinute);
+		return mProductsPerMinute;
 	}
 
 	public int getDatabaseVersion() {
 		return PrimexSQLiteOpenHelper.DATABASE_VERSION;
 	}
+	
 	public void changeNumberOfSkids(double num) {
 		if (num <= 0d) throw new IllegalArgumentException("Number of skids not positive");
 		double totalSkids = Math.ceil(num);
@@ -576,17 +578,21 @@ public class PrimexModel {
 	}
 
 	public void setNumberOfWebs(int numberOfWebs) {
+		if (numberOfWebs <= 0) throw new IllegalArgumentException("Number of webs must be positive");
 		this.mNumberOfWebs = numberOfWebs;
 		mSelectedLine.setNumberOfWebs(numberOfWebs);
+		propChangeSupport.firePropertyChange(NUMBER_OF_WEBS_CHANGE_EVENT, null, numberOfWebs);
 	}
 
-	public int getNumberOfSkids() {
-		return mNumberOfSkids;
+	public int getNumberOfTableSkids() {
+		return mNumberOfTableSkids;
 	}
 
-	public void setNumberOfSkids(int numberOfSkids) {
+	public void setNumberOfTableSkids(int numberOfSkids) {
 		if (numberOfSkids <= 0) throw new IllegalArgumentException("Number of skids must be positive");
-		this.mNumberOfSkids = numberOfSkids;
+		int oldNumSkids = mNumberOfTableSkids;
+		this.mNumberOfTableSkids = numberOfSkids;
+		propChangeSupport.firePropertyChange(NUMBER_OF_TABLE_SKIDS_CHANGE_EVENT, null, numberOfSkids);
 	}
 
 	@Override

@@ -345,8 +345,13 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 		mImg_numberOfWebs.setImageDrawable(getResources().getDrawable(resId));
 		
 		if ((numWebs == 2) && (getSheetsOrRollsState() == SHEETS_MODE)) {
-			mContainerProductDetails.addView(mContainerSkidsOnTable);
-		} else mContainerProductDetails.removeView(mContainerSkidsOnTable);
+			if ( (mContainerSkidsOnTable == null) || (mContainerSkidsOnTable).getParent() == null) {
+				mContainerProductDetails.addView(mContainerSkidsOnTable);
+			}
+		} else {
+			mRadioButton_oneSkid.setChecked(true);
+			mContainerProductDetails.removeView(mContainerSkidsOnTable);
+		}
 	}
 	
 	public int getNumberOfWebs() {

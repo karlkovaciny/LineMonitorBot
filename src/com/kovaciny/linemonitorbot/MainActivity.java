@@ -245,7 +245,7 @@ public class MainActivity extends FragmentActivity implements
 			numberOfWebs = mModel.getSelectedLine().getNumberOfWebs();
 		}
 		args.putInt("NumberOfWebs", numberOfWebs);
-		args.putInt("NumberOfSkids", mModel.getNumberOfSkids());
+		args.putInt("NumberOfSkids", mModel.getNumberOfTableSkids());
 		
 		args.putDouble("DifferentialSpeed", differentialSpeed);
 		args.putDouble("DifferentialLowValue", mModel.getSelectedLine().getDifferentialRangeLow());
@@ -277,7 +277,7 @@ public class MainActivity extends FragmentActivity implements
     		double speedFactor = spmd.getSpeedFactorValue();
     		
     		mModel.setNumberOfWebs(spmd.getNumberOfWebs());
-    		mModel.setNumberOfSkids(spmd.getNumberOfSkids());
+    		mModel.setNumberOfTableSkids(spmd.getNumberOfSkids());
     		updateSpeedData(lineSpeed, diffSpeed, speedFactor);
     		String productType;
     		if (spmd.getSheetsOrRollsState().equals(SheetsPerMinuteDialogFragment.ROLLS_MODE)) {
@@ -347,6 +347,8 @@ public class MainActivity extends FragmentActivity implements
 				(eventName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) ||
 				(eventName == PrimexModel.LINE_SPEED_CHANGE_EVENT) ||
 				(eventName == PrimexModel.SECONDS_TO_MAXSON_CHANGE_EVENT) ||
+				(eventName == PrimexModel.NUMBER_OF_WEBS_CHANGE_EVENT) ||
+				(eventName == PrimexModel.NUMBER_OF_TABLE_SKIDS_CHANGE_EVENT) ||
 				(eventName == PrimexModel.SKID_CHANGE_EVENT )) {
 			skidTimesFrag.modelPropertyChange(event);
 		} else if (eventName == PrimexModel.CURRENT_SKID_START_TIME_CHANGE_EVENT) {
