@@ -4,7 +4,7 @@ public class Sheetset extends Sheet {
 	private int mNumberOfWebs = 1;
 	private static final String mUnitSingular = "sheet";
 	private static final String mUnitPlural = "cuts";
-	private static final String mGrouping = "skid";
+	private String mGrouping = "skid";
 
 	public Sheetset(double gauge, double width, double length, int numberOfWebs) {
 		super(gauge, width, length);
@@ -26,6 +26,9 @@ public class Sheetset extends Sheet {
 		return mGrouping;
 	}
 
+	public void setGrouping(String grouping) {
+		mGrouping = grouping;
+	}
 	public int getNumberOfWebs() {
 		return mNumberOfWebs;
 	}

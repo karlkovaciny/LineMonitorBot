@@ -44,7 +44,7 @@
             <EditText
                 android:id="@id/edit_skid_number"
                 style="@style/EditText"
-                android:layout_width="@dimen/sheets_label_width"
+                android:layout_width="@dimen/edit_skid_number_width"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/lbl_product_type"
                 android:layout_below="@id/btn_skid_number_up"
@@ -135,14 +135,14 @@
 
             <Button
                 android:id="@+id/btn_go_by_height"
+                style="@style/Button.Minor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/edit_current_count"
                 android:layout_alignParentRight="true"
                 android:drawableLeft="@drawable/ic_ruler"
                 android:drawablePadding="10dp"
-                android:text="Go by\nheight"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:text="Go by\nheight" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -303,6 +303,7 @@
 
         <Button
             android:id="@+id/btn_cancel_alarm"
+            style="@style/Button.Minor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"

@@ -27,6 +27,13 @@
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
     </style>
 
+    <style name="Button.Minor">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+    </style>
+    
     <style name="EditText" parent="@android:style/Widget.EditText">
         <item name="android:textColor">#1964DE</item>
         <item name="android:gravity">center</item>
