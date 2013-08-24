@@ -305,7 +305,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 			this.mEdit_sheetLength.setEnabled(false);
 			this.mEdit_sheetWidth.setNextFocusDownId(R.id.edit_line_speed);
 			mContainerProductDetails.removeView(mContainerSkidsOnTable);
-		} else if (state.equals(SHEETS_MODE)) {
+		} else if (state.equals(SHEETS_MODE) || state.equals(Product.SHEETSET_TYPE)) {
 			this.mSheetsOrRollsState = SHEETS_MODE;
 			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.sheet_slider120);
 			this.mLbl_sheetLength.setEnabled(true);

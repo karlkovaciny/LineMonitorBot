@@ -1,13 +1,13 @@
 package com.kovaciny.primexmodel;
 
-public class Rollset extends Roll {
+public class Sheetset extends Sheet {
 	private int mNumberOfWebs = 1;
-	private static final String mUnitSingular = "foot";
-	private static final String mUnitPlural = "feet";
-	private static final String mGrouping = "rollset";
-	
-	public Rollset(double gauge, double width, int linearFeet, int numberOfWebs) {
-		super(gauge, width, linearFeet);
+	private static final String mUnitSingular = "sheet";
+	private static final String mUnitPlural = "cuts";
+	private static final String mGrouping = "skid";
+
+	public Sheetset(double gauge, double width, double length, int numberOfWebs) {
+		super(gauge, width, length);
 		setNumberOfWebs(numberOfWebs);
 	}
 
@@ -15,7 +15,7 @@ public class Rollset extends Roll {
 	public String getUnit() {
 		return mUnitSingular;
 	}
-	
+
 	@Override
 	public String getUnits() {
 		return mUnitPlural;
@@ -36,6 +36,7 @@ public class Rollset extends Roll {
 
 	@Override
 	public String getType() {
-		return Product.ROLLSET_TYPE;
+		return Product.SHEETSET_TYPE;
 	}
+
 }

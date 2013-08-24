@@ -28,10 +28,11 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.kovaciny.database.PrimexSQLiteOpenHelper;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Products;
+import com.kovaciny.primexmodel.Rollset;
+import com.kovaciny.primexmodel.Sheetset;
 import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.SpeedValues;
 import com.kovaciny.primexmodel.WorkOrder;
@@ -282,7 +283,8 @@ public class MainActivity extends FragmentActivity implements
     				productType = Product.ROLLSET_TYPE;
     			}
     		} else {
-    			productType = Product.SHEETS_TYPE;
+    			if (spmd.getNumberOfWebs() == 1) productType = Product.SHEETS_TYPE;
+    			else productType = Product.SHEETSET_TYPE;
     		}
     		updateProductData(productType, gauge, width, length, spmd.getNumberOfWebs());
     	}
@@ -448,7 +450,7 @@ public class MainActivity extends FragmentActivity implements
 		mModel.getSelectedLine().getNovatec().setControllerSetpoint(novaSetpoint); //TODO ug...ly.
 		if (mModel.hasSelectedProduct()) {
 			Product p = mModel.getSelectedWorkOrder().getProduct();
-			if (p.getType().equals(Product.ROLLSET_TYPE)) {
+			if (p instanceof Rollset || p instanceof Sheetset) {
 				unitWeight *= p.getNumberOfWebs();
 			}
 			p.setUnitWeight(unitWeight);
