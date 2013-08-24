@@ -37,6 +37,9 @@ public class Roll implements Product {
 	public double getGauge() {
 		return mGauge;
 	}
+	public void setGauge(double gauge){
+		mGauge = gauge;
+	}
 	public double getUnitWeight() {
 		return mLinearFootWeight;
 	}
@@ -65,12 +68,19 @@ public class Roll implements Product {
 	public double getWidth() {
 		return mWidth;
 	}
+	public void setWidth(double width) {
+		if (width <= 0) throw new IllegalArgumentException("width must be positive");
+		mWidth = width;
+	}
 	public String getMaterialType() {
 		return "Not implemented";
 	}
 	public boolean setMaterialType(){
 		//TODO
 		return false;
+	}
+	public int getNumberOfWebs() {
+		return 1;
 	}
 	public String getUnit() {
 		return mUnitSingular;
@@ -87,9 +97,18 @@ public class Roll implements Product {
 	public String getType() {
 		return Product.ROLLS_TYPE;
 	}
+	public double getDensity() {
+		return mDensity;
+	}
+
+	public void setDensity(double density) {
+		this.mDensity = density;
+	}
+
 	
 	@Override
 	public String toString() {
-		return "Roll: " + String.valueOf(mGauge) + " x " + String.valueOf(mWidth) + " x R8";
+		return getType() + ": " + String.valueOf(mGauge) + " x " + String.valueOf(mWidth) + " x R8, " + 
+				String.valueOf(getNumberOfWebs()) + " webs";
 	}
 }

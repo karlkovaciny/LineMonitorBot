@@ -6,8 +6,10 @@ public interface Product {
 	double getUnitWeight(); //of one unit of the product (sheet or roll? TODO)
 	void setUnitWeight(double unitWeight);
 	double getWidth(); //in inches
+	void setWidth(double width);
 	double getLength(); // in inches
 	void setLength(double length);
+	int getNumberOfWebs();
 	double getEstimatedWeight();
 	String getMaterialType();
 	boolean setMaterialType();
@@ -18,4 +20,5 @@ public interface Product {
 	
 	public static String SHEETS_TYPE="Sheet";
 	public static String ROLLS_TYPE="Roll";
+	public static String ROLLSET_TYPE="Rollset";
 }

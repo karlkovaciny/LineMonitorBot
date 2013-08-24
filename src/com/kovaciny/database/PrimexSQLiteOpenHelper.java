@@ -21,6 +21,7 @@ import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.ProductionLine;
 import com.kovaciny.primexmodel.Roll;
+import com.kovaciny.primexmodel.Rollset;
 import com.kovaciny.primexmodel.Sheet;
 import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.SpeedValues;
@@ -33,7 +34,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 136;
+    public static final int DATABASE_VERSION = 139;
     public static final String DATABASE_NAME = "Primex.db";
     
     public static final int DEFAULT_INITIAL_WO_NUM = 123;
@@ -57,7 +58,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_LINE_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_DIFFERENTIAL_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_PRODUCTS_PER_MINUTE + DOUBLE_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_WEBS + INTEGER_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_TABLE_SKIDS + INTEGER_TYPE + COMMA_SEP +
 					"UNIQUE (" + PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER + ")" +
 					")";
@@ -106,9 +106,10 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 					PrimexDatabaseSchema.Products.COLUMN_NAME_GAUGE + REAL_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.Products.COLUMN_NAME_WIDTH + REAL_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.Products.COLUMN_NAME_LENGTH + REAL_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE + INTEGER_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE_ID + INTEGER_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + INTEGER_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.Products.COLUMN_NAME_UNIT_WEIGHT + REAL_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.Products.COLUMN_NAME_NUMBER_OF_WEBS + INTEGER_TYPE + COMMA_SEP +					
 					" UNIQUE ("  + PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + ")" +
 					" )";
 
@@ -201,7 +202,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         	List<Double> dieWidthsList = Arrays.asList(new Double[]{130d,58d,53d,58d,64d, 64d,78d,75d,75d,64d, 64d, 58.5d, 53d});
         	Iterator<Double> dieWidthsIterator = dieWidthsList.iterator();
         	
-        	List<Double> speedFactorsList = Arrays.asList(new Double[]{.995d,.0771d,.01d,.99d,.0102d,  1d,1d,.0098d,.0098d,1.01d, 1.01d,.0347d,.01003d});        	
+        	List<Double> speedFactorsList = Arrays.asList(new Double[]{.995d,.07775d,.01d,.99d,.0102d,  1d,1d,.0098d,.0098d,1.01d, 1.01d,.0347d,.01003d});        	
         	Iterator<Double> speedFactorsIterator = speedFactorsList.iterator();
         	
         	List<String> speedControllerTypesList = Arrays.asList(
@@ -275,8 +276,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_PRODUCT_TYPES);
         try {
         	db.beginTransaction();
-        	String[] types = {Product.SHEETS_TYPE, Product.ROLLS_TYPE};
-        	for (int j = 0; j < 2; j++) {
+        	String[] types = {Product.SHEETS_TYPE, Product.ROLLS_TYPE, Product.ROLLSET_TYPE};
+        	for (int j = 0; j < types.length; j++) {
         		ContentValues ptvalues = new ContentValues();
         		ptvalues.put(PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES, types[j]);
 
@@ -392,12 +393,11 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     		values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE, model.getCreateDate().getTime());
     	} 
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_DIFFERENTIAL_SETPOINT, model.getDifferentialSetpoint());
-    	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_EDGE_TRIM_PERCENT, model.getEdgeTrimPercent());
+    	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_EDGE_TRIM_PERCENT, model.getEdgeTrimRatio());
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_GROSS_PPH, model.getGrossPph());
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_LINE_SPEED_SETPOINT, model.getLineSpeedSetpoint());
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NET_PPH, model.getNetPph());
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_PRODUCTS_PER_MINUTE, model.getProductsPerMinute());
-    	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_WEBS, model.getSelectedLine().getNumberOfWebs());
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_TABLE_SKIDS, model.getNumberOfTableSkids());
 
     	long rowId;
@@ -880,10 +880,12 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_LENGTH, newProduct.getLength());
 		String type = newProduct.getType();
 		int foreignKey = getProductTypeId(type);
-		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE, foreignKey);
+		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE_ID, foreignKey);
 		int otherForeign = woNumber;
 		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER, otherForeign);
 		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_UNIT_WEIGHT, newProduct.getUnitWeight());
+		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_NUMBER_OF_WEBS, newProduct.getNumberOfWebs());
+    	
 		long rowId = db.insertWithOnConflict(
 				PrimexDatabaseSchema.Products.TABLE_NAME, 
 				null, 
@@ -905,7 +907,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				PrimexDatabaseSchema.Products.TABLE_NAME + 
 				" JOIN " + PrimexDatabaseSchema.ProductTypes.TABLE_NAME + 
 				" ON " + PrimexDatabaseSchema.ProductTypes.TABLE_NAME + "." + PrimexDatabaseSchema.ProductTypes._ID +  
-				"=" + PrimexDatabaseSchema.Products.TABLE_NAME + "." + PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE + 
+				"=" + PrimexDatabaseSchema.Products.TABLE_NAME + "." + PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE_ID + 
 				" JOIN " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + 
 				" ON " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + "." + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER +
 				"=" + woNumber +
@@ -935,7 +937,14 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 							resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_WIDTH)),
 							0
 						);					
-				} else throw new IllegalArgumentException("not a sheet or roll!");
+				} else if (type.equals(Product.ROLLSET_TYPE)) {
+					p = new Rollset(
+							resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_GAUGE)),
+							resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_WIDTH)),
+							0,
+							resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_NUMBER_OF_WEBS))
+						);
+				} else throw new IllegalArgumentException("unknown product type");
 				double unitWeight = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_UNIT_WEIGHT));
 				p.setUnitWeight(unitWeight);
 			} else {

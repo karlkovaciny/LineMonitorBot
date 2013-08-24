@@ -40,7 +40,7 @@ public class ProductionLine {
 		sb.append(
 				getLineNumber()).append(", length ").append(getLineLength()).append(", die width ").append(getDieWidth())
 				.append (", speed controller type: ").append(getSpeedControllerType()).append(", takeoff equipment: ")
-				.append(getTakeoffEquipmentType()).append(", number of webs: ").append(getNumberOfWebs());
+				.append(getTakeoffEquipmentType());
 		sb.append(" (").append(super.toString()).append(")");
 		sb.append("\n").append("Speed values: ").append(mSpeedValues.toString());
 		return sb.toString();
@@ -131,12 +131,4 @@ public class ProductionLine {
 	public void setWebWidth(double width) {
 		this.mWebWidth = width;
 	}
-	public int getNumberOfWebs() {
-		return mNumberOfWebs;
-	}
-	public void setNumberOfWebs(int numberOfWebs) {
-		if (numberOfWebs <= 0) throw new IllegalArgumentException("Need a positive number of webs");
-		this.mNumberOfWebs = numberOfWebs;
-	}
-
 }

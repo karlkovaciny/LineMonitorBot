@@ -297,7 +297,7 @@ public class SheetsPerMinuteDialogFragment extends DialogFragment implements OnC
 	}
  
 	private void setSheetsOrRollsState (String state) {
-		if (state.equals(ROLLS_MODE)) {
+		if (state.equals(ROLLS_MODE) || state.equals(Product.ROLLSET_TYPE)) {
 			this.mSheetsOrRollsState = ROLLS_MODE;
 			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.roll_slider120);
 			this.mEdit_sheetLength.setText("12");
