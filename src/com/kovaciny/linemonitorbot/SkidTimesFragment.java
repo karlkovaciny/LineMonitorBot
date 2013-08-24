@@ -394,10 +394,6 @@ public class SkidTimesFragment extends Fragment implements
 		} else if (propertyName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {
 			if ( (newProperty == null) || ((Double)newProperty <= 0) ) {
 				mTxt_productsPerMinute.setText("");
-			} else if (mNumTableSkids > 1) {
-				//TODO this is business logic, representing that 2-up is half the cuts
-				double ppm = (Double)newProperty / mNumTableSkids;
-				mTxt_productsPerMinute.setText(String.valueOf(ppm));
 			} else {
 				mTxt_productsPerMinute.setText(String.valueOf(newProperty));
 			}

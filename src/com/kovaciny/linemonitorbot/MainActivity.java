@@ -432,6 +432,8 @@ public class MainActivity extends FragmentActivity implements
 		Product p;
 		try {
 			p = Products.makeProduct(productType, gauge, width, length, numberOfWebs);
+			Product oldProduct = mModel.getSelectedWorkOrder().getProduct();
+			p.setUnitWeight(oldProduct.getUnitWeight() * p.getNumberOfWebs() / oldProduct.getNumberOfWebs());
 		} catch (IllegalArgumentException e) {
 			if (e.getCause().equals(PrimexModel.ERROR_NO_PRODUCT_SELECTED)) {
 				throw new IllegalStateException(new Throwable(PrimexModel.ERROR_NO_PRODUCT_SELECTED));	
