@@ -425,12 +425,17 @@ public class PrimexModel {
 	public int getDatabaseVersion() {
 		return PrimexSQLiteOpenHelper.DATABASE_VERSION;
 	}
+	public void changeNumberOfSkids(double num, int totalCount) {
+		changeNumberOfSkids(num);
+		mSelectedWorkOrder.updateFutureSheetCounts(totalCount);
+	}
 	
 	public void changeNumberOfSkids(double num) {
 		if (num <= 0d) throw new IllegalArgumentException("Number of skids not positive");
 		double totalSkids = Math.ceil(num);
 		double fractionalSkid = num % 1.0; //TODO bigdecimal
 		Skid<Product> currentSkid = mSelectedWorkOrder.getSelectedSkid();
+		
 		while (mSelectedWorkOrder.getNumberOfSkids() < totalSkids) {
 			currentSkid = addSkid(0, mSelectedSkid.getTotalItems());
 			mSelectedWorkOrder.addOrUpdateSkid(currentSkid);

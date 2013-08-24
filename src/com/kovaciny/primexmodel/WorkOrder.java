@@ -148,23 +148,18 @@ public class WorkOrder {
 	}
 	public double getNumberOfSkids() {
 		if (mSkidsList.size() < 2 ) return mSkidsList.size();
-		
-		//check for last skid being partial
-		Skid<Product> lastSkid = mSkidsList.get(mSkidsList.size() - 1); 
 		Skid<Product> penultSkid = mSkidsList.get(mSkidsList.size() - 2);
-		double fraction = (double)lastSkid.getTotalItems() / (double) penultSkid.getTotalItems();
-		if (fraction > 1) {
-			Log.e("WorkOrder.getNumberOfSkids()", "the penult skid has fewer items than the last skid");
-			//that is not a good state, but at least we know the last skid is not "partial" compared to it
-			return mSkidsList.size();
-		} else if ((1 - fraction) < .0001) { //ie, equal sheet counts, so not a partial
-			Log.v("WorkOrder.class", "returning number of skids: " + String.valueOf(mSkidsList.size()));
-			return mSkidsList.size();
-		} else {
-			double totalSkids = mSkidsList.size() - 1 + fraction;
+		double finalSkidRatio = getLastSkidSheetCount() / penultSkid.getTotalItems();
+		if ((finalSkidRatio > .001) && (finalSkidRatio < 1)) { //ie, partial skid
+			double totalSkids = mSkidsList.size() - 1 + finalSkidRatio;
 			Log.v("WorkOrder.class", "returning number of skids: " + String.valueOf(totalSkids));
 			return totalSkids;
-		}	
+		} else return mSkidsList.size();  
+	}
+	
+	public double getLastSkidSheetCount() {
+		if (mSkidsList.size() == 0) return 0;
+		else return mSkidsList.get(mSkidsList.size() - 1).getTotalItems();
 	}
 
 	public Skid<Product> getSelectedSkid() {
@@ -191,5 +186,19 @@ public class WorkOrder {
 		String finish = (mFinishDate == null) ? "n/a" : mFinishDate.toString();
 		return "W0" + mWoNumber + ": selected skid " + String.valueOf(mSelectedSkidPosition + 1) + " of " + 
 				String.valueOf(getNumberOfSkids()) + ", finish time " + finish;
+	}
+
+	public void updateFutureSheetCounts(int totalCount) {
+		Skid<Product> currentSkid = mSkidsList.get(mSelectedSkidPosition);
+		double finalSkidRatio = getLastSkidSheetCount() / currentSkid.getTotalItems();
+		if (finalSkidRatio > .99) {
+			mSkidsList.get(mSkidsList.size() - 1).setTotalItems(totalCount);
+		} else { //partial skid, set the sheet count to be the same fraction of the new sheet count
+			mSkidsList.get(mSkidsList.size() - 1).setTotalItems((int)Math.round(finalSkidRatio * totalCount));
+		}
+		//update the rest of the skids
+		for (int i = mSelectedSkidPosition; i < mSkidsList.size() - 1; i++) {
+				mSkidsList.get(i).setTotalItems(totalCount);
+		}
 	}
 }
