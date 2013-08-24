@@ -46,10 +46,6 @@ public class ProductionLine {
 		return sb.toString();
 	}
 	
-	public double getLineSpeed() {
-		return mSpeedValues.getProduct();		
-	}
-	
 	public long getSecondsToMaxson() {
 		if (getLineSpeed() > 0) {
 			return Math.round(getLineLength() / getLineSpeed() * HelperFunction.SECONDS_PER_MINUTE);
@@ -77,6 +73,10 @@ public class ProductionLine {
 			sv.differentialSpeed = 1;
 		}
 		mSpeedValues = sv;
+	}
+	
+	public double getLineSpeed() {
+		return mSpeedValues.getProduct();		
 	}
 	public double getDifferentialRangeLow() {
 		return mDifferentialRange[0];

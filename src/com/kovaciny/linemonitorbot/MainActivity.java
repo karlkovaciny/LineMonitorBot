@@ -295,10 +295,6 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event == null) {
-			throw new RuntimeException("something threw a null event");
-		}
-		
 		SkidTimesFragment skidTimesFrag;
 		RatesFragment ratesFrag;
 		try {
@@ -433,7 +429,9 @@ public class MainActivity extends FragmentActivity implements
 		try {
 			p = Products.makeProduct(productType, gauge, width, length, numberOfWebs);
 			Product oldProduct = mModel.getSelectedWorkOrder().getProduct();
-			p.setUnitWeight(oldProduct.getUnitWeight() * p.getNumberOfWebs() / oldProduct.getNumberOfWebs());
+			if (oldProduct != null) {
+				p.setUnitWeight(oldProduct.getUnitWeight() * p.getNumberOfWebs() / oldProduct.getNumberOfWebs());
+			}
 		} catch (IllegalArgumentException e) {
 			if (e.getCause().equals(PrimexModel.ERROR_NO_PRODUCT_SELECTED)) {
 				throw new IllegalStateException(new Throwable(PrimexModel.ERROR_NO_PRODUCT_SELECTED));	
