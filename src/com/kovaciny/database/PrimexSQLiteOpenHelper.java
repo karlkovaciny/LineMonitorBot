@@ -20,6 +20,7 @@ import com.kovaciny.primexmodel.Pallet;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.ProductionLine;
+import com.kovaciny.primexmodel.Products;
 import com.kovaciny.primexmodel.Roll;
 import com.kovaciny.primexmodel.Rollset;
 import com.kovaciny.primexmodel.Sheet;
@@ -34,7 +35,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 139;
+    public static final int DATABASE_VERSION = 140;
     public static final String DATABASE_NAME = "Primex.db";
     
     public static final int DEFAULT_INITIAL_WO_NUM = 123;
@@ -276,7 +277,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_PRODUCT_TYPES);
         try {
         	db.beginTransaction();
-        	String[] types = {Product.SHEETS_TYPE, Product.ROLLS_TYPE, Product.ROLLSET_TYPE};
+        	String[] types = {Product.SHEETS_TYPE, Product.ROLLS_TYPE, Product.ROLLSET_TYPE, Product.SHEETSET_TYPE};
         	for (int j = 0; j < types.length; j++) {
         		ContentValues ptvalues = new ContentValues();
         		ptvalues.put(PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES, types[j]);
@@ -925,26 +926,14 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			if (resultCursor.moveToFirst()) {
 				int indexOfProductType = resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES);
 				String type = resultCursor.getString(indexOfProductType);
-				if (type.equals(Product.SHEETS_TYPE)) {
-					p = new Sheet(
-						resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_GAUGE)),
-						resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_WIDTH)),
-						resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_LENGTH))
-						);
-				} else if (type.equals(Product.ROLLS_TYPE)) {
-					p = new Roll(
- 							resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_GAUGE)),
-							resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_WIDTH)),
-							0
-						);					
-				} else if (type.equals(Product.ROLLSET_TYPE)) {
-					p = new Rollset(
-							resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_GAUGE)),
-							resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_WIDTH)),
-							0,
-							resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_NUMBER_OF_WEBS))
-						);
-				} else throw new IllegalArgumentException("unknown product type");
+				double gauge = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_GAUGE));
+				double width = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_WIDTH));
+				double length = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_LENGTH));
+				int numberOfWebs = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_NUMBER_OF_WEBS));
+				if (type.equals(Product.ROLLSET_TYPE) || type.equals(Product.SHEETSET_TYPE)) {
+					width /= numberOfWebs;
+				}
+				p = Products.makeProduct(type, gauge, width, length, numberOfWebs);
 				double unitWeight = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_UNIT_WEIGHT));
 				p.setUnitWeight(unitWeight);
 			} else {

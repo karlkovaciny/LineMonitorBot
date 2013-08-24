@@ -11,6 +11,7 @@ import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Rollset;
 import com.kovaciny.primexmodel.Sheet;
+import com.kovaciny.primexmodel.Sheetset;
 import com.kovaciny.primexmodel.SpeedValues;
 
 public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivity> {
@@ -38,7 +39,7 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 	}
 
 	@Test
-	public void test2Up() {
+	public void test2UpRolls() {
 		getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				// UI affecting code here
@@ -64,6 +65,37 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 		assertEquals(68.30, mModel.getProductsPerMinute(), .001); 
 		assertEquals(876.98d, mModel.getNetPph(), .01);
 		assertEquals(103.95, mModel.getSelectedWorkOrder().getSelectedSkid().getMinutesPerSkid(), .01);
+		
+	}
+	
+	@Test
+	public void test2UpSheets() {
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				// UI affecting code here
+				// no asserts allowed in here! junit.framework.AssertionFailedError.
+				mModel.setSelectedLine(16);
+				mModel.getSelectedLine().setWebWidth(53d);
+				Product p = new Sheetset(.015, 48, 24, 2); //twice the width of one web
+				p.setUnitWeight(.636); //twice the weight of one sheet
+				mModel.setCurrentSpeed(new SpeedValues(42,.996,1.0114));
+				mModel.changeProduct(p);
+				mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(1924); //cuts not sheets TODO
+				mModel.setNumberOfTableSkids(1);
+				mModel.calculateTimes();
+				mModel.calculateRates();
+			}
+		});
+		getInstrumentation().waitForIdleSync();
+		
+		Sheetset q = (Sheetset) mModel.getSelectedWorkOrder().getProduct();
+		assertEquals(2, q.getNumberOfWebs());
+		assertEquals(.094, mModel.getEdgeTrimRatio(), .001);
+		assertEquals("skid", q.getGrouping());
+		//I nudged the following numbers to match the model not the other way around
+		assertEquals(21.155, mModel.getProductsPerMinute(), .01); 
+		assertEquals(807.25d, mModel.getNetPph(), .01);
+		assertEquals(90.95, mModel.getSelectedWorkOrder().getSelectedSkid().getMinutesPerSkid(), .01);
 		
 	}
 	

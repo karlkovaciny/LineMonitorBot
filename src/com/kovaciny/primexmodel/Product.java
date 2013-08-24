@@ -19,6 +19,7 @@ public interface Product {
 	String getType(); //TODO hope this is not bad polymorphism	
 	
 	public static String SHEETS_TYPE="Sheet";
+	public static String SHEETSET_TYPE="Sheetset";
 	public static String ROLLS_TYPE="Roll";
 	public static String ROLLSET_TYPE="Rollset";
 }
