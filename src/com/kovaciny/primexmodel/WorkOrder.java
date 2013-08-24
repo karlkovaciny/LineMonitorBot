@@ -180,7 +180,7 @@ public class WorkOrder {
 	public Product getProduct() {
 		return mProduct;
 	}	
-
+	
 	@Override
 	public String toString() {
 		String finish = (mFinishDate == null) ? "n/a" : mFinishDate.toString();

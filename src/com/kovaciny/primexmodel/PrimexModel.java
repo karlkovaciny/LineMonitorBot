@@ -78,8 +78,7 @@ public class PrimexModel {
 	 */
 	private boolean mSpeedChanged = false;
 	private boolean mProductChanged = false;
-	private boolean mSkidChanged = false;
-
+	
 	/*
 	 * This section sets up notifying observers about changes.
 	 */
@@ -255,7 +254,7 @@ public class PrimexModel {
 			}
 		}
 		mSelectedSkid = mSelectedWorkOrder.selectSkid(skidNumber);
-		mSkidChanged = true;
+		this.propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, null, mSelectedSkid);
 		return skidNumber;
 	}
 	
@@ -336,10 +335,6 @@ public class PrimexModel {
 			this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, mSelectedWorkOrder.getProduct());
 			mProductChanged = false;
 		}
-		if (mSkidChanged) {
-			this.propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, null, mSelectedSkid);
-			mSkidChanged = false;
-		}
 		
 		calculateProductsPerMinute();
 		
@@ -383,11 +378,7 @@ public class PrimexModel {
 			this.propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, mSelectedWorkOrder.getProduct());
 			mProductChanged = false;
 		}
-		if (mSkidChanged) {
-			this.propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, null, mSelectedSkid);
-			mSkidChanged = false;
-		}
-	
+		
 		calculateProductsPerMinute();
 		
 		if ( (mProductsPerMinute > 0 ) && (mSelectedSkid.getTotalItems() > 0) ) {			
@@ -422,6 +413,14 @@ public class PrimexModel {
 		return mProductsPerMinute;
 	}
 
+	public int calculateSheetsFromGauge(double currentHeight, double gauge) {
+		return (int) Math.round(currentHeight / gauge);
+	}
+	
+	public int calculateSheetsFromHeight(double currentHeight, double finishedHeight) {
+		return (int) Math.round(currentHeight / finishedHeight * mSelectedSkid.getTotalItems()); //TODO may need to account for stacks
+	}
+	
 	public int getDatabaseVersion() {
 		return PrimexSQLiteOpenHelper.DATABASE_VERSION;
 	}

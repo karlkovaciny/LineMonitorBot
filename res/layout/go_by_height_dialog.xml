@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container_go_by_height_dialog"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/ParentFragment.HorizontallyDivided"
+    android:orientation="vertical" >
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView1"
+                style="@style/Label.FirstTableColumn"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:text="Finished height"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/edit_finished_height"
+                style="@style/EditText.SecondTableColumn"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="numberDecimal" >
+            </EditText>
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView2"
+                style="@style/Label.FirstTableColumn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="or"
+                android:textStyle="bold"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/placeholder"
+                style="@style/Label.SecondTableColumn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView3"
+                style="@style/Label.FirstTableColumn"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:text="Average gauge"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/edit_average_gauge"
+                style="@style/EditText.SecondTableColumn"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="numberDecimal" />
+
+        </TableRow>
+
+    </TableLayout>
+
+    <TableLayout
+        android:id="@+id/table_go_by_height_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:shrinkColumns="*"
+        android:stretchColumns="*" >
+
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView4"
+                style="@style/Label.FirstTableColumn"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:text="Current height"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/edit_current_height"
+                style="@style/EditText.SecondTableColumn"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="numberDecimal" >
+            </EditText>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView5"
+                style="@style/Label.FirstTableColumn"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:text="Sheets per skid"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/edit_sheets_per_skid"
+                style="@style/EditText.SecondTableColumn"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView6"
+                style="@style/Label.FirstTableColumn"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:text="Stacks per skid"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/edit_number_of_stacks"
+                style="@style/EditText.SecondTableColumn"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:visibility="gone" />
+
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

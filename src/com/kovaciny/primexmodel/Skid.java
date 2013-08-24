@@ -15,6 +15,7 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 	double mFinishedNetWeight;
 	double mFinishedGrossWeight;
 	double mMinutesPerSkid;
+	double mStackHeight;
 	int mSkidNumber = 0;
 	int mNumberOfStacks;
 	Date mStartTime;
@@ -48,10 +49,17 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 		this(new Pallet(), totalItems, 0d, 1, product);
 	}
 
-	public double getStackHeight() {
+	public double getEstimatedStackHeight() {
 		return mTotalItems / mNumberOfStacks * mProductUnit.getHeight();
 	}
+	
+	public double getFinishedStackHeight() {
+		return mStackHeight;
+	}
 
+	public void setFinishedStackHeight(double stackHeight) {
+		mStackHeight = stackHeight;
+	}
 	public double getFinishedNetWeight() {
 		return mProductUnit.getUnitWeight() * mTotalItems;
 	}
@@ -77,7 +85,7 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 		this.mTotalItems = totalItems;
 	}
 
-	public int getmNumberOfStacks() {
+	public int getNumberOfStacks() {
 		return mNumberOfStacks;
 	}
 
@@ -105,16 +113,17 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 	 * This version of the function is for a skid that's currently being produced.
 	 */
 	public Date calculateFinishTimeWhileRunning(double productsPerMinute) {
-		if ( mTotalItems == null) {
-			throw new IllegalStateException("total items not set");
+		Date currentDate = new Date();
+		long timeNow = currentDate.getTime();
+		
+		if (mCurrentItems >= mTotalItems) {
+			mFinishTime = currentDate;
 		} else {
 			double minutesLeft = (mTotalItems - mCurrentItems ) / productsPerMinute;
 			long millisLeft = (long) (minutesLeft * HelperFunction.ONE_MINUTE_IN_MILLIS);
-			Date currentDate = new Date();
-			long timeNow = currentDate.getTime();
 			mFinishTime = new Date( timeNow + millisLeft);
-			return mFinishTime;
 		}
+		return mFinishTime;
 	}
 	
 	/*
@@ -163,6 +172,10 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 	public void setSkidNumber(int skidNumber) {
 		if (!(skidNumber > 0)) throw new RuntimeException ("Should never assign a skid number " + String.valueOf(skidNumber) + "!");
 		this.mSkidNumber = skidNumber;
+	}
+
+	public int getItemsPerStack() {
+		return mTotalItems / mNumberOfStacks;
 	}
 
 	@Override

@@ -39,6 +39,12 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 	}
 
 	@Test
+	public void testCalculateSheetsFromGauge() {
+		int sheets = mModel.calculateSheetsFromGauge(6d, .100);
+		assertEquals(60, sheets);
+	}
+	
+	@Test
 	public void test2UpRolls() {
 		getActivity().runOnUiThread(new Runnable() {
 			public void run() {

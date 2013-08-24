@@ -12,6 +12,11 @@
 	<dimen name="dialog_sheets_per_minute_height">425dp</dimen>
 	<dimen name="touch_target_default">45dp</dimen>
 	<dimen name="sheets_label_width">62dp</dimen>
+	<dimen name="label_padding_right">4dp</dimen>
+	<dimen name="button_row_padding">10dp</dimen>
+	<dimen name="button_row_spacing">8dp</dimen>
+	<dimen name="button_padding_left">18dp</dimen>
+	<dimen name="data_entry_group_left_padding">10dp</dimen>
 	<dimen name="label_row_height">70px</dimen>
 	<dimen name="up_arrow_top_padding">10dp</dimen>
 	<dimen name="up_arrow_bottom_padding">10dp</dimen>
