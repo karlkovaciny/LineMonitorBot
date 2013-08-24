@@ -237,6 +237,13 @@ public class PrimexModel {
 				String.valueOf(setpoint));
 	}
 	public void changeProduct (Product p) {
+		if (hasSelectedProduct() && mSelectedWorkOrder.getProduct().getType().equals(Product.SHEETSET_TYPE)) {
+			if (mNumberOfTableSkids == 2) {
+				((Sheetset)p).setGrouping("skidset");
+			} else ((Sheetset)p).setGrouping("skid");
+			propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, mSelectedWorkOrder.getProduct());
+		}
+
 		mSelectedWorkOrder.setProduct(p);
 		addProduct(p);
 		propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, p);

@@ -131,8 +131,6 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 		mEdit_speedFactor = (EditText) rootView.findViewById(R.id.edit_speed_factor);
 		mImgbtnSheetsOrRolls = (ImageButton) rootView.findViewById(R.id.imgbtn_sheets_or_rolls);
 		
-		markRequiredFields();
-		
 		SharedPreferences settings = getActivity().getPreferences(Context.MODE_PRIVATE);
 		
 		if (getArguments() != null) {
@@ -312,17 +310,6 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 			this.mEdit_sheetLength.setEnabled(true);
 			this.mEdit_sheetWidth.setNextFocusDownId(R.id.edit_sheet_length);
 			setNumberOfWebs(getNumberOfWebs()); //to trigger the check for added views TODO ugly
-		}
-	}
-	
-	private void markRequiredFields() {
-		List<EditText> required = new ArrayList<EditText>();
-		required.add(mEdit_differentialSpeed);
-		required.add(mEdit_lineSpeed);
-		required.add(mEdit_sheetLength);
-		required.add(mEdit_sheetWidth);
-		for (EditText et : required) {
-			et.setHint(Html.fromHtml("<i>Required</i>"));
 		}
 	}
 	
