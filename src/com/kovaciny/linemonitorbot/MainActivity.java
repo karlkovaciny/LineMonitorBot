@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.kovaciny.linemonitorbot.GoByHeightDialogFragment.GoByHeightDialogListener;
@@ -329,17 +330,23 @@ public class MainActivity extends FragmentActivity implements
     			if (gbhd.getAverageGauge() > 0) currentProduct.setAverageGauge(gbhd.getAverageGauge());
     			mModel.changeProduct(currentProduct);
     		} 
+    		
     		int items;
+    		double height;
     		if (gbhd.getAverageGauge() > 0) {
-    			items = mModel.calculateSheetsFromGauge(gbhd.getCurrentHeight(), gbhd.getAverageGauge());	
+    			items = mModel.calculateSheetsFromGauge(gbhd.getCurrentHeight(), gbhd.getAverageGauge());
+    			height = items * gbhd.getAverageGauge();
     		} else {
     			currentSkid.setFinishedStackHeight(gbhd.getFinishedHeight());
     			items = mModel.calculateSheetsFromHeight(gbhd.getCurrentHeight(), gbhd.getFinishedHeight());
+    			height = gbhd.getFinishedHeight();
     		}
     		currentSkid.setCurrentItems(items);
     		mModel.changeSelectedSkid(currentSkid.getSkidNumber()); //to trigger events
     		
     		//Give the user feedback of what the dialog changed
+    		View heightButton = this.findViewById(R.id.btn_go_by_height);
+    		if (heightButton != null) ((Button) heightButton).setText(String.valueOf(height));
     		View currentItems = this.findViewById(R.id.edit_current_count);
     		if (currentItems != null) currentItems.requestFocus();
     	}
