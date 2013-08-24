@@ -410,7 +410,7 @@ public class MainActivity extends FragmentActivity implements
 	}
 		
 	public void updateSkidData(Integer skidNumber, Integer currentCount, Integer totalCount, Double numberOfSkids) {
-		mModel.changeNumberOfSkids(numberOfSkids);
+		mModel.changeNumberOfSkids(numberOfSkids, totalCount);
 		
 		Skid<Product> skid = new Skid<Product>(
 				currentCount, 
