@@ -112,6 +112,8 @@ public class PrimexModel {
 		
 		mSelectedLine = line;
 		mSelectedLine.setNovatec(mDbHelper.getNovatec(line.getLineNumber()));
+		setDifferentialSetpoint(mSelectedLine.getSpeedValues().differentialSpeed);
+		setLineSpeedSetpoint(mSelectedLine.getSpeedValues().lineSpeedSetpoint);
 
 		propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLine, mSelectedLine);
 		propChangeSupport.firePropertyChange(NOVATEC_CHANGE_EVENT, null, mSelectedLine.getNovatec());
@@ -151,13 +153,13 @@ public class PrimexModel {
 			propChangeSupport.firePropertyChange(SKID_CHANGE_EVENT, null, mSelectedSkid);
 			propChangeSupport.firePropertyChange(CURRENT_SKID_FINISH_TIME_CHANGE_EVENT, null, mSelectedSkid.getFinishTime());
 			propChangeSupport.firePropertyChange(CURRENT_SKID_START_TIME_CHANGE_EVENT, null, mSelectedSkid.getStartTime());
+			propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, null, mSelectedSkid.getMinutesPerSkid());
+			propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, getProductsPerMinute()); 
+			if (mSelectedLine.getLineSpeed() > 0) {
+				propChangeSupport.firePropertyChange(SECONDS_TO_MAXSON_CHANGE_EVENT, null, mSelectedLine.getSecondsToMaxson());
+			}
 		}
-		propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, null, mSelectedSkid.getMinutesPerSkid());
 		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, null, mSelectedWorkOrder.getNumberOfSkids());
-		if (mSelectedLine.getLineSpeed() > 0) {
-			propChangeSupport.firePropertyChange(SECONDS_TO_MAXSON_CHANGE_EVENT, null, mSelectedLine.getSecondsToMaxson());
-		}
-		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, getProductsPerMinute()); 
 		propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, null, getEdgeTrimRatio()); 
 		propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, null, getNetPph()); 
 		propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, null, getGrossPph()); 
@@ -389,6 +391,8 @@ public class PrimexModel {
 		calculateProductsPerMinute();
 		
 		if ( (mProductsPerMinute > 0 ) && (mSelectedSkid.getTotalItems() > 0) ) {			
+			propChangeSupport.firePropertyChange(SECONDS_TO_MAXSON_CHANGE_EVENT, null, mSelectedLine.getSecondsToMaxson());
+			
 			//calculate total time per skid. 
 			double minutes = mSelectedSkid.calculateMinutesPerSkid(mProductsPerMinute);
 			minutes *= mNumberOfTableSkids;
@@ -405,10 +409,6 @@ public class PrimexModel {
 			Date oldJobFinishTime = null; //mSelectedWorkOrder.getFinishTime();
 			Date newJobFinishTime = mSelectedWorkOrder.calculateFinishTimes(mProductsPerMinute);
 			propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, oldJobFinishTime, newJobFinishTime);
-			
-			if (mSelectedLine.getLineSpeed() > 0) {
-				propChangeSupport.firePropertyChange(SECONDS_TO_MAXSON_CHANGE_EVENT, null, mSelectedLine.getSecondsToMaxson());
-			}
 		}
 	}
 	
