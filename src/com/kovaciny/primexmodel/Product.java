@@ -3,6 +3,10 @@ package com.kovaciny.primexmodel;
 public interface Product {
 	double getHeight();
 	double getGauge();
+	boolean hasStacks();
+	void setGauge(double gauge);
+	double getAverageGauge();
+	void setAverageGauge(double gauge);
 	double getUnitWeight(); //of one unit of the product (sheet or roll? TODO)
 	void setUnitWeight(double unitWeight);
 	double getWidth(); //in inches

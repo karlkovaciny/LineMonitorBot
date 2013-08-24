@@ -27,7 +27,7 @@ import com.kovaciny.linemonitorbot.MainActivity.SectionsPagerAdapter;
 import com.kovaciny.linemonitorbot.R;
 import com.kovaciny.linemonitorbot.RatesFragment;
 import com.kovaciny.linemonitorbot.SettingsActivity;
-import com.kovaciny.linemonitorbot.SheetsPerMinuteDialogFragment;
+import com.kovaciny.linemonitorbot.EnterProductDialogFragment;
 import com.kovaciny.linemonitorbot.SkidTimesFragment;
 
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
@@ -156,6 +156,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		final List<Integer> lineNumbers = Arrays.asList(1,6,7,9,10,  11,12,13,14,15,  16,17,18); //13 lines
 		int lineNumberPosition = lineNumbers.indexOf(lineNumber);
 		sendRepeatedKeys(lineNumberPosition, KeyEvent.KEYCODE_DPAD_DOWN);
+		getInstrumentation().waitForIdleSync();
+		getInstrumentation().waitForIdleSync();
+		getInstrumentation().waitForIdleSync();
 		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
 		getInstrumentation().waitForIdleSync();
 	}
@@ -236,7 +239,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	@Test
 	public void testShowSheetsPerMinuteDialog() {
 		clickButton(R.id.btn_enter_product);
-		SheetsPerMinuteDialogFragment spmd = (SheetsPerMinuteDialogFragment) mActivity.getFragmentManager().findFragmentByTag("SheetsPerMinuteDialog");
+		EnterProductDialogFragment spmd = (EnterProductDialogFragment) mActivity.getFragmentManager().findFragmentByTag("EnterProductDialog");
 		assertTrue(spmd != null);
 	}
 	
@@ -276,7 +279,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		final double NEW_DIFFERENTIAL = 1d;
 		switchLines(9);
 		clickButton(R.id.btn_enter_product);
-		SheetsPerMinuteDialogFragment spmdf = (SheetsPerMinuteDialogFragment)getActivity().getFragmentManager().findFragmentByTag("SheetsPerMinuteDialog");
+		EnterProductDialogFragment spmdf = (EnterProductDialogFragment)getActivity().getFragmentManager().findFragmentByTag("EnterProductDialog");
 		final EditText spmEdit_sheetWidth = (EditText) spmdf.getDialog().findViewById(R.id.edit_sheet_width);
 		final EditText spmEdit_sheetLength = (EditText) spmdf.getDialog().findViewById(R.id.edit_sheet_length);
 		final EditText spmEdit_lineSpeed = (EditText) spmdf.getDialog().findViewById(R.id.edit_line_speed);

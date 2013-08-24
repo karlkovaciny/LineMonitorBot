@@ -2,7 +2,6 @@ package com.kovaciny.linemonitorbot;
 
 import java.beans.PropertyChangeEvent;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
@@ -49,6 +49,7 @@ public class SkidTimesFragment extends Fragment implements
 	private Button mBtn_enterProduct;
 	private Button mBtn_cancelAlarm;
 	private Button mBtn_calculateTimes;
+	private Button mBtn_goByHeight;
 	private ImageButton mBtn_skidNumberUp;
 	private ImageButton mBtn_totalSkidsUp;
 	
@@ -136,11 +137,13 @@ public class SkidTimesFragment extends Fragment implements
 		
 		mBtn_cancelAlarm = (Button) rootView.findViewById(R.id.btn_cancel_alarm);
 		mBtn_cancelAlarm.setOnClickListener(this);
-		mBtn_cancelAlarm.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
 		
 		mBtn_calculateTimes = (Button) rootView.findViewById(R.id.btn_calculate_times);
 		mBtn_calculateTimes.setOnClickListener(this);
 		mBtn_calculateTimes.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF,0xFF0000FF));
+
+		mBtn_goByHeight = (Button) rootView.findViewById(R.id.btn_go_by_height);
+		mBtn_goByHeight.setOnClickListener(this);
 		
 		//set up textViews
 		mLbl_productType = (TextView) rootView.findViewById(R.id.lbl_product_type);
@@ -244,10 +247,21 @@ public class SkidTimesFragment extends Fragment implements
 			for (EditText et : mEditableGroup) {
 				et.clearFocus();
 			}
-			((MainActivity)getActivity()).showSheetsPerMinuteDialog();
+			((MainActivity)getActivity()).showEnterProductDialog();
+			break;
+		case (R.id.btn_go_by_height):
+			int updatedTotalSheets = 1000;
+			if (mEdit_totalCountPerSkid.getText().length() > 0) {
+				updatedTotalSheets = Integer.valueOf(mEdit_totalCountPerSkid.getText().toString());
+			}
+			((MainActivity)getActivity()).showGoByHeightDialog(updatedTotalSheets);
 			break;
 		case (R.id.btn_calculate_times):
 			//supply default values and validate entries
+			int currentCount = Integer.valueOf(mEdit_currentCount.getText().toString());
+			int totalCount = Integer.valueOf(mEdit_totalCountPerSkid.getText().toString());
+			if (currentCount > totalCount) mEdit_currentCount.setText(String.valueOf(totalCount));
+			
 			if (mEdit_currentSkidNumber.getText().toString().equals("")) {
 				mEdit_currentSkidNumber.setText("1");
 			}
@@ -389,6 +403,8 @@ public class SkidTimesFragment extends Fragment implements
 			Product p = (Product)newProperty;
 			mProductUnits = HelperFunction.capitalizeFirstChar(p.getUnits());
 			mProductGrouping = HelperFunction.capitalizeFirstChar(p.getGrouping());
+			if (p.hasStacks()) mBtn_goByHeight.setVisibility(EditText.VISIBLE);
+			else mBtn_goByHeight.setVisibility(EditText.GONE);
 			updateLabels();
 			
 		} else if (propertyName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {

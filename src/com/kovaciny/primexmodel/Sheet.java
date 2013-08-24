@@ -3,6 +3,7 @@ package com.kovaciny.primexmodel;
 public class Sheet implements Product {
 	private double mSheetWeight;
 	private double mGauge; //sheet thickness in inches
+	private double mAverageGauge;
 	private double mWidth; //traverse direction in inches
 	private double mLength; //machine direction in inches
 	private double mDensity;
@@ -34,7 +35,12 @@ public class Sheet implements Product {
 	
 	public double getGauge(){
 		return mGauge;
-		
+	}
+	public double getAverageGauge() {
+		return mAverageGauge;
+	}
+	public void setAverageGauge(double gauge) {
+		mAverageGauge = gauge;
 	}
 	public double getUnitWeight(){
 		return mSheetWeight;
@@ -46,6 +52,9 @@ public class Sheet implements Product {
 		mSheetWeight = unitWeight;
 	}
 	
+	public boolean hasStacks() {
+		return true;
+	}
 	public double getLength() {
 		return mLength;
 	}

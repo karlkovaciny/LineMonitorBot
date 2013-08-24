@@ -35,7 +35,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 140;
+    public static final int DATABASE_VERSION = 141;
     public static final String DATABASE_NAME = "Primex.db";
     
     public static final int DEFAULT_INITIAL_WO_NUM = 123;
@@ -997,7 +997,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER, skid.getSkidNumber());
 		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_CURRENT_ITEMS, skid.getCurrentItems());
 		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_TOTAL_ITEMS, skid.getTotalItems());
-		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_STACKS, skid.getmNumberOfStacks());
+		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_STACKS, skid.getNumberOfStacks());
 		values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_TIME_PER_SKID, skid.getMinutesPerSkid());
 		if (skid.getStartTime() != null) {
 			values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_START_DATE, skid.getStartTime().getTime());	

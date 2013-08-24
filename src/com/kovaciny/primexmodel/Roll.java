@@ -4,6 +4,7 @@ public class Roll implements Product {
 	private double mLinearFootWeight = 0;
 	private int mLinearFeet = 0;
 	private double mGauge; //sheet thickness in inches
+	private double mAverageGauge;
 	private double mWidth; //traverse direction in inches
 	private double mLength = 12d; //one linear foot
 	private double mDensity;
@@ -37,8 +38,19 @@ public class Roll implements Product {
 	public double getGauge() {
 		return mGauge;
 	}
+	
 	public void setGauge(double gauge){
 		mGauge = gauge;
+	}
+	
+	public double getAverageGauge() {
+		return mAverageGauge;
+	}
+	public void setAverageGauge(double gauge) {
+		mAverageGauge = gauge;
+	}
+	public boolean hasStacks() {
+		return false;
 	}
 	public double getUnitWeight() {
 		return mLinearFootWeight;
