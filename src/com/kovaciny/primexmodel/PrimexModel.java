@@ -391,6 +391,7 @@ public class PrimexModel {
 		if ( (mProductsPerMinute > 0 ) && (mSelectedSkid.getTotalItems() > 0) ) {			
 			//calculate total time per skid. 
 			double minutes = mSelectedSkid.calculateMinutesPerSkid(mProductsPerMinute);
+			minutes *= mNumberOfTableSkids;
 			propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, null, minutes);
 			
 			//calculate skid start and finish time

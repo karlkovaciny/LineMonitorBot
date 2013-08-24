@@ -69,7 +69,7 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 	}
 	
 	@Test
-	public void test2UpSheets() {
+	public void test2UpSheets1Skid() {
 		getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				// UI affecting code here
@@ -99,6 +99,36 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 		
 	}
 	
+	@Test
+	public void test2UpSheets2Skids() {
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				// UI affecting code here
+				// no asserts allowed in here! junit.framework.AssertionFailedError.
+				mModel.setSelectedLine(16);
+				mModel.getSelectedLine().setWebWidth(53d);
+				Product p = new Sheetset(.015, 48, 24, 2); //twice the width of one web
+				p.setUnitWeight(.636); //twice the weight of one sheet
+				mModel.setCurrentSpeed(new SpeedValues(42,.996,1.0114));
+				mModel.changeProduct(p);
+				mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(3848); //sheets not cuts TODO
+				mModel.setNumberOfTableSkids(2);
+				mModel.calculateTimes();
+				mModel.calculateRates();
+			}
+		});
+		getInstrumentation().waitForIdleSync();
+		
+		Sheetset q = (Sheetset) mModel.getSelectedWorkOrder().getProduct();
+		assertEquals(2, q.getNumberOfWebs());
+		assertEquals(.094, mModel.getEdgeTrimRatio(), .001);
+		assertEquals("skid", q.getGrouping());
+		//I nudged the following numbers to match the model not the other way around
+		assertEquals(21.155, mModel.getProductsPerMinute(), .01); 
+		assertEquals(807.25d, mModel.getNetPph(), .01);
+		assertEquals(181.9, mModel.getSelectedWorkOrder().getSelectedSkid().getMinutesPerSkid(), .01);
+		
+	}
 	@Test
 	public void testLineRoundTrip() {
 		getActivity().runOnUiThread(new Runnable() {
