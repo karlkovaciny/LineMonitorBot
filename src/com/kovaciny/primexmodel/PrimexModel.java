@@ -71,7 +71,6 @@ public class PrimexModel {
 	private double mLineSpeedSetpoint;
 	private double mNetPph;
 	private double mProductsPerMinute;
-	private int mNumberOfWebs;
 	private int mNumberOfTableSkids;
 	
 	/*
@@ -159,12 +158,11 @@ public class PrimexModel {
 			propChangeSupport.firePropertyChange(SECONDS_TO_MAXSON_CHANGE_EVENT, null, mSelectedLine.getSecondsToMaxson());
 		}
 		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, getProductsPerMinute()); 
-		propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, null, getEdgeTrimPercent()); 
+		propChangeSupport.firePropertyChange(EDGE_TRIM_RATIO_CHANGE_EVENT, null, getEdgeTrimRatio()); 
 		propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, null, getNetPph()); 
 		propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, null, getGrossPph()); 
 		propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, null, getColorPercent()); 
 		propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, null, mSelectedWorkOrder);
-		propChangeSupport.firePropertyChange(NUMBER_OF_WEBS_CHANGE_EVENT, null, getNumberOfWebs());
 		propChangeSupport.firePropertyChange(NUMBER_OF_TABLE_SKIDS_CHANGE_EVENT, null, getNumberOfTableSkids());
 	}
 
@@ -311,7 +309,6 @@ public class PrimexModel {
 		    	mColorPercent= cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_COLOR_PERCENT));
 		    	mLineSpeedSetpoint = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_LINE_SPEED_SETPOINT));
 		    	mDifferentialSetpoint = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_DIFFERENTIAL_SETPOINT));
-		    	mNumberOfWebs = cursor.getInt(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_WEBS));
 		    	mNumberOfTableSkids = cursor.getInt(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_TABLE_SKIDS));
 		    	return true;
 		    } else return false;
@@ -350,7 +347,7 @@ public class PrimexModel {
 		double grossWidth = mSelectedLine.getWebWidth();
 		if (grossWidth > 0) {
 			Double oldEt = null; //mEdgeTrimRatio;
-			double netWidth = getSelectedWorkOrder().getProduct().getWidth() * mNumberOfWebs;
+			double netWidth = getSelectedWorkOrder().getProduct().getWidth();
 			if (netWidth >= grossWidth) {
 				throw new IllegalStateException(new Throwable(ERROR_NET_LESS_THAN_GROSS));
 			}
@@ -419,7 +416,7 @@ public class PrimexModel {
 		if (productLength < 0) throw new IllegalStateException(new Throwable(ERROR_NO_PPM_VALUE));
 
 		double lineSpeed = mSelectedLine.getLineSpeed();
-		mProductsPerMinute = HelperFunction.INCHES_PER_FOOT / productLength * lineSpeed * mNumberOfWebs;
+		mProductsPerMinute = HelperFunction.INCHES_PER_FOOT / productLength * lineSpeed;
 		propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, mProductsPerMinute);
 		return mProductsPerMinute;
 	}
@@ -517,7 +514,7 @@ public class PrimexModel {
 		this.mProductsPerMinute = productsPerMinute;
 	}
 
-	public double getEdgeTrimPercent() {
+	public double getEdgeTrimRatio() {
 		return mEdgeTrimRatio;
 	}
 
@@ -573,24 +570,12 @@ public class PrimexModel {
 		this.mCreateDate = createDate;
 	}	
 	
-	public int getNumberOfWebs() {
-		return mNumberOfWebs;
-	}
-
-	public void setNumberOfWebs(int numberOfWebs) {
-		if (numberOfWebs <= 0) throw new IllegalArgumentException("Number of webs must be positive");
-		this.mNumberOfWebs = numberOfWebs;
-		mSelectedLine.setNumberOfWebs(numberOfWebs);
-		propChangeSupport.firePropertyChange(NUMBER_OF_WEBS_CHANGE_EVENT, null, numberOfWebs);
-	}
-
 	public int getNumberOfTableSkids() {
 		return mNumberOfTableSkids;
 	}
 
 	public void setNumberOfTableSkids(int numberOfSkids) {
 		if (numberOfSkids <= 0) throw new IllegalArgumentException("Number of skids must be positive");
-		int oldNumSkids = mNumberOfTableSkids;
 		this.mNumberOfTableSkids = numberOfSkids;
 		propChangeSupport.firePropertyChange(NUMBER_OF_TABLE_SKIDS_CHANGE_EVENT, null, numberOfSkids);
 	}

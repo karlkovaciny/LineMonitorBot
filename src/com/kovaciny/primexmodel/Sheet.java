@@ -80,6 +80,9 @@ public class Sheet implements Product {
 		return false;
 	}
 	
+	public int getNumberOfWebs() {
+		return 1;
+	}	
 	public String getUnit() {
 		return mUnitSingular;
 	}

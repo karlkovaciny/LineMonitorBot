@@ -451,7 +451,7 @@ public class SkidTimesFragment extends Fragment implements
 			
 		} else if (propertyName == PrimexModel.NUMBER_OF_TABLE_SKIDS_CHANGE_EVENT) {
 			mNumTableSkids = (Integer)newProperty;
-			updateLabels();
+//			updateLabels(); TODO 
 			
 		} else if (propertyName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) {
 			if (newProperty == null) {
@@ -500,10 +500,6 @@ public class SkidTimesFragment extends Fragment implements
 	}
 
 	private void updateLabels() {
-		if ((mNumTableSkids > 1) && (mProductGrouping.equals("Skid"))) {
-			mProductGrouping = "Skidset";
-			mProductUnits = "Cuts";
-		}
 		mLbl_productType.setText(mProductGrouping + ":");
 		mLbl_productsPerMinute.setText(mProductUnits + " per minute");
 		mLbl_products.setText(mProductUnits + ":");

@@ -240,11 +240,6 @@ public class MainActivity extends FragmentActivity implements
 			differentialSpeed = mModel.getSelectedLine().getSpeedValues().differentialSpeed; //TODO seems ugly
 		}
 		
-		int numberOfWebs = mModel.getNumberOfWebs();
-		if (numberOfWebs == 0) {
-			numberOfWebs = mModel.getSelectedLine().getNumberOfWebs();
-		}
-		args.putInt("NumberOfWebs", numberOfWebs);
 		args.putInt("NumberOfSkids", mModel.getNumberOfTableSkids());
 		
 		args.putDouble("DifferentialSpeed", differentialSpeed);
@@ -254,9 +249,10 @@ public class MainActivity extends FragmentActivity implements
 		
 		if (currentProd != null) {
 			args.putDouble("Gauge", currentProd.getGauge());
-			args.putDouble("SheetWidth", currentProd.getWidth());
+			args.putDouble("SheetWidth", currentProd.getWidth()/currentProd.getNumberOfWebs());
 			args.putDouble("SheetLength", currentProd.getLength());			
 			args.putString("ProductType", currentProd.getType());
+			args.putInt("NumberOfWebs", currentProd.getNumberOfWebs());
 		}
 		newFragment.setArguments(args);
 		newFragment.show(this.getFragmentManager(),
@@ -276,16 +272,19 @@ public class MainActivity extends FragmentActivity implements
     		double diffSpeed = spmd.getDifferentialSpeedValue();
     		double speedFactor = spmd.getSpeedFactorValue();
     		
-    		mModel.setNumberOfWebs(spmd.getNumberOfWebs());
     		mModel.setNumberOfTableSkids(spmd.getNumberOfSkids());
     		updateSpeedData(lineSpeed, diffSpeed, speedFactor);
     		String productType;
     		if (spmd.getSheetsOrRollsState().equals(SheetsPerMinuteDialogFragment.ROLLS_MODE)) {
-    			productType = Product.ROLLS_TYPE;
+    			if (spmd.getNumberOfWebs() == 1) {
+    				productType = Product.ROLLS_TYPE;
+    			} else {
+    				productType = Product.ROLLSET_TYPE;
+    			}
     		} else {
     			productType = Product.SHEETS_TYPE;
     		}
-    		updateProductData(productType, gauge, width, length);
+    		updateProductData(productType, gauge, width, length, spmd.getNumberOfWebs());
     	}
     }	
     
@@ -427,10 +426,10 @@ public class MainActivity extends FragmentActivity implements
 		mModel.calculateTimes();
 	}
 	
-	protected void updateProductData(String productType, double gauge, double width, double length) {
+	protected void updateProductData(String productType, double gauge, double width, double length, int numberOfWebs) {
 		Product p;
 		try {
-			p = Products.makeProduct(productType, gauge, width, length);
+			p = Products.makeProduct(productType, gauge, width, length, numberOfWebs);
 		} catch (IllegalArgumentException e) {
 			if (e.getCause().equals(PrimexModel.ERROR_NO_PRODUCT_SELECTED)) {
 				throw new IllegalStateException(new Throwable(PrimexModel.ERROR_NO_PRODUCT_SELECTED));	
@@ -449,6 +448,9 @@ public class MainActivity extends FragmentActivity implements
 		mModel.getSelectedLine().getNovatec().setControllerSetpoint(novaSetpoint); //TODO ug...ly.
 		if (mModel.hasSelectedProduct()) {
 			Product p = mModel.getSelectedWorkOrder().getProduct();
+			if (p.getType().equals(Product.ROLLSET_TYPE)) {
+				unitWeight *= p.getNumberOfWebs();
+			}
 			p.setUnitWeight(unitWeight);
 			mModel.changeProduct(p);
 		}

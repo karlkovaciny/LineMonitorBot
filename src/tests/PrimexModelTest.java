@@ -9,6 +9,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import com.kovaciny.linemonitorbot.MainActivity;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
+import com.kovaciny.primexmodel.Rollset;
 import com.kovaciny.primexmodel.Sheet;
 import com.kovaciny.primexmodel.SpeedValues;
 
@@ -42,34 +43,27 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 			public void run() {
 				// UI affecting code here
 				// no asserts allowed in here! junit.framework.AssertionFailedError.
-				mModel.setSelectedLine(12);
-				Product p = new Sheet(.010, 20, 24);
-				p.setUnitWeight(1.5);
-				mModel.setCurrentSpeed(new SpeedValues(20,1,1));
+				mModel.setSelectedLine(6);
+				mModel.getSelectedLine().setWebWidth(36d);
+				Product p = new Rollset(.012, 31.25, 12, 2); //twice the width of one web
+				p.setUnitWeight(.214); //twice the weight of one linear foot
+				mModel.setCurrentSpeed(new SpeedValues(1331,.660,.07775));
 				mModel.changeProduct(p);
-				mModel.setNumberOfWebs(2);
+				mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(7100);
 				mModel.calculateTimes();
+				mModel.calculateRates();
 			}
 		});
 		getInstrumentation().waitForIdleSync();
-		assertEquals(2, mModel.getNumberOfWebs());
-		assertEquals(20d, mModel.getProductsPerMinute());
-		mModel.setNumberOfWebs(1);
-		getActivity().runOnUiThread(new Runnable() {
-			public void run() {
-				mModel.calculateTimes();
-			}
-		});
-		getInstrumentation().waitForIdleSync();
-		assertEquals(10d, mModel.getProductsPerMinute());
 		
-		mModel.setNumberOfWebs(2);
-		mModel.setNumberOfTableSkids(2);
-		getActivity().runOnUiThread(new Runnable() {
-			public void run() {
-				mModel.calculateTimes();
-			}
-		});
+		Rollset q = (Rollset) mModel.getSelectedWorkOrder().getProduct();
+		assertEquals(2, q.getNumberOfWebs());
+		assertEquals(.132, mModel.getEdgeTrimRatio(), .001);
+		assertEquals("rollset", q.getGrouping());
+		//I nudged the following numbers to match the model not the other way around
+		assertEquals(68.30, mModel.getProductsPerMinute(), .001); 
+		assertEquals(876.98d, mModel.getNetPph(), .01);
+		assertEquals(103.95, mModel.getSelectedWorkOrder().getSelectedSkid().getMinutesPerSkid(), .01);
 		
 	}
 	
