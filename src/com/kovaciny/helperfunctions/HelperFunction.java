@@ -11,6 +11,7 @@ import android.text.SpannedString;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.SubscriptSpan;
 import android.text.style.SuperscriptSpan;
+import android.widget.EditText;
 
 final public class HelperFunction {
 	private HelperFunction() {
@@ -63,4 +64,25 @@ final public class HelperFunction {
 		
 		return ssb;
 	}
+	
+	/*
+	 * Can handle both double and integer formats
+	 */
+	public static void incrementEditText(EditText et) {
+		String current = et.getText().toString();
+		if (current.length() == 0) {
+			et.setText("1");
+		}
+		double doubleValue = Double.valueOf(et.getText().toString());
+		int intValue = (int) doubleValue;
+		if (doubleValue == intValue) {
+			String incremented = String.valueOf(intValue + 1);
+			et.setText(incremented);
+		} else {
+			String incremented = String. valueOf(doubleValue + 1d);
+			et.setText(incremented);
+		}		
+		et.clearFocus();
+	}
+	
 }

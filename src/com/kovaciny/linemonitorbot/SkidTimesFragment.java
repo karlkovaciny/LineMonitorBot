@@ -228,16 +228,16 @@ public class SkidTimesFragment extends Fragment implements
 		switch (v.getId()) {
 		case (R.id.btn_skid_number_up):
 			((MainActivity)getActivity()).hideKeyboard();
-			incrementEditText(mEdit_currentSkidNumber);
+			HelperFunction.incrementEditText(mEdit_currentSkidNumber);
 			if (Double.valueOf(mEdit_currentSkidNumber.getText().toString()) >
 					Math.ceil(Double.valueOf(mEdit_numSkidsInJob.getText().toString()))) { 
 				//it's OK for this to be higher than a fractional number of skids
-				incrementEditText(mEdit_numSkidsInJob); 
+				HelperFunction.incrementEditText(mEdit_numSkidsInJob); 
 			}
 			break;
 		case (R.id.btn_total_skids_up):
 			((MainActivity)getActivity()).hideKeyboard();
-			incrementEditText(mEdit_numSkidsInJob);
+			HelperFunction.incrementEditText(mEdit_numSkidsInJob);
 			mEdit_numSkidsInJob.clearFocus();
 			break;
 		case (R.id.btn_enter_product):
@@ -354,26 +354,6 @@ public class SkidTimesFragment extends Fragment implements
 		}
 	}
 
-	/*
-	 * Can handle both double and integer formats
-	 */
-	public void incrementEditText(EditText et) {
-		String current = et.getText().toString();
-		if (current.length() == 0) {
-			et.setText("1");
-		}
-		double doubleValue = Double.valueOf(et.getText().toString());
-		int intValue = (int) doubleValue;
-		if (doubleValue == intValue) {
-			String incremented = String.valueOf(intValue + 1);
-			et.setText(incremented);
-		} else {
-			String incremented = String. valueOf(doubleValue + 1d);
-			et.setText(incremented);
-		}		
-		et.clearFocus();
-	}
-		
 	public void onetimeTimer(View v, long interval) {
 
 		Context context = getActivity();
