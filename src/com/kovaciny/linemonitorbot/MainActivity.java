@@ -132,6 +132,15 @@ public class MainActivity extends FragmentActivity implements
 
 		}
 
+		//Load the tab we were last on
+		SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
+		int lastTabPos = settings.getInt("LastSelectedTabPosition", -1);
+		if ((lastTabPos == SKID_TIMES_FRAGMENT_POSITION) || 
+				(lastTabPos == RATES_FRAGMENT_POSITION) || 
+				(lastTabPos == DRAINING_FRAGMENT_POSITION)) {
+			mViewPager.setCurrentItem(lastTabPos);			
+		}
+		
 		// Float a calculator over all tabs by replacing the main content.
 		getSupportFragmentManager().beginTransaction()
 				.replace(android.R.id.content, new CalculatorFragment())
@@ -695,7 +704,7 @@ public class MainActivity extends FragmentActivity implements
 			editor.putInt("lastSelectedLine", mModel.getSelectedLine()
 					.getLineNumber());
 		}
-
+		editor.putInt("LastSelectedTabPosition", mViewPager.getCurrentItem());
 		// Commit the edits!
 		editor.commit();
 
@@ -705,23 +714,16 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	protected void onStop() {
-		try {
-			mModel.saveState();
-		} catch (IllegalStateException e) {
-			if (DEBUG)
+		if (mModel.hasSelectedLine()) {
+			try {
+				mModel.saveState();
+			} catch (IllegalStateException e) {
 				Toast.makeText(this,
 						"Saving state error: " + e.getCause().getMessage(),
 						Toast.LENGTH_LONG).show();
-			else
-				throw e;
+			}
 		}
 		super.onStop();
-	}
-
-	void showDummyDialog(String text) {
-		// Create the fragment and show it as a dialog.
-		DialogFragment newFragment = MyDialogFragment.newInstance(text);
-		newFragment.show(getFragmentManager(), "dialog");
 	}
 
 	public void hideKeyboard() {
