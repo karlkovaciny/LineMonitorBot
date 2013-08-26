@@ -28,6 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/imageView1"
                 android:text="Select a line"
+                android:textColor="@color/gray"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </RelativeLayout>
