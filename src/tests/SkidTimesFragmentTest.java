@@ -5,10 +5,12 @@ import java.util.GregorianCalendar;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.KeyEvent;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.kovaciny.linemonitorbot.MainActivity;
@@ -20,6 +22,13 @@ public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<Main
 
 	MainActivity mActivity;
 	SkidTimesFragment mSkidTimesFragment;
+	private EditText mEdit_currentSkidNumber;
+	private EditText mEdit_currentCount;
+	private EditText mEdit_totalCountPerSkid;
+	private EditText mEdit_numSkidsInJob;
+
+	private Button mBtn_calculateTimes;
+
 	TextView mTxt_jobFinishTime;
 	TextView mTxt_sheetsPerMinute;
 	
@@ -37,8 +46,27 @@ public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<Main
 	    mSkidTimesFragment = (SkidTimesFragment)mActivity.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
 	    mTxt_jobFinishTime = (TextView)mActivity.findViewById(R.id.txt_job_finish_time);
 	    mTxt_sheetsPerMinute = (TextView)mActivity.findViewById(R.id.txt_products_per_minute);
+	    //set up editTexts		
+	    mEdit_numSkidsInJob = (EditText) mActivity.findViewById(R.id.edit_num_skids_in_job);
+	    mEdit_currentSkidNumber = (EditText) mActivity.findViewById(R.id.edit_skid_number);
+	    mEdit_currentCount = (EditText) mActivity.findViewById(R.id.edit_current_count);
+	    mEdit_totalCountPerSkid = (EditText) mActivity.findViewById(R.id.edit_total_sheets_per_skid);
+
+	    mBtn_calculateTimes = (Button) mActivity.findViewById(R.id.btn_calculate_times);
+		
 	}
 
+	public void clickButton(int buttonId) {
+		final Button button = (Button) mActivity.findViewById(buttonId);
+		mActivity.runOnUiThread(new Runnable() {
+		     public void run() {
+		    	 button.requestFocus();		    	 
+		     }
+		});
+		getInstrumentation().waitForIdleSync();
+		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
+	}
+	
 	@After
 	public void tearDown() throws Exception {
 		super.tearDown();
@@ -49,7 +77,36 @@ public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<Main
 		assertTrue(mTxt_sheetsPerMinute != null);
 	}
 	
-
+	@Test
+	public void testErrorMessages() {
+		mActivity.runOnUiThread(new Runnable() {
+		     public void run() {
+		    	 mEdit_totalCountPerSkid.setText("0");
+		    	 mEdit_currentCount.setText("1234");
+		    	 mEdit_numSkidsInJob.setText("");
+		    	 mEdit_currentSkidNumber.setText("200");
+		     }
+		});
+		clickButton(R.id.btn_calculate_times);
+		assertEquals(mActivity.getString(R.string.error_over_maximum_skids).replace("%1", String.valueOf(SkidTimesFragment.MAXIMUM_NUMBER_OF_SKIDS)), mEdit_numSkidsInJob.getError());
+		assertEquals(mActivity.getString(R.string.error_current_greater_than_total), mEdit_currentCount.getError());
+		assertEquals(mActivity.getString(R.string.error_need_nonzero), mEdit_totalCountPerSkid.getError());
+		assertEquals(null, mEdit_currentSkidNumber.getError());
+		
+		mActivity.runOnUiThread(new Runnable() {
+		     public void run() {
+		    	 mEdit_totalCountPerSkid.setText("");
+		    	 mEdit_currentCount.setText("");
+		    	 mEdit_numSkidsInJob.setText("");
+		    	 mEdit_currentSkidNumber.setText("");
+		     }
+		});
+		clickButton(R.id.btn_calculate_times);
+		assertEquals(mActivity.getString(R.string.error_over_maximum_skids).replace("%1", String.valueOf(SkidTimesFragment.MAXIMUM_NUMBER_OF_SKIDS)), mEdit_numSkidsInJob.getError());
+		assertEquals(mActivity.getString(R.string.error_current_greater_than_total), mEdit_currentCount.getError());
+		assertEquals(mActivity.getString(R.string.error_need_nonzero), mEdit_totalCountPerSkid.getError());
+		assertEquals(null, mEdit_currentSkidNumber.getError());
+	}
 	/*@Test
 	public void testOnPause() {
 		fail("Not yet implemented"); // TODO
