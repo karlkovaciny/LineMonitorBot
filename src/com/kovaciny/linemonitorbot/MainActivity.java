@@ -157,7 +157,7 @@ public class MainActivity extends FragmentActivity implements
 		getMenuInflater().inflate(R.menu.main, menu);
 		mJobPicker = (MenuItem) menu.findItem(R.id.action_pick_job);
 		mLinePicker = (MenuItem) menu.findItem(R.id.action_pick_line);
-
+		
 		// populate the line picker with line numbers from the database
 		List<Integer> lineNumberList = new ArrayList<Integer>();
 		lineNumberList = mModel.getLineNumbers();
@@ -398,20 +398,12 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		SkidTimesFragment skidTimesFrag;
-		RatesFragment ratesFrag;
-		try {
-			skidTimesFrag = (SkidTimesFragment) this
-					.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
-			ratesFrag = (RatesFragment) this
-					.findFragmentByPosition(MainActivity.RATES_FRAGMENT_POSITION);
-		} catch (IllegalStateException e) {
-			if (e.getCause().getMessage() == ERROR_FRAGMENT_NOT_FOUND) {
-				return; // too early to handle events
-			} else
-				throw e;
-		}
-
+		Fragment stf = this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
+		Fragment rf = this.findFragmentByPosition(MainActivity.RATES_FRAGMENT_POSITION);
+		if ((stf == null) || (rf == null)) return; //too early to handle events
+		SkidTimesFragment skidTimesFrag = (SkidTimesFragment) stf;
+		RatesFragment ratesFrag = (RatesFragment) rf;
+		
 		String eventName = event.getPropertyName();
 		Log.v("Event", eventName);
 		Object newProperty = event.getNewValue();
@@ -618,7 +610,7 @@ public class MainActivity extends FragmentActivity implements
 			// Return a SectionFragment with the page number as its lone
 			// argument.
 			Fragment fragment;
-
+			
 			switch (position) {
 			case SKID_TIMES_FRAGMENT_POSITION:
 				fragment = new SkidTimesFragment();
@@ -668,10 +660,6 @@ public class MainActivity extends FragmentActivity implements
 	public Fragment findFragmentByPosition(int pos) {
 		String tag = "android:switcher:" + mViewPager.getId() + ":" + pos;
 		Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
-		if (fragment == null) {
-			throw new IllegalStateException(new Throwable(
-					ERROR_FRAGMENT_NOT_FOUND));
-		}
 		return fragment;
 	}
 
