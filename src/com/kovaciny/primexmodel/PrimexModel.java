@@ -23,7 +23,6 @@ public class PrimexModel {
 			throw new RuntimeException("database didn't find any lines");
 		}
 		mWoNumbersList = mDbHelper.getWoNumbers();
-		setNumberOfTableSkids(1);
 	}
 	
 	public static final String LINE_SPEED_CHANGE_EVENT = "PrimexModel.SPEED_CHANGE";
@@ -140,12 +139,11 @@ public class PrimexModel {
 		mDbHelper.updateLineWorkOrderLink(mSelectedLine.getLineNumber(), woNumber);
 		changeSelectedSkid(mSelectedWorkOrder.getSelectedSkid().getSkidNumber());
 		
-		Product p = mDbHelper.getProduct(woNumber);
-		mSelectedWorkOrder.setProduct(p);
-		if (p != null) propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, p);
-		
 		loadState(woNumber);
 		
+		Product p = mDbHelper.getProduct(woNumber);
+		if (p != null) changeProduct(p);
+				
 		//Now that everything is loaded up, notify listeners of all the changes.
 		propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, null, mSelectedWorkOrder.getFinishDate());
 		if (mSelectedSkid != null) {
@@ -393,7 +391,6 @@ public class PrimexModel {
 			
 			//calculate total time per skid. 
 			double minutes = mSelectedSkid.calculateMinutesPerSkid(mProductsPerMinute);
-			minutes *= mNumberOfTableSkids;
 			propChangeSupport.firePropertyChange(MINUTES_PER_SKID_CHANGE_EVENT, null, minutes);
 			
 			//calculate skid start and finish time
@@ -410,6 +407,9 @@ public class PrimexModel {
 		}
 	}
 	
+	/*
+	 * Irrespective of number of webs, as a rollset is one product with several webs.
+	 */
 	private double calculateProductsPerMinute() {
 		double productLength = mSelectedWorkOrder.getProduct().getLength();
 		if (productLength < 0) throw new IllegalStateException(new Throwable(ERROR_NO_PPM_VALUE));

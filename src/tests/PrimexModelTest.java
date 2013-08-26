@@ -116,9 +116,9 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 				Product p = new Sheetset(.015, 48, 24, 2); //twice the width of one web
 				p.setUnitWeight(.636); //twice the weight of one sheet
 				mModel.setCurrentSpeed(new SpeedValues(42,.996,1.0114));
+				mModel.setNumberOfTableSkids(2);
 				mModel.changeProduct(p);
 				mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(3848); //sheets not cuts TODO
-				mModel.setNumberOfTableSkids(2);
 				mModel.calculateTimes();
 				mModel.calculateRates();
 			}
@@ -128,11 +128,43 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 		Sheetset q = (Sheetset) mModel.getSelectedWorkOrder().getProduct();
 		assertEquals(2, q.getNumberOfWebs());
 		assertEquals(.094, mModel.getEdgeTrimRatio(), .001);
-		assertEquals("skid", q.getGrouping());
+		assertEquals("skidset", q.getGrouping());
 		//I nudged the following numbers to match the model not the other way around
 		assertEquals(21.155, mModel.getProductsPerMinute(), .01); 
 		assertEquals(807.25d, mModel.getNetPph(), .01);
 		assertEquals(181.9, mModel.getSelectedWorkOrder().getSelectedSkid().getMinutesPerSkid(), .01);
+		
+	}
+	
+	@Test
+	public void test2UpSheets2Skids_PartDeux() {
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				// UI affecting code here
+				// no asserts allowed in here! junit.framework.AssertionFailedError.
+				mModel.setSelectedLine(11);
+				mModel.getSelectedLine().setWebWidth(57.125d);
+				Product p = new Sheetset(.060, 52, 17, 2); //twice the width of one web
+				p.setUnitWeight(2.058); //twice the weight of one sheet
+				mModel.setCurrentSpeed(new SpeedValues(11.1,1.025,.9837));
+				mModel.changeProduct(p);
+				mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(960); //sheets not cuts TODO
+				mModel.setNumberOfTableSkids(2);
+				mModel.calculateTimes();
+				mModel.calculateRates();
+			}
+		});
+		getInstrumentation().waitForIdleSync();
+		
+		Sheetset q = (Sheetset) mModel.getSelectedWorkOrder().getProduct();
+		assertEquals(2, q.getNumberOfWebs());
+		assertEquals(.0897, mModel.getEdgeTrimRatio(), .001);
+		assertEquals("skidset", q.getGrouping());
+		//I nudged the following numbers to match the model not the other way around
+		assertEquals(7.9, mModel.getProductsPerMinute(), .01);
+		assertEquals(122, mModel.getSelectedWorkOrder().getSelectedSkid().getMinutesPerSkid(), 1);
+		assertEquals(975.49d, mModel.getNetPph(), .1);
+		assertEquals(121.52, mModel.getSelectedWorkOrder().getSelectedSkid().getMinutesPerSkid(), .01);
 		
 	}
 	@Test
