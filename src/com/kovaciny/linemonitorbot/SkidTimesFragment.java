@@ -137,6 +137,7 @@ public class SkidTimesFragment extends Fragment implements
 		mBtn_cancelAlarm.setOnClickListener(this);
 		
 		mBtn_calculateTimes = (Button) rootView.findViewById(R.id.btn_calculate_times);
+		mBtn_calculateTimes.setWidth(240);
 		mBtn_calculateTimes.setOnClickListener(this);
 		mBtn_calculateTimes.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF,0xFF0000FF));
 
