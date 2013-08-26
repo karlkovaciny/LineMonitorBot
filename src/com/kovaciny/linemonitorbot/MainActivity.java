@@ -170,7 +170,7 @@ public class MainActivity extends FragmentActivity implements
 			pickLineSubMenu.add(LINE_LIST_MENU_GROUP,
 					(lineNumberList.get(i) + LINE_LIST_ID_RANDOMIZER),
 					Menu.FLAG_APPEND_TO_GROUP,
-					String.valueOf(lineNumberList.get(i)));
+					"Line  " + String.valueOf(lineNumberList.get(i)));
 		}
 
 		if (!mModel.hasSelectedLine()) {
