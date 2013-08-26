@@ -110,6 +110,6 @@ public class Sheet implements Product {
 	@Override
 	public String toString() {
 		return getType() + ": " + String.valueOf(mGauge) + " x " + String.valueOf(mWidth) + " x " + String.valueOf(mLength) +
-				String.valueOf(getNumberOfWebs()) + " webs";
+				", " + String.valueOf(getNumberOfWebs()) + " webs";
 	}
 }
