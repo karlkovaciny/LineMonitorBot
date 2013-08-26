@@ -191,7 +191,9 @@ public class GoByHeightDialogFragment extends DialogFragment {
 	}
 	
 	public double getFinishedHeight() {
-		return Double.valueOf(mEdit_finishedHeight.getText().toString());
+		if (mEdit_finishedHeight.getText().length() > 0) {
+			return Double.valueOf(mEdit_finishedHeight.getText().toString());
+		} else return 0d;
 	}
 	
 	public int getNumberOfStacks() {

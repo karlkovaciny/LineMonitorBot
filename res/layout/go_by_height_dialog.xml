@@ -29,7 +29,8 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="numberDecimal" >
+                android:inputType="numberDecimal"
+                android:nextFocusDown="@+id/edit_current_height" >
             </EditText>
 
         </TableRow>
@@ -102,7 +103,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
-                android:id="@+id/edit_current_height"
+                android:id="@id/edit_current_height"
                 style="@style/EditText.SecondTableColumn"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
