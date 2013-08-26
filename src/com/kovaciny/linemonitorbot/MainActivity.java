@@ -21,6 +21,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +31,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.linemonitorbot.GoByHeightDialogFragment.GoByHeightDialogListener;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
@@ -324,6 +327,7 @@ public class MainActivity extends FragmentActivity implements
     		Skid<Product> currentSkid = mModel.getSelectedWorkOrder().getSelectedSkid();
     		currentSkid.setTotalItems(gbhd.getTotalSheets());
     		currentSkid.setNumberOfStacks(gbhd.getNumberOfStacks());
+    		currentSkid.setFinishedStackHeight(gbhd.getFinishedHeight()); //will be 0 if they entered average gauge
     		
     		if (mModel.hasSelectedProduct()) {
     			Product currentProduct = mModel.getSelectedWorkOrder().getProduct();
@@ -332,21 +336,22 @@ public class MainActivity extends FragmentActivity implements
     		} 
     		
     		int items;
-    		double height;
+    		double totalHeight;
     		if (gbhd.getAverageGauge() > 0) {
     			items = mModel.calculateSheetsFromGauge(gbhd.getCurrentHeight(), gbhd.getAverageGauge());
-    			height = items * gbhd.getAverageGauge();
+    			totalHeight = gbhd.getTotalSheets() * gbhd.getAverageGauge();
     		} else {
-    			currentSkid.setFinishedStackHeight(gbhd.getFinishedHeight());
     			items = mModel.calculateSheetsFromHeight(gbhd.getCurrentHeight(), gbhd.getFinishedHeight());
-    			height = gbhd.getFinishedHeight();
+    			totalHeight = gbhd.getFinishedHeight();
     		}
     		currentSkid.setCurrentItems(items);
     		mModel.changeSelectedSkid(currentSkid.getSkidNumber()); //to trigger events
     		
     		//Give the user feedback of what the dialog changed
+    		double roundedHeight = Math.round(totalHeight*16d) / 16d; //round to the nearest 1/16
+    		Spannable heightAsFraction = new SpannableStringBuilder(HelperFunction.formatDecimalAsProperFraction(roundedHeight)).append("\"");
     		View heightButton = this.findViewById(R.id.btn_go_by_height);
-    		if (heightButton != null) ((Button) heightButton).setText(String.valueOf(height));
+    		if (heightButton != null) ((Button) heightButton).setText(heightAsFraction);
     		View currentItems = this.findViewById(R.id.edit_current_count);
     		if (currentItems != null) currentItems.requestFocus();
     	}

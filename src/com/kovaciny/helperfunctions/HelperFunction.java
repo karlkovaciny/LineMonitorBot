@@ -1,5 +1,17 @@
 package com.kovaciny.helperfunctions;
 
+import org.apache.commons.lang3.math.Fraction;
+
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.SpannedString;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.SubscriptSpan;
+import android.text.style.SuperscriptSpan;
+
 final public class HelperFunction {
 	private HelperFunction() {
 		//class can't be instantiated
@@ -10,7 +22,10 @@ final public class HelperFunction {
 	public static final long MINUTES_PER_HOUR = 60;
 	public static final long SECONDS_PER_MINUTE = 60;
 	public static final double INCHES_PER_FOOT = 12.0;
-	
+
+	public static final float RELATIVE_SIZE_SUPERSCRIPT = 0.66f;
+	public static final float RELATIVE_SIZE_SUBSCRIPT = 0.66f;
+
 	public static String formatMinutesAsHours(long minutes) {
         long hours = minutes/60;
         long remainingMinutes = minutes % 60;
@@ -27,5 +42,25 @@ final public class HelperFunction {
 		StringBuilder capitalized = new StringBuilder(target);
 		capitalized.setCharAt(0, Character.toUpperCase(capitalized.charAt(0)));
 		return capitalized.toString();
+	}
+	
+	public static Spannable formatDecimalAsProperFraction(double decimal) {
+		Fraction fraction = Fraction.getFraction(decimal);
+		String whole = String.valueOf(fraction.getProperWhole());
+		if (fraction.getProperNumerator() == 0) return new SpannableString(whole);
+		
+		SpannableString numerator = new SpannableString(String.valueOf(fraction.getProperNumerator()));
+		numerator.setSpan(new SuperscriptSpan(), 0, numerator.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		SpannableString denominator = new SpannableString(String.valueOf(fraction.getDenominator()));
+		denominator.setSpan(new SubscriptSpan(), 0, denominator.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		Spanned slash = new SpannedString(Html.fromHtml("&frasl;"));
+		SpannableStringBuilder ssb = new SpannableStringBuilder();
+		ssb.append(numerator);
+		ssb.append(slash);
+		ssb.append(denominator);
+		ssb.setSpan(new RelativeSizeSpan(RELATIVE_SIZE_SUPERSCRIPT), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssb.insert(0, new SpannableString(whole + " "));
+		
+		return ssb;
 	}
 }
