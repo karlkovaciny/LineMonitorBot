@@ -27,7 +27,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewPropertyAnimator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
@@ -103,8 +102,7 @@ public class SkidTimesFragment extends Fragment implements
 		mEdit_numSkidsInJob = (EditText) rootView.findViewById(R.id.edit_num_skids_in_job);
 		mEdit_currentSkidNumber = (EditText) rootView.findViewById(R.id.edit_skid_number);
 		mEdit_currentCount = (EditText) rootView.findViewById(R.id.edit_current_count);
-		mEdit_totalCountPerSkid = (EditText) rootView
-				.findViewById(R.id.edit_total_sheets_per_skid);
+		mEdit_totalCountPerSkid = (EditText) rootView.findViewById(R.id.edit_total_sheets_per_skid);
 		
 		mEditableGroup = new ArrayList<EditText>(); 
 		ViewGroup dataEntryGroup = (RelativeLayout) rootView.findViewById(R.id.rl_data_entry_group);
@@ -257,26 +255,31 @@ public class SkidTimesFragment extends Fragment implements
 			((MainActivity)getActivity()).showGoByHeightDialog(updatedTotalSheets);
 			break;
 		case (R.id.btn_calculate_times):
-			//supply default values and validate entries
-			int currentCount = Integer.valueOf(mEdit_currentCount.getText().toString());
-			int totalCount = Integer.valueOf(mEdit_totalCountPerSkid.getText().toString());
-			if (currentCount > totalCount) mEdit_currentCount.setText(String.valueOf(totalCount));
+			//supply default values
+			if (mEdit_currentCount.getText().length() == 0) {
+				mEdit_currentCount.setText("0");
+			}
 			
-			if (mEdit_currentSkidNumber.getText().toString().equals("")) {
+			if (mEdit_currentSkidNumber.getText().length() == 0) {
 				mEdit_currentSkidNumber.setText("1");
 			}
 			String currentSkidNumText = mEdit_currentSkidNumber.getText().toString();
-			Integer currentSkidNum = Integer.valueOf(currentSkidNumText);
 			
-			String totalSkidsText = mEdit_numSkidsInJob.getText().toString();
-			if (totalSkidsText.equals("")) {
+			if (mEdit_numSkidsInJob.getText().length() == 0 ) {
 				mEdit_numSkidsInJob.setText(currentSkidNumText);
 			}
 			
-			Double totalSkids = Double.valueOf(totalSkidsText);
-			if (totalSkids <= 0d) {
+			if (mEdit_numSkidsInJob.getText().toString() == "0") {
 				mEdit_numSkidsInJob.setText("1");
 			}
+			
+			if (mEdit_totalCountPerSkid.getText().length() == 0) {
+				mEdit_totalCountPerSkid.setText("0"); 
+			}
+			
+			Integer currentSkidNum = Integer.valueOf(currentSkidNumText);
+			Double totalSkids = Double.valueOf(mEdit_numSkidsInJob.getText().toString());
+			
 			if (currentSkidNum > Math.ceil(totalSkids)) {
 				mEdit_numSkidsInJob.setText(currentSkidNumText);
 			}
@@ -295,21 +298,32 @@ public class SkidTimesFragment extends Fragment implements
 			//Process the entries only if all the necessary ones are filled.
 			Iterator<EditText> itr = mEditableGroup.iterator();
 			boolean validInputs = true;
-			if (mEdit_totalCountPerSkid.getText().toString().equals("0")) {
+			int currentCount = Integer.valueOf(mEdit_currentCount.getText().toString());
+			int totalCount = Integer.valueOf(mEdit_totalCountPerSkid.getText().toString());
+			
+			if (currentCount > totalCount) {
+				mEdit_currentCount.setError(getString(R.string.error_current_greater_than_total));
+				validInputs = false;
+			}
+			
+			if (totalCount == 0) {
 				mEdit_totalCountPerSkid.setError(getString(R.string.error_need_nonzero));
 				validInputs = false;
-			} else if (Double.valueOf(mEdit_numSkidsInJob.getText().toString()) > MAXIMUM_NUMBER_OF_SKIDS) {
+			} 
+			
+			if (Double.valueOf(mEdit_numSkidsInJob.getText().toString()) > MAXIMUM_NUMBER_OF_SKIDS) {
 				mEdit_numSkidsInJob.setError(getString(R.string.error_over_maximum_skids).replace("%1", String.valueOf(MAXIMUM_NUMBER_OF_SKIDS)));
 				validInputs = false;
-			} else {
-				while (itr.hasNext()) {
-					EditText et = itr.next();
-					if ( et.getText().toString().trim().equals("") ) {
-						et.setError(getString(R.string.error_empty_field));
-						validInputs = false;
-					}
-				}	
 			}
+			
+			while (itr.hasNext()) {
+				EditText et = itr.next();
+				if ( et.getText().toString().trim().equals("") ) {
+					et.setError(getString(R.string.error_empty_field));
+					validInputs = false;
+				}
+			}
+			
 			if (validInputs) {
 				((MainActivity)getActivity()).hideKeyboard();
 				mBtn_enterProduct.setError(null);
