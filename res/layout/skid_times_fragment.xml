@@ -138,11 +138,13 @@
                 style="@style/Button.Minor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/edit_current_count"
-                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@id/textView124"
+                android:layout_toRightOf="@+id/edit_num_skids_in_job"
+                android:layout_marginLeft="@dimen/btn_go_by_height_margin"
                 android:drawableLeft="@drawable/ic_ruler"
                 android:drawablePadding="10dp"
-                android:text="Go by\nheight" />
+                android:text="@string/btn_go_by_height_text" />
+            
         </RelativeLayout>
     </LinearLayout>
 
@@ -157,28 +159,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_marginLeft="8dp"
             android:text="Enter Product" />
 
         <Button
             android:id="@+id/btn_calculate_times"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/button_width_default"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/btn_enter_product"
-            android:paddingLeft="@dimen/button_row_spacing"
+            android:layout_marginLeft="@dimen/button_row_spacing"
             android:text="Get Times" />
 
     </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal|center_vertical" >
-
-    </LinearLayout>
     
 <TableLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:shrinkColumns="3" >
 
         <TableRow
@@ -201,6 +198,7 @@
     </TableLayout>
 
     <TableLayout
+        android:layout_marginLeft="10dp"        
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:shrinkColumns="3" >

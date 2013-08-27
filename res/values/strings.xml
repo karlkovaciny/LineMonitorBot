@@ -39,6 +39,9 @@
 	<string name="calculate">Calculate</string>
 	<string name="title_activity_alarm_manager">Skid Finished Alarm Manager</string>
 	<string name="default_sheet_weight">0.0</string>
+	<string name="btn_go_by_height_text">Go by\nheight</string>
+	<string name="lbl_finished_height">Finished height\n<small>(highest spot)</small></string>
+	<string name="lbl_current_gauge">Current gauge\n<small>(highest reading)</small></string>
 	<string name="error_empty_field">Please enter a value</string>
 	<string name="error_need_nonzero">Value must be greater than zero</string>
 	<string name="error_net_less_than_gross">Gross width must be larger than sheet width</string>
