@@ -85,9 +85,9 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 				Product p = new Sheetset(.015, 48, 24, 2); //twice the width of one web
 				p.setUnitWeight(.636); //twice the weight of one sheet
 				mModel.setCurrentSpeed(new SpeedValues(42,.996,1.0114));
+				mModel.setNumberOfTableSkids(1);
 				mModel.changeProduct(p);
 				mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(1924); //cuts not sheets TODO
-				mModel.setNumberOfTableSkids(1);
 				mModel.calculateTimes();
 				mModel.calculateRates();
 			}
@@ -147,9 +147,9 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 				Product p = new Sheetset(.060, 52, 17, 2); //twice the width of one web
 				p.setUnitWeight(2.058); //twice the weight of one sheet
 				mModel.setCurrentSpeed(new SpeedValues(11.1,1.025,.9837));
+				mModel.setNumberOfTableSkids(2);
 				mModel.changeProduct(p);
 				mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(960); //sheets not cuts TODO
-				mModel.setNumberOfTableSkids(2);
 				mModel.calculateTimes();
 				mModel.calculateRates();
 			}

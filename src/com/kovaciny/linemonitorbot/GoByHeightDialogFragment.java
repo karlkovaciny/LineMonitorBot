@@ -10,11 +10,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TableRow;
+
+import com.kovaciny.primexmodel.PrimexModel;
 
 public class GoByHeightDialogFragment extends DialogFragment {
 
@@ -66,13 +66,11 @@ public class GoByHeightDialogFragment extends DialogFragment {
 		builder.setView(rootView);
 	
 		mEdit_finishedHeight = (EditText) rootView.findViewById(R.id.edit_finished_height);
-	  	mEdit_averageGauge = (EditText) rootView.findViewById(R.id.edit_average_gauge);
+	  	mEdit_averageGauge = (EditText) rootView.findViewById(R.id.edit_current_gauge);
 	  	mEdit_currentHeight = (EditText) rootView.findViewById(R.id.edit_current_height);
-	  	mEdit_sheetsPerSkid = (EditText) rootView.findViewById(R.id.edit_sheets_per_skid);
+	  	mEdit_sheetsPerSkid = (EditText) rootView.findViewById(R.id.edit_sheets_per_skid_height_dialog);
 	  	mEdit_numberOfStacks = (EditText) rootView.findViewById(R.id.edit_number_of_stacks);
 	  	
-		SharedPreferences settings = getActivity().getPreferences(Context.MODE_PRIVATE);
-		
 		if (getArguments() != null) {
 			int sheetsPerSkid = getArguments().getInt("SheetsPerSkid", 0);
 			double finishedHeight = getArguments().getDouble("FinishedHeight", 0);
@@ -119,39 +117,38 @@ public class GoByHeightDialogFragment extends DialogFragment {
 					public void onClick(View v) {
 						View parent = (View)v.getRootView();
 						boolean validInputs = true;
-						ViewGroup table = (ViewGroup)parent.findViewById(R.id.table_go_by_height_2);
-						if (table != null) {					
-							for (int i = 0, n = table.getChildCount(); i < n; i++) {
-								ViewGroup nextRow = (ViewGroup)table.getChildAt(i);
-								if (nextRow instanceof TableRow) {
-									for (int j = 0, m = nextRow.getChildCount(); j < m; j++) {
-										View nextChild = nextRow.getChildAt(j);
-										if (nextChild instanceof EditText) {
-											EditText et = (EditText) nextChild;
-											String text = et.getText().toString();
-											if (text.length() == 0) {
-												et.setError(getString(R.string.error_empty_field));
-												validInputs = false;
-											} else if (Double.valueOf(text) <= 0) {
-												et.setError(getString(R.string.error_need_nonzero));
-												validInputs = false;
-											}
-										}
-									}
-								}
-							} 
-						}
-						EditText etHeight = (EditText) parent.findViewById(R.id.edit_finished_height);
-						EditText etGauge = (EditText) parent.findViewById(R.id.edit_average_gauge);
-						String height = etHeight.getText().toString();
+						
+						EditText etSheets = (EditText) parent.findViewById(R.id.edit_sheets_per_skid_height_dialog);
+						EditText etFinishedHeight = (EditText) parent.findViewById(R.id.edit_finished_height);
+						EditText etGauge = (EditText) parent.findViewById(R.id.edit_current_gauge);
+						EditText etCurrentHeight = (EditText) parent.findViewById(R.id.edit_current_height);
+						String finishedHeight = etFinishedHeight.getText().toString();
 						String gauge = etGauge.getText().toString();
-						if ((height.length() == 0) && (gauge.length() == 0)) {
-							etHeight.setError(getString(R.string.error_need_at_least_one));
+						String sheets = etSheets.getText().toString();
+						
+						if (etCurrentHeight.getText().length() == 0) {
+							etCurrentHeight.setText("0");
+						}
+
+						//auto-convert if user enters gauge as a whole number instead of a decimal
+						if (!gauge.equals("")) {
+							double gaugeValue = Double.valueOf(gauge);
+							if (gaugeValue > PrimexModel.MAXIMUM_POSSIBLE_GAUGE) {
+								gaugeValue /= 1000;
+								etGauge.setText(String.valueOf(gaugeValue));
+							}
+						}
+						if ((sheets.length() == 0) || sheets.equals("0")) {
+							etSheets.setError(getString(R.string.error_need_nonzero)); 
+							validInputs = false;
+						}
+						if ((finishedHeight.length() == 0) && (gauge.length() == 0)) {
+							etFinishedHeight.setError(getString(R.string.error_need_at_least_one));
 							etGauge.setError(getString(R.string.error_need_at_least_one));
 							validInputs = false;
 						}
-						if ((height.length() > 0) && (gauge.length() > 0)) {
-							etHeight.setError(getString(R.string.error_need_only_one));
+						if ((finishedHeight.length() > 0) && (gauge.length() > 0)) {
+							etFinishedHeight.setError(getString(R.string.error_need_only_one));
 							etGauge.setError(getString(R.string.error_need_only_one));
 							validInputs = false;
 						}

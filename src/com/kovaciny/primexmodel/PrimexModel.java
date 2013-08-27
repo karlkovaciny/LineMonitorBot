@@ -55,6 +55,7 @@ public class PrimexModel {
 	public static final String ERROR_ZERO_LINE_SPEED = "PrimexModel.Dividing by zero line speed";
 	public static final String ERROR_NO_PPM_VALUE = "PrimexModel.Products per minute is null";
 	
+	public static final double MAXIMUM_POSSIBLE_GAUGE = .550d;
 	private List<Integer> mLineNumbersList;
 	private List<Integer> mWoNumbersList;
 	private ProductionLine mSelectedLine;
@@ -234,12 +235,14 @@ public class PrimexModel {
 				null, 
 				String.valueOf(setpoint));
 	}
+	/*
+	 * Dependency on setNumberOfTableSkids
+	 */
 	public void changeProduct (Product p) {
-		if (hasSelectedProduct() && mSelectedWorkOrder.getProduct().getType().equals(Product.SHEETSET_TYPE)) {
+		if (hasSelectedProduct() && p.getType().equals(String.valueOf(Product.SHEETSET_TYPE))) {
 			if (mNumberOfTableSkids == 2) {
 				((Sheetset)p).setGrouping("skidset");
 			} else ((Sheetset)p).setGrouping("skid");
-			propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, mSelectedWorkOrder.getProduct());
 		}
 
 		mSelectedWorkOrder.setProduct(p);

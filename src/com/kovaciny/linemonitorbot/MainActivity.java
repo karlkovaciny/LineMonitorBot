@@ -87,7 +87,7 @@ public class MainActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
 		// Initialize settings on first run
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -108,6 +108,7 @@ public class MainActivity extends FragmentActivity implements
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+		mViewPager.setOffscreenPageLimit(2); //so that all fragments will always be available
 
 		// When swiping between different sections, select the corresponding
 		// tab. We can also use ActionBar.Tab#select() to do this if we have
@@ -228,12 +229,7 @@ public class MainActivity extends FragmentActivity implements
 		if (settings.getLong("firstRunDate", -1) == -1) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this)
 					.setMessage("Welcome to LineMonitorBot!\n\n"
-							+ "* Pick your line from the top menu \n"
-							+ "* Then, enter your product details.\n\n"
-							+ "LineMonitorBot will\n\n"
-							+ "* Know when your skids are done\n"
-							+ "* Remind you by vibrating with 90 seconds left (optional)\n"
-							+ "* Calculate your run rates.");
+							+ "Start by picking your line from the top menu.");
 			builder.setPositiveButton(R.string.ok,
 					new DialogInterface.OnClickListener() {
 
@@ -324,7 +320,7 @@ public class MainActivity extends FragmentActivity implements
 		if (currentProduct != null) {
 			args.putDouble("AverageGauge", currentProduct.getAverageGauge());
 		}
-
+		
 		newFragment.setArguments(args);
 		newFragment.show(this.getFragmentManager(), "GoByHeightDialog");
 	}
@@ -353,17 +349,20 @@ public class MainActivity extends FragmentActivity implements
     			items = mModel.calculateSheetsFromHeight(gbhd.getCurrentHeight(), gbhd.getFinishedHeight());
     			totalHeight = gbhd.getFinishedHeight();
     		}
-    		currentSkid.setCurrentItems(items);
+    		if (items > 0) {
+    			currentSkid.setCurrentItems(items);
+    			View currentItems = this.findViewById(R.id.edit_current_count);
+        		if (currentItems != null) currentItems.requestFocus(); //to show what changed
+    		}
+
     		mModel.changeSelectedSkid(currentSkid.getSkidNumber()); //to trigger events
-    		
-    		//Give the user feedback of what the dialog changed
-    		double roundedHeight = Math.round(totalHeight*16d) / 16d; //round to the nearest 1/16
-    		Spannable heightAsFraction = new SpannableStringBuilder(HelperFunction.formatDecimalAsProperFraction(roundedHeight)).append("\"");
+			double roundedHeight = Math.round(totalHeight*16d) / 16d; //round to the nearest 1/16
+    		Spannable heightAsFraction = new SpannableStringBuilder(
+    				HelperFunction.formatDecimalAsProperFraction(roundedHeight)).append("\"");
     		View heightButton = this.findViewById(R.id.btn_go_by_height);
-    		if (heightButton != null) ((Button) heightButton).setText(heightAsFraction);
-    		View currentItems = this.findViewById(R.id.edit_current_count);
-    		if (currentItems != null) currentItems.requestFocus();
+    		if (heightButton != null) ((Button) heightButton).setText(heightAsFraction);    		
     	}
+    	
     	if (d.getTag() == "EnterProductDialog") {
     		EnterProductDialogFragment epd = (EnterProductDialogFragment)d;
     		
@@ -382,10 +381,17 @@ public class MainActivity extends FragmentActivity implements
     				productType = Product.ROLLS_TYPE;
     			} else {
     				productType = Product.ROLLSET_TYPE;
+    				Toast.makeText(this, "Divide total rolls by " + String.valueOf(epd.getNumberOfWebs()) + 
+    						" to get total rollsets", Toast.LENGTH_LONG).show();
     			}
     		} else {
     			if (epd.getNumberOfWebs() == 1) productType = Product.SHEETS_TYPE;
-    			else productType = Product.SHEETSET_TYPE;
+    			else {
+    				productType = Product.SHEETSET_TYPE;
+    				if (epd.getNumberOfSkids() == 2) {
+    					Toast.makeText(this, "Divide total skids by 2 to get total skidsets", Toast.LENGTH_LONG).show();
+    				}
+    			}
     		}
     		updateProductData(productType, gauge, width, length, epd.getNumberOfWebs());
     	}
@@ -400,7 +406,6 @@ public class MainActivity extends FragmentActivity implements
 	public void propertyChange(PropertyChangeEvent event) {
 		Fragment stf = this.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
 		Fragment rf = this.findFragmentByPosition(MainActivity.RATES_FRAGMENT_POSITION);
-		if ((stf == null) || (rf == null)) return; //too early to handle events
 		SkidTimesFragment skidTimesFrag = (SkidTimesFragment) stf;
 		RatesFragment ratesFrag = (RatesFragment) rf;
 		
