@@ -213,9 +213,11 @@ com.kovaciny.linemonitorbot.R$color: int yellow
 com.kovaciny.linemonitorbot.R$dimen: int activity_horizontal_margin
 com.kovaciny.linemonitorbot.R$dimen: int activity_vertical_margin
 com.kovaciny.linemonitorbot.R$dimen: int borderless_row_padding
+com.kovaciny.linemonitorbot.R$dimen: int btn_go_by_height_margin
 com.kovaciny.linemonitorbot.R$dimen: int button_padding_left
 com.kovaciny.linemonitorbot.R$dimen: int button_row_padding
 com.kovaciny.linemonitorbot.R$dimen: int button_row_spacing
+com.kovaciny.linemonitorbot.R$dimen: int button_width_default
 com.kovaciny.linemonitorbot.R$dimen: int data_entry_group_left_padding
 com.kovaciny.linemonitorbot.R$dimen: int dialog_sheets_per_minute_height
 com.kovaciny.linemonitorbot.R$dimen: int dialog_sheets_per_minute_width
@@ -248,8 +250,16 @@ com.kovaciny.linemonitorbot.R$drawable: int numberpicker_up_disabled_holo_dark
 com.kovaciny.linemonitorbot.R$drawable: int numberpicker_up_focused_holo_dark
 com.kovaciny.linemonitorbot.R$drawable: int numberpicker_up_normal_holo_dark
 com.kovaciny.linemonitorbot.R$drawable: int numberpicker_up_pressed_holo_dark
+com.kovaciny.linemonitorbot.R$drawable: int pointer_arrow
 com.kovaciny.linemonitorbot.R$drawable: int roll_slider120
 com.kovaciny.linemonitorbot.R$drawable: int sheet_slider120
+com.kovaciny.linemonitorbot.R$drawable: int tab_selected_example
+com.kovaciny.linemonitorbot.R$drawable: int tab_selected_focused_example
+com.kovaciny.linemonitorbot.R$drawable: int tab_selected_pressed_example
+com.kovaciny.linemonitorbot.R$drawable: int tab_unselected_example
+com.kovaciny.linemonitorbot.R$drawable: int tab_unselected_focused_example
+com.kovaciny.linemonitorbot.R$drawable: int tab_unselected_pressed_example
+com.kovaciny.linemonitorbot.R$drawable: int tabindicator
 com.kovaciny.linemonitorbot.R$drawable: int table_cell_rectangle
 com.kovaciny.linemonitorbot.R$id: int TableRow01
 com.kovaciny.linemonitorbot.R$id: int TableRow02
@@ -275,9 +285,8 @@ com.kovaciny.linemonitorbot.R$id: int container_go_by_height_dialog
 com.kovaciny.linemonitorbot.R$id: int container_product_details
 com.kovaciny.linemonitorbot.R$id: int container_skid_times_fragment
 com.kovaciny.linemonitorbot.R$id: int container_skids_on_table
-com.kovaciny.linemonitorbot.R$id: int dummy_dialog_text
-com.kovaciny.linemonitorbot.R$id: int edit_average_gauge
 com.kovaciny.linemonitorbot.R$id: int edit_current_count
+com.kovaciny.linemonitorbot.R$id: int edit_current_gauge
 com.kovaciny.linemonitorbot.R$id: int edit_current_height
 com.kovaciny.linemonitorbot.R$id: int edit_differential_speed
 com.kovaciny.linemonitorbot.R$id: int edit_finished_height
@@ -290,11 +299,12 @@ com.kovaciny.linemonitorbot.R$id: int edit_number_of_stacks
 com.kovaciny.linemonitorbot.R$id: int edit_sheet_length
 com.kovaciny.linemonitorbot.R$id: int edit_sheet_weight
 com.kovaciny.linemonitorbot.R$id: int edit_sheet_width
-com.kovaciny.linemonitorbot.R$id: int edit_sheets_per_skid
+com.kovaciny.linemonitorbot.R$id: int edit_sheets_per_skid_height_dialog
 com.kovaciny.linemonitorbot.R$id: int edit_skid_number
 com.kovaciny.linemonitorbot.R$id: int edit_speed_factor
 com.kovaciny.linemonitorbot.R$id: int edit_total_sheets_per_skid
 com.kovaciny.linemonitorbot.R$id: int gridview_database
+com.kovaciny.linemonitorbot.R$id: int imageView1
 com.kovaciny.linemonitorbot.R$id: int img_number_of_webs
 com.kovaciny.linemonitorbot.R$id: int imgbtn_sheets_or_rolls
 com.kovaciny.linemonitorbot.R$id: int lbl_color_percent
@@ -356,6 +366,7 @@ com.kovaciny.linemonitorbot.R$id: int txt_color_percent
 com.kovaciny.linemonitorbot.R$id: int txt_edge_trim_percent
 com.kovaciny.linemonitorbot.R$id: int txt_gross_pph
 com.kovaciny.linemonitorbot.R$id: int txt_job_finish_time
+com.kovaciny.linemonitorbot.R$id: int txt_message
 com.kovaciny.linemonitorbot.R$id: int txt_net_pph
 com.kovaciny.linemonitorbot.R$id: int txt_products_per_minute
 com.kovaciny.linemonitorbot.R$id: int txt_skid_finish_time
@@ -370,9 +381,9 @@ com.kovaciny.linemonitorbot.R$layout: int calculator_button_fragment
 com.kovaciny.linemonitorbot.R$layout: int container_skids_on_table
 com.kovaciny.linemonitorbot.R$layout: int database_viewer_fragment
 com.kovaciny.linemonitorbot.R$layout: int draining_fragment
-com.kovaciny.linemonitorbot.R$layout: int dummy_dialog
 com.kovaciny.linemonitorbot.R$layout: int enter_product_dialog
 com.kovaciny.linemonitorbot.R$layout: int go_by_height_dialog
+com.kovaciny.linemonitorbot.R$layout: int message_fragment
 com.kovaciny.linemonitorbot.R$layout: int rates_fragment
 com.kovaciny.linemonitorbot.R$layout: int skid_times_fragment
 com.kovaciny.linemonitorbot.R$layout: int spinnerriffic_textview
@@ -382,6 +393,7 @@ com.kovaciny.linemonitorbot.R$string: int action_pick_line_title
 com.kovaciny.linemonitorbot.R$string: int action_settings
 com.kovaciny.linemonitorbot.R$string: int action_view_database_title
 com.kovaciny.linemonitorbot.R$string: int app_name
+com.kovaciny.linemonitorbot.R$string: int btn_go_by_height_text
 com.kovaciny.linemonitorbot.R$string: int calculate
 com.kovaciny.linemonitorbot.R$string: int cancel
 com.kovaciny.linemonitorbot.R$string: int clear_wos
@@ -389,6 +401,7 @@ com.kovaciny.linemonitorbot.R$string: int confirm_clear_wos
 com.kovaciny.linemonitorbot.R$string: int database_viewer_activity_name
 com.kovaciny.linemonitorbot.R$string: int debug_display
 com.kovaciny.linemonitorbot.R$string: int default_sheet_weight
+com.kovaciny.linemonitorbot.R$string: int error_current_greater_than_total
 com.kovaciny.linemonitorbot.R$string: int error_differential_too_high
 com.kovaciny.linemonitorbot.R$string: int error_differential_too_low
 com.kovaciny.linemonitorbot.R$string: int error_empty_field
@@ -398,6 +411,8 @@ com.kovaciny.linemonitorbot.R$string: int error_need_only_one
 com.kovaciny.linemonitorbot.R$string: int error_net_less_than_gross
 com.kovaciny.linemonitorbot.R$string: int error_over_maximum_skids
 com.kovaciny.linemonitorbot.R$string: int label_novatec_setpoint
+com.kovaciny.linemonitorbot.R$string: int lbl_current_gauge
+com.kovaciny.linemonitorbot.R$string: int lbl_finished_height
 com.kovaciny.linemonitorbot.R$string: int new_wo
 com.kovaciny.linemonitorbot.R$string: int ok
 com.kovaciny.linemonitorbot.R$string: int placeholder
@@ -412,6 +427,7 @@ com.kovaciny.linemonitorbot.R$string: int title_fragment_calculator_button
 com.kovaciny.linemonitorbot.R$string: int title_fragment_draining
 com.kovaciny.linemonitorbot.R$string: int title_fragment_rates
 com.kovaciny.linemonitorbot.R$string: int title_fragment_skid_times
+com.kovaciny.linemonitorbot.R$style: int ActionBarTabStyle_Example
 com.kovaciny.linemonitorbot.R$style: int AppBaseTheme
 com.kovaciny.linemonitorbot.R$style: int AppTheme
 com.kovaciny.linemonitorbot.R$style: int BlankThirdColumn
@@ -432,3 +448,9 @@ com.kovaciny.linemonitorbot.SettingsActivity
 com.kovaciny.linemonitorbot.SettingsActivity: SettingsActivity()
 com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver
 com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver: SkidFinishedBroadcastReceiver()
+org.apache.commons.lang3.JavaVersion: org.apache.commons.lang3.JavaVersion[] values()
+org.apache.commons.lang3.JavaVersion: org.apache.commons.lang3.JavaVersion valueOf(java.lang.String)
+org.apache.commons.lang3.Range$ComparableComparator: org.apache.commons.lang3.Range$ComparableComparator[] values()
+org.apache.commons.lang3.Range$ComparableComparator: org.apache.commons.lang3.Range$ComparableComparator valueOf(java.lang.String)
+org.apache.commons.lang3.text.translate.NumericEntityUnescaper$OPTION: org.apache.commons.lang3.text.translate.NumericEntityUnescaper$OPTION[] values()
+org.apache.commons.lang3.text.translate.NumericEntityUnescaper$OPTION: org.apache.commons.lang3.text.translate.NumericEntityUnescaper$OPTION valueOf(java.lang.String)
