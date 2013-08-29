@@ -45,7 +45,7 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 	}
 	
 	@Test
-	public void test2UpRolls() {
+	public void testCalculateTimes_2UpRolls() {
 		getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				// UI affecting code here
@@ -75,7 +75,7 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 	}
 	
 	@Test
-	public void test2UpSheets1Skid() {
+	public void testCalculateTimes_2UpSheets1Skid() {
 		getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				// UI affecting code here
