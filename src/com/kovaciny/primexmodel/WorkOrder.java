@@ -191,7 +191,7 @@ public class WorkOrder {
 	public void updateFutureSheetCounts(int totalCount) {
 		Skid<Product> currentSkid = mSkidsList.get(mSelectedSkidPosition);
 		double finalSkidRatio = getLastSkidSheetCount() / currentSkid.getTotalItems();
-		if (finalSkidRatio > .99) {
+		if (finalSkidRatio > .995) {
 			mSkidsList.get(mSkidsList.size() - 1).setTotalItems(totalCount);
 		} else { //partial skid, set the sheet count to be the same fraction of the new sheet count
 			mSkidsList.get(mSkidsList.size() - 1).setTotalItems((int)Math.round(finalSkidRatio * totalCount));

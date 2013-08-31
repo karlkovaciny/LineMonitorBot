@@ -9,6 +9,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import com.kovaciny.linemonitorbot.MainActivity;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
+import com.kovaciny.primexmodel.Products;
 import com.kovaciny.primexmodel.Rollset;
 import com.kovaciny.primexmodel.Sheet;
 import com.kovaciny.primexmodel.Sheetset;
@@ -38,6 +39,24 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 		super.tearDown();
 	}
 
+	public void loadTestCase(int caseNumber) {
+	    final TestCase testCase = new TestCase(caseNumber);
+	    getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                mModel.setSelectedLine(testCase.mLineNumber);
+                mModel.getSelectedLine().setWebWidth(testCase.mWebWidth);
+                Product p = Products.makeProduct(testCase.mProductType, testCase.mGauge, testCase.mWidth, testCase.mLength);
+                p.setUnitWeight(testCase.mUnitWeight);
+                mModel.setCurrentSpeed(new SpeedValues(testCase.mLineSpeedSetpoint,testCase.mDifferentialSetpoint,testCase.mSpeedFactor));
+                mModel.changeProduct(p);
+                mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(testCase.mTotalItems);
+                mModel.calculateTimes();
+                mModel.calculateRates();
+            }
+        });
+        getInstrumentation().waitForIdleSync();
+	}
+	
 	@Test
 	public void testCalculateSheetsFromGauge() {
 		int sheets = mModel.calculateSheetsFromGauge(6d, .100);
