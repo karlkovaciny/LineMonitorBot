@@ -439,6 +439,9 @@ public class PrimexModel {
 		mSelectedWorkOrder.updateFutureSheetCounts(totalCount);
 	}
 	
+	/*
+	 * Dependent on the current skid number being right
+	 */
 	public void changeNumberOfSkids(double num) {
 		if (num <= 0d) throw new IllegalArgumentException("Number of skids not positive");
 		double totalSkids = Math.ceil(num);

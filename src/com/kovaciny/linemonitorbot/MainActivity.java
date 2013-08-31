@@ -60,7 +60,7 @@ public class MainActivity extends FragmentActivity implements
 
 	public static final String ERROR_FRAGMENT_NOT_FOUND = "MainActivity.Fragment not found";
 
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -217,33 +217,33 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	private CharSequence generateJobTitle(int woNumber) {
-		List<Integer> woNumbers = mModel.getAllWoNumbersForLine(mModel
-				.getSelectedLine().getLineNumber());
-		int position = woNumbers.indexOf(woNumber);
-		return "WO " + String.valueOf(mModel.getSelectedLine().getLineNumber())
-				+ "-" + String.valueOf(position + 1);
+	    List<Integer> woNumbers = mModel.getAllWoNumbersForLine(mModel
+	            .getSelectedLine().getLineNumber());
+	    int position = woNumbers.indexOf(woNumber);
+	    return "WO " + String.valueOf(mModel.getSelectedLine().getLineNumber())
+	            + "-" + String.valueOf(position + 1);
 	}
 
 	private void doFirstRun() {
-		SharedPreferences settings = getPreferences(MODE_PRIVATE);
-		if (settings.getLong("firstRunDate", -1) == -1) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this)
-					.setMessage("Welcome to LineMonitorBot!\n\n"
-							+ "Start by picking your line from the top menu.");
-			builder.setPositiveButton(R.string.ok,
-					new DialogInterface.OnClickListener() {
+	    SharedPreferences settings = getPreferences(MODE_PRIVATE);
+	    if (settings.getLong("firstRunDate", -1) == -1) {
+	        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+	        .setMessage("Welcome to LineMonitorBot!\n\n"
+	                + "Start by picking your line from the top menu.");
+	        builder.setPositiveButton(R.string.ok,
+	                new DialogInterface.OnClickListener() {
 
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// Do nothing
-						}
-					});
-			builder.show();
+	            @Override
+	            public void onClick(DialogInterface dialog, int which) {
+	                // Do nothing
+	            }
+	        });
+	        builder.show();
 
-			SharedPreferences.Editor editor = settings.edit();
-			editor.putLong("firstRunDate", new Date().getTime());
-			editor.commit();
-		}
+	        SharedPreferences.Editor editor = settings.edit();
+	        editor.putLong("firstRunDate", new Date().getTime());
+	        editor.commit();
+	    }
 	}
 
 	public Bundle showEnterProductDialog() {
@@ -270,12 +270,7 @@ public class MainActivity extends FragmentActivity implements
 			lineSpeedSetpoint = mModel.getSelectedLine().getSpeedValues().lineSpeedSetpoint;
 		}
 		args.putDouble("LineSpeed", lineSpeedSetpoint);
-		Log.v("MainActivity.showSheetsPerMinuteDialog()",
-				"Just sent line speed " + mModel.getLineSpeedSetpoint()
-						+ "from line "
-						+ mModel.getSelectedLine().getLineNumber()
-						+ "to dialog");
-
+		
 		Double differentialSpeed = mModel.getDifferentialSetpoint();
 		if (differentialSpeed == 0d) {
 			differentialSpeed = mModel.getSelectedLine().getSpeedValues().differentialSpeed; // TODO
@@ -410,12 +405,10 @@ public class MainActivity extends FragmentActivity implements
 		RatesFragment ratesFrag = (RatesFragment) rf;
 		
 		String eventName = event.getPropertyName();
-		Log.v("Event", eventName);
 		Object newProperty = event.getNewValue();
 		String objectDescription = (newProperty == null) ? "null" : newProperty
 				.toString();
-		Log.v("Event value", objectDescription);
-
+		
 		if (eventName == PrimexModel.SELECTED_LINE_CHANGE_EVENT) {
 			CharSequence lineTitle = "Line "
 					+ String.valueOf(mModel.getSelectedLine().getLineNumber());
@@ -520,13 +513,14 @@ public class MainActivity extends FragmentActivity implements
 
 	public void updateSkidData(Integer skidNumber, Integer currentCount,
 			Integer totalCount, Double numberOfSkids) {
-		mModel.changeNumberOfSkids(numberOfSkids, totalCount);
+	    mModel.changeNumberOfSkids(numberOfSkids, totalCount);
+	    
+	    Skid<Product> skid = new Skid<Product>(currentCount, totalCount, 1);
+	    skid.setSkidNumber(skidNumber);
+	    mModel.getSelectedWorkOrder().addOrUpdateSkid(skid);
+	    mModel.changeSelectedSkid(skidNumber);
+	    mModel.saveSkid(skid);
 
-		Skid<Product> skid = new Skid<Product>(currentCount, totalCount, 1);
-		skid.setSkidNumber(skidNumber);
-		mModel.getSelectedWorkOrder().addOrUpdateSkid(skid);
-		mModel.changeSelectedSkid(skidNumber);
-		mModel.saveSkid(skid);
 
 		mModel.calculateTimes();
 	}

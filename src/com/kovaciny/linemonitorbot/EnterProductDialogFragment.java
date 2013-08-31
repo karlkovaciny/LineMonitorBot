@@ -303,6 +303,7 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 			this.mEdit_sheetLength.setEnabled(false);
 			this.mEdit_sheetWidth.setNextFocusDownId(R.id.edit_line_speed);
 			mContainerProductDetails.removeView(mContainerSkidsOnTable);
+			setNumberOfWebs(getNumberOfWebs());
 		} else if (state.equals(SHEETS_MODE) || state.equals(Product.SHEETSET_TYPE)) {
 			this.mSheetsOrRollsState = SHEETS_MODE;
 			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.sheet_slider120);
@@ -327,8 +328,12 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 		} else mBtn_subtractWeb.setEnabled(true);
 		
 		mLbl_numberOfWebs.setText(String.valueOf(numWebs) + "-up ");
-		
-		int resId = getResources().getIdentifier("ic_" + String.valueOf(numWebs) + "sheet", "drawable", getActivity().getPackageName());
+		int resId;
+		if (getSheetsOrRollsState() == ROLLS_MODE) {
+		    resId = getResources().getIdentifier("ic_" + String.valueOf(numWebs) + "roll", "drawable", getActivity().getPackageName());
+		} else {
+		    resId = getResources().getIdentifier("ic_" + String.valueOf(numWebs) + "sheet", "drawable", getActivity().getPackageName());
+		}
 		mImg_numberOfWebs.setImageDrawable(getResources().getDrawable(resId));
 		
 		if ((numWebs == 2) && (getSheetsOrRollsState() == SHEETS_MODE)) {
