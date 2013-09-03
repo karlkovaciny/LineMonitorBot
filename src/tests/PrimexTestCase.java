@@ -1,8 +1,14 @@
 package tests;
 
-import com.kovaciny.primexmodel.Product;
+import java.util.ArrayList;
+import java.util.List;
 
-public class TestCase {
+import com.kovaciny.primexmodel.Product;
+import com.kovaciny.primexmodel.Products;
+import com.kovaciny.primexmodel.Skid;
+import com.kovaciny.primexmodel.WorkOrder;
+
+public class PrimexTestCase {
     public int mLineNumber;
     public double mSheetsPerMinute;
     public double mRollDiameter;
@@ -18,10 +24,13 @@ public class TestCase {
     public double mLength;
     public double mUnitWeight;
     public int mTotalItems;
+    public Product mProduct;
+    public WorkOrder mWorkOrder;
+    public List<Skid<Product>> mSkidsList;
     
     public static final int JOMA_ROLLS = 1;
     
-    TestCase(int caseNumber) {
+    PrimexTestCase(int caseNumber) {
         switch(caseNumber) {
             case JOMA_ROLLS:
                 mLineNumber = 9;
@@ -39,6 +48,12 @@ public class TestCase {
                 mLength = 12d;
                 mUnitWeight = .288; //semi made up
                 mTotalItems = 2950;
+                mProduct = Products.makeProduct(mProductType, mGauge, mWidth, mLength);
+                mWorkOrder = new WorkOrder(1);
+                for (int i = 0; i < 3; i++) {
+                    mWorkOrder.addOrUpdateSkid(new Skid<Product>(mTotalItems, mProduct));
+                    mWorkOrder.selectSkid(1);
+                }
                 
                 break;
             default:
