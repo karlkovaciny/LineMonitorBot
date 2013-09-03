@@ -12,6 +12,7 @@ public class ATestSuiteRunner extends TestCase {
 		  suite.addTestSuite(SkidTimesFragmentTest.class);
 		  suite.addTestSuite(PrimexModelTest.class);
 		  suite.addTestSuite(SpeedValuesTest.class);
+		  suite.addTestSuite(WorkOrderTest.class);
 		  return suite;
 	  }
 }

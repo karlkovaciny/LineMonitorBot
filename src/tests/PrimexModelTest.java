@@ -40,7 +40,7 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 	}
 
 	public void loadTestCase(int caseNumber) {
-	    final TestCase testCase = new TestCase(caseNumber);
+	    final PrimexTestCase testCase = new PrimexTestCase(caseNumber);
 	    getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 mModel.setSelectedLine(testCase.mLineNumber);

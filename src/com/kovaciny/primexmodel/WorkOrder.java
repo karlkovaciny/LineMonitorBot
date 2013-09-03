@@ -18,6 +18,8 @@ public class WorkOrder {
 	private int mSelectedSkidPosition = -1;
 	private Date mFinishDate;
 	
+	
+	
 	static final double MAX_STACK_HEIGHT_OLEFINS = 24d;
 	static final double MAX_STACK_HEIGHT_STYRENE = 30d;
 	static final double MAX_WO_NUMBER = 999999d;
@@ -61,7 +63,9 @@ public class WorkOrder {
 	}
 	
 	/*
-	 * Appends a skid to the end of the list, changing its skid number.. If the skid is null, set start time equal to the last skid's finish time (now if none)
+	 * Appends a skid to the end of the list, changing its skid number.
+	 * If the skid is the first one added, select the skid to avoid having no selection.
+	 * If the skid is null, set start time equal to the last skid's finish time (now if none)
 	 * and set the skid's sheet count equal to the last one TODO
 	 * Return the skid.
 	 */
@@ -79,9 +83,10 @@ public class WorkOrder {
 			mSkidsList.set(newSkid.getSkidNumber() - 1, newSkid);
 		} else {
 			mSkidsList.add(newSkid);
-			Log.v("WorkOrder.class", "Just added skid #" + String.valueOf(newSkid.getSkidNumber())); 
+//			Log.v("WorkOrder.class", "Just added skid #" + String.valueOf(newSkid.getSkidNumber())); 
 			newSkid.setSkidNumber(mSkidsList.size());	
 		}		
+		if (mSkidsList.size() == 1) selectSkid(newSkid.getSkidNumber());
 		return newSkid;
 	}
 	
@@ -90,10 +95,11 @@ public class WorkOrder {
 	 * Returns its skid number.
 	 */
 	public int removeLastSkid() {
-		int skidNumber = mSkidsList.size();
+		int removedSkidNumber = mSkidsList.size();
 		mSkidsList.remove(mSkidsList.size()-1);
-		Log.v("WorkOrder.class", "deleting skid" + String.valueOf(skidNumber));
-		return skidNumber;
+		if (mSelectedSkidPosition == mSkidsList.size()) selectSkid(mSkidsList.size());
+//		Log.v("WorkOrder.class", "deleting skid" + String.valueOf(skidNumber));
+		return removedSkidNumber;
 	}
 	
 	public boolean hasProduct() {
@@ -149,15 +155,14 @@ public class WorkOrder {
 	public double getNumberOfSkids() {
 		if (mSkidsList.size() < 2 ) return mSkidsList.size();
 		Skid<Product> penultSkid = mSkidsList.get(mSkidsList.size() - 2);
-		double finalSkidRatio = getLastSkidSheetCount() / penultSkid.getTotalItems();
-		if ((finalSkidRatio > .001) && (finalSkidRatio < 1)) { //ie, partial skid
+		double finalSkidRatio = Double.valueOf(getLastSkidSheetCount()) / Double.valueOf(penultSkid.getTotalItems());
+		if ((finalSkidRatio > HelperFunction.EPSILON) && (finalSkidRatio < 1)) { //ie, partial skid
 			double totalSkids = mSkidsList.size() - 1 + finalSkidRatio;
-			Log.v("WorkOrder.class", "returning number of skids: " + String.valueOf(totalSkids));
 			return totalSkids;
 		} else return mSkidsList.size();  
 	}
 	
-	public double getLastSkidSheetCount() {
+	public int getLastSkidSheetCount() {
 		if (mSkidsList.size() == 0) return 0;
 		else return mSkidsList.get(mSkidsList.size() - 1).getTotalItems();
 	}
@@ -180,25 +185,42 @@ public class WorkOrder {
 	public Product getProduct() {
 		return mProduct;
 	}	
-	
-	@Override
-	public String toString() {
-		String finish = (mFinishDate == null) ? "n/a" : mFinishDate.toString();
-		return "W0" + mWoNumber + ": selected skid " + String.valueOf(mSelectedSkidPosition + 1) + " of " + 
-				String.valueOf(getNumberOfSkids()) + ", finish time " + finish;
-	}
 
-	public void updateFutureSheetCounts(int totalCount) {
-		Skid<Product> currentSkid = mSkidsList.get(mSelectedSkidPosition);
-		double finalSkidRatio = getLastSkidSheetCount() / currentSkid.getTotalItems();
-		if (finalSkidRatio > .995) {
-			mSkidsList.get(mSkidsList.size() - 1).setTotalItems(totalCount);
-		} else { //partial skid, set the sheet count to be the same fraction of the new sheet count
-			mSkidsList.get(mSkidsList.size() - 1).setTotalItems((int)Math.round(finalSkidRatio * totalCount));
-		}
-		//update the rest of the skids
-		for (int i = mSelectedSkidPosition; i < mSkidsList.size() - 1; i++) {
-				mSkidsList.get(i).setTotalItems(totalCount);
-		}
+	public void updateSkidsList (int startingSkidNumber, int totalCount, double totalSkids) {
+	    //Make sure there are skids up to and including startingSkidNumber
+	    while (mSkidsList.size() < startingSkidNumber) {
+	        addOrUpdateSkid(new Skid<Product>(totalCount, getProduct()));
+	    }
+	    
+	    //Update or add skids till we reach the total skid count
+	    int totalWholeSkids = (int)Math.floor(totalSkids);
+	    for (int i = startingSkidNumber; i <= totalWholeSkids; i++) {
+            Skid<Product> newSkid = new Skid<Product>(totalCount, getProduct());
+            newSkid.setSkidNumber(i);
+            addOrUpdateSkid(newSkid);
+        }
+
+	    //Check if the totalSkids argument included a fractional skid
+	    int finalNumSkids = totalWholeSkids;
+	    if ((totalSkids - Math.floor(totalSkids)) > HelperFunction.EPSILON) {
+	        finalNumSkids++;
+	        int fractionalSheetCount = (int)(Double.valueOf(totalCount) * (totalSkids % 1));
+	        Skid<Product> newSkid = new Skid<Product> (fractionalSheetCount, getProduct());
+	        newSkid.setSkidNumber((int)Math.ceil(totalSkids));
+	        addOrUpdateSkid(newSkid);
+	    }
+	    
+	    //Remove any extra skids
+	    while (mSkidsList.size() > finalNumSkids) {
+	        removeLastSkid();
+	    }
 	}
+	
+    @Override
+    public String toString() {
+        String finish = (mFinishDate == null) ? "n/a" : mFinishDate.toString();
+        return "W0 " + mWoNumber + ": selected skid " + String.valueOf(mSelectedSkidPosition + 1) + " of " + 
+                String.valueOf(getNumberOfSkids()) + ", finish time " + finish;
+    }
+
 }

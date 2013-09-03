@@ -23,6 +23,8 @@ final public class HelperFunction {
 	public static final long MINUTES_PER_HOUR = 60;
 	public static final long SECONDS_PER_MINUTE = 60;
 	public static final double INCHES_PER_FOOT = 12.0;
+	
+	public static final double EPSILON = 0.0001; //for comparing doubles
 
 	public static final float RELATIVE_SIZE_SUPERSCRIPT = 0.66f;
 	public static final float RELATIVE_SIZE_SUBSCRIPT = 0.66f;

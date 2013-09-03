@@ -3,6 +3,7 @@ package com.kovaciny.primexmodel;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -280,8 +281,8 @@ public class PrimexModel {
 	public void saveSkid(Skid<Product> s) {
 		mDbHelper.insertOrReplaceSkid(s, mSelectedWorkOrder.getWoNumber());
 		mSelectedWorkOrder.getSkidsList().set(s.getSkidNumber() - 1, s);
-	}
-	
+		Log.v("saveState", "Saved " + s.toString());
+	}	
 	
 	/*
 	 * Saves the selected line number and work order number, and other settings
@@ -289,11 +290,10 @@ public class PrimexModel {
 	public void saveState() {
 		if (!hasSelectedLine()) throw new IllegalStateException(new Throwable(ERROR_NO_LINE_SELECTED));
 		if (!hasSelectedWorkOrder()) throw new IllegalStateException (new Throwable(ERROR_NO_WORK_ORDER_SELECTED));
-    	if (mSelectedSkid != null) {
-    		saveSkid(mSelectedSkid);
-    		Log.v("saveState", "Saved state of selected skid");
+    	for (Iterator<Skid<Product>> itr = mSelectedWorkOrder.getSkidsList().iterator(); itr.hasNext(); ) {
+    	    saveSkid(itr.next());
     	}
-    	if (hasSelectedProduct()){
+		if (hasSelectedProduct()){
     		saveProduct(mSelectedWorkOrder.getProduct());
     		Log.v("saveState", "Saved state of selected product.");
     	}
@@ -433,10 +433,6 @@ public class PrimexModel {
 	
 	public int getDatabaseVersion() {
 		return PrimexSQLiteOpenHelper.DATABASE_VERSION;
-	}
-	public void changeNumberOfSkids(double num, int totalCount) {
-		changeNumberOfSkids(num);
-		mSelectedWorkOrder.updateFutureSheetCounts(totalCount);
 	}
 	
 	/*

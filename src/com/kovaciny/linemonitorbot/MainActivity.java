@@ -513,14 +513,13 @@ public class MainActivity extends FragmentActivity implements
 
 	public void updateSkidData(Integer skidNumber, Integer currentCount,
 			Integer totalCount, Double numberOfSkids) {
-	    mModel.changeNumberOfSkids(numberOfSkids, totalCount);
+	    mModel.getSelectedWorkOrder().updateSkidsList(skidNumber, totalCount, numberOfSkids);
 	    
 	    Skid<Product> skid = new Skid<Product>(currentCount, totalCount, 1);
 	    skid.setSkidNumber(skidNumber);
 	    mModel.getSelectedWorkOrder().addOrUpdateSkid(skid);
 	    mModel.changeSelectedSkid(skidNumber);
 	    mModel.saveSkid(skid);
-
 
 		mModel.calculateTimes();
 	}
@@ -537,11 +536,10 @@ public class MainActivity extends FragmentActivity implements
 						* p.getNumberOfWebs() / oldProduct.getNumberOfWebs());
 			}
 		} catch (IllegalArgumentException e) {
-			if (e.getCause().equals(PrimexModel.ERROR_NO_PRODUCT_SELECTED)) {
-				throw new IllegalStateException(new Throwable(
-						PrimexModel.ERROR_NO_PRODUCT_SELECTED));
-			} else
-				throw e;
+		    if (e.getCause().equals(PrimexModel.ERROR_NO_PRODUCT_SELECTED)) {
+		        throw new IllegalStateException(new Throwable(
+		                PrimexModel.ERROR_NO_PRODUCT_SELECTED));
+		    } else throw e;
 		}
 		mModel.changeProduct(p);
 	}
