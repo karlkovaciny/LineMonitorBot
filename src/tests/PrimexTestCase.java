@@ -29,6 +29,7 @@ public class PrimexTestCase {
     public List<Skid<Product>> mSkidsList;
     
     public static final int JOMA_ROLLS = 1;
+    public static final int LINE_14 = 14;
     
     PrimexTestCase(int caseNumber) {
         switch(caseNumber) {
@@ -56,6 +57,14 @@ public class PrimexTestCase {
                 }
                 
                 break;
+            case LINE_14:
+                mLineNumber = 14;
+                mWebWidth = 65;
+                mLineSpeedSetpoint = 29.6;
+                mDifferentialSetpoint = 103;
+                //top/bottom roll setpoint: 99.5/101.5
+                mUnitWeight = 5.885;
+                        
             default:
                 throw new IllegalArgumentException("invalid case number");
         }

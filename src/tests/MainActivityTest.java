@@ -189,7 +189,11 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		final List<Integer> lineNumbers = Arrays.asList(1,6,7,9,10,  11,12,13,14,15,  16,17,18); //13 lines
 		int lineNumberPosition = lineNumbers.indexOf(lineNumber);
 		for (int i = 0; i < lineNumberPosition; i++) {
-			sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
+//			sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
+		    KeyEvent ke = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN);
+		    getInstrumentation().sendKeySync(ke);
+		    KeyEvent keUp = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN);
+		    getInstrumentation().sendKeySync(keUp);
 			getInstrumentation().waitForIdleSync();
 			getInstrumentation().waitForIdleSync();
 			getInstrumentation().waitForIdleSync();
@@ -282,7 +286,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	}
 	
 	@Test
-	public void testShowSheetsPerMinuteDialog() {
+	public void testShowEnterProductDialog() {
 		clickButton(R.id.btn_enter_product);
 		EnterProductDialogFragment spmd = (EnterProductDialogFragment) mActivity.getFragmentManager().findFragmentByTag("EnterProductDialog");
 		assertTrue(spmd != null);
@@ -307,7 +311,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	}
 	
 	@Test
-	public void testSpmDialog() {
+	public void testEnterProductDialog() {
 		final double NEW_WIDTH_SETPOINT = 40d;
 		final double NEW_LENGTH_SETPOINT = 12d;
 		final double NEW_LINE_SPEED_SETPOINT = 16.84d; //for line 9 -- equals 16.67 / factors, 2 decimal place.
@@ -338,7 +342,13 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		assertTrue("is calculate times button visible", mBtn_calculateTimes.getLocalVisibleRect(windowBounds));
 		TouchUtils.clickView(this, mBtn_calculateTimes);
 		assertEquals("did the time display correctly", "0:59", mTxt_timePerSkid.getText().toString());
-
+		switchLines(6);
+		switchLines(10);
+		clickButton(R.id.btn_enter_product);
+		spmdf = (EnterProductDialogFragment)getActivity().getFragmentManager().findFragmentByTag("EnterProductDialog");
+		final EditText edit_diffSpeed = (EditText) spmdf.getDialog().findViewById(R.id.edit_differential_speed);
+		assertTrue("Differential should be different from " + String.valueOf(NEW_DIFFERENTIAL) + ", but it's not", 
+		        Double.valueOf(edit_diffSpeed.getText().toString()) != NEW_DIFFERENTIAL);
 	}
 	
 	@Test
