@@ -29,7 +29,7 @@ import com.kovaciny.primexmodel.Novatec;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 
-public class RatesFragment extends Fragment implements OnClickListener{
+public class RatesFragment extends Fragment implements OnClickListener, ViewEventResponder {
 	EditText mEdit_grossWidth;
 	TextView mTxt_edgeTrimPercent;
 	TextView mLbl_sheetWeight;
