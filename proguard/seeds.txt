@@ -50,12 +50,304 @@ android.support.v4.view.ViewPager: void setPageMarginDrawable(int)
 android.support.v4.view.ViewPager: void setScrollingCacheEnabled(boolean)
 android.support.v4.view.ViewPager$SavedState
 android.support.v4.view.ViewPager$SavedState: android.os.Parcelable$Creator CREATOR
+com.bugsense.trace.BugProfiler
+com.bugsense.trace.BugProfiler: com.bugsense.trace.BugProfiler instance
+com.bugsense.trace.BugProfiler: int MAX_LIFETIME
+com.bugsense.trace.BugProfiler: java.lang.StringBuilder trackCpu
+com.bugsense.trace.BugProfiler: java.lang.StringBuilder trackMem
+com.bugsense.trace.BugProfiler: java.lang.String currentTag
+com.bugsense.trace.BugProfiler: int currentStep
+com.bugsense.trace.BugProfiler: int runningFor
+com.bugsense.trace.BugProfiler: boolean running
+com.bugsense.trace.BugProfiler: BugProfiler()
+com.bugsense.trace.BugProfiler: com.bugsense.trace.BugProfiler getProfiler()
+com.bugsense.trace.BugProfiler: void startProfiling(java.lang.String,int)
+com.bugsense.trace.BugProfiler: void stopProfiling(java.lang.String)
+com.bugsense.trace.BugProfiler: void startThread()
+com.bugsense.trace.BugProfiler: boolean access$000()
+com.bugsense.trace.BugProfiler: java.lang.StringBuilder access$100(com.bugsense.trace.BugProfiler)
+com.bugsense.trace.BugProfiler: java.lang.StringBuilder access$200(com.bugsense.trace.BugProfiler)
+com.bugsense.trace.BugProfiler: int access$300()
+com.bugsense.trace.BugProfiler: int access$412(int)
+com.bugsense.trace.BugProfiler: int access$400()
+com.bugsense.trace.BugProfiler: java.lang.String access$500()
+com.bugsense.trace.BugProfiler: void <clinit>()
+com.bugsense.trace.BugProfiler$1
+com.bugsense.trace.BugProfiler$1: com.bugsense.trace.BugProfiler this$0
+com.bugsense.trace.BugProfiler$1: BugProfiler$1(com.bugsense.trace.BugProfiler)
+com.bugsense.trace.BugProfiler$1: void run()
+com.bugsense.trace.BugSense
+com.bugsense.trace.BugSense: java.util.concurrent.ExecutorService executor
+com.bugsense.trace.BugSense: BugSense()
+com.bugsense.trace.BugSense: java.util.concurrent.ExecutorService getExecutor()
+com.bugsense.trace.BugSense: void showUpgradeNotification(android.content.Context,java.lang.String)
+com.bugsense.trace.BugSense: void <clinit>()
+com.bugsense.trace.BugSenseHandler
+com.bugsense.trace.BugSenseHandler: boolean I_WANT_TO_DEBUG
+com.bugsense.trace.BugSenseHandler: android.content.SharedPreferences preferences
+com.bugsense.trace.BugSenseHandler: android.content.SharedPreferences$Editor editor
+com.bugsense.trace.BugSenseHandler: com.bugsense.trace.ExceptionCallback exceptionCallback
+com.bugsense.trace.BugSenseHandler: boolean isSessionActive
+com.bugsense.trace.BugSenseHandler: java.lang.String locTicker
+com.bugsense.trace.BugSenseHandler: java.lang.String locTitle
+com.bugsense.trace.BugSenseHandler: java.lang.String locText
+com.bugsense.trace.BugSenseHandler: java.util.HashMap crashExtraData
+com.bugsense.trace.BugSenseHandler: BugSenseHandler()
+com.bugsense.trace.BugSenseHandler: void initAndStartSession(android.content.Context,java.lang.String)
+com.bugsense.trace.BugSenseHandler: void sendDataOverWiFiOnly()
+com.bugsense.trace.BugSenseHandler: int getTotalCrashesNum()
+com.bugsense.trace.BugSenseHandler: void clearTotalCrashesNum()
+com.bugsense.trace.BugSenseHandler: java.lang.String getLastCrashID()
+com.bugsense.trace.BugSenseHandler: void setExceptionCallback(com.bugsense.trace.ExceptionCallback)
+com.bugsense.trace.BugSenseHandler: com.bugsense.trace.ExceptionCallback getCallback()
+com.bugsense.trace.BugSenseHandler: void startSession(android.content.Context)
+com.bugsense.trace.BugSenseHandler: void leaveBreadcrumb(java.lang.String)
+com.bugsense.trace.BugSenseHandler: void closeSession(android.content.Context)
+com.bugsense.trace.BugSenseHandler: void sendEvent(java.lang.String)
+com.bugsense.trace.BugSenseHandler: void setUserIdentifier(java.lang.String)
+com.bugsense.trace.BugSenseHandler: void flush(android.content.Context)
+com.bugsense.trace.BugSenseHandler: void sendExceptionMap(java.util.HashMap,java.lang.Exception)
+com.bugsense.trace.BugSenseHandler: void sendException(java.lang.Exception)
+com.bugsense.trace.BugSenseHandler: void sendExceptionMessage(java.lang.String,java.lang.String,java.lang.Exception)
+com.bugsense.trace.BugSenseHandler: void setLogging(boolean)
+com.bugsense.trace.BugSenseHandler: void setLogging(int)
+com.bugsense.trace.BugSenseHandler: void setLogging(java.lang.String)
+com.bugsense.trace.BugSenseHandler: void setLogging(int,java.lang.String)
+com.bugsense.trace.BugSenseHandler: void installHandler()
+com.bugsense.trace.BugSenseHandler: void setLocalizedNotification(java.lang.String,java.lang.String,java.lang.String)
+com.bugsense.trace.BugSenseHandler: java.util.HashMap getCrashExtraData()
+com.bugsense.trace.BugSenseHandler: void addCrashExtraData(java.lang.String,java.lang.String)
+com.bugsense.trace.BugSenseHandler: void addCrashExtraMap(java.util.HashMap)
+com.bugsense.trace.BugSenseHandler: void removeCrashExtraData(java.lang.String)
+com.bugsense.trace.BugSenseHandler: void clearCrashExtraData()
+com.bugsense.trace.BugSenseHandler: void useProxy(boolean)
+com.bugsense.trace.BugSenseHandler: android.content.SharedPreferences access$002(android.content.SharedPreferences)
+com.bugsense.trace.BugSenseHandler: android.content.SharedPreferences$Editor access$102(android.content.SharedPreferences$Editor)
+com.bugsense.trace.BugSenseHandler: android.content.SharedPreferences access$000()
+com.bugsense.trace.BugSenseHandler: android.content.SharedPreferences$Editor access$100()
+com.bugsense.trace.BugSenseHandler: void <clinit>()
+com.bugsense.trace.BugSenseHandler$1
+com.bugsense.trace.BugSenseHandler$1: android.content.Context val$context
+com.bugsense.trace.BugSenseHandler$1: BugSenseHandler$1(android.content.Context)
+com.bugsense.trace.BugSenseHandler$1: void run()
+com.bugsense.trace.CrashMechanism
+com.bugsense.trace.CrashMechanism: int MAX_CRASHES
+com.bugsense.trace.CrashMechanism: int MAX_EXCEPTIONS
+com.bugsense.trace.CrashMechanism: int HANDLEDEXCEPTION
+com.bugsense.trace.CrashMechanism: int CRASH
+com.bugsense.trace.CrashMechanism: java.lang.String fixfilename
+com.bugsense.trace.CrashMechanism: com.bugsense.trace.CrashMechanism instance
+com.bugsense.trace.CrashMechanism: CrashMechanism()
+com.bugsense.trace.CrashMechanism: com.bugsense.trace.CrashMechanism getInstance()
+com.bugsense.trace.CrashMechanism: void sendSavedCrashes()
+com.bugsense.trace.CrashMechanism: java.lang.String createJSONFromCrash(java.lang.String,int,int,int,java.lang.String[],java.lang.String,java.util.Map,java.util.Map,int,long,java.util.Map)
+com.bugsense.trace.CrashMechanism: void transmitCrashASync(java.lang.String,int)
+com.bugsense.trace.CrashMechanism: boolean transmitCrashSync(java.lang.String,int)
+com.bugsense.trace.CrashMechanism: void saveFixNotification(java.lang.String)
+com.bugsense.trace.CrashMechanism: void saveCrash(java.lang.String,int)
+com.bugsense.trace.CrashMechanism: java.lang.String getBreadcrumbsLine(java.util.ArrayList)
+com.bugsense.trace.CrashMechanism: java.lang.String getClass(java.lang.String)
+com.bugsense.trace.CrashMechanism: boolean access$000(java.lang.String,int)
+com.bugsense.trace.CrashMechanism$1
+com.bugsense.trace.CrashMechanism$1: com.bugsense.trace.CrashMechanism this$0
+com.bugsense.trace.CrashMechanism$1: CrashMechanism$1(com.bugsense.trace.CrashMechanism)
+com.bugsense.trace.CrashMechanism$1: void run()
+com.bugsense.trace.CrashMechanism$1$1
+com.bugsense.trace.CrashMechanism$1$1: com.bugsense.trace.CrashMechanism$1 this$1
+com.bugsense.trace.CrashMechanism$1$1: CrashMechanism$1$1(com.bugsense.trace.CrashMechanism$1)
+com.bugsense.trace.CrashMechanism$1$1: boolean accept(java.io.File,java.lang.String)
+com.bugsense.trace.CrashMechanism$1$2
+com.bugsense.trace.CrashMechanism$1$2: com.bugsense.trace.CrashMechanism$1 this$1
+com.bugsense.trace.CrashMechanism$1$2: CrashMechanism$1$2(com.bugsense.trace.CrashMechanism$1)
+com.bugsense.trace.CrashMechanism$1$2: boolean accept(java.io.File,java.lang.String)
+com.bugsense.trace.CrashMechanism$2
+com.bugsense.trace.CrashMechanism$2: java.lang.String val$jsonCrashData
+com.bugsense.trace.CrashMechanism$2: int val$type
+com.bugsense.trace.CrashMechanism$2: CrashMechanism$2(java.lang.String,int)
+com.bugsense.trace.CrashMechanism$2: void run()
+com.bugsense.trace.CrashMechanism$3
+com.bugsense.trace.CrashMechanism$3: java.lang.String val$line
+com.bugsense.trace.CrashMechanism$3: CrashMechanism$3(java.lang.String)
+com.bugsense.trace.CrashMechanism$3: void run()
+com.bugsense.trace.CrashMechanism$4
+com.bugsense.trace.CrashMechanism$4: int val$type
+com.bugsense.trace.CrashMechanism$4: java.lang.String val$jsonCrashData
+com.bugsense.trace.CrashMechanism$4: CrashMechanism$4(int,java.lang.String)
+com.bugsense.trace.CrashMechanism$4: void run()
+com.bugsense.trace.CryptoHttpClient
+com.bugsense.trace.CryptoHttpClient: int KEY
+com.bugsense.trace.CryptoHttpClient: java.lang.String BASE64KEYANALYTICS
+com.bugsense.trace.CryptoHttpClient: java.lang.String BASE64KEYERRORS
+com.bugsense.trace.CryptoHttpClient: int ANALYTICS
+com.bugsense.trace.CryptoHttpClient: int ERRORS
+com.bugsense.trace.CryptoHttpClient: CryptoHttpClient(int)
+com.bugsense.trace.CryptoHttpClient: org.apache.http.conn.ClientConnectionManager createClientConnectionManager()
+com.bugsense.trace.CryptoHttpClient: org.apache.http.conn.ssl.SSLSocketFactory newSslSocketFactory()
+com.bugsense.trace.DefaultExceptionHandler
+com.bugsense.trace.DefaultExceptionHandler: java.lang.Thread$UncaughtExceptionHandler defaultExceptionHandler
+com.bugsense.trace.DefaultExceptionHandler: DefaultExceptionHandler(java.lang.Thread$UncaughtExceptionHandler)
+com.bugsense.trace.DefaultExceptionHandler: void uncaughtException(java.lang.Thread,java.lang.Throwable)
+com.bugsense.trace.EventsMechanism
+com.bugsense.trace.EventsMechanism: int MAX_EVENTS_SIZE
+com.bugsense.trace.EventsMechanism: int MAX_BYTES
+com.bugsense.trace.EventsMechanism: com.bugsense.trace.EventsMechanism instance
+com.bugsense.trace.EventsMechanism: EventsMechanism()
+com.bugsense.trace.EventsMechanism: com.bugsense.trace.EventsMechanism getInstance()
+com.bugsense.trace.EventsMechanism: void sendSavedEvents()
+com.bugsense.trace.EventsMechanism: java.lang.String getFlatLine(java.lang.String)
+com.bugsense.trace.EventsMechanism: boolean transmitEventSync(java.lang.String)
+com.bugsense.trace.EventsMechanism: void saveEvent(java.lang.String)
+com.bugsense.trace.EventsMechanism$1
+com.bugsense.trace.EventsMechanism$1: com.bugsense.trace.EventsMechanism this$0
+com.bugsense.trace.EventsMechanism$1: EventsMechanism$1(com.bugsense.trace.EventsMechanism)
+com.bugsense.trace.EventsMechanism$1: void run()
+com.bugsense.trace.EventsMechanism$1$1
+com.bugsense.trace.EventsMechanism$1$1: com.bugsense.trace.EventsMechanism$1 this$1
+com.bugsense.trace.EventsMechanism$1$1: EventsMechanism$1$1(com.bugsense.trace.EventsMechanism$1)
+com.bugsense.trace.EventsMechanism$1$1: boolean accept(java.io.File,java.lang.String)
+com.bugsense.trace.EventsMechanism$2
+com.bugsense.trace.EventsMechanism$2: java.lang.String val$tag
+com.bugsense.trace.EventsMechanism$2: EventsMechanism$2(java.lang.String)
+com.bugsense.trace.EventsMechanism$2: void run()
+com.bugsense.trace.ExceptionCallback
+com.bugsense.trace.ExceptionCallback: void lastBreath(java.lang.Exception)
+com.bugsense.trace.G
+com.bugsense.trace.G: java.lang.String BUGSENSE_VERSION
+com.bugsense.trace.G: java.lang.String FILES_PATH
+com.bugsense.trace.G: java.lang.String APP_VERSION
+com.bugsense.trace.G: java.lang.String APP_VERSIONCODE
+com.bugsense.trace.G: java.lang.String APP_PACKAGE
+com.bugsense.trace.G: java.lang.String URL
+com.bugsense.trace.G: java.lang.String ANALYTICS_URL
+com.bugsense.trace.G: java.lang.String TAG
+com.bugsense.trace.G: java.lang.String ANDROID_VERSION
+com.bugsense.trace.G: java.lang.String PHONE_MODEL
+com.bugsense.trace.G: java.lang.String PHONE_BRAND
+com.bugsense.trace.G: java.lang.String API_KEY
+com.bugsense.trace.G: boolean HAS_ROOT
+com.bugsense.trace.G: java.lang.String LOCALE
+com.bugsense.trace.G: java.lang.String UID
+com.bugsense.trace.G: int MAX_BREADCRUMBS
+com.bugsense.trace.G: java.util.ArrayList breadcrumbs
+com.bugsense.trace.G: boolean SEND_LOG
+com.bugsense.trace.G: java.lang.String LOG_FILTER
+com.bugsense.trace.G: int LOG_LINES
+com.bugsense.trace.G: long TIMESTAMP
+com.bugsense.trace.G: boolean proxyEnabled
+com.bugsense.trace.G: int IS_WIFI_ON
+com.bugsense.trace.G: int IS_MOBILENET_ON
+com.bugsense.trace.G: int IS_GPS_ON
+com.bugsense.trace.G: java.lang.String[] SCREEN_PROPS
+com.bugsense.trace.G: boolean sendOnlyWiFi
+com.bugsense.trace.G: java.lang.String userIdentifier
+com.bugsense.trace.G: java.lang.String APPS_RUNNING
+com.bugsense.trace.G: G()
+com.bugsense.trace.G: void <clinit>()
+com.bugsense.trace.PingsMechanism
+com.bugsense.trace.PingsMechanism: int MAX_PINGS_SIZE
+com.bugsense.trace.PingsMechanism: int MAX_GNIPS_SIZE
+com.bugsense.trace.PingsMechanism: int MAX_PERFS_SIZE
+com.bugsense.trace.PingsMechanism: int PING
+com.bugsense.trace.PingsMechanism: int GNIP
+com.bugsense.trace.PingsMechanism: int TRANS_START
+com.bugsense.trace.PingsMechanism: int TRANS_END
+com.bugsense.trace.PingsMechanism: com.bugsense.trace.PingsMechanism instance
+com.bugsense.trace.PingsMechanism: PingsMechanism()
+com.bugsense.trace.PingsMechanism: com.bugsense.trace.PingsMechanism getInstance()
+com.bugsense.trace.PingsMechanism: void sendSavedPings()
+com.bugsense.trace.PingsMechanism: java.lang.String getFlatLine(int,java.lang.String,java.lang.String,java.lang.String)
+com.bugsense.trace.PingsMechanism: void transmitPingASync(int)
+com.bugsense.trace.PingsMechanism: void transmitPingASync(java.lang.String,int)
+com.bugsense.trace.PingsMechanism: boolean transmitPingSync(java.lang.String)
+com.bugsense.trace.PingsMechanism: void savePing(int,java.lang.String)
+com.bugsense.trace.PingsMechanism: void savePing(int,java.lang.String,java.lang.String,java.lang.String)
+com.bugsense.trace.PingsMechanism$1
+com.bugsense.trace.PingsMechanism$1: com.bugsense.trace.PingsMechanism this$0
+com.bugsense.trace.PingsMechanism$1: PingsMechanism$1(com.bugsense.trace.PingsMechanism)
+com.bugsense.trace.PingsMechanism$1: void run()
+com.bugsense.trace.PingsMechanism$1$1
+com.bugsense.trace.PingsMechanism$1$1: com.bugsense.trace.PingsMechanism$1 this$1
+com.bugsense.trace.PingsMechanism$1$1: PingsMechanism$1$1(com.bugsense.trace.PingsMechanism$1)
+com.bugsense.trace.PingsMechanism$1$1: boolean accept(java.io.File,java.lang.String)
+com.bugsense.trace.PingsMechanism$1$2
+com.bugsense.trace.PingsMechanism$1$2: com.bugsense.trace.PingsMechanism$1 this$1
+com.bugsense.trace.PingsMechanism$1$2: PingsMechanism$1$2(com.bugsense.trace.PingsMechanism$1)
+com.bugsense.trace.PingsMechanism$1$2: boolean accept(java.io.File,java.lang.String)
+com.bugsense.trace.PingsMechanism$1$3
+com.bugsense.trace.PingsMechanism$1$3: com.bugsense.trace.PingsMechanism$1 this$1
+com.bugsense.trace.PingsMechanism$1$3: PingsMechanism$1$3(com.bugsense.trace.PingsMechanism$1)
+com.bugsense.trace.PingsMechanism$1$3: boolean accept(java.io.File,java.lang.String)
+com.bugsense.trace.PingsMechanism$2
+com.bugsense.trace.PingsMechanism$2: java.lang.String val$jsonCrashData
+com.bugsense.trace.PingsMechanism$2: int val$type
+com.bugsense.trace.PingsMechanism$2: PingsMechanism$2(java.lang.String,int)
+com.bugsense.trace.PingsMechanism$2: void run()
+com.bugsense.trace.PingsMechanism$3
+com.bugsense.trace.PingsMechanism$3: int val$type
+com.bugsense.trace.PingsMechanism$3: java.lang.String val$tag
+com.bugsense.trace.PingsMechanism$3: PingsMechanism$3(int,java.lang.String)
+com.bugsense.trace.PingsMechanism$3: void run()
+com.bugsense.trace.PingsMechanism$4
+com.bugsense.trace.PingsMechanism$4: int val$type
+com.bugsense.trace.PingsMechanism$4: java.lang.String val$tag
+com.bugsense.trace.PingsMechanism$4: java.lang.String val$cpu
+com.bugsense.trace.PingsMechanism$4: java.lang.String val$mem
+com.bugsense.trace.PingsMechanism$4: PingsMechanism$4(int,java.lang.String,java.lang.String,java.lang.String)
+com.bugsense.trace.PingsMechanism$4: void run()
+com.bugsense.trace.Utils
+com.bugsense.trace.Utils: int STATE_OFF
+com.bugsense.trace.Utils: int STATE_ON
+com.bugsense.trace.Utils: int STATE_DONT_KNOW
+com.bugsense.trace.Utils: char[] DIGITS
+com.bugsense.trace.Utils: java.lang.Runtime rt
+com.bugsense.trace.Utils: java.lang.String crashCounterFile
+com.bugsense.trace.Utils: java.lang.String lastCrashIDFile
+com.bugsense.trace.Utils: Utils()
+com.bugsense.trace.Utils: boolean checkForRoot()
+com.bugsense.trace.Utils: java.lang.String getTime()
+com.bugsense.trace.Utils: java.lang.String exceedLimitString(java.lang.String)
+com.bugsense.trace.Utils: java.lang.String readLogs()
+com.bugsense.trace.Utils: java.lang.String readFile(java.lang.String)
+com.bugsense.trace.Utils: java.lang.String MD5(java.lang.String)
+com.bugsense.trace.Utils: int CheckNetworkConnection(android.content.Context,java.lang.String)
+com.bugsense.trace.Utils: int isWifiOn(android.content.Context)
+com.bugsense.trace.Utils: boolean isOnWifi(android.content.Context)
+com.bugsense.trace.Utils: int isMobileNetworkOn(android.content.Context)
+com.bugsense.trace.Utils: int isGPSOn(android.content.Context)
+com.bugsense.trace.Utils: java.lang.String[] ScreenProperties(android.content.Context)
+com.bugsense.trace.Utils: void setProperties(android.content.Context)
+com.bugsense.trace.Utils: java.lang.String manageUid(android.content.Context)
+com.bugsense.trace.Utils: boolean saveUid(java.io.File,java.lang.String)
+com.bugsense.trace.Utils: boolean hasStorage(boolean)
+com.bugsense.trace.Utils: java.lang.String generateUid()
+com.bugsense.trace.Utils: char[] encodeHex(byte[])
+com.bugsense.trace.Utils: java.lang.String getMem()
+com.bugsense.trace.Utils: java.lang.String getCPU()
+com.bugsense.trace.Utils: java.lang.String getAppsRunning(android.content.Context)
+com.bugsense.trace.Utils: int getCrashCounter()
+com.bugsense.trace.Utils: void clearCrashCounter()
+com.bugsense.trace.Utils: void saveCrashCounter()
+com.bugsense.trace.Utils: void saveLastCrashID(java.lang.String)
+com.bugsense.trace.Utils: java.lang.String getLastCrashID()
+com.bugsense.trace.Utils: void <clinit>()
+com.bugsense.trace.Utils$1
+com.bugsense.trace.Utils$1: Utils$1()
+com.bugsense.trace.Utils$1: void run()
+com.bugsense.trace.Utils$2
+com.bugsense.trace.Utils$2: Utils$2()
+com.bugsense.trace.Utils$2: void run()
+com.bugsense.trace.Utils$3
+com.bugsense.trace.Utils$3: java.lang.String val$lastID
+com.bugsense.trace.Utils$3: Utils$3(java.lang.String)
+com.bugsense.trace.Utils$3: void run()
 com.kovaciny.linemonitorbot.DatabaseViewerActivity
 com.kovaciny.linemonitorbot.DatabaseViewerActivity: DatabaseViewerActivity()
 com.kovaciny.linemonitorbot.MainActivity
 com.kovaciny.linemonitorbot.MainActivity: MainActivity()
 com.kovaciny.linemonitorbot.R$array: int jobs_list
 com.kovaciny.linemonitorbot.R$array: int line_list
+com.kovaciny.linemonitorbot.R$array: int tips_and_apps_details
+com.kovaciny.linemonitorbot.R$array: int tips_and_apps_headers
 com.kovaciny.linemonitorbot.R$array: int vibrator_durations_entries
 com.kovaciny.linemonitorbot.R$array: int vibrator_durations_values
 com.kovaciny.linemonitorbot.R$color: int AliceBlue
@@ -234,12 +526,19 @@ com.kovaciny.linemonitorbot.R$dimen: int up_arrow_bottom_padding
 com.kovaciny.linemonitorbot.R$dimen: int up_arrow_top_padding
 com.kovaciny.linemonitorbot.R$drawable: int border_rectangle
 com.kovaciny.linemonitorbot.R$drawable: int calculator
+com.kovaciny.linemonitorbot.R$drawable: int ic_1roll
 com.kovaciny.linemonitorbot.R$drawable: int ic_1sheet
+com.kovaciny.linemonitorbot.R$drawable: int ic_2roll
 com.kovaciny.linemonitorbot.R$drawable: int ic_2sheet
+com.kovaciny.linemonitorbot.R$drawable: int ic_3roll
 com.kovaciny.linemonitorbot.R$drawable: int ic_3sheet
+com.kovaciny.linemonitorbot.R$drawable: int ic_4roll
 com.kovaciny.linemonitorbot.R$drawable: int ic_4sheet
+com.kovaciny.linemonitorbot.R$drawable: int ic_5roll
 com.kovaciny.linemonitorbot.R$drawable: int ic_5sheet
 com.kovaciny.linemonitorbot.R$drawable: int ic_audio_alarm_dark
+com.kovaciny.linemonitorbot.R$drawable: int ic_calculator
+com.kovaciny.linemonitorbot.R$drawable: int ic_flashlight
 com.kovaciny.linemonitorbot.R$drawable: int ic_launcher
 com.kovaciny.linemonitorbot.R$drawable: int ic_minus
 com.kovaciny.linemonitorbot.R$drawable: int ic_plus
@@ -268,6 +567,7 @@ com.kovaciny.linemonitorbot.R$id: int TableRow04
 com.kovaciny.linemonitorbot.R$id: int action_pick_job
 com.kovaciny.linemonitorbot.R$id: int action_pick_line
 com.kovaciny.linemonitorbot.R$id: int action_settings
+com.kovaciny.linemonitorbot.R$id: int action_tips_and_apps
 com.kovaciny.linemonitorbot.R$id: int action_view_database
 com.kovaciny.linemonitorbot.R$id: int btn_add_web
 com.kovaciny.linemonitorbot.R$id: int btn_calculate_rates
@@ -275,7 +575,9 @@ com.kovaciny.linemonitorbot.R$id: int btn_calculate_times
 com.kovaciny.linemonitorbot.R$id: int btn_calculator
 com.kovaciny.linemonitorbot.R$id: int btn_cancel_alarm
 com.kovaciny.linemonitorbot.R$id: int btn_enter_product
+com.kovaciny.linemonitorbot.R$id: int btn_flashlight
 com.kovaciny.linemonitorbot.R$id: int btn_go_by_height
+com.kovaciny.linemonitorbot.R$id: int btn_self_destruct
 com.kovaciny.linemonitorbot.R$id: int btn_skid_number_up
 com.kovaciny.linemonitorbot.R$id: int btn_subtract_web
 com.kovaciny.linemonitorbot.R$id: int btn_total_skids_up
@@ -304,8 +606,8 @@ com.kovaciny.linemonitorbot.R$id: int edit_skid_number
 com.kovaciny.linemonitorbot.R$id: int edit_speed_factor
 com.kovaciny.linemonitorbot.R$id: int edit_total_sheets_per_skid
 com.kovaciny.linemonitorbot.R$id: int gridview_database
-com.kovaciny.linemonitorbot.R$id: int imageView1
 com.kovaciny.linemonitorbot.R$id: int img_number_of_webs
+com.kovaciny.linemonitorbot.R$id: int img_tutorial_arrow
 com.kovaciny.linemonitorbot.R$id: int imgbtn_sheets_or_rolls
 com.kovaciny.linemonitorbot.R$id: int lbl_color_percent
 com.kovaciny.linemonitorbot.R$id: int lbl_differential_speed
@@ -321,6 +623,8 @@ com.kovaciny.linemonitorbot.R$id: int lbl_product_type
 com.kovaciny.linemonitorbot.R$id: int lbl_products
 com.kovaciny.linemonitorbot.R$id: int lbl_products_per_minute
 com.kovaciny.linemonitorbot.R$id: int lbl_reminder_no_differential_speed
+com.kovaciny.linemonitorbot.R$id: int lbl_select_line_reminder
+com.kovaciny.linemonitorbot.R$id: int lbl_select_line_tutorial_prompt
 com.kovaciny.linemonitorbot.R$id: int lbl_sheet_length
 com.kovaciny.linemonitorbot.R$id: int lbl_sheet_weight
 com.kovaciny.linemonitorbot.R$id: int lbl_sheet_width
@@ -366,7 +670,6 @@ com.kovaciny.linemonitorbot.R$id: int txt_color_percent
 com.kovaciny.linemonitorbot.R$id: int txt_edge_trim_percent
 com.kovaciny.linemonitorbot.R$id: int txt_gross_pph
 com.kovaciny.linemonitorbot.R$id: int txt_job_finish_time
-com.kovaciny.linemonitorbot.R$id: int txt_message
 com.kovaciny.linemonitorbot.R$id: int txt_net_pph
 com.kovaciny.linemonitorbot.R$id: int txt_products_per_minute
 com.kovaciny.linemonitorbot.R$id: int txt_skid_finish_time
@@ -377,20 +680,21 @@ com.kovaciny.linemonitorbot.R$id: int vertical_divider
 com.kovaciny.linemonitorbot.R$layout: int action_pick_job
 com.kovaciny.linemonitorbot.R$layout: int action_pick_line
 com.kovaciny.linemonitorbot.R$layout: int activity_main
-com.kovaciny.linemonitorbot.R$layout: int calculator_button_fragment
 com.kovaciny.linemonitorbot.R$layout: int container_skids_on_table
 com.kovaciny.linemonitorbot.R$layout: int database_viewer_fragment
 com.kovaciny.linemonitorbot.R$layout: int draining_fragment
 com.kovaciny.linemonitorbot.R$layout: int enter_product_dialog
+com.kovaciny.linemonitorbot.R$layout: int floating_toolbar_fragment
 com.kovaciny.linemonitorbot.R$layout: int go_by_height_dialog
-com.kovaciny.linemonitorbot.R$layout: int message_fragment
 com.kovaciny.linemonitorbot.R$layout: int rates_fragment
+com.kovaciny.linemonitorbot.R$layout: int select_line_fragment
 com.kovaciny.linemonitorbot.R$layout: int skid_times_fragment
 com.kovaciny.linemonitorbot.R$layout: int spinnerriffic_textview
 com.kovaciny.linemonitorbot.R$menu: int main
 com.kovaciny.linemonitorbot.R$string: int action_pick_job_title
 com.kovaciny.linemonitorbot.R$string: int action_pick_line_title
 com.kovaciny.linemonitorbot.R$string: int action_settings
+com.kovaciny.linemonitorbot.R$string: int action_tips_and_apps_title
 com.kovaciny.linemonitorbot.R$string: int action_view_database_title
 com.kovaciny.linemonitorbot.R$string: int app_name
 com.kovaciny.linemonitorbot.R$string: int btn_go_by_height_text
@@ -401,6 +705,7 @@ com.kovaciny.linemonitorbot.R$string: int confirm_clear_wos
 com.kovaciny.linemonitorbot.R$string: int database_viewer_activity_name
 com.kovaciny.linemonitorbot.R$string: int debug_display
 com.kovaciny.linemonitorbot.R$string: int default_sheet_weight
+com.kovaciny.linemonitorbot.R$string: int default_sheet_weight_label
 com.kovaciny.linemonitorbot.R$string: int error_current_greater_than_total
 com.kovaciny.linemonitorbot.R$string: int error_differential_too_high
 com.kovaciny.linemonitorbot.R$string: int error_differential_too_low
@@ -421,7 +726,9 @@ com.kovaciny.linemonitorbot.R$string: int pref_timer_default
 com.kovaciny.linemonitorbot.R$string: int prompt_need_product
 com.kovaciny.linemonitorbot.R$string: int reminder_differential_format
 com.kovaciny.linemonitorbot.R$string: int reminder_no_differential_speed
+com.kovaciny.linemonitorbot.R$string: int select_line_activity_name
 com.kovaciny.linemonitorbot.R$string: int settings_activity_name
+com.kovaciny.linemonitorbot.R$string: int tips_activity_name
 com.kovaciny.linemonitorbot.R$string: int title_activity_alarm_manager
 com.kovaciny.linemonitorbot.R$string: int title_fragment_calculator_button
 com.kovaciny.linemonitorbot.R$string: int title_fragment_draining
@@ -437,6 +744,7 @@ com.kovaciny.linemonitorbot.R$style: int Button_Minor
 com.kovaciny.linemonitorbot.R$style: int EditText
 com.kovaciny.linemonitorbot.R$style: int EditText_SecondTableColumn
 com.kovaciny.linemonitorbot.R$style: int Hint
+com.kovaciny.linemonitorbot.R$style: int Hint_Large
 com.kovaciny.linemonitorbot.R$style: int Label
 com.kovaciny.linemonitorbot.R$style: int Label_FirstTableColumn
 com.kovaciny.linemonitorbot.R$style: int Label_SecondTableColumn
@@ -444,10 +752,14 @@ com.kovaciny.linemonitorbot.R$style: int ParentFragment
 com.kovaciny.linemonitorbot.R$style: int ParentFragment_HorizontallyDivided
 com.kovaciny.linemonitorbot.R$style: int Spinner
 com.kovaciny.linemonitorbot.R$xml: int preferences
+com.kovaciny.linemonitorbot.SelectLineActivity
+com.kovaciny.linemonitorbot.SelectLineActivity: SelectLineActivity()
 com.kovaciny.linemonitorbot.SettingsActivity
 com.kovaciny.linemonitorbot.SettingsActivity: SettingsActivity()
 com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver
 com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver: SkidFinishedBroadcastReceiver()
+com.kovaciny.linemonitorbot.TipsActivity
+com.kovaciny.linemonitorbot.TipsActivity: TipsActivity()
 org.apache.commons.lang3.JavaVersion: org.apache.commons.lang3.JavaVersion[] values()
 org.apache.commons.lang3.JavaVersion: org.apache.commons.lang3.JavaVersion valueOf(java.lang.String)
 org.apache.commons.lang3.Range$ComparableComparator: org.apache.commons.lang3.Range$ComparableComparator[] values()
