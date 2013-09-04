@@ -72,21 +72,6 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	SectionsPagerAdapter mSectionsPagerAdapter;
 
-	@Override
-    protected void onStart() {
-	    SharedPreferences settings = getPreferences(MODE_PRIVATE);
-	    long lastRun = settings.getLong("mostRecentStartDate", 0);
-	    long now = new Date().getTime();
-	    if ( (lastRun > 0) && ((now - lastRun) > (1 * HelperFunction.ONE_HOUR_IN_MILLIS) )) {
-	        mModel.deleteWorkOrders();
-	        if (DEBUG) Toast.makeText(this, "clearing work orders", Toast.LENGTH_LONG).show();
-	    }
-	    SharedPreferences.Editor editor = settings.edit();
-        editor.putLong("mostRecentStartDate", now);
-        editor.commit();
-	    super.onStart();
-    }
-
     /**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
@@ -165,6 +150,21 @@ public class MainActivity extends FragmentActivity implements
 
 		mActionBar = actionBar;
 	}
+
+    @Override
+    protected void onStart() {
+        SharedPreferences settings = getPreferences(MODE_PRIVATE);
+        long lastRun = settings.getLong("mostRecentStartDate", 0);
+        long now = new Date().getTime();
+        if ( (lastRun > 0) && ((now - lastRun) > (1 * HelperFunction.ONE_HOUR_IN_MILLIS) )) {
+            mModel.deleteWorkOrders();
+            if (DEBUG) Toast.makeText(this, "clearing work orders", Toast.LENGTH_LONG).show();
+        }
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putLong("mostRecentStartDate", now);
+        editor.commit();
+        super.onStart();
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
