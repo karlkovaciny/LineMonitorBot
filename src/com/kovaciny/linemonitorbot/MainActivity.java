@@ -23,7 +23,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +30,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.bugsense.trace.BugSenseHandler;
 import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.linemonitorbot.GoByHeightDialogFragment.GoByHeightDialogListener;
 import com.kovaciny.primexmodel.PrimexModel;
@@ -86,6 +86,7 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		BugSenseHandler.initAndStartSession(this, "2100e887");
 		setContentView(R.layout.activity_main);
 		
 		// Initialize settings on first run
