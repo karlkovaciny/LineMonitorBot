@@ -46,6 +46,8 @@ public class MainActivity extends FragmentActivity implements
 		ActionBar.TabListener, PropertyChangeListener,
 		EnterProductDialogFragment.EnterProductDialogListener,
 		GoByHeightDialogListener {
+    
+    public static final boolean DEBUG = false;
 
 	private static final int LINE_LIST_MENU_GROUP = 1111;
 	private static final int LINE_LIST_ID_RANDOMIZER = 1234; //TODO replace this by adding line number to Menu.FIRST
@@ -61,9 +63,6 @@ public class MainActivity extends FragmentActivity implements
 	public static final int CALCULATOR_FRAGMENT_POSITION = POSITION_NONE;
 
 	public static final String ERROR_FRAGMENT_NOT_FOUND = "MainActivity.Fragment not found";
-
-	public static final boolean DEBUG = true;
-
 	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -261,19 +260,6 @@ public class MainActivity extends FragmentActivity implements
 	        mForceUserToSelectLine = true;
 	        mShowTutorial = true;
 	        
-	        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-	        .setMessage("Welcome to LineMonitorBot!\n\n"
-	                + "Start by picking your line from the top menu.");
-	        builder.setPositiveButton(R.string.ok,
-	                new DialogInterface.OnClickListener() {
-
-	            @Override
-	            public void onClick(DialogInterface dialog, int which) {
-	                // Do nothing
-	            }
-	        });
-	        builder.show();
-
 	        SharedPreferences.Editor editor = settings.edit();
 	        editor.putLong("firstRunDate", new Date().getTime());
 	        editor.commit();

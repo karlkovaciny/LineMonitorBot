@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewConfiguration;
 
 import com.kovaciny.primexmodel.PrimexModel;
 
@@ -36,6 +37,9 @@ public class SelectLineActivity extends Activity {
         mJobPicker = (MenuItem) menu.findItem(R.id.action_pick_job);
         mLinePicker = (MenuItem) menu.findItem(R.id.action_pick_line);
         mJobPicker.setEnabled(false);
+        if (!ViewConfiguration.get(this).hasPermanentMenuKey()) {
+            mJobPicker.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER); //just a hack to make the arrow line up
+        }
         
         // populate the line picker with line numbers from the database
         List<Integer> lineNumberList = new ArrayList<Integer>();
