@@ -908,6 +908,16 @@ android.support.v4.widget.SearchViewCompatIcs$MySearchView
 android.support.v4.widget.SimpleCursorAdapter
 android.support.v4.widget.SimpleCursorAdapter$CursorToStringConverter
 android.support.v4.widget.SimpleCursorAdapter$ViewBinder
+biz.source_code.base64Coder.Base64Coder:
+    public static java.lang.String encodeString(java.lang.String)
+    public static java.lang.String encodeLines(byte[])
+    public static java.lang.String encodeLines(byte[],int,int,int,java.lang.String)
+    public static char[] encode(byte[])
+    public static char[] encode(byte[],int)
+    public static char[] encode(byte[],int,int)
+    public static java.lang.String decodeString(java.lang.String)
+    public static byte[] decodeLines(java.lang.String)
+    private Base64Coder()
 com.kovaciny.database.DatabaseViewer:
     public static final int DATABASE_VERSION
     public static final java.lang.String DATABASE_NAME
@@ -924,6 +934,7 @@ com.kovaciny.database.PrimexDatabaseSchema$WorkOrders
 com.kovaciny.database.PrimexSQLiteOpenHelper:
     public static final int DATABASE_VERSION
     public static final java.lang.String DATABASE_NAME
+    public static final int DEFAULT_INITIAL_LINE_ID
     public static final int DEFAULT_INITIAL_WO_NUM
     private static final java.lang.String TEXT_TYPE
     private static final java.lang.String DOUBLE_TYPE
@@ -954,9 +965,10 @@ com.kovaciny.database.PrimexSQLiteOpenHelper:
     private static final java.lang.String SQL_DELETE_PRODUCTION_LINES
     private static final java.lang.String SQL_DELETE_WORK_ORDERS
     private static final java.lang.String SQL_DELETE_MODEL_STATE
-    709:726:public java.util.Date getLatestWoCreateDate()
-    779:798:public int getProductType(int)
-    820:837:public java.lang.String getFieldAsString(java.lang.String,java.lang.String,java.lang.String,java.lang.String[])
+    705:722:public java.util.Date getLatestWoCreateDate()
+    777:796:public int getProductType(int)
+    818:835:public java.lang.String getFieldAsString(java.lang.String,java.lang.String,java.lang.String,java.lang.String[])
+    1028:1046:public void deleteSkid(int,int)
 com.kovaciny.helperfunctions.HelperFunction:
     public static final long ONE_HOUR_IN_MILLIS
     public static final long ONE_MINUTE_IN_MILLIS
@@ -964,6 +976,7 @@ com.kovaciny.helperfunctions.HelperFunction:
     public static final long MINUTES_PER_HOUR
     public static final long SECONDS_PER_MINUTE
     public static final double INCHES_PER_FOOT
+    public static final double EPSILON
     public static final float RELATIVE_SIZE_SUPERSCRIPT
     public static final float RELATIVE_SIZE_SUBSCRIPT
     17:19:private HelperFunction()
@@ -974,18 +987,19 @@ com.kovaciny.linemonitorbot.EnterProductDialogFragment:
     public static final int MAXIMUM_NUMBER_OF_WEBS
 com.kovaciny.linemonitorbot.Job
 com.kovaciny.linemonitorbot.MainActivity:
+    public static final boolean DEBUG
     private static final int LINE_LIST_MENU_GROUP
     private static final int LINE_LIST_ID_RANDOMIZER
     private static final int JOB_LIST_MENU_GROUP
     private static final int JOB_OPTIONS_MENU_GROUP
+    private static final int SELECT_LINE_INTENT_CODE
+    private static final int DEFAULT_LINE_NUMBER
     public static final int POSITION_NONE
     public static final int SKID_TIMES_FRAGMENT_POSITION
     public static final int RATES_FRAGMENT_POSITION
     public static final int DRAINING_FRAGMENT_POSITION
     public static final int CALCULATOR_FRAGMENT_POSITION
     public static final java.lang.String ERROR_FRAGMENT_NOT_FOUND
-    public static final boolean DEBUG
-com.kovaciny.linemonitorbot.MessageFragment
 com.kovaciny.linemonitorbot.R
 com.kovaciny.linemonitorbot.R$array
 com.kovaciny.linemonitorbot.R$attr
@@ -998,6 +1012,8 @@ com.kovaciny.linemonitorbot.R$menu
 com.kovaciny.linemonitorbot.R$string
 com.kovaciny.linemonitorbot.R$style
 com.kovaciny.linemonitorbot.R$xml
+com.kovaciny.linemonitorbot.SelectLineActivity:
+    private static final int LINE_LIST_MENU_GROUP
 com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver:
     public static final java.lang.String ONE_TIME
     public static final java.lang.String REPEATING
@@ -1005,9 +1021,14 @@ com.kovaciny.linemonitorbot.SkidTimesFragment:
     private android.widget.TextView mLbl_totalProducts
     private java.util.List mSkidList
     public static final int MAXIMUM_NUMBER_OF_SKIDS
-    210:210:public java.util.List getSkidList()
-    214:215:public void setSkidList(java.util.List)
-com.kovaciny.linemonitorbot.TimePickerFragment
+    public static final java.lang.String DEFAULT_PRODUCT_UNITS
+    public static final java.lang.String DEFAULT_PRODUCT_GROUPING
+    212:212:public java.util.List getSkidList()
+    216:217:public void setSkidList(java.util.List)
+com.kovaciny.linemonitorbot.TipsActivityFragment:
+    public static final java.lang.String MOTION_ACTIONS_PACKAGE_NAME
+    public static final java.lang.String TINY_FLASHLIGHT_PACKAGE_NAME
+    public static final java.lang.String PROXIMITY_ACTIONS_PACKAGE_NAME
 com.kovaciny.linemonitorbot.ViewEventResponder
 com.kovaciny.primexmodel.Concentrate
 com.kovaciny.primexmodel.Hopper
@@ -1057,17 +1078,19 @@ com.kovaciny.primexmodel.PrimexModel:
     public static final java.lang.String ERROR_ZERO_LINE_SPEED
     public static final java.lang.String ERROR_NO_PPM_VALUE
     public static final double MAXIMUM_POSSIBLE_GAUGE
-    95:96:public void removePropertyChangeListener(java.beans.PropertyChangeListener)
-    230:237:public void changeNovatecSetpoint(java.lang.Double)
-    475:476:public void closeDb()
-    505:505:public java.util.List getWoNumbers()
-    509:509:public java.util.Date getLatestWoCreateDate()
-    529:530:public void setProductsPerMinute(double)
-    537:538:public void setEdgeTrimPercent(double)
-    545:546:public void setNetPph(double)
-    553:554:public void setGrossPph(double)
-    561:562:public void setColorPercent(double)
-    585:586:public void setCreateDate(java.util.Date)
+    96:97:public void removePropertyChangeListener(java.beans.PropertyChangeListener)
+    182:186:public com.kovaciny.primexmodel.Skid addSkid(int,int)
+    235:242:public void changeNovatecSetpoint(java.lang.Double)
+    447:476:public void changeNumberOfSkids(double)
+    479:480:public void closeDb()
+    509:509:public java.util.List getWoNumbers()
+    513:513:public java.util.Date getLatestWoCreateDate()
+    533:534:public void setProductsPerMinute(double)
+    541:542:public void setEdgeTrimPercent(double)
+    549:550:public void setNetPph(double)
+    557:558:public void setGrossPph(double)
+    565:566:public void setColorPercent(double)
+    590:591:public void setCreateDate(java.util.Date)
 com.kovaciny.primexmodel.Product:
     public static final java.lang.String SHEETS_TYPE
     public static final java.lang.String SHEETSET_TYPE
@@ -1554,6 +1577,8 @@ tests.PrimexModelTest$2
 tests.PrimexModelTest$3
 tests.PrimexModelTest$4
 tests.PrimexModelTest$5
+tests.PrimexModelTest$6
+tests.PrimexTestCase
 tests.RatesFragmentTest
 tests.RatesFragmentTest$1
 tests.RatesFragmentTest$2
@@ -1563,3 +1588,4 @@ tests.SkidTimesFragmentTest$2
 tests.SkidTimesFragmentTest$3
 tests.SkidTimesFragmentTest$4
 tests.SpeedValuesTest
+tests.WorkOrderTest
