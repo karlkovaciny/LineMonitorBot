@@ -13,12 +13,11 @@
 
         <TextView
             android:id="@+id/textView1"
+            style="@style/Hint.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New feature..."
-            android:textSize="35px"
-            android:textColor="@color/SlateGray"
-            android:textStyle="italic" />
+            android:textSize="35px" />
 
         <LinearLayout
             android:layout_width="match_parent"
