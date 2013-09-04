@@ -145,7 +145,7 @@ public class MainActivity extends FragmentActivity implements
 		
 		// Float a calculator over all tabs by replacing the main content.
 		getSupportFragmentManager().beginTransaction()
-				.replace(android.R.id.content, new CalculatorFragment())
+				.replace(android.R.id.content, new FloatingToolbarFragment())
 				.commit();
 
 		mActionBar = actionBar;
@@ -214,8 +214,6 @@ public class MainActivity extends FragmentActivity implements
 			action_viewDatabase.setVisible(true);
 		}
 
-		MenuItem action_tipsAndApps = (MenuItem) menu.findItem(R.id.action_tips_and_apps);
-		
 		return true;
 	}
 
@@ -626,7 +624,7 @@ public class MainActivity extends FragmentActivity implements
 				fragment = new DrainingFragment();
 				break;
 			case CALCULATOR_FRAGMENT_POSITION:
-				fragment = new CalculatorFragment();
+				fragment = new FloatingToolbarFragment();
 				break;
 			default:
 				fragment = new DrainingFragment(); // better never get here!
