@@ -13,6 +13,10 @@
 # Add any project specific keep options here:
 -dontwarn android.test.**
 
+# Bugsense recommendations
+-keep class com.bugsense.** { *; }
+-libraryjars libs/bugsense-3.5.jar 
+
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:

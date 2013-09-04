@@ -20,6 +20,20 @@
             android:textColor="@color/SlateGray"
             android:textStyle="italic" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" >
+
+            <Button
+                android:id="@+id/btn_self_destruct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SELF-DESTRUCT!"
+                android:textColor="@color/red" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>
