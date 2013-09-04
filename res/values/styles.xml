@@ -109,5 +109,9 @@
 		<item name="android:textColor">@color/SlateGray</item>
 		<item name="android:textStyle">italic</item>
     </style>
+    
+    <style name="Hint.Large">
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
         
 </resources>

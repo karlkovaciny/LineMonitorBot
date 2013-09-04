@@ -56,6 +56,14 @@
             <meta-data
                 android:name="tipsActivity"
                 android:value="com.kovaciny.linemonitorbot.TipsActivity" />
+        </activity>     
+         <activity
+            android:name="com.kovaciny.linemonitorbot.SelectLineActivity"
+            android:label="@string/select_line_activity_name"
+            android:parentActivityName="com.kovaciny.linemonitorbot.MainActivity" >
+            <meta-data
+                android:name="selectLineActivity"
+                android:value="com.kovaciny.linemonitorbot.SelectLineActivity" />
         </activity>        
         <receiver android:name="com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver">
         </receiver>

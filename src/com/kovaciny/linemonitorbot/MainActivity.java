@@ -51,7 +51,9 @@ public class MainActivity extends FragmentActivity implements
 	private static final int LINE_LIST_ID_RANDOMIZER = 1234; //TODO replace this by adding line number to Menu.FIRST
 	private static final int JOB_LIST_MENU_GROUP = 2222;
 	private static final int JOB_OPTIONS_MENU_GROUP = 2223;
-
+	private static final int SELECT_LINE_INTENT_CODE = 1;
+	private static final int DEFAULT_LINE_NUMBER = 11;
+	
 	public static final int POSITION_NONE = -1;
 	public static final int SKID_TIMES_FRAGMENT_POSITION = 0;
 	public static final int RATES_FRAGMENT_POSITION = 1;
@@ -62,6 +64,7 @@ public class MainActivity extends FragmentActivity implements
 
 	public static final boolean DEBUG = true;
 
+	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a
@@ -80,6 +83,8 @@ public class MainActivity extends FragmentActivity implements
 	private MenuItem mJobPicker;
 	private MenuItem mLinePicker;
 	public PrimexModel mModel; // only public so I can do testing!
+	private boolean mForceUserToSelectLine;
+	private boolean mShowTutorial;
 
 	private ActionBar mActionBar;
 
@@ -156,8 +161,9 @@ public class MainActivity extends FragmentActivity implements
         SharedPreferences settings = getPreferences(MODE_PRIVATE);
         long lastRun = settings.getLong("mostRecentStartDate", 0);
         long now = new Date().getTime();
-        if ( (lastRun > 0) && ((now - lastRun) > (1 * HelperFunction.ONE_HOUR_IN_MILLIS) )) {
+        if ( (lastRun > 0) && ((now - lastRun) > (12 * HelperFunction.ONE_HOUR_IN_MILLIS) )) {
             mModel.deleteWorkOrders();
+            mForceUserToSelectLine = true;
             if (DEBUG) Toast.makeText(this, "clearing work orders", Toast.LENGTH_LONG).show();
         }
         SharedPreferences.Editor editor = settings.edit();
@@ -191,9 +197,18 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 		if (!mModel.hasSelectedLine()) {
-			SharedPreferences settings = getPreferences(MODE_PRIVATE);
-			int lineNum = settings.getInt("lastSelectedLine", 18);
-			mModel.setSelectedLine(lineNum);
+		    //that is, on launch, but not on invalidateOptionsMenu.
+		    if (mForceUserToSelectLine) {
+		        mForceUserToSelectLine = false;
+		        Intent selectLineIntent = new Intent(this, SelectLineActivity.class);
+		        selectLineIntent.putExtra("ShowTutorial", mShowTutorial);
+	            this.startActivityForResult(selectLineIntent, SELECT_LINE_INTENT_CODE);
+	            mModel.setSelectedLine(11);
+		    } else {
+		        SharedPreferences settings = getPreferences(MODE_PRIVATE);
+		        int lineNum = settings.getInt("lastSelectedLine", DEFAULT_LINE_NUMBER);
+		        mModel.setSelectedLine(lineNum);
+		    }
 		}
 
 		// populate the job picker with jobs
@@ -243,6 +258,9 @@ public class MainActivity extends FragmentActivity implements
 	private void doFirstRun() {
 	    SharedPreferences settings = getPreferences(MODE_PRIVATE);
 	    if (settings.getLong("firstRunDate", -1) == -1) {
+	        mForceUserToSelectLine = true;
+	        mShowTutorial = true;
+	        
 	        AlertDialog.Builder builder = new AlertDialog.Builder(this)
 	        .setMessage("Welcome to LineMonitorBot!\n\n"
 	                + "Start by picking your line from the top menu.");
@@ -587,7 +605,20 @@ public class MainActivity extends FragmentActivity implements
 		mModel.calculateRates();
 	}
 
-	/*
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SELECT_LINE_INTENT_CODE) {
+            if (resultCode == RESULT_FIRST_USER) {
+                int lineNumber = data.getIntExtra("LineNumber", DEFAULT_LINE_NUMBER);
+                mModel.setSelectedLine(lineNumber);
+            } else if (resultCode == RESULT_CANCELED) {
+                finish();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /*
 	 * --------------------------------------------------------- start of
 	 * functions I never change
 	 */
