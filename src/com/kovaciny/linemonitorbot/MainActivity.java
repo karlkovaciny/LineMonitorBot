@@ -48,7 +48,7 @@ public class MainActivity extends FragmentActivity implements
 		GoByHeightDialogListener {
 
 	private static final int LINE_LIST_MENU_GROUP = 1111;
-	private static final int LINE_LIST_ID_RANDOMIZER = 1234;
+	private static final int LINE_LIST_ID_RANDOMIZER = 1234; //TODO replace this by adding line number to Menu.FIRST
 	private static final int JOB_LIST_MENU_GROUP = 2222;
 	private static final int JOB_OPTIONS_MENU_GROUP = 2223;
 

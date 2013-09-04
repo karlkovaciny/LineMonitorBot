@@ -35,9 +35,10 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 142;
+    public static final int DATABASE_VERSION = 149;
     public static final String DATABASE_NAME = "Primex.db";
     
+    public static final int DEFAULT_INITIAL_LINE_ID = 7;
     public static final int DEFAULT_INITIAL_WO_NUM = 123;
     
 	private static final String TEXT_TYPE = " TEXT";
@@ -49,7 +50,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	private static final String SQL_CREATE_MODEL_STATE = 
 			"CREATE TABLE " + PrimexDatabaseSchema.ModelState.TABLE_NAME + " (" +
 					PrimexDatabaseSchema.ModelState._ID + " INTEGER PRIMARY KEY," +
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE + INTEGER_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER + INTEGER_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE + INTEGER_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_EDGE_TRIM_PERCENT + DOUBLE_TYPE + COMMA_SEP +
@@ -179,10 +179,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         //Batch insert to SQLite database on Android
         try {
         	db.beginTransaction();
-        	Integer lineNum = 12;
         	Integer woNum = DEFAULT_INITIAL_WO_NUM;
         	ContentValues modvalues = new ContentValues();
-        	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, lineNum);
         	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, woNum);
         	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE,0);
 
@@ -251,7 +249,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         try {
         	db.beginTransaction();
         	ContentValues values = new ContentValues();
-        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER,1);
+        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, DEFAULT_INITIAL_WO_NUM);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED,69);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT,0);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER,1);
@@ -266,8 +264,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         try {
         	db.beginTransaction();
         	ContentValues values = new ContentValues();
-        	values.put(PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID, 7);
-        	values.put(PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID, 1);
+        	values.put(PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID, DEFAULT_INITIAL_LINE_ID);
+        	values.put(PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID, DEFAULT_INITIAL_WO_NUM);
         	values.put(PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_IS_SELECTED, 1);
         	db.insertOrThrow(PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME, null, values);
         	db.setTransactionSuccessful();
@@ -382,18 +380,14 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     public long saveModelState(PrimexModel model) {
     	SQLiteDatabase db = getWritableDatabase();
 
-    	//TODO not sure if these lines are necessary
-    	insertOrUpdateLine(model.getSelectedLine());
-    	insertOrUpdateWorkOrder(model.getSelectedWorkOrder());
-    	
     	ContentValues values = new ContentValues();
-    	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE, model.getSelectedLine().getLineNumber());
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, model.getSelectedWorkOrder().getWoNumber());
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_COLOR_PERCENT, model.getColorPercent());
     	if (model.getCreateDate() != null) {
     		values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE, model.getCreateDate().getTime());
     	} 
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_DIFFERENTIAL_SETPOINT, model.getDifferentialSetpoint());
+    	Log.v("SQLite", "just saved differential setpoint of " + String.valueOf(model.getDifferentialSetpoint()));
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_EDGE_TRIM_PERCENT, model.getEdgeTrimRatio());
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_GROSS_PPH, model.getGrossPph());
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_LINE_SPEED_SETPOINT, model.getLineSpeedSetpoint());
@@ -442,7 +436,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_RANGE_LOW , newLine.getDifferentialRangeLow());
     	values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_RANGE_HIGH, newLine.getDifferentialRangeHigh());
 		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR, newLine.getSpeedValues().speedFactor);
-		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT, newLine.getSpeedValues().lineSpeedSetpoint);
+		Log.v("insertLine", "just saved speed factor of " + String.valueOf(newLine.getSpeedValues().speedFactor));
+        values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT, newLine.getSpeedValues().lineSpeedSetpoint);
 		
     	long rowId;
     	try {
@@ -490,7 +485,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		}
     	return rowId;
     }
-    public ProductionLine getLine(int lineNumber){
+    public ProductionLine loadLine(int lineNumber){
     	SQLiteDatabase db = getReadableDatabase();
     	
     	Cursor resultCursor = db.query(
@@ -518,6 +513,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	    	ProductionLine newLine = new ProductionLine(ln,ll,dw,sct,tet);
 	    	SpeedValues sv = new SpeedValues(sp,diff,sf);
 	    	newLine.setSpeedValues(sv);
+	    	Log.v("loadLine", "just loaded speed values of " + sv.toString());
 	    	newLine.setWebWidth(ww);
 	    	return newLine;
 	    } finally {
@@ -525,7 +521,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	}    	
     }
     
-    public Novatec getNovatec(int lineNumber) {
+    public Novatec loadNovatec(int lineNumber) {
     	SQLiteDatabase db = getReadableDatabase();
 		
 		String sql = "SELECT * FROM " +
@@ -633,7 +629,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				new String[]{String.valueOf(newWo.getWoNumber())}, 
 				SQLiteDatabase.CONFLICT_REPLACE);
 		}
-		Log.v("Verbose", "just inserted this work order into row " + String.valueOf(rowId) + ": " + newWo.toString());
+//		Log.v("Verbose", "just inserted this work order into row " + String.valueOf(rowId) + ": " + newWo.toString());
 		return rowId;
 	}
 	
@@ -762,6 +758,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		db.execSQL(SQL_CREATE_PRODUCTS);
 		db.execSQL(SQL_DELETE_SKIDS);		
 		db.execSQL(SQL_CREATE_SKIDS);		
+		db.execSQL(SQL_DELETE_MODEL_STATE);
+		db.execSQL(SQL_CREATE_MODEL_STATE);
 	}
 	
 	
@@ -894,9 +892,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				SQLiteDatabase.CONFLICT_REPLACE);
 		
 		if (rowId == -1) {
-			Log.v("verbose", "insert error code -1");
+			Log.d("insert product", "sqlite insert error code -1");
 		} else {
-			Log.v("verbose", "inserted product " + newProduct.toString() + " into rowID " + String.valueOf(rowId)); //TODO firing on restart?
+//			Log.v("verbose", "inserted product " + newProduct.toString() + " into rowID " + String.valueOf(rowId)); //TODO firing on restart?
 		}
 		return rowId;
 	}
@@ -1018,7 +1016,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		if (rowId == -1) {
 			Log.v("verbose", "insert error code -1");
 		} else {
-			Log.v("verbose", "inserted this skid into row ID " + String.valueOf(rowId) + ": " + skid.toString());
+//			Log.v("verbose", "inserted this skid into row ID " + String.valueOf(rowId) + ": " + skid.toString());
 		}
 		return rowId;
 	}

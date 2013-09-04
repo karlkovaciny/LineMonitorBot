@@ -127,15 +127,20 @@ public class RatesFragment extends Fragment implements OnClickListener{
 		String propertyName = event.getPropertyName();
 		Object newProperty = event.getNewValue();
 		if (propertyName == PrimexModel.PRODUCT_CHANGE_EVENT) {
-			Product p = (Product)newProperty;
-			mLbl_sheetWeight.setText(HelperFunction.capitalizeFirstChar(p.getUnit()) + " weight");
-			Double sheetWeight = p.getUnitWeight() / p.getNumberOfWebs();
-			if (sheetWeight <= 0) {
-				mEdit_sheetWeight.setText(getString(R.string.default_sheet_weight));
-			} else {
-				String swdisp = new DecimalFormat("#0.###").format(sheetWeight);
-				mEdit_sheetWeight.setText(swdisp);
-			}
+		    if (newProperty == null) {
+		        mLbl_sheetWeight.setText(getString(R.string.default_sheet_weight_label));
+		        mEdit_sheetWeight.setText(getString(R.string.default_sheet_weight));
+		    } else {
+		        Product p = (Product)newProperty;
+		        mLbl_sheetWeight.setText(HelperFunction.capitalizeFirstChar(p.getUnit()) + " weight");
+		        Double sheetWeight = p.getUnitWeight() / p.getNumberOfWebs();
+		        if (sheetWeight <= 0) {
+		            mEdit_sheetWeight.setText(getString(R.string.default_sheet_weight));
+		        } else {
+		            String swdisp = new DecimalFormat("#0.###").format(sheetWeight);
+		            mEdit_sheetWeight.setText(swdisp);
+		        }
+		    }
 			
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
 			
