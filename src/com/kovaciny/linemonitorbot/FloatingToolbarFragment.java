@@ -40,16 +40,24 @@ public class FloatingToolbarFragment extends Fragment implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case (R.id.btn_calculator):
-                launchAppByName("calcul", "calc", "calculator", "");
+                if (!launchAppByName("calcul", "calc", "calculator", "")) {
+                    Toast.makeText(getActivity(), "No calculator app found. Try downloading a different calculator.", Toast.LENGTH_LONG).show();
+                }
                 break;
-                case (R.id.btn_flashlight):
-                launchAppByName("flashlight", "", "flashlight", "com.devuni.flashlight");
+            case (R.id.btn_flashlight):
+                if (!launchAppByName("flashlight", "", "flashlight", "com.devuni.flashlight")) {
+                    Toast.makeText(getActivity(), "No flashlight app found. Try downloading the suggested flashlight app from the tips page.", Toast.LENGTH_LONG).show();
+                }
                 break;
             default:
         }
     }
 
-    private void launchAppByName(String nameMustContainThis, String bestNameWouldStartWithThis, String appIsCalledThis,
+    /*
+     * Attempts to launch a type of app by looking at its package name and app name. 
+     * Returns whether it found an app to launch or not.
+     */
+    private boolean launchAppByName(String nameMustContainThis, String bestNameWouldStartWithThis, String appIsCalledThis,
             String specificPackageIfPresent) {
         boolean specificPackageFound = false;
         ArrayList<HashMap<String,Object>> items = new ArrayList<HashMap<String,Object>>();
@@ -94,10 +102,11 @@ public class FloatingToolbarFragment extends Fragment implements View.OnClickLis
             if (i != null) {
                 startActivity(i);
             }
+            return true;
         } 
-        else{
+        else {
             // Application not found
-            Toast.makeText(getActivity(), "No " + appIsCalledThis + " found, try downloading a different " + appIsCalledThis + "  app", Toast.LENGTH_LONG).show();
+            return false;
         }        
     }
 
