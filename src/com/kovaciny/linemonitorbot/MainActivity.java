@@ -209,11 +209,13 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 		if (DEBUG) {
-			MenuItem viewDatabase = (MenuItem) menu
+			MenuItem action_viewDatabase = (MenuItem) menu
 					.findItem(R.id.action_view_database);
-			viewDatabase.setVisible(true);
+			action_viewDatabase.setVisible(true);
 		}
 
+		MenuItem action_tipsAndApps = (MenuItem) menu.findItem(R.id.action_tips_and_apps);
+		
 		return true;
 	}
 
@@ -489,6 +491,10 @@ public class MainActivity extends FragmentActivity implements
 			Intent dbintent = new Intent(this, DatabaseViewerActivity.class);
 			this.startActivity(dbintent);
 			break;
+		case R.id.action_tips_and_apps:
+		    Intent tipsIntent = new Intent(this, TipsActivity.class);
+		    this.startActivity(tipsIntent);
+		    break;
 		case R.id.action_settings:
 			Intent settingsIntent = new Intent(this, SettingsActivity.class);
 			this.startActivity(settingsIntent);

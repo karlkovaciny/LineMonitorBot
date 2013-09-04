@@ -48,6 +48,14 @@
             <meta-data
                 android:name="databaseViewerActivity"
                 android:value="com.kovaciny.linemonitorbot.DatabaseViewerActivity" />
+        </activity>
+        <activity
+            android:name="com.kovaciny.linemonitorbot.TipsActivity"
+            android:label="@string/tips_activity_name"
+            android:parentActivityName="com.kovaciny.linemonitorbot.MainActivity" >
+            <meta-data
+                android:name="tipsActivity"
+                android:value="com.kovaciny.linemonitorbot.TipsActivity" />
         </activity>        
         <receiver android:name="com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver">
         </receiver>
