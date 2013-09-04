@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.linemonitorbot.EnterProductDialogFragment;
 import com.kovaciny.linemonitorbot.MainActivity;
 import com.kovaciny.linemonitorbot.MainActivity.SectionsPagerAdapter;
@@ -143,7 +144,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		//asserts and this.sendKeys() OK here
 		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
 		
-		String skidCountBeforeDestroy = mEdit_numSkidsInJob.getText().toString();
+		Double skidCountBeforeDestroy = Double.valueOf(mEdit_numSkidsInJob.getText().toString());
 
 		destroyActivity();
 		
@@ -161,7 +162,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	    mSkidTimesFragment = (SkidTimesFragment)mActivity.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
 	    mEdit_numSkidsInJob = (EditText)mActivity.findViewById(R.id.edit_num_skids_in_job);
 
-		assertEquals(skidCountBeforeDestroy, mEdit_numSkidsInJob.getText().toString());		
+		assertEquals(skidCountBeforeDestroy, Double.valueOf(mEdit_numSkidsInJob.getText().toString()), HelperFunction.EPSILON);		
 	}
 	
 	
