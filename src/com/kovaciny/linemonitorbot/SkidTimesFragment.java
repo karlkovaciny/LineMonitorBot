@@ -79,10 +79,12 @@ public class SkidTimesFragment extends Fragment implements
 	private List<TextView> mTimesDisplayList;
 	private long mMillisPerSkid;
 	private int mNumTableSkids;
-	private String mProductUnits = "Sheets";
-	private String mProductGrouping = "Skid";
+	private String mProductUnits = DEFAULT_PRODUCT_UNITS;
+	private String mProductGrouping = DEFAULT_PRODUCT_GROUPING;
 	
 	public static final int MAXIMUM_NUMBER_OF_SKIDS = 100;
+	public static final String DEFAULT_PRODUCT_UNITS = "Sheets";
+    public static final String DEFAULT_PRODUCT_GROUPING = "Skid";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -394,11 +396,17 @@ public class SkidTimesFragment extends Fragment implements
 		Object newProperty = event.getNewValue();
 		
 		if (propertyName == PrimexModel.PRODUCT_CHANGE_EVENT) {
-			Product p = (Product)newProperty;
-			mProductUnits = HelperFunction.capitalizeFirstChar(p.getUnits());
-			mProductGrouping = HelperFunction.capitalizeFirstChar(p.getGrouping());
-			if (p.hasStacks()) mBtn_goByHeight.setVisibility(EditText.VISIBLE);
-			else mBtn_goByHeight.setVisibility(EditText.GONE);
+			if (newProperty == null) {
+			    mProductUnits = DEFAULT_PRODUCT_UNITS;
+			    mProductGrouping = DEFAULT_PRODUCT_GROUPING;
+			    mBtn_goByHeight.setVisibility(Button.GONE);
+			} else {
+			    Product p = (Product)newProperty;
+			    mProductUnits = HelperFunction.capitalizeFirstChar(p.getUnits());
+			    mProductGrouping = HelperFunction.capitalizeFirstChar(p.getGrouping());
+			    if (p.hasStacks()) mBtn_goByHeight.setVisibility(Button.VISIBLE);
+			    else mBtn_goByHeight.setVisibility(Button.GONE);
+			}
 			updateLabels();
 			
 		} else if (propertyName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {

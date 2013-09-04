@@ -1,5 +1,7 @@
 package com.kovaciny.primexmodel;
 
+import android.util.Log;
+
 import com.kovaciny.helperfunctions.HelperFunction;
 
 public class ProductionLine {
@@ -73,6 +75,7 @@ public class ProductionLine {
 			sv.differentialSpeed = 1;
 		}
 		mSpeedValues = sv;
+		Log.v("ProductionLine", "just set speed values to " + sv.toString());
 	}
 	
 	public double getLineSpeed() {

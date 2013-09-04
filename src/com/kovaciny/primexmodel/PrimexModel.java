@@ -96,12 +96,12 @@ public class PrimexModel {
 	    propChangeSupport.removePropertyChangeListener(l);
 	}
 
-	public void setSelectedLine (Integer lineNumber) {
-		if (lineNumber == null) throw new NullPointerException("need to select a line");
+	public void  setSelectedLine (Integer lineNumber) {
 		if (!mLineNumbersList.contains(lineNumber)) throw new NoSuchElementException("Line number not in the list of lines");
+		
 		int oldLineNumber = hasSelectedLine() ? mSelectedLine.getLineNumber() : -1;
 		if (lineNumber != oldLineNumber) {
-			ProductionLine lineToSelect = mDbHelper.getLine(lineNumber);
+			ProductionLine lineToSelect = mDbHelper.loadLine(lineNumber);
 			setSelectedLine(lineToSelect);
 		}
 	}
@@ -111,9 +111,7 @@ public class PrimexModel {
 		ProductionLine oldLine = mSelectedLine;
 		
 		mSelectedLine = line;
-		mSelectedLine.setNovatec(mDbHelper.getNovatec(line.getLineNumber()));
-		setDifferentialSetpoint(mSelectedLine.getSpeedValues().differentialSpeed);
-		setLineSpeedSetpoint(mSelectedLine.getSpeedValues().lineSpeedSetpoint);
+		mSelectedLine.setNovatec(mDbHelper.loadNovatec(line.getLineNumber()));
 
 		propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLine, mSelectedLine);
 		propChangeSupport.firePropertyChange(NOVATEC_CHANGE_EVENT, null, mSelectedLine.getNovatec());
@@ -141,10 +139,20 @@ public class PrimexModel {
 		mDbHelper.updateLineWorkOrderLink(mSelectedLine.getLineNumber(), woNumber);
 		changeSelectedSkid(mSelectedWorkOrder.getSelectedSkid().getSkidNumber());
 		
-		loadState(woNumber);
+		if (!loadState(woNumber)) {
+		    //initialize state variables
+		    mCreateDate = new Date();
+            mProductsPerMinute = 0d;
+            mEdgeTrimRatio = 0d;
+            mNetPph = 0d;
+            mGrossPph = 0d;
+            mColorPercent= 0d;
+            setCurrentSpeed(new SpeedValues(0, 0, mSelectedLine.getSpeedValues().speedFactor));
+            mNumberOfTableSkids = 1;
+		}
 		
 		Product p = mDbHelper.getProduct(woNumber);
-		if (p != null) changeProduct(p);
+		changeProduct(p);
 				
 		//Now that everything is loaded up, notify listeners of all the changes.
 		propChangeSupport.firePropertyChange(JOB_FINISH_TIME_CHANGE_EVENT, null, mSelectedWorkOrder.getFinishDate());
@@ -178,10 +186,6 @@ public class PrimexModel {
 		return newSkid;	
 	}
 	
-	protected void addProduct(Product p) {
-		mDbHelper.insertOrReplaceProduct(p, mSelectedWorkOrder.getWoNumber());
-	}
-	
 	public WorkOrder addWorkOrder() {
 		//generate a work order number
 		int newWoNumber = getHighestWoNumber() + 1;
@@ -208,7 +212,7 @@ public class PrimexModel {
 		mSelectedLine.setSpeedValues(values);
 		setLineSpeedSetpoint(values.lineSpeedSetpoint);
 		setDifferentialSetpoint(values.differentialSpeed);
-		String[] lineNum = new String[]{String.valueOf(mSelectedLine.getLineNumber())};
+ 		String[] lineNum = new String[]{String.valueOf(mSelectedLine.getLineNumber())};
 		mDbHelper.updateColumn(PrimexDatabaseSchema.ProductionLines.TABLE_NAME,
 				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT,
 				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + "=?",
@@ -240,15 +244,17 @@ public class PrimexModel {
 	 * Dependency on setNumberOfTableSkids
 	 */
 	public void changeProduct (Product p) {
-		if (hasSelectedProduct() && p.getType().equals(String.valueOf(Product.SHEETSET_TYPE))) {
-			if (mNumberOfTableSkids == 2) {
-				((Sheetset)p).setGrouping("skidset");
-			} else ((Sheetset)p).setGrouping("skid");
+	    mSelectedWorkOrder.setProduct(p);
+	    if (p != null) {
+	        if (hasSelectedProduct() && p.getType().equals(String.valueOf(Product.SHEETSET_TYPE))) {
+	            if (mNumberOfTableSkids == 2) {
+	                ((Sheetset)p).setGrouping("skidset");
+	            } else ((Sheetset)p).setGrouping("skid");
+	        }
+	        mDbHelper.insertOrReplaceProduct(p, mSelectedWorkOrder.getWoNumber());
 		}
 
-		mSelectedWorkOrder.setProduct(p);
-		addProduct(p);
-		propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, p);
+		propChangeSupport.firePropertyChange(PRODUCT_CHANGE_EVENT, null, p); //should fire if p is null
 		mProductChanged = true;
 	}
 	
@@ -290,12 +296,12 @@ public class PrimexModel {
 	public void saveState() {
 		if (!hasSelectedLine()) throw new IllegalStateException(new Throwable(ERROR_NO_LINE_SELECTED));
 		if (!hasSelectedWorkOrder()) throw new IllegalStateException (new Throwable(ERROR_NO_WORK_ORDER_SELECTED));
-    	for (Iterator<Skid<Product>> itr = mSelectedWorkOrder.getSkidsList().iterator(); itr.hasNext(); ) {
+    	
+		for (Iterator<Skid<Product>> itr = mSelectedWorkOrder.getSkidsList().iterator(); itr.hasNext(); ) {
     	    saveSkid(itr.next());
     	}
 		if (hasSelectedProduct()){
     		saveProduct(mSelectedWorkOrder.getProduct());
-    		Log.v("saveState", "Saved state of selected product.");
     	}
 		mDbHelper.saveModelState(this);
 	}
@@ -308,7 +314,6 @@ public class PrimexModel {
 		
 		try {
 			if (cursor.moveToFirst()) {
-				int lineNumber = cursor.getInt(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_LINE));
 				long create = cursor.getLong(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE));
 		    	mCreateDate = new Date(create);
 		    	mProductsPerMinute = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_PRODUCTS_PER_MINUTE));
@@ -572,8 +577,9 @@ public class PrimexModel {
 		return mDifferentialSetpoint;
 	}
 
-	public void setDifferentialSetpoint(double differentialSetpoint) {
-		this.mDifferentialSetpoint = differentialSetpoint;
+	private void setDifferentialSetpoint(double differentialSetpoint) {
+		mDifferentialSetpoint = differentialSetpoint;
+		Log.v("PrimexModel", "just set differential to " + String.valueOf(differentialSetpoint));
 	}
 	
 	public Date getCreateDate() {

@@ -38,6 +38,7 @@
 	<string name="debug_display">Debug</string>
 	<string name="calculate">Calculate</string>
 	<string name="title_activity_alarm_manager">Skid Finished Alarm Manager</string>
+	<string name="default_sheet_weight_label">Sheet weight</string>
 	<string name="default_sheet_weight">0.0</string>
 	<string name="btn_go_by_height_text">Go by\nheight</string>
 	<string name="lbl_finished_height">Finished height\n<small>(highest spot)</small></string>

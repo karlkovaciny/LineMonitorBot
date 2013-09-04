@@ -347,8 +347,10 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		clickButton(R.id.btn_enter_product);
 		spmdf = (EnterProductDialogFragment)getActivity().getFragmentManager().findFragmentByTag("EnterProductDialog");
 		final EditText edit_diffSpeed = (EditText) spmdf.getDialog().findViewById(R.id.edit_differential_speed);
-		assertTrue("Differential should be different from " + String.valueOf(NEW_DIFFERENTIAL) + ", but it's not", 
-		        Double.valueOf(edit_diffSpeed.getText().toString()) != NEW_DIFFERENTIAL);
+		if (edit_diffSpeed.getText().length() > 0) {
+		    assertTrue("Differential should be different from " + String.valueOf(NEW_DIFFERENTIAL) + ", but it's not", 
+		            Double.valueOf(edit_diffSpeed.getText().toString()) != NEW_DIFFERENTIAL);
+		}
 	}
 	
 	@Test

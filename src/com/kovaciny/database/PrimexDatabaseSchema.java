@@ -13,7 +13,6 @@ public class PrimexDatabaseSchema {
 	//inner classes for each table
 	public static abstract class ModelState implements BaseColumns {
 		public static final String TABLE_NAME = "model_state";
-		public static final String COLUMN_NAME_SELECTED_LINE = "selected_line";
 		public static final String COLUMN_NAME_SELECTED_WORK_ORDER = "selected_wo";
 		public static final String COLUMN_NAME_CREATE_DATE = "create_date";
 		public static final String COLUMN_NAME_EDGE_TRIM_PERCENT = "edge_trim_percent";
