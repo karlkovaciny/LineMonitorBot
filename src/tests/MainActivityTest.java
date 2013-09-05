@@ -20,6 +20,7 @@ import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kovaciny.helperfunctions.HelperFunction;
@@ -40,13 +41,16 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	ViewPager mViewPager;
 	TextView mTxt_sheetsPerMinute;
 	TextView mTxt_timePerSkid;
+	TextView mTxt_skidFinishTime;
 	EditText mEdit_currentCount;
 	EditText mEdit_totalCount;
+	EditText mEdit_currentSkidNumber;
 	EditText mEdit_numSkidsInJob;
 	Button mBtn_calculateTimes;
 	Button mBtn_calculateRates;
 	Button mBtn_enterProduct;
 	LinearLayout mContainerSkidTimesFragment;
+	RelativeLayout mContainerEnterProductButton;
 
 	public static final String TEST_STATE_DESTROY_TEXT = "666";
 	public static final int TEST_SWITCH_LINES_LINE_NUMBER = 10;
@@ -63,13 +67,16 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	    mRatesFragment = (RatesFragment)mActivity.findFragmentByPosition(MainActivity.RATES_FRAGMENT_POSITION);
 	    mTxt_timePerSkid = (TextView) mActivity.findViewById(R.id.txt_time_per_skid);
 	    mTxt_sheetsPerMinute = (TextView)mActivity.findViewById(R.id.txt_products_per_minute);
+	    mTxt_skidFinishTime = (TextView)mActivity.findViewById(R.id.txt_skid_finish_time);
 	    mEdit_currentCount = (EditText)mActivity.findViewById(R.id.edit_current_count);
 	    mEdit_totalCount = (EditText)mActivity.findViewById(R.id.edit_total_sheets_per_skid);
+	    mEdit_currentSkidNumber = (EditText)mActivity.findViewById(R.id.edit_skid_number);
 	    mEdit_numSkidsInJob = (EditText)mActivity.findViewById(R.id.edit_num_skids_in_job);
 	    mBtn_calculateTimes = (Button)mActivity.findViewById((R.id.btn_calculate_times));
 	    mBtn_enterProduct = (Button)mActivity.findViewById(R.id.btn_enter_product);
 	    mBtn_calculateRates = (Button)mActivity.findViewById(R.id.btn_calculate_rates);
 	    mContainerSkidTimesFragment = (LinearLayout)mActivity.findViewById(R.id.container_skid_times_fragment);
+	    mContainerEnterProductButton = (RelativeLayout)mActivity.findViewById(R.id.container_enter_product_button);
 	    assertTrue(mSkidTimesFragment != null);
 		assertTrue(mRatesFragment != null);
 	}
@@ -89,6 +96,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	 * Utility functions
 	 */
 	
+	/*
+	 * Note, all edittexts need to be reinitialized after calling this
+	 */
 	public void destroyActivity() {
 	    this.sendKeys(KeyEvent.KEYCODE_BACK);
 	    
@@ -113,6 +123,14 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);        
     }
     
+	
+	public void testNewWorkOrder() {
+	    int oldWoNumber = mActivity.mModel.getSelectedWorkOrder().getWoNumber();
+	    getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
+        getInstrumentation().invokeMenuActionSync(mActivity, R.id.new_wo, 0);
+        int newWoNumber = mActivity.mModel.getSelectedWorkOrder().getWoNumber();
+        assertTrue(newWoNumber != oldWoNumber);	    
+	}
 	
 	public void testStateDestroyRestoreNumSkids() {
 		//setup: add 2.5 skids to the current total, then subtract one, then change the sheet count, 
@@ -166,6 +184,29 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	}
 	
 	
+	public void testStateDestroyRestoreSkidNumber() {
+	    final double NUM_SKIDS = 6;
+	    final String CURRENT_SKID_NUMBER_TEXT = "3";
+	    getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                String newNumSkids = String.valueOf(NUM_SKIDS);
+                mEdit_numSkidsInJob.setText(newNumSkids);
+                mEdit_currentSkidNumber.setText(CURRENT_SKID_NUMBER_TEXT);
+                mEdit_totalCount.setText("999");
+                mBtn_calculateTimes.requestFocus();
+            }
+        });
+        getInstrumentation().waitForIdleSync();
+        //asserts and this.sendKeys() OK here
+        this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
+        String finishTimeBeforeDestroy = mTxt_skidFinishTime.getText().toString();
+        
+        destroyActivity();
+        mTxt_skidFinishTime = (TextView) getActivity().findViewById(R.id.txt_skid_finish_time);
+        mEdit_currentSkidNumber = (EditText) getActivity().findViewById(R.id.edit_skid_number);
+        assertEquals(finishTimeBeforeDestroy, mTxt_skidFinishTime.getText().toString());
+        assertEquals(CURRENT_SKID_NUMBER_TEXT, mEdit_currentSkidNumber.getText().toString());	    
+	}
 	
 	public void testOpenSettingsActivity() {	
 		String beforeClick = mTxt_sheetsPerMinute.getText().toString();
@@ -343,6 +384,19 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		assertTrue("is calculate times button visible", mBtn_calculateTimes.getLocalVisibleRect(windowBounds));
 		TouchUtils.clickView(this, mBtn_calculateTimes);
 		assertEquals("did the time display correctly", "0:59", mTxt_timePerSkid.getText().toString());
+
+		//test to see if the line's values are filled in on a new work order
+		testNewWorkOrder();
+		clickButton(R.id.btn_enter_product);
+		spmdf = (EnterProductDialogFragment)getActivity().getFragmentManager().findFragmentByTag("EnterProductDialog");
+		final EditText edit_diffSpeedAgain = (EditText) spmdf.getDialog().findViewById(R.id.edit_differential_speed);
+		if (edit_diffSpeedAgain.getText().length() > 0) {
+		    assertEquals("Differential should be the same on this new WO as it was on the last job", 
+		            NEW_DIFFERENTIAL, Double.valueOf(edit_diffSpeedAgain.getText().toString()));
+		}
+        Button bneg = ((AlertDialog)spmdf.getDialog()).getButton(Dialog.BUTTON_NEGATIVE);
+        TouchUtils.clickView(this, bneg);
+      
 		switchLines(6);
 		switchLines(10);
 		clickButton(R.id.btn_enter_product);
@@ -352,6 +406,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		    assertTrue("Differential should be different from " + String.valueOf(NEW_DIFFERENTIAL) + ", but it's not", 
 		            Double.valueOf(edit_diffSpeed.getText().toString()) != NEW_DIFFERENTIAL);
 		}
+
+		
 	}
 	
 	@Test
@@ -560,10 +616,13 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		final Button button = (Button) mActivity.findViewById(buttonId);
 		mActivity.runOnUiThread(new Runnable() {
 		     public void run() {
-		    	 button.requestFocus();		    	 
+		        button.setFocusable(true);
+		         button.setFocusableInTouchMode(true);
+		    	 button.requestFocus();
 		     }
 		});
 		getInstrumentation().waitForIdleSync();
+      assertTrue(button.hasFocus());
 		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
 	}
 

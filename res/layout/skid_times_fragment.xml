@@ -149,6 +149,7 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/container_enter_product_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/borderless_row_padding"

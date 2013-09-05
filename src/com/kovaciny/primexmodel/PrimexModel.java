@@ -147,7 +147,7 @@ public class PrimexModel {
             mNetPph = 0d;
             mGrossPph = 0d;
             mColorPercent= 0d;
-            setCurrentSpeed(new SpeedValues(0, 0, mSelectedLine.getSpeedValues().speedFactor));
+            setCurrentSpeed(mSelectedLine.getSpeedValues());
             mNumberOfTableSkids = 1;
 		}
 		
@@ -281,6 +281,10 @@ public class PrimexModel {
 		mDbHelper.insertOrUpdateLine(mSelectedLine);
 	}
 	
+	public void saveSelectedWorkOrder() {
+	    mDbHelper.insertOrUpdateWorkOrder(getSelectedWorkOrder());
+	}
+	
 	/*
 	 * Convenience method for saving a skid from the currently selected work order. TODO the currently selected skid, in fact.
 	 */
@@ -297,6 +301,9 @@ public class PrimexModel {
 		if (!hasSelectedLine()) throw new IllegalStateException(new Throwable(ERROR_NO_LINE_SELECTED));
 		if (!hasSelectedWorkOrder()) throw new IllegalStateException (new Throwable(ERROR_NO_WORK_ORDER_SELECTED));
     	
+		saveSelectedLine();
+		saveSelectedWorkOrder();
+        
 		for (Iterator<Skid<Product>> itr = mSelectedWorkOrder.getSkidsList().iterator(); itr.hasNext(); ) {
     	    saveSkid(itr.next());
     	}
