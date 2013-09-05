@@ -1081,16 +1081,16 @@ com.kovaciny.primexmodel.PrimexModel:
     96:97:public void removePropertyChangeListener(java.beans.PropertyChangeListener)
     182:186:public com.kovaciny.primexmodel.Skid addSkid(int,int)
     235:242:public void changeNovatecSetpoint(java.lang.Double)
-    447:476:public void changeNumberOfSkids(double)
-    479:480:public void closeDb()
-    509:509:public java.util.List getWoNumbers()
-    513:513:public java.util.Date getLatestWoCreateDate()
-    533:534:public void setProductsPerMinute(double)
-    541:542:public void setEdgeTrimPercent(double)
-    549:550:public void setNetPph(double)
-    557:558:public void setGrossPph(double)
-    565:566:public void setColorPercent(double)
-    590:591:public void setCreateDate(java.util.Date)
+    454:483:public void changeNumberOfSkids(double)
+    486:487:public void closeDb()
+    516:516:public java.util.List getWoNumbers()
+    520:520:public java.util.Date getLatestWoCreateDate()
+    540:541:public void setProductsPerMinute(double)
+    548:549:public void setEdgeTrimPercent(double)
+    556:557:public void setNetPph(double)
+    564:565:public void setGrossPph(double)
+    572:573:public void setColorPercent(double)
+    597:598:public void setCreateDate(java.util.Date)
 com.kovaciny.primexmodel.Product:
     public static final java.lang.String SHEETS_TYPE
     public static final java.lang.String SHEETSET_TYPE
@@ -1570,6 +1570,7 @@ tests.MainActivityTest$5
 tests.MainActivityTest$6
 tests.MainActivityTest$7
 tests.MainActivityTest$8
+tests.MainActivityTest$9
 tests.MainActivityTest$MockSheetsPerMinuteDialogInterface
 tests.PrimexModelTest
 tests.PrimexModelTest$1
