@@ -582,6 +582,7 @@ com.kovaciny.linemonitorbot.R$id: int btn_skid_number_up
 com.kovaciny.linemonitorbot.R$id: int btn_subtract_web
 com.kovaciny.linemonitorbot.R$id: int btn_total_skids_up
 com.kovaciny.linemonitorbot.R$id: int clear_wos
+com.kovaciny.linemonitorbot.R$id: int container_enter_product_button
 com.kovaciny.linemonitorbot.R$id: int container_enter_product_dialog
 com.kovaciny.linemonitorbot.R$id: int container_go_by_height_dialog
 com.kovaciny.linemonitorbot.R$id: int container_product_details
