@@ -35,7 +35,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 150;
+    public static final int DATABASE_VERSION = 151;
     public static final String DATABASE_NAME = "Primex.db";
     
     public static final int DEFAULT_INITIAL_LINE_ID = 7;
@@ -250,7 +250,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         	db.beginTransaction();
         	ContentValues values = new ContentValues();
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, DEFAULT_INITIAL_WO_NUM);
-        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED,69);
+        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED,1000);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT,0);
         	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER,1);
 
@@ -1022,7 +1022,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	}
 	
 	/*
-	 * This function will let you delete the currently selected skid, because it shouldn't know about that.
+	 * This function will allow you to delete the currently selected skid, because it shouldn't know about that.
 	 */
 	public void deleteSkid(int woNumber, int skidNumber) {
 		SQLiteDatabase db = getWritableDatabase();
