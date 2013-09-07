@@ -181,8 +181,9 @@
 
         <TableRow
             android:id="@+id/tableRow6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" 
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/lbl_skid_finish_time"
@@ -194,8 +195,18 @@
                 style="@style/Label.SecondTableColumn"
                 android:textStyle="bold" />
 
-            <TextView style="@style/BlankThirdColumn" />
-        </TableRow>
+            <LinearLayout
+                style="@style/ThirdColumn" >
+                
+                <ImageButton
+                    android:id="@+id/imgbtn_cancel_alarm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:selectableItemBackground"
+                    android:src="@drawable/ic_device_cancel_alarms" />
+
+            </LinearLayout>
+            </TableRow>
     </TableLayout>
 
     <TableLayout
@@ -292,36 +303,5 @@
 
             <TextView style="@style/BlankThirdColumn" />
         </TableRow>
-    </TableLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:paddingTop="6dip" >
-
-        <Button
-            android:id="@+id/btn_cancel_alarm"
-            style="@style/Button.Minor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Cancel alarm" />
-    </LinearLayout>
-
-    	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:paddingTop="40dip"
-	        android:gravity="bottom|right" >
-
-	        <ImageButton
-	            android:id="@+id/btn_calculator"
-	            android:visibility="invisible"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:src="@drawable/calculator" />
-
-	    </LinearLayout>
-    
+    </TableLayout>    
 </LinearLayout>

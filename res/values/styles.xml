@@ -100,6 +100,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">0.15</item>
     </style>
+    
+    <style name="ThirdColumn">
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0.15</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+    </style>
 
     <style name="BlankThirdColumn.Unused">
         <item name="android:layout_weight">0.0</item>

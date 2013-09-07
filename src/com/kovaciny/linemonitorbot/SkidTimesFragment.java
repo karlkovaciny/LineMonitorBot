@@ -46,7 +46,7 @@ import com.kovaciny.primexmodel.WorkOrder;
 public class SkidTimesFragment extends Fragment implements
 		OnClickListener, OnEditorActionListener, OnItemSelectedListener, View.OnFocusChangeListener, ViewEventResponder	{
 	private Button mBtn_enterProduct;
-	private Button mBtn_cancelAlarm;
+	private ImageButton mImgBtn_cancelAlarm;
 	private Button mBtn_calculateTimes;
 	private Button mBtn_goByHeight;
 	private ImageButton mBtn_skidNumberUp;
@@ -135,8 +135,8 @@ public class SkidTimesFragment extends Fragment implements
 		mBtn_enterProduct.setOnClickListener(this);
 		mBtn_enterProduct.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
 		
-		mBtn_cancelAlarm = (Button) rootView.findViewById(R.id.btn_cancel_alarm);
-		mBtn_cancelAlarm.setOnClickListener(this);
+		mImgBtn_cancelAlarm = (ImageButton) rootView.findViewById(R.id.imgbtn_cancel_alarm);
+		mImgBtn_cancelAlarm.setOnClickListener(this);
 		
 		mBtn_calculateTimes = (Button) rootView.findViewById(R.id.btn_calculate_times);
 		mBtn_calculateTimes.setOnClickListener(this);
@@ -175,8 +175,8 @@ public class SkidTimesFragment extends Fragment implements
 		String sst = settings.getString("skidStartTime", "");
 		String sft = settings.getString("skidFinishTime", "");
 		if (visible) {
-			mBtn_cancelAlarm.setVisibility(Button.VISIBLE);
-		} else mBtn_cancelAlarm.setVisibility(Button.INVISIBLE);
+			mImgBtn_cancelAlarm.setVisibility(Button.VISIBLE);
+		} else mImgBtn_cancelAlarm.setVisibility(Button.INVISIBLE);
 		mTxt_timePerSkid.setText(tps);
 		mTxt_productsPerMinute.setText(ppm);
 		mTxt_jobFinishTime.setText(jft);
@@ -350,8 +350,9 @@ public class SkidTimesFragment extends Fragment implements
 				}
 			}
 			break;
-		case (R.id.btn_cancel_alarm):
+		case (R.id.imgbtn_cancel_alarm):
 			cancelAlarm();
+		    Toast.makeText(getActivity(), getResources().getString(R.string.toast_alarm_canceled), Toast.LENGTH_LONG).show();
 			break;
 		}
 	}
@@ -364,7 +365,7 @@ public class SkidTimesFragment extends Fragment implements
 		} else {
 			Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
 		}
-		mBtn_cancelAlarm.setVisibility(Button.VISIBLE);
+		mImgBtn_cancelAlarm.setVisibility(Button.VISIBLE);
 	}
 	
 	public void repeatingTimer(View v, long trigger, long interval) {
@@ -375,7 +376,7 @@ public class SkidTimesFragment extends Fragment implements
 		} else {
 			Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
 		}
-		mBtn_cancelAlarm.setVisibility(Button.VISIBLE);
+		mImgBtn_cancelAlarm.setVisibility(Button.VISIBLE);
 	}
 
 	public void cancelAlarm() {
@@ -389,7 +390,7 @@ public class SkidTimesFragment extends Fragment implements
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
         pi.cancel();
         
-        mBtn_cancelAlarm.setVisibility(Button.INVISIBLE);
+        mImgBtn_cancelAlarm.setVisibility(Button.INVISIBLE);
 	}
 	public void modelPropertyChange (PropertyChangeEvent event) {
 		String propertyName = event.getPropertyName();
@@ -420,8 +421,10 @@ public class SkidTimesFragment extends Fragment implements
 			if (newProperty == null) {
 				mTxt_skidFinishTime.setText("");
 			} else {
-				SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.US);
-				String formattedTime = formatter.format((Date)newProperty);
+			    Date roundedTimeForDisplay = HelperFunction.toNearestWholeMinute((Date)newProperty);
+			    SimpleDateFormat formatter;
+			    formatter = new SimpleDateFormat("h:mm a", Locale.US); //drops seconds
+			    String formattedTime = formatter.format(roundedTimeForDisplay);
 				mTxt_skidFinishTime.setText(formattedTime);
 
 				//set alarm 
@@ -471,12 +474,12 @@ public class SkidTimesFragment extends Fragment implements
 			if (newProperty == null) {
 				mTxt_jobFinishTime.setText("");
 			} else {
-				Date finishTime = (Date)newProperty;
-				SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a E", Locale.US);
+			    Date roundedTimeForDisplay = HelperFunction.toNearestWholeMinute((Date)newProperty);
+                SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a E", Locale.US);
 				
 				//"Pace time": Don't show the day of the week if it's before 6 am the next day. 
 				Calendar finishDate = new GregorianCalendar(Locale.US);
-				finishDate.setTime(finishTime);
+				finishDate.setTime(roundedTimeForDisplay);
 				Calendar today = Calendar.getInstance(Locale.US);
 				today.add(Calendar.DAY_OF_MONTH, 1);
 				today.set(Calendar.HOUR_OF_DAY, 6);
@@ -484,11 +487,11 @@ public class SkidTimesFragment extends Fragment implements
 				if (finishDate.before(today)) {
 					formatter3 = new SimpleDateFormat("h:mm a", Locale.US);
 				}
-				mTxt_jobFinishTime.setText(formatter3.format(finishTime));
+				mTxt_jobFinishTime.setText(formatter3.format(roundedTimeForDisplay));
 			}
 			
 		} else if (propertyName == PrimexModel.SKID_CHANGE_EVENT) {
-			Skid<Product> skid = (Skid<Product>)newProperty; //TODO check if null, clear the fields
+			Skid<?> skid = (Skid<?>)newProperty; //TODO check if null, clear the fields
 			mEdit_currentSkidNumber.setText(String.valueOf(skid.getSkidNumber()));
 			mEdit_currentCount.setText(String.valueOf(skid.getCurrentItems()));
 			mEdit_totalCountPerSkid.setText(String.valueOf(skid.getTotalItems()));
@@ -538,7 +541,7 @@ public class SkidTimesFragment extends Fragment implements
 		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
 	    SharedPreferences.Editor editor = settings.edit();
 		boolean visible = false;
-		if (mBtn_cancelAlarm.getVisibility() == Button.VISIBLE) {
+		if (mImgBtn_cancelAlarm.getVisibility() == Button.VISIBLE) {
 			visible = true;
 		}
 		editor.putBoolean("cancelAlarmVisible", visible);
