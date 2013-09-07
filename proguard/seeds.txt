@@ -1,5 +1,6 @@
 android.support.v4.app.BackStackState
 android.support.v4.app.BackStackState: android.os.Parcelable$Creator CREATOR
+android.support.v4.app.Fragment: Fragment()
 android.support.v4.app.Fragment$SavedState
 android.support.v4.app.Fragment$SavedState: android.os.Parcelable$Creator CREATOR
 android.support.v4.app.FragmentActivity
@@ -342,8 +343,11 @@ com.bugsense.trace.Utils$3: Utils$3(java.lang.String)
 com.bugsense.trace.Utils$3: void run()
 com.kovaciny.linemonitorbot.DatabaseViewerActivity
 com.kovaciny.linemonitorbot.DatabaseViewerActivity: DatabaseViewerActivity()
+com.kovaciny.linemonitorbot.FloatingToolbarFragment
+com.kovaciny.linemonitorbot.FloatingToolbarFragment: FloatingToolbarFragment()
 com.kovaciny.linemonitorbot.MainActivity
 com.kovaciny.linemonitorbot.MainActivity: MainActivity()
+com.kovaciny.linemonitorbot.R$anim: int fade_out_fade_in
 com.kovaciny.linemonitorbot.R$array: int jobs_list
 com.kovaciny.linemonitorbot.R$array: int line_list
 com.kovaciny.linemonitorbot.R$array: int tips_and_apps_details
@@ -514,6 +518,7 @@ com.kovaciny.linemonitorbot.R$dimen: int data_entry_group_left_padding
 com.kovaciny.linemonitorbot.R$dimen: int dialog_sheets_per_minute_height
 com.kovaciny.linemonitorbot.R$dimen: int dialog_sheets_per_minute_width
 com.kovaciny.linemonitorbot.R$dimen: int edit_skid_number_width
+com.kovaciny.linemonitorbot.R$dimen: int floating_toolbar_height
 com.kovaciny.linemonitorbot.R$dimen: int fragment_divider_padding
 com.kovaciny.linemonitorbot.R$dimen: int fragment_horizontal_margin
 com.kovaciny.linemonitorbot.R$dimen: int fragment_vertical_margin
@@ -538,6 +543,7 @@ com.kovaciny.linemonitorbot.R$drawable: int ic_5roll
 com.kovaciny.linemonitorbot.R$drawable: int ic_5sheet
 com.kovaciny.linemonitorbot.R$drawable: int ic_audio_alarm_dark
 com.kovaciny.linemonitorbot.R$drawable: int ic_calculator
+com.kovaciny.linemonitorbot.R$drawable: int ic_device_cancel_alarms
 com.kovaciny.linemonitorbot.R$drawable: int ic_flashlight
 com.kovaciny.linemonitorbot.R$drawable: int ic_launcher
 com.kovaciny.linemonitorbot.R$drawable: int ic_minus
@@ -573,7 +579,6 @@ com.kovaciny.linemonitorbot.R$id: int btn_add_web
 com.kovaciny.linemonitorbot.R$id: int btn_calculate_rates
 com.kovaciny.linemonitorbot.R$id: int btn_calculate_times
 com.kovaciny.linemonitorbot.R$id: int btn_calculator
-com.kovaciny.linemonitorbot.R$id: int btn_cancel_alarm
 com.kovaciny.linemonitorbot.R$id: int btn_enter_product
 com.kovaciny.linemonitorbot.R$id: int btn_flashlight
 com.kovaciny.linemonitorbot.R$id: int btn_go_by_height
@@ -584,6 +589,7 @@ com.kovaciny.linemonitorbot.R$id: int btn_total_skids_up
 com.kovaciny.linemonitorbot.R$id: int clear_wos
 com.kovaciny.linemonitorbot.R$id: int container_enter_product_button
 com.kovaciny.linemonitorbot.R$id: int container_enter_product_dialog
+com.kovaciny.linemonitorbot.R$id: int container_floating_toolbar
 com.kovaciny.linemonitorbot.R$id: int container_go_by_height_dialog
 com.kovaciny.linemonitorbot.R$id: int container_product_details
 com.kovaciny.linemonitorbot.R$id: int container_skid_times_fragment
@@ -606,9 +612,13 @@ com.kovaciny.linemonitorbot.R$id: int edit_sheets_per_skid_height_dialog
 com.kovaciny.linemonitorbot.R$id: int edit_skid_number
 com.kovaciny.linemonitorbot.R$id: int edit_speed_factor
 com.kovaciny.linemonitorbot.R$id: int edit_total_sheets_per_skid
+com.kovaciny.linemonitorbot.R$id: int floating_toolbar_1
+com.kovaciny.linemonitorbot.R$id: int floating_toolbar_2
+com.kovaciny.linemonitorbot.R$id: int floating_toolbar_3
 com.kovaciny.linemonitorbot.R$id: int gridview_database
 com.kovaciny.linemonitorbot.R$id: int img_number_of_webs
 com.kovaciny.linemonitorbot.R$id: int img_tutorial_arrow
+com.kovaciny.linemonitorbot.R$id: int imgbtn_cancel_alarm
 com.kovaciny.linemonitorbot.R$id: int imgbtn_sheets_or_rolls
 com.kovaciny.linemonitorbot.R$id: int lbl_color_percent
 com.kovaciny.linemonitorbot.R$id: int lbl_differential_speed
@@ -644,6 +654,7 @@ com.kovaciny.linemonitorbot.R$id: int radio_group_skids_on_table
 com.kovaciny.linemonitorbot.R$id: int radio_one_skid
 com.kovaciny.linemonitorbot.R$id: int radio_two_skids
 com.kovaciny.linemonitorbot.R$id: int rl_data_entry_group
+com.kovaciny.linemonitorbot.R$id: int scrollView1
 com.kovaciny.linemonitorbot.R$id: int tableRow1
 com.kovaciny.linemonitorbot.R$id: int tableRow10
 com.kovaciny.linemonitorbot.R$id: int tableRow2
@@ -678,6 +689,8 @@ com.kovaciny.linemonitorbot.R$id: int txt_skid_start_time
 com.kovaciny.linemonitorbot.R$id: int txt_time_per_skid
 com.kovaciny.linemonitorbot.R$id: int txt_time_to_maxson
 com.kovaciny.linemonitorbot.R$id: int vertical_divider
+com.kovaciny.linemonitorbot.R$id: int view_switcher_rates_fragment
+com.kovaciny.linemonitorbot.R$id: int view_switcher_skid_times_fragment
 com.kovaciny.linemonitorbot.R$layout: int action_pick_job
 com.kovaciny.linemonitorbot.R$layout: int action_pick_line
 com.kovaciny.linemonitorbot.R$layout: int activity_main
@@ -735,6 +748,7 @@ com.kovaciny.linemonitorbot.R$string: int title_fragment_calculator_button
 com.kovaciny.linemonitorbot.R$string: int title_fragment_draining
 com.kovaciny.linemonitorbot.R$string: int title_fragment_rates
 com.kovaciny.linemonitorbot.R$string: int title_fragment_skid_times
+com.kovaciny.linemonitorbot.R$string: int toast_alarm_canceled
 com.kovaciny.linemonitorbot.R$style: int ActionBarTabStyle_Example
 com.kovaciny.linemonitorbot.R$style: int AppBaseTheme
 com.kovaciny.linemonitorbot.R$style: int AppTheme
@@ -752,6 +766,7 @@ com.kovaciny.linemonitorbot.R$style: int Label_SecondTableColumn
 com.kovaciny.linemonitorbot.R$style: int ParentFragment
 com.kovaciny.linemonitorbot.R$style: int ParentFragment_HorizontallyDivided
 com.kovaciny.linemonitorbot.R$style: int Spinner
+com.kovaciny.linemonitorbot.R$style: int ThirdColumn
 com.kovaciny.linemonitorbot.R$xml: int preferences
 com.kovaciny.linemonitorbot.SelectLineActivity
 com.kovaciny.linemonitorbot.SelectLineActivity: SelectLineActivity()
