@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/view_switcher_rates_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        
+  <LinearLayout 
     style="@style/ParentFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -184,10 +190,11 @@
 
     </LinearLayout>
 
-        <fragment
-            android:id="@+id/floating_toolbar_2"
-            android:name="com.kovaciny.linemonitorbot.FloatingToolbarFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    
-</LinearLayout>
+    <fragment
+        android:id="@+id/floating_toolbar_2"
+        android:name="com.kovaciny.linemonitorbot.FloatingToolbarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+  </LinearLayout>
+
+</ViewSwitcher>

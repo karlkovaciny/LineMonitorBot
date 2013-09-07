@@ -27,6 +27,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
@@ -36,6 +38,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.PrimexModel;
@@ -45,7 +48,7 @@ import com.kovaciny.primexmodel.WorkOrder;
 
 public class SkidTimesFragment extends Fragment implements
 		OnClickListener, OnEditorActionListener, OnItemSelectedListener, View.OnFocusChangeListener, ViewEventResponder	{
-	private Button mBtn_enterProduct;
+    private Button mBtn_enterProduct;
 	private ImageButton mImgBtn_cancelAlarm;
 	private Button mBtn_calculateTimes;
 	private Button mBtn_goByHeight;
@@ -402,7 +405,6 @@ public class SkidTimesFragment extends Fragment implements
 			    mProductGrouping = DEFAULT_PRODUCT_GROUPING;
 			    mBtn_goByHeight.setVisibility(Button.GONE);
 			    mBtn_calculateTimes.setEnabled(false);
-			    mTxt_timeToMaxson.setVisibility(TextView.GONE);
 			} else {
 			    Product p = (Product)newProperty;
 			    mProductUnits = HelperFunction.capitalizeFirstChar(p.getUnits());
@@ -425,6 +427,7 @@ public class SkidTimesFragment extends Fragment implements
 			if (newProperty == null) {
 				mTxt_skidFinishTime.setText("");
 				mImgBtn_cancelAlarm.setVisibility(ImageButton.GONE);
+				mTxt_timeToMaxson.setVisibility(TextView.GONE); //TODO not really the right place for it
 			} else {
 			    Date roundedTimeForDisplay = HelperFunction.toNearestWholeMinute((Date)newProperty);
 			    SimpleDateFormat formatter;
@@ -432,7 +435,7 @@ public class SkidTimesFragment extends Fragment implements
 			    String formattedTime = formatter.format(roundedTimeForDisplay);
 				mTxt_skidFinishTime.setText(formattedTime);
 				mImgBtn_cancelAlarm.setVisibility(ImageButton.VISIBLE);
-
+				mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
 				//set alarm 
 				long alarmLeadTime = (long) (1.5 * HelperFunction.ONE_MINUTE_IN_MILLIS); //TODO
 				Date curDate = new Date();
@@ -516,7 +519,12 @@ public class SkidTimesFragment extends Fragment implements
 			}
 			
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
-			WorkOrder wo = (WorkOrder)newProperty;
+		    Animation fadeOutFadeIn = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out_fade_in);
+		    ViewSwitcher viewSwitcher = (ViewSwitcher) getView().findViewById(R.id.view_switcher_skid_times_fragment);
+		    viewSwitcher.setAnimation(fadeOutFadeIn);
+	        viewSwitcher.showNext();
+	        
+		    WorkOrder wo = (WorkOrder)newProperty;
 			Skid<Product> skid = wo.getSelectedSkid();
 			mEdit_currentSkidNumber.setText(String.valueOf(skid.getSkidNumber()));
 			mBtn_goByHeight.setText(getString(R.string.btn_go_by_height_text));
