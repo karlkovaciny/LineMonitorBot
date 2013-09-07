@@ -17,6 +17,9 @@ import com.kovaciny.linemonitorbot.MainActivity;
 import com.kovaciny.linemonitorbot.R;
 import com.kovaciny.linemonitorbot.SkidTimesFragment;
 import com.kovaciny.primexmodel.PrimexModel;
+import com.kovaciny.primexmodel.Product;
+import com.kovaciny.primexmodel.Products;
+import com.kovaciny.primexmodel.SpeedValues;
 
 public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<MainActivity>{
 
@@ -77,11 +80,30 @@ public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<Main
 		assertTrue(mTxt_sheetsPerMinute != null);
 	}
 	
+	public void loadTestCase(int caseNumber) {
+        final PrimexTestCase testCase = new PrimexTestCase(caseNumber);
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                mActivity.mModel.setSelectedLine(testCase.mLineNumber);
+                mActivity.mModel.getSelectedLine().setWebWidth(testCase.mWebWidth);
+                Product p = Products.makeProduct(testCase.mProductType, testCase.mGauge, testCase.mWidth, testCase.mLength);
+                p.setUnitWeight(testCase.mUnitWeight);
+                mActivity.mModel.setCurrentSpeed(new SpeedValues(testCase.mLineSpeedSetpoint,testCase.mDifferentialSetpoint,testCase.mSpeedFactor));
+                mActivity.mModel.changeProduct(p);
+                mActivity.mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(testCase.mTotalItems);
+                mActivity.mModel.calculateTimes();
+                mActivity.mModel.calculateRates();
+            }
+        });
+        getInstrumentation().waitForIdleSync();
+    }
+	
 	@Test
 	public void testErrorMessages() {
-		mActivity.runOnUiThread(new Runnable() {
+	    loadTestCase(PrimexTestCase.JOMA_ROLLS);
+	    mActivity.runOnUiThread(new Runnable() {
 		     public void run() {
-		    	 mEdit_totalCountPerSkid.setText("0");
+		         mEdit_totalCountPerSkid.setText("0");
 		    	 mEdit_currentCount.setText("1234");
 		    	 mEdit_numSkidsInJob.setText("");
 		    	 mEdit_currentSkidNumber.setText("200");

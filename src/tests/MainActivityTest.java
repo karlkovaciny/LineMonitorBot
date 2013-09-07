@@ -31,6 +31,9 @@ import com.kovaciny.linemonitorbot.R;
 import com.kovaciny.linemonitorbot.RatesFragment;
 import com.kovaciny.linemonitorbot.SettingsActivity;
 import com.kovaciny.linemonitorbot.SkidTimesFragment;
+import com.kovaciny.primexmodel.Product;
+import com.kovaciny.primexmodel.Products;
+import com.kovaciny.primexmodel.SpeedValues;
 
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -123,6 +126,24 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);        
     }
     
+    public void loadTestCase(int caseNumber) {
+        final PrimexTestCase testCase = new PrimexTestCase(caseNumber);
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                mActivity.mModel.setSelectedLine(testCase.mLineNumber);
+                mActivity.mModel.getSelectedLine().setWebWidth(testCase.mWebWidth);
+                Product p = Products.makeProduct(testCase.mProductType, testCase.mGauge, testCase.mWidth, testCase.mLength);
+                p.setUnitWeight(testCase.mUnitWeight);
+                mActivity.mModel.setCurrentSpeed(new SpeedValues(testCase.mLineSpeedSetpoint,testCase.mDifferentialSetpoint,testCase.mSpeedFactor));
+                mActivity.mModel.changeProduct(p);
+                mActivity.mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(testCase.mTotalItems);
+                mActivity.mModel.calculateTimes();
+                mActivity.mModel.calculateRates();
+            }
+        });
+        getInstrumentation().waitForIdleSync();
+    }
+    
 	public void testNewWorkOrder() {
 	    int oldWoNumber = mActivity.mModel.getSelectedWorkOrder().getWoNumber();
 	    getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
@@ -132,6 +153,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	}
 	
 	public void testStateDestroyRestoreNumSkids() {
+	       loadTestCase(PrimexTestCase.JOMA_ROLLS);
+
 		//setup: add 2.5 skids to the current total, then subtract one, then change the sheet count, 
 	    //then destroy the activity to see if the database has only your new number of skids.
 		getActivity().runOnUiThread(new Runnable() {
@@ -184,6 +207,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	
 	
 	public void testStateDestroyRestoreSkidNumber() {
+	    loadTestCase(PrimexTestCase.JOMA_ROLLS);
 	    final double NUM_SKIDS = 6;
 	    final String CURRENT_SKID_NUMBER_TEXT = "3";
 	    getActivity().runOnUiThread(new Runnable() {
@@ -220,6 +244,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	}
 	
 	public void testSwitchLines() {
+		switchLines(18);
 		switchLines(TEST_SWITCH_LINES_LINE_NUMBER);
 		assertEquals(TEST_SWITCH_LINES_LINE_NUMBER, mActivity.mModel.getSelectedLine().getLineNumber());
 	}
@@ -250,6 +275,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		    getInstrumentation().waitForIdleSync();
 		    getInstrumentation().waitForIdleSync();
 		    getInstrumentation().waitForIdleSync();
+		    tries++;
 		}
 		assertTrue(mActivity.mModel.getSelectedLine().getLineNumber() == lineNumber);
 	}
@@ -284,37 +310,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		fail ("failed to generate an exception");
 	}*/
 
-	@Test
-	public void testGetTimesWithoutProductDialog() {
-		getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
-		getInstrumentation().invokeMenuActionSync(mActivity, R.id.action_pick_job, 0);
-		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
-		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
-		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
-		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
-		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
-		this.sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
-		this.sendKeys(KeyEvent.KEYCODE_DPAD_UP);
-		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER); //click + New
-				
-		mActivity.runOnUiThread(new Runnable() {
-		     public void run() {
-		    	 mBtn_calculateTimes.requestFocus();
-		     }
-		});
-		getInstrumentation().waitForIdleSync();
-		//asserts OK here
-		try {
-			this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
-			//I think this should have thrown an exception even though the comment that was here said it shouldn't.
-			//needs to run when certain lines don't have products?
-			assertEquals(getActivity().getString(R.string.prompt_need_product), mBtn_enterProduct.getError()); 
-			
-		} catch (IllegalStateException e) {
-			fail ("Threw exception don't know why");
-		}   
-	}
-	
+
 	public void testClickCalcRatesResetsSheetsPerMinute() {
 		mActivity.runOnUiThread(new Runnable() {
 		     public void run() {
@@ -625,6 +621,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		getInstrumentation().waitForIdleSync();
       assertTrue(button.hasFocus());
 		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
+	      getInstrumentation().waitForIdleSync();
+
 	}
 
 }
