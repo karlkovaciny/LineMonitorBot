@@ -225,31 +225,33 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	}
 	
 	public void switchLines(int lineNumber) {
-		getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
+		int tries = 0;
+	    getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
 		getInstrumentation().invokeMenuActionSync(mActivity, R.id.action_pick_line, 0);
 		final List<Integer> lineNumbers = Arrays.asList(1,6,7,9,10,  11,12,13,14,15,  16,17,18); //13 lines
 		int lineNumberPosition = lineNumbers.indexOf(lineNumber);
-		for (int i = 0; i < lineNumberPosition; i++) {
+		while ( (tries < 10) && (mActivity.mModel.getSelectedLine().getLineNumber() != lineNumber) ) {
+		    //if at first you don't succeed, try again
+		    for (int i = 0; i < lineNumberPosition; i++) {
 //			sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
-		    KeyEvent ke = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN);
-		    getInstrumentation().sendKeySync(ke);
-		    KeyEvent keUp = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN);
-		    getInstrumentation().sendKeySync(keUp);
-			getInstrumentation().waitForIdleSync();
-			getInstrumentation().waitForIdleSync();
-			getInstrumentation().waitForIdleSync();
+		        KeyEvent ke = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN);
+		        getInstrumentation().sendKeySync(ke);
+		        KeyEvent keUp = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN);
+		        getInstrumentation().sendKeySync(keUp);
+		        getInstrumentation().waitForIdleSync();
+		        getInstrumentation().waitForIdleSync();
+		        getInstrumentation().waitForIdleSync();
+		    }
+		    getInstrumentation().waitForIdleSync();
+		    getInstrumentation().waitForIdleSync();
+		    getInstrumentation().waitForIdleSync();
+		    this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
+		    getInstrumentation().waitForIdleSync();
+		    getInstrumentation().waitForIdleSync();
+		    getInstrumentation().waitForIdleSync();
+		    getInstrumentation().waitForIdleSync();
 		}
-		getInstrumentation().waitForIdleSync();
-		getInstrumentation().waitForIdleSync();
-		getInstrumentation().waitForIdleSync();
-		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
-		getInstrumentation().waitForIdleSync();
-		getInstrumentation().waitForIdleSync();
-		getInstrumentation().waitForIdleSync();
-		getInstrumentation().waitForIdleSync();
-		if (mActivity.mModel.getSelectedLine().getLineNumber() != lineNumber) {
-		    switchLines(lineNumber); //dammit, we'll try this till we get it right!
-		}
+		assertTrue(mActivity.mModel.getSelectedLine().getLineNumber() == lineNumber);
 	}
 	
 //		String afterClick = mTxt_sheetsPerMinute.getText().toString();

@@ -22,5 +22,5 @@
 	<dimen name="data_entry_group_left_padding">10dp</dimen>
 	<dimen name="label_row_height">70px</dimen>
 	<dimen name="up_arrow_top_padding">10dp</dimen>
-	<dimen name="up_arrow_bottom_padding">10dp</dimen>
+	<dimen name="up_arrow_bottom_padding">16dp</dimen>
 </resources>
