@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical" >
 
@@ -34,5 +34,10 @@
         </LinearLayout>
 
     </LinearLayout>
-
+        <fragment
+            android:id="@+id/floating_toolbar_3"
+            android:name="com.kovaciny.linemonitorbot.FloatingToolbarFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    
 </LinearLayout>

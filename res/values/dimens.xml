@@ -23,4 +23,5 @@
 	<dimen name="label_row_height">70px</dimen>
 	<dimen name="up_arrow_top_padding">10dp</dimen>
 	<dimen name="up_arrow_bottom_padding">16dp</dimen>
+	<dimen name="floating_toolbar_height">400dp</dimen>
 </resources>
