@@ -149,6 +149,8 @@ public class PrimexModel {
             mColorPercent= 0d;
             setCurrentSpeed(mSelectedLine.getSpeedValues());
             mNumberOfTableSkids = 1;
+		} else {
+		    setCurrentSpeed(new SpeedValues(mLineSpeedSetpoint, mDifferentialSetpoint, mSelectedLine.getSpeedValues().speedFactor));
 		}
 		
 		Product p = mDbHelper.getProduct(woNumber);
