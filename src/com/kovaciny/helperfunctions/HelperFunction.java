@@ -1,5 +1,9 @@
 package com.kovaciny.helperfunctions;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import org.apache.commons.lang3.math.Fraction;
 
 import android.text.Html;
@@ -29,6 +33,11 @@ final public class HelperFunction {
 	public static final float RELATIVE_SIZE_SUPERSCRIPT = 0.66f;
 	public static final float RELATIVE_SIZE_SUBSCRIPT = 0.66f;
 
+	/*
+	 * Time functions
+	 */
+	
+	
 	public static String formatMinutesAsHours(long minutes) {
         long hours = minutes/60;
         long remainingMinutes = minutes % 60;
@@ -40,6 +49,23 @@ final public class HelperFunction {
         long remainingSeconds = seconds % 60;
         return String.format("%d:%02d", minutes, remainingSeconds);
     }
+
+	public static Date toNearestWholeMinute(Date d) {
+	    Calendar c = new GregorianCalendar();
+	    c.setTime(d);
+
+	    if (c.get(Calendar.SECOND) >= 30)
+	        c.add(Calendar.MINUTE, 1);
+
+	    c.set(Calendar.SECOND, 0);
+	    c.set(Calendar.MILLISECOND, 0);
+
+	    return c.getTime();
+	}
+	
+	/*
+	 * String functions
+	 */
 	
 	public static String capitalizeFirstChar(String target) {
 		StringBuilder capitalized = new StringBuilder(target);
@@ -66,6 +92,12 @@ final public class HelperFunction {
 		
 		return ssb;
 	}
+	
+	/*
+	 * View functions
+	 */
+	
+	
 	
 	/*
 	 * Can handle both double and integer formats

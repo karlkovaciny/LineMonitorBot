@@ -47,7 +47,7 @@ public class MainActivity extends FragmentActivity implements
 		EnterProductDialogFragment.EnterProductDialogListener,
 		GoByHeightDialogListener {
     
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
 	private static final int LINE_LIST_MENU_GROUP = 1111;
 	private static final int LINE_LIST_ID_RANDOMIZER = 1234; //TODO replace this by adding line number to Menu.FIRST
