@@ -134,14 +134,14 @@ public class SkidTimesFragment extends Fragment implements
 				.findViewById(R.id.btn_enter_product);
 		mBtn_enterProduct.setOnClickListener(this);
 		mBtn_enterProduct.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
-		
+        		
 		mImgBtn_cancelAlarm = (ImageButton) rootView.findViewById(R.id.imgbtn_cancel_alarm);
 		mImgBtn_cancelAlarm.setOnClickListener(this);
 		
 		mBtn_calculateTimes = (Button) rootView.findViewById(R.id.btn_calculate_times);
 		mBtn_calculateTimes.setOnClickListener(this);
 		mBtn_calculateTimes.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF,0xFF0000FF));
-
+		
 		mBtn_goByHeight = (Button) rootView.findViewById(R.id.btn_go_by_height);
 		mBtn_goByHeight.setOnClickListener(this);
 		
@@ -401,12 +401,16 @@ public class SkidTimesFragment extends Fragment implements
 			    mProductUnits = DEFAULT_PRODUCT_UNITS;
 			    mProductGrouping = DEFAULT_PRODUCT_GROUPING;
 			    mBtn_goByHeight.setVisibility(Button.GONE);
+			    mBtn_calculateTimes.setEnabled(false);
+			    mTxt_timeToMaxson.setVisibility(TextView.GONE);
 			} else {
 			    Product p = (Product)newProperty;
 			    mProductUnits = HelperFunction.capitalizeFirstChar(p.getUnits());
 			    mProductGrouping = HelperFunction.capitalizeFirstChar(p.getGrouping());
 			    if (p.hasStacks()) mBtn_goByHeight.setVisibility(Button.VISIBLE);
 			    else mBtn_goByHeight.setVisibility(Button.GONE);
+			    mBtn_calculateTimes.setEnabled(true);
+			    mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
 			}
 			updateLabels();
 			
@@ -420,12 +424,14 @@ public class SkidTimesFragment extends Fragment implements
 		} else if (propertyName == PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE_EVENT) {
 			if (newProperty == null) {
 				mTxt_skidFinishTime.setText("");
+				mImgBtn_cancelAlarm.setVisibility(ImageButton.GONE);
 			} else {
 			    Date roundedTimeForDisplay = HelperFunction.toNearestWholeMinute((Date)newProperty);
 			    SimpleDateFormat formatter;
 			    formatter = new SimpleDateFormat("h:mm a", Locale.US); //drops seconds
 			    String formattedTime = formatter.format(roundedTimeForDisplay);
 				mTxt_skidFinishTime.setText(formattedTime);
+				mImgBtn_cancelAlarm.setVisibility(ImageButton.VISIBLE);
 
 				//set alarm 
 				long alarmLeadTime = (long) (1.5 * HelperFunction.ONE_MINUTE_IN_MILLIS); //TODO

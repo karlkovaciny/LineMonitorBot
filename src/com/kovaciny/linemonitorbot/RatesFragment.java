@@ -179,7 +179,7 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 			if (grossWidth <= 0) {
 				mEdit_grossWidth.setText("");
 			} else {
-				String gwdisp = new DecimalFormat("#0.0").format(grossWidth);
+				String gwdisp = new DecimalFormat("#0.###").format(grossWidth);
 				mEdit_grossWidth.setText(gwdisp);
 			}
 			
