@@ -3,26 +3,28 @@ package com.kovaciny.linemonitorbot;
 import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.LightingColorFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.Novatec;
@@ -143,7 +145,10 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 		    }
 			
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
-			
+		    Animation fadeOutFadeIn = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out_fade_in);
+            ViewSwitcher viewSwitcher = (ViewSwitcher) getView().findViewById(R.id.view_switcher_rates_fragment);
+            viewSwitcher.setAnimation(fadeOutFadeIn);
+            viewSwitcher.showNext();
 		} else if (propertyName == PrimexModel.SELECTED_LINE_CHANGE_EVENT){
 			
 		} else if (propertyName == PrimexModel.EDGE_TRIM_RATIO_CHANGE_EVENT) {
@@ -196,11 +201,14 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 		
 		else if (propertyName == PrimexModel.NOVATEC_CHANGE_EVENT) {
 			Novatec n = (Novatec)newProperty;
-			String label = getString(R.string.label_novatec_setpoint);
+			SpannableStringBuilder labelSb = new SpannableStringBuilder(getString(R.string.label_novatec_setpoint));
 			if (n.getLetdownRatio() != 1) {
-				 label += " (" + String.valueOf(n.getLetdownRatio()) + "x)";
+			    SpannableString screwSizeIndicator = 
+			            new SpannableString("\n(" + String.valueOf(n.getLetdownRatio()) + "x screw)");
+			    screwSizeIndicator.setSpan(new RelativeSizeSpan(.75f), 0, screwSizeIndicator.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			    labelSb.append(screwSizeIndicator);
 			}
-			mLbl_novatecSetpoint.setText(label); 
+			mLbl_novatecSetpoint.setText(labelSb); 
 			mEdit_novatecSetpoint.setText(String.valueOf(n.getControllerSetpoint()));
 			
 		}

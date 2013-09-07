@@ -78,6 +78,6 @@
 	<string name="pref_timer_default">Automatic</string>
 	<string name="toast_alarm_canceled">Alarm canceled</string>
 	
-	<string name="label_novatec_setpoint">Nova setpt</string>
+	<string name="label_novatec_setpoint">Novatec setpoint</string>
 	
 </resources>

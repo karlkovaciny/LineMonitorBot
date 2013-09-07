@@ -88,7 +88,9 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		BugSenseHandler.initAndStartSession(this, "2100e887");
+		if (!DEBUG) {
+		    BugSenseHandler.initAndStartSession(this, "2100e887");
+		}
 		setContentView(R.layout.activity_main);
 		
 		// Initialize settings on first run
@@ -608,6 +610,7 @@ public class MainActivity extends FragmentActivity implements
 		// the ViewPager.
 		int pos = tab.getPosition();
 		mViewPager.setCurrentItem(pos);
+		hideKeyboard();
 	}
 
 	@Override
