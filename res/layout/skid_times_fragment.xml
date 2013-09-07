@@ -36,7 +36,7 @@
                 android:layout_alignLeft="@+id/edit_skid_number"
                 android:layout_alignParentTop="true"
                 android:layout_alignRight="@+id/edit_skid_number"
-                android:background="#00000000"
+                android:background="?android:selectableItemBackground"
                 android:paddingBottom="@dimen/up_arrow_bottom_padding"
                 android:paddingTop="@dimen/up_arrow_top_padding"
                 android:src="@drawable/numberpicker_up_btn_holo_dark" />
@@ -72,7 +72,7 @@
                 android:layout_alignLeft="@+id/edit_num_skids_in_job"
                 android:layout_alignParentTop="true"
                 android:layout_alignRight="@+id/edit_num_skids_in_job"
-                android:background="#00000000"
+				android:background="?android:selectableItemBackground"
                 android:paddingBottom="@dimen/up_arrow_bottom_padding"
                 android:paddingTop="@dimen/up_arrow_top_padding"
                 android:src="@drawable/numberpicker_up_btn_holo_dark" />
