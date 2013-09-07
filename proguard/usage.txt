@@ -24,6 +24,8 @@ android.support.v4.app.BackStackRecord:
     357:360:public java.lang.CharSequence getBreadCrumbShortTitle()
     379:380:public android.support.v4.app.FragmentTransaction add(android.support.v4.app.Fragment,java.lang.String)
     384:385:public android.support.v4.app.FragmentTransaction add(int,android.support.v4.app.Fragment)
+    421:421:public android.support.v4.app.FragmentTransaction replace(int,android.support.v4.app.Fragment)
+    425:430:public android.support.v4.app.FragmentTransaction replace(int,android.support.v4.app.Fragment,java.lang.String)
     434:439:public android.support.v4.app.FragmentTransaction remove(android.support.v4.app.Fragment)
     443:448:public android.support.v4.app.FragmentTransaction hide(android.support.v4.app.Fragment)
     452:457:public android.support.v4.app.FragmentTransaction show(android.support.v4.app.Fragment)
@@ -163,6 +165,7 @@ android.support.v4.app.FragmentTransaction:
     public static final int TRANSIT_FRAGMENT_FADE
     public abstract android.support.v4.app.FragmentTransaction add(android.support.v4.app.Fragment,java.lang.String)
     public abstract android.support.v4.app.FragmentTransaction add(int,android.support.v4.app.Fragment)
+    public abstract android.support.v4.app.FragmentTransaction replace(int,android.support.v4.app.Fragment)
     public abstract android.support.v4.app.FragmentTransaction replace(int,android.support.v4.app.Fragment,java.lang.String)
     public abstract android.support.v4.app.FragmentTransaction remove(android.support.v4.app.Fragment)
     public abstract android.support.v4.app.FragmentTransaction hide(android.support.v4.app.Fragment)
@@ -979,7 +982,7 @@ com.kovaciny.helperfunctions.HelperFunction:
     public static final double EPSILON
     public static final float RELATIVE_SIZE_SUPERSCRIPT
     public static final float RELATIVE_SIZE_SUBSCRIPT
-    17:19:private HelperFunction()
+    21:23:private HelperFunction()
 com.kovaciny.linemonitorbot.BuildConfig
 com.kovaciny.linemonitorbot.EnterProductDialogFragment:
     public static final java.lang.String SHEETS_MODE
@@ -1001,6 +1004,7 @@ com.kovaciny.linemonitorbot.MainActivity:
     public static final int CALCULATOR_FRAGMENT_POSITION
     public static final java.lang.String ERROR_FRAGMENT_NOT_FOUND
 com.kovaciny.linemonitorbot.R
+com.kovaciny.linemonitorbot.R$anim
 com.kovaciny.linemonitorbot.R$array
 com.kovaciny.linemonitorbot.R$attr
 com.kovaciny.linemonitorbot.R$color
@@ -1023,8 +1027,8 @@ com.kovaciny.linemonitorbot.SkidTimesFragment:
     public static final int MAXIMUM_NUMBER_OF_SKIDS
     public static final java.lang.String DEFAULT_PRODUCT_UNITS
     public static final java.lang.String DEFAULT_PRODUCT_GROUPING
-    212:212:public java.util.List getSkidList()
-    216:217:public void setSkidList(java.util.List)
+    215:215:public java.util.List getSkidList()
+    219:220:public void setSkidList(java.util.List)
 com.kovaciny.linemonitorbot.TipsActivityFragment:
     public static final java.lang.String MOTION_ACTIONS_PACKAGE_NAME
     public static final java.lang.String TINY_FLASHLIGHT_PACKAGE_NAME
@@ -1079,18 +1083,18 @@ com.kovaciny.primexmodel.PrimexModel:
     public static final java.lang.String ERROR_NO_PPM_VALUE
     public static final double MAXIMUM_POSSIBLE_GAUGE
     96:97:public void removePropertyChangeListener(java.beans.PropertyChangeListener)
-    182:186:public com.kovaciny.primexmodel.Skid addSkid(int,int)
-    235:242:public void changeNovatecSetpoint(java.lang.Double)
-    454:483:public void changeNumberOfSkids(double)
-    486:487:public void closeDb()
-    516:516:public java.util.List getWoNumbers()
-    520:520:public java.util.Date getLatestWoCreateDate()
-    540:541:public void setProductsPerMinute(double)
-    548:549:public void setEdgeTrimPercent(double)
-    556:557:public void setNetPph(double)
-    564:565:public void setGrossPph(double)
-    572:573:public void setColorPercent(double)
-    597:598:public void setCreateDate(java.util.Date)
+    184:188:public com.kovaciny.primexmodel.Skid addSkid(int,int)
+    237:244:public void changeNovatecSetpoint(java.lang.Double)
+    456:485:public void changeNumberOfSkids(double)
+    488:489:public void closeDb()
+    518:518:public java.util.List getWoNumbers()
+    522:522:public java.util.Date getLatestWoCreateDate()
+    542:543:public void setProductsPerMinute(double)
+    550:551:public void setEdgeTrimPercent(double)
+    558:559:public void setNetPph(double)
+    566:567:public void setGrossPph(double)
+    574:575:public void setColorPercent(double)
+    599:600:public void setCreateDate(java.util.Date)
 com.kovaciny.primexmodel.Product:
     public static final java.lang.String SHEETS_TYPE
     public static final java.lang.String SHEETSET_TYPE
@@ -1588,5 +1592,6 @@ tests.SkidTimesFragmentTest$1
 tests.SkidTimesFragmentTest$2
 tests.SkidTimesFragmentTest$3
 tests.SkidTimesFragmentTest$4
+tests.SkidTimesFragmentTest$5
 tests.SpeedValuesTest
 tests.WorkOrderTest
