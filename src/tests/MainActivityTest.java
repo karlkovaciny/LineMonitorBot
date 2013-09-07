@@ -123,7 +123,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);        
     }
     
-	
 	public void testNewWorkOrder() {
 	    int oldWoNumber = mActivity.mModel.getSelectedWorkOrder().getWoNumber();
 	    getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
