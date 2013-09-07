@@ -7,12 +7,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom|center"
-        android:paddingTop="40dip" 
+        android:paddingTop="@dimen/fragment_vertical_margin" 
         android:paddingBottom="@dimen/fragment_vertical_margin"
         android:paddingRight="@dimen/fragment_horizontal_margin"
         android:paddingLeft="@dimen/fragment_horizontal_margin">
 
         <LinearLayout 
+            android:id="@+id/container_floating_toolbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="2dp"

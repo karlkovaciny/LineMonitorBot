@@ -163,12 +163,6 @@
                 android:layout_span="2"
                 android:orientation="vertical" 
                 android:gravity="center">
-
-                    <Button
-                    android:id="@+id/btn_calculate_rates"
-                    android:layout_width="@dimen/button_width_default"
-                    android:layout_height="wrap_content"
-                    android:text="Get Rates" />
             </LinearLayout>
 
             <TextView style="@style/BlankThirdColumn"/>
@@ -177,4 +171,23 @@
         
     </TableLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal" >
+
+        <Button
+            android:id="@+id/btn_calculate_rates"
+            android:layout_width="@dimen/button_width_default"
+            android:layout_height="wrap_content"
+            android:text="Get Rates" />
+
+    </LinearLayout>
+
+        <fragment
+            android:id="@+id/floating_toolbar_2"
+            android:name="com.kovaciny.linemonitorbot.FloatingToolbarFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    
 </LinearLayout>

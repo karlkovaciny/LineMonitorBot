@@ -8,10 +8,8 @@ import java.util.List;
 import java.util.Locale;
 
 import android.app.ActionBar;
-import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -147,11 +145,6 @@ public class MainActivity extends FragmentActivity implements
 			mViewPager.setCurrentItem(lastTabPos);			
 		}
 		
-		// Float a calculator over all tabs by replacing the main content.
-		getSupportFragmentManager().beginTransaction()
-				.replace(android.R.id.content, new FloatingToolbarFragment())
-				.commit();
-
 		mActionBar = actionBar;
 	}
 

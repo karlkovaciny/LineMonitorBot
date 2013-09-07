@@ -183,7 +183,7 @@ public class SkidTimesFragment extends Fragment implements
 		mTxt_timeToMaxson.setText(ttm);
 		mTxt_skidStartTime.setText(sst);
 		mTxt_skidFinishTime.setText(sft);
-		
+
 		return rootView;
 	}
 
@@ -352,7 +352,7 @@ public class SkidTimesFragment extends Fragment implements
 			break;
 		case (R.id.imgbtn_cancel_alarm):
 			cancelAlarm();
-		    Toast.makeText(getActivity(), getResources().getString(R.string.toast_alarm_canceled), Toast.LENGTH_LONG).show();
+		    Toast.makeText(getActivity(), getResources().getString(R.string.toast_alarm_canceled), Toast.LENGTH_SHORT).show();
 			break;
 		}
 	}

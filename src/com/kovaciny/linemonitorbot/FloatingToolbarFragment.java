@@ -26,7 +26,7 @@ public class FloatingToolbarFragment extends Fragment implements View.OnClickLis
             Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.floating_toolbar_fragment, container, false);
-
+        
         mImgBtn_calculator = (ImageButton) rootView.findViewById(R.id.btn_calculator);
         mImgBtn_calculator.setOnClickListener(this);
         
