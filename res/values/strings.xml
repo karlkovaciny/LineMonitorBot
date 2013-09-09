@@ -19,19 +19,27 @@
         <item >Line 42</item>    
     </string-array>
     <string-array name="tips_and_apps_headers">
-        <item >Entering partial skids:</item>    
         <item >SUGGESTED APPS</item>    
         <item >Motion Actions</item>    
         <item >Tiny Flashlight</item>    
-        <item >Proximity Actions</item>    
+        <item >Proximity Actions</item>
+        <item >\nTIPS</item>
+        <item >To enter partial skids:</item>    
+        <item >To notice the vibrating alarm:</item>    
+        <item >To track your reclaim:</item>    
     </string-array>
     <string-array name="tips_and_apps_details">
-        <item >If your fourth skid is only 500 sheets instead of 1000, 
-            put \"3.5\" in the "Total Skids" box.\n\n\n</item>
-        <item >&#160;&#160;&#160;&#160;&#160;&#160;(click to view in Play Store)\n</item>
+        <item >&#160;&#160;&#160;&#160;&#160;&#160;(touch to view in Play Store)\n</item>
         <item >Open LineMonitorBot by shaking your phone.</item>
         <item >Change the LED Light Default setting to On for instant light.</item>
         <item >Turn your phone on just by taking it out of your pocket, with Smart Screen On.</item>
+        <item > </item>
+        <item >Enter your last skid as a fraction.\n
+            <i> Example</i>: Your fourth skid will be 900 sheets instead of 1200. 
+            900/1200 = .75, so enter \"3.75\" as the total number of skids.</item>
+        <item >Carry a tape measure in your pocket to keep your phone against your leg.</item>
+        <item >Record your predicted finish time at the start of the job. If you then finish at 9:42 instead of 9:00, 
+            you had 0.7 hours of reclaim. </item>
     </string-array>
         
     <string-array name="jobs_list">
