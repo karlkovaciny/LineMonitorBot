@@ -988,6 +988,8 @@ com.kovaciny.linemonitorbot.EnterProductDialogFragment:
     public static final java.lang.String SHEETS_MODE
     public static final java.lang.String ROLLS_MODE
     public static final int MAXIMUM_NUMBER_OF_WEBS
+com.kovaciny.linemonitorbot.FirstLaunchActivity:
+    private static final int LINE_LIST_MENU_GROUP
 com.kovaciny.linemonitorbot.Job
 com.kovaciny.linemonitorbot.MainActivity:
     public static final boolean DEBUG
@@ -1016,8 +1018,6 @@ com.kovaciny.linemonitorbot.R$menu
 com.kovaciny.linemonitorbot.R$string
 com.kovaciny.linemonitorbot.R$style
 com.kovaciny.linemonitorbot.R$xml
-com.kovaciny.linemonitorbot.SelectLineActivity:
-    private static final int LINE_LIST_MENU_GROUP
 com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver:
     public static final java.lang.String ONE_TIME
     public static final java.lang.String REPEATING

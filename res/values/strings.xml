@@ -60,6 +60,7 @@
 	<string name="ok">OK</string>
 	<string name="cancel">Cancel</string>
 	<string name="clear_wos">Clear</string>
+	<string name="support_email">kovaciny_karl@yahoo.com</string>
 	<string name="placeholder">&#8230;</string>
 	<string name="placeholder_coming_soon"><i>\nComing soon...</i></string>
 	<string name="debug_display">Debug</string>
