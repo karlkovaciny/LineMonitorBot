@@ -16,7 +16,8 @@
             style="@style/Hint.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New feature..."
+            android:gravity="center_horizontal"
+            android:text="Draining coming soon... \nHere's something else instead.\n"
             android:textSize="35px" />
 
         <LinearLayout
