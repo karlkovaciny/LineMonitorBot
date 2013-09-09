@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@+id/action_pick_line"
+        android:orderInCategory="2"
+        android:showAsAction="always"
+        android:title="@string/action_pick_line_title" >
+		<!-- pick line submenu --> 
+        <menu 
+            android:id = "@+id/pick_line_submenu">
+            <item android:id="@+id/line_list"
+                  android:title="@string/placeholder" >
+            </item>
+        </menu>
+    </item>
+	<item
+        android:id="@+id/action_pick_job"
+        android:orderInCategory="3"
+        android:showAsAction="always"
+        android:title="@string/action_pick_job_title" >
+        <!-- pick job submenu -->
+        <menu
+            android:id="@+id/pick_job_submenu">
+            <item android:id="@+id/new_wo"
+                  android:title="@string/new_wo" />
+            <item android:id="@+id/clear_wos"
+                  android:title="@string/clear_wos" />
+        </menu>
+	</item>
+	
+</menu>

@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class SelectLineFragment extends Fragment {
+public class FirstLaunchFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-	    View rootView = inflater.inflate(R.layout.select_line_fragment, container, false);
+	    View rootView = inflater.inflate(R.layout.first_launch_fragment, container, false);
 	    ImageView arrow = (ImageView) rootView.findViewById(R.id.img_tutorial_arrow);
 	    TextView label = (TextView) rootView.findViewById(R.id.lbl_select_line_tutorial_prompt);
 	    TextView hint = (TextView) rootView.findViewById(R.id.lbl_select_line_reminder);

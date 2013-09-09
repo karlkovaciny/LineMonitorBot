@@ -58,7 +58,7 @@
                 android:value="com.kovaciny.linemonitorbot.TipsActivity" />
         </activity>     
          <activity
-            android:name="com.kovaciny.linemonitorbot.SelectLineActivity"
+            android:name="com.kovaciny.linemonitorbot.FirstLaunchActivity"
             android:label="@string/select_line_activity_name"
             android:parentActivityName="com.kovaciny.linemonitorbot.MainActivity" >
             <meta-data
