@@ -12,7 +12,7 @@ import android.view.ViewConfiguration;
 
 import com.kovaciny.primexmodel.PrimexModel;
 
-public class SelectLineActivity extends Activity {
+public class FirstLaunchActivity extends Activity {
 
     MenuItem mJobPicker;
     MenuItem mLinePicker;
@@ -25,7 +25,7 @@ public class SelectLineActivity extends Activity {
         super.onCreate(savedInstanceState);
         mModel = new PrimexModel(getApplication());
         Bundle intentExtras = getIntent().getExtras();
-        SelectLineFragment slfrag = new SelectLineFragment();
+        FirstLaunchFragment slfrag = new FirstLaunchFragment();
         slfrag.setArguments(intentExtras);
         getFragmentManager().beginTransaction().replace(android.R.id.content, slfrag).commit();
     }
@@ -33,7 +33,7 @@ public class SelectLineActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.first_launch, menu);
         mJobPicker = (MenuItem) menu.findItem(R.id.action_pick_job);
         mLinePicker = (MenuItem) menu.findItem(R.id.action_pick_line);
         mJobPicker.setEnabled(false);

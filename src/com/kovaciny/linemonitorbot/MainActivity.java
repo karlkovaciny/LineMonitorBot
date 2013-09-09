@@ -45,7 +45,7 @@ public class MainActivity extends FragmentActivity implements
 		EnterProductDialogFragment.EnterProductDialogListener,
 		GoByHeightDialogListener {
     
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
 	private static final int LINE_LIST_MENU_GROUP = 1111;
 	private static final int LINE_LIST_ID_RANDOMIZER = 1234; //TODO replace this by adding line number to Menu.FIRST
@@ -194,7 +194,7 @@ public class MainActivity extends FragmentActivity implements
 		    //that is, on launch, but not on invalidateOptionsMenu.
 		    if (mForceUserToSelectLine) {
 		        mForceUserToSelectLine = false;
-		        Intent selectLineIntent = new Intent(this, SelectLineActivity.class);
+		        Intent selectLineIntent = new Intent(this, FirstLaunchActivity.class);
 		        selectLineIntent.putExtra("ShowTutorial", mShowTutorial);
 	            this.startActivityForResult(selectLineIntent, SELECT_LINE_INTENT_CODE);
 	            mModel.setSelectedLine(11);
