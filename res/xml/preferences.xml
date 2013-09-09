@@ -22,4 +22,10 @@
         <Preference 
             android:key="version_name" ></Preference>
     </PreferenceCategory>
+    
+    <PreferenceCategory android:title="Support">
+        <Preference 
+            android:key="support_email"
+            android:title="@string/support_email" ></Preference>
+    </PreferenceCategory>
 </PreferenceScreen>

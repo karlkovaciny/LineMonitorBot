@@ -193,11 +193,10 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 			public void run() {
 //				getInstrumentation().callActivityOnResume(mActivity);				
 				mEdit_currentCount.setText("71");
-				mBtn_calculateTimes.requestFocus();
 			}
 		});
 		getInstrumentation().waitForIdleSync();
-		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
+		clickButton(R.id.btn_calculate_times);
 		
 	    mSkidTimesFragment = (SkidTimesFragment)mActivity.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
 	    mEdit_numSkidsInJob = (EditText)mActivity.findViewById(R.id.edit_num_skids_in_job);
@@ -216,12 +215,11 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
                 mEdit_numSkidsInJob.setText(newNumSkids);
                 mEdit_currentSkidNumber.setText(CURRENT_SKID_NUMBER_TEXT);
                 mEdit_totalCount.setText("999");
-                mBtn_calculateTimes.requestFocus();
             }
         });
         getInstrumentation().waitForIdleSync();
         //asserts and this.sendKeys() OK here
-        this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
+        clickButton(R.id.btn_calculate_times);
         String finishTimeBeforeDestroy = mTxt_skidFinishTime.getText().toString();
         
         destroyActivity();

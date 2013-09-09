@@ -343,6 +343,8 @@ com.bugsense.trace.Utils$3: Utils$3(java.lang.String)
 com.bugsense.trace.Utils$3: void run()
 com.kovaciny.linemonitorbot.DatabaseViewerActivity
 com.kovaciny.linemonitorbot.DatabaseViewerActivity: DatabaseViewerActivity()
+com.kovaciny.linemonitorbot.FirstLaunchActivity
+com.kovaciny.linemonitorbot.FirstLaunchActivity: FirstLaunchActivity()
 com.kovaciny.linemonitorbot.FloatingToolbarFragment
 com.kovaciny.linemonitorbot.FloatingToolbarFragment: FloatingToolbarFragment()
 com.kovaciny.linemonitorbot.MainActivity
@@ -698,12 +700,13 @@ com.kovaciny.linemonitorbot.R$layout: int container_skids_on_table
 com.kovaciny.linemonitorbot.R$layout: int database_viewer_fragment
 com.kovaciny.linemonitorbot.R$layout: int draining_fragment
 com.kovaciny.linemonitorbot.R$layout: int enter_product_dialog
+com.kovaciny.linemonitorbot.R$layout: int first_launch_fragment
 com.kovaciny.linemonitorbot.R$layout: int floating_toolbar_fragment
 com.kovaciny.linemonitorbot.R$layout: int go_by_height_dialog
 com.kovaciny.linemonitorbot.R$layout: int rates_fragment
-com.kovaciny.linemonitorbot.R$layout: int select_line_fragment
 com.kovaciny.linemonitorbot.R$layout: int skid_times_fragment
 com.kovaciny.linemonitorbot.R$layout: int spinnerriffic_textview
+com.kovaciny.linemonitorbot.R$menu: int first_launch
 com.kovaciny.linemonitorbot.R$menu: int main
 com.kovaciny.linemonitorbot.R$string: int action_pick_job_title
 com.kovaciny.linemonitorbot.R$string: int action_pick_line_title
@@ -768,8 +771,6 @@ com.kovaciny.linemonitorbot.R$style: int ParentFragment_HorizontallyDivided
 com.kovaciny.linemonitorbot.R$style: int Spinner
 com.kovaciny.linemonitorbot.R$style: int ThirdColumn
 com.kovaciny.linemonitorbot.R$xml: int preferences
-com.kovaciny.linemonitorbot.SelectLineActivity
-com.kovaciny.linemonitorbot.SelectLineActivity: SelectLineActivity()
 com.kovaciny.linemonitorbot.SettingsActivity
 com.kovaciny.linemonitorbot.SettingsActivity: SettingsActivity()
 com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver

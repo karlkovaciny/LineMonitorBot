@@ -1,11 +1,14 @@
 package com.kovaciny.linemonitorbot;
 
+import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
+import android.widget.Toast;
 
 public class SettingsFragment extends PreferenceFragment {
     @Override
@@ -30,6 +33,7 @@ public class SettingsFragment extends PreferenceFragment {
             }
         });
         
+        
         Preference version = findPreference("version_name");
         String versionName;
         try {
@@ -37,6 +41,30 @@ public class SettingsFragment extends PreferenceFragment {
         } catch (NameNotFoundException e){
         	versionName = "3.14159";
         }
-        version.setTitle(versionName);
+        final String versionNameFinal = versionName;
+        version.setTitle(versionNameFinal);
+        
+        Preference emailLink = findPreference("support_email");
+        emailLink.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+            
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("message/rfc822");
+                i.putExtra(Intent.EXTRA_EMAIL  , new String[]{getString(R.string.support_email)});
+                i.putExtra(Intent.EXTRA_SUBJECT, versionNameFinal);
+                StringBuilder sb = new StringBuilder(android.os.Build.MANUFACTURER);  
+                sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+                String deviceDetails = "Device: " + sb.toString() + " " + android.os.Build.MODEL + "\nAndroid version: " + android.os.Build.VERSION.RELEASE + "\n\n";
+                i.putExtra(Intent.EXTRA_TEXT   , deviceDetails);
+                try {
+                    startActivity(Intent.createChooser(i, "Send mail..."));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Toast.makeText(getActivity(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });
+       
     }
 }
