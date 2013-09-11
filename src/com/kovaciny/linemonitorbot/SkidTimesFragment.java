@@ -239,11 +239,17 @@ public class SkidTimesFragment extends Fragment implements
 				//it's OK for this to be higher than a fractional number of skids
 				HelperFunction.incrementEditText(mEdit_numSkidsInJob); 
 			}
+			for (EditText ett : mEditableGroup) {
+                ett.clearFocus();
+            }
 			break;
 		case (R.id.btn_total_skids_up):
 			((MainActivity)getActivity()).hideKeyboard();
 			HelperFunction.incrementEditText(mEdit_numSkidsInJob);
 			mEdit_numSkidsInJob.clearFocus();
+			for (EditText ett : mEditableGroup) {
+                ett.clearFocus();
+            }
 			break;
 		case (R.id.btn_enter_product):
 			mBtn_enterProduct.setError(null);
