@@ -59,36 +59,30 @@ public class FloatingToolbarFragment extends Fragment implements View.OnClickLis
      */
     private boolean launchAppByName(String nameMustContainThis, String bestNameWouldStartWithThis, String appIsCalledThis,
             String specificPackageIfPresent) {
-        boolean specificPackageFound = false;
-        ArrayList<HashMap<String,Object>> items = new ArrayList<HashMap<String,Object>>();
         final PackageManager pm = getActivity().getPackageManager();
-        List<PackageInfo> packs = pm.getInstalledPackages(0);
-        for (PackageInfo pi : packs) {
-            String currentPackName = pi.packageName.toString().toLowerCase(Locale.US);
-            if (currentPackName.equals(specificPackageIfPresent)) {
-                specificPackageFound = true;
+        Intent intent = pm.getLaunchIntentForPackage(specificPackageIfPresent);
+        if (intent == null) {
+            //search the list of packages for some other matching app.
+            ArrayList<HashMap<String,Object>> items = new ArrayList<HashMap<String,Object>>();
+            List<PackageInfo> packs = pm.getInstalledPackages(0);
+            for (PackageInfo pi : packs) {
+                String currentPackName = pi.packageName.toString().toLowerCase(Locale.US);
+                if( currentPackName.contains(nameMustContainThis)){
+                    HashMap<String, Object> map = new HashMap<String, Object>();
+                    map.put("appName", pi.applicationInfo.loadLabel(pm));
+                    map.put("packageName", pi.packageName);
+                    items.add(map);
+                }
             }
-            
-            if( currentPackName.contains(nameMustContainThis)){
-                HashMap<String, Object> map = new HashMap<String, Object>();
-                map.put("appName", pi.applicationInfo.loadLabel(pm));
-                map.put("packageName", pi.packageName);
-                items.add(map);
-            }
-        }
-        if (items.size() >= 1) {
-            //If you found your preferred package, load that.
-            //Otherwise, search the list for the first calculator whose appname starts with your preferred string.
-            //If you don't find one, take the first app in the list.
-            String packageName = "";
-            if (specificPackageFound) {
-                packageName = specificPackageIfPresent; 
-            } else {
+            if (items.size() >= 1) {
+                //Search the list for the first calculator whose appname starts with your preferred string.
+                //If you don't find one, take the first app in the list.
+                String packageName = "";
                 boolean found = false;
                 for (HashMap<String, Object> hm : items) {
                     if (!found) {
                         String appName = (String) hm.get("appName");
-                        if (appName.toLowerCase().startsWith(bestNameWouldStartWithThis)) {
+                        if (appName.toLowerCase(Locale.US).startsWith(bestNameWouldStartWithThis)) {
                             packageName = (String) hm.get("packageName");
                             found = true;
                         }
@@ -97,17 +91,14 @@ public class FloatingToolbarFragment extends Fragment implements View.OnClickLis
                 if (!found) {
                     packageName = (String) items.get(0).get("packageName");
                 }
+                intent = pm.getLaunchIntentForPackage(packageName);
             }
-            Intent i = pm.getLaunchIntentForPackage(packageName);
-            if (i != null) {
-                startActivity(i);
-            }
+        }
+        
+        if (intent != null) {
+            startActivity(intent);
             return true;
-        } 
-        else {
-            // Application not found
-            return false;
-        }        
+        } else return false;
     }
 
 }
