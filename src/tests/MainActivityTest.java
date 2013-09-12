@@ -249,11 +249,11 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	
 	public void switchLines(int lineNumber) {
 		int tries = 0;
-	    getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
-		getInstrumentation().invokeMenuActionSync(mActivity, R.id.action_pick_line, 0);
 		final List<Integer> lineNumbers = Arrays.asList(1,6,7,9,10,  11,12,13,14,15,  16,17,18); //13 lines
 		int lineNumberPosition = lineNumbers.indexOf(lineNumber);
 		while ( (tries < 10) && (mActivity.mModel.getSelectedLine().getLineNumber() != lineNumber) ) {
+		    getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
+		    getInstrumentation().invokeMenuActionSync(mActivity, R.id.action_pick_line, 0);
 		    //if at first you don't succeed, try again
 		    for (int i = 0; i < lineNumberPosition; i++) {
 //			sendKeys(KeyEvent.KEYCODE_DPAD_DOWN);
