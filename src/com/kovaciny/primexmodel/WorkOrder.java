@@ -54,9 +54,10 @@ public class WorkOrder {
 		} else {
 			Skid<Product> currentSkid = mSkidsList.get(mSelectedSkidPosition);
 			Date currentFinishTime = currentSkid.calculateFinishTimeWhileRunning(productsPerMinute);
-			double skidsRemaining = getNumberOfSkids() - currentSkid.getSkidNumber();
+			//When you're on skid #3 of 2.5, there are 0 skids left after this one.
+			double skidsAfterThisOne = Math.max(0, getNumberOfSkids() - currentSkid.getSkidNumber()); 
 			long millisPerSkid = Math.round(currentSkid.calculateMinutesPerSkid(productsPerMinute) * HelperFunction.ONE_MINUTE_IN_MILLIS);
-			long millisRemaining = (long) (skidsRemaining * millisPerSkid);
+			long millisRemaining = (long) (skidsAfterThisOne * millisPerSkid);
 			mFinishDate = new Date(currentFinishTime.getTime() + millisRemaining);
 		}
 		return mFinishDate;
