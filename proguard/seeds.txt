@@ -745,6 +745,7 @@ com.kovaciny.linemonitorbot.R$string: int reminder_differential_format
 com.kovaciny.linemonitorbot.R$string: int reminder_no_differential_speed
 com.kovaciny.linemonitorbot.R$string: int select_line_activity_name
 com.kovaciny.linemonitorbot.R$string: int settings_activity_name
+com.kovaciny.linemonitorbot.R$string: int support_email
 com.kovaciny.linemonitorbot.R$string: int tips_activity_name
 com.kovaciny.linemonitorbot.R$string: int title_activity_alarm_manager
 com.kovaciny.linemonitorbot.R$string: int title_fragment_calculator_button
