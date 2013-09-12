@@ -91,8 +91,8 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case (R.id.btn_calculate_rates): 
-			boolean validInputs = true;
+		case (R.id.btn_calculate_rates):
+		    boolean validInputs = true;
 			for (EditText et : mEditableGroup) {
 				String value = et.getText().toString();
 				if (value.equals("")) {

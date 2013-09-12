@@ -186,6 +186,7 @@
             android:id="@+id/btn_calculate_rates"
             android:layout_width="@dimen/button_width_default"
             android:layout_height="wrap_content"
+            android:soundEffectsEnabled="true"
             android:text="Get Rates" />
 
     </LinearLayout>
