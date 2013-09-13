@@ -177,19 +177,27 @@
         
     </TableLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal" >
+        android:layout_height="wrap_content">
 
+        <Button
+            android:id="@+id/btn_enter_product_rates_frag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="8dp"
+            android:text="Enter Product" />
+        
         <Button
             android:id="@+id/btn_calculate_rates"
             android:layout_width="@dimen/button_width_default"
             android:layout_height="wrap_content"
-            android:soundEffectsEnabled="true"
+            android:layout_toRightOf="@id/btn_enter_product_rates_frag"
+            android:layout_marginLeft="@dimen/button_row_spacing"
             android:text="Get Rates" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <fragment
         android:id="@+id/floating_toolbar_2"
