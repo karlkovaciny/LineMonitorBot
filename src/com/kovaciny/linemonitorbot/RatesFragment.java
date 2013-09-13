@@ -209,7 +209,7 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 			    labelSb.append(screwSizeIndicator);
 			}
 			mLbl_novatecSetpoint.setText(labelSb); 
-			mEdit_novatecSetpoint.setText(String.valueOf(n.getControllerSetpoint()));
+			mEdit_novatecSetpoint.setText(String.valueOf(n.getSetpoint()));
 			
 		}
 	}

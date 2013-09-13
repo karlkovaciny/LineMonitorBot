@@ -1,62 +1,66 @@
 package com.kovaciny.primexmodel;
 
 public class Novatec implements Hopper {
+    public static double DEFAULT_VOLUME = 50d;
+    public static double DEFAULT_SCREW_SIZE_FACTOR = 1d;
 	double mCapacity; //in pounds of mReferenceMaterial
-	/**
-	 * percent of full capacity at which alarm sounds.  100 = no alarm.
-	 * Not implemented yet.
-	 */
-	double mAlarmPercent; 
+	double mAlarmVolume;
 	Material mReferenceMaterial; 
 	private double mControllerSetpoint;
 	double mLbsContained;
 	private double mScrewSizeFactor;
-	private double mRate;
+	private double mFeedRate;
 	Material mContents;
 	
-	public Novatec(double capacity, double setpoint, double screwSizeFactor) {
-		if ((capacity < 0) || (setpoint < 0) || (screwSizeFactor < 0)) {
+	/*
+	 * "0" for alarmVolume represents no alarm
+	 */
+	public Novatec(double volume, double alarmVolume, double setpoint, double screwSizeFactor) {
+		if ((volume <= 0d) || (alarmVolume < 0d) || (setpoint < 0d) || (screwSizeFactor <= 0d)) {
 			throw new IllegalArgumentException("No negative numbers");
 		}
-		mCapacity = capacity;
+		mCapacity = volume;
+		mAlarmVolume = alarmVolume;
 		mControllerSetpoint = setpoint;
 		mScrewSizeFactor = screwSizeFactor;
 		mLbsContained = 0;
 		mReferenceMaterial = new Material("105 Concentrate");
 		mContents = mReferenceMaterial;
-		mAlarmPercent = 100;
 	}
 	
 	public Novatec() {
-		this(0,0,1);
+		this(DEFAULT_VOLUME,0,0,DEFAULT_SCREW_SIZE_FACTOR);
 	}
 	
-	private void updateRate(){
-		mRate = mControllerSetpoint * mScrewSizeFactor * mContents.getDensity()/mReferenceMaterial.getDensity();
+	private void updateFeedRate(){
+		mFeedRate = mControllerSetpoint * mScrewSizeFactor * mContents.getDensity()/mReferenceMaterial.getDensity();
 	}
-	public double getRate(){
-		updateRate();
-		return mRate;
+	public double getFeedRate(){
+		updateFeedRate();
+		return mFeedRate;
+	}
+	public void setFeedRate(double feedRate) {
+	    this.mFeedRate = feedRate;
 	}
 	
-	public double setControllerSetpoint(double setpoint) {
+	public double setSetpoint(double setpoint) {
 		if (setpoint < 0) {
 			throw new IllegalArgumentException("No negative numbers");
 		}
 		mControllerSetpoint = setpoint;
-		updateRate();
+		updateFeedRate();
 		return mControllerSetpoint;
 	}
-	public double getControllerSetpoint() {
+	public double getSetpoint() {
 		return mControllerSetpoint;
 	}
 	
-	public double estimateMinimumFullCapacity() {
+	public double getUsableVolume() {
 		return mCapacity ; //need to change w/ new matl
 	}
 	
-	public double estimateAlarmCapacity() {
-		return mAlarmPercent * mCapacity;
+	public double getAlarmVolume() {
+		return mAlarmVolume;
 	}
 	
 	public double getLbsContained() {
@@ -74,7 +78,7 @@ public class Novatec implements Hopper {
 
 	public void setScrewSizeFactor(double screwSizeFactor) {
 		this.mScrewSizeFactor = screwSizeFactor;
-		updateRate();
+		updateFeedRate();
 	}
 
 	public Material getContents() {
@@ -83,11 +87,15 @@ public class Novatec implements Hopper {
 
 	public void setContents(Material mContents) {
 		this.mContents = mContents;
-		updateRate();
+		updateFeedRate();
 		updateCapacity();
 	}
 	
 	private void updateCapacity() {
 		mCapacity = mCapacity * mContents.getDensity()/mReferenceMaterial.getDensity();
+	}
+	
+	public boolean hasAlarm() {
+	    return (mAlarmVolume > 0) ? true : false; 
 	}
 }

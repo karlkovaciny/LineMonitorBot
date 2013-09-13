@@ -575,7 +575,7 @@ public class MainActivity extends FragmentActivity implements
 			Double novaSetpoint) {
 		mModel.getSelectedLine().setWebWidth(grossWidth);
 		mModel.getSelectedLine().getNovatec()
-				.setControllerSetpoint(novaSetpoint); // TODO ug...ly.
+				.setSetpoint(novaSetpoint); // TODO ug...ly.
 		if (mModel.hasSelectedProduct()) {
 			Product p = mModel.getSelectedWorkOrder().getProduct();
 			if (p instanceof Rollset || p instanceof Sheetset) {
