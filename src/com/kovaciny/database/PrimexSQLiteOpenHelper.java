@@ -21,9 +21,6 @@ import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.ProductionLine;
 import com.kovaciny.primexmodel.Products;
-import com.kovaciny.primexmodel.Roll;
-import com.kovaciny.primexmodel.Rollset;
-import com.kovaciny.primexmodel.Sheet;
 import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.SpeedValues;
 import com.kovaciny.primexmodel.WorkOrder;
@@ -184,7 +181,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, woNum);
         	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE,0);
 
-        	long rowId = db.insertOrThrow(PrimexDatabaseSchema.ModelState.TABLE_NAME, null, modvalues);
+        	db.insertOrThrow(PrimexDatabaseSchema.ModelState.TABLE_NAME, null, modvalues);
 
         	db.setTransactionSuccessful();
         } finally {
@@ -235,7 +232,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE, speedControllerTypesIterator.next());
         		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE, "Maxson");
 
-        		long rowId = db.insertOrThrow(
+        		db.insertOrThrow(
         				PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
         				null, 
         				values);	        	
@@ -280,7 +277,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         		ContentValues ptvalues = new ContentValues();
         		ptvalues.put(PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES, types[j]);
 
-        		long rowId = db.insertOrThrow(PrimexDatabaseSchema.ProductTypes.TABLE_NAME, null, ptvalues);
+        		db.insertOrThrow(PrimexDatabaseSchema.ProductTypes.TABLE_NAME, null, ptvalues);
         	}
         	db.setTransactionSuccessful();
         } finally {
@@ -291,7 +288,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         try {
         	db.beginTransaction();
         	Integer defaultSetpoint = 0;
-        	List<Integer> linesWithBigNovatecs = Arrays.asList(new Integer[] {1,12,13,14});
+        	List<Integer> linesWithBigNovatecs = Arrays.asList(new Integer[] {1,11,12,13,14});
         	double screwRatio;
 
         	ContentValues novatecValues = new ContentValues();
@@ -306,7 +303,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         			screwRatio = 1.5; 
         		} else screwRatio = 1d;
         		novatecValues.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO, screwRatio);
-        		long rowId = db.insertOrThrow(PrimexDatabaseSchema.Novatecs.TABLE_NAME, null, novatecValues);
+        		db.insertOrThrow(PrimexDatabaseSchema.Novatecs.TABLE_NAME, null, novatecValues);
         	}
 
         	db.setTransactionSuccessful();
@@ -462,7 +459,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	SQLiteDatabase db = getWritableDatabase();
     	
     	ContentValues values = new ContentValues();
-    	values.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT, novatec.getControllerSetpoint());
+    	values.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT, novatec.getSetpoint());
     	values.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO, novatec.getScrewSizeFactor());
     	int lineId = getIdOfValue(PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
     			PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, lineNumber);
@@ -545,7 +542,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				
 				double setpoint = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT));
 				double letdownRatio = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO));
-				n = new Novatec(50, setpoint, letdownRatio);
+				n = new Novatec(Novatec.DEFAULT_VOLUME, 0, setpoint, letdownRatio);
 			} else {
 				Log.e("error", "SQLiteOpenHelper::getNovatec returned no results");
 			}

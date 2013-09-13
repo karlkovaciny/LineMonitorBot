@@ -235,7 +235,7 @@ public class PrimexModel {
  
 	public void changeNovatecSetpoint (Double setpoint) {
 		Novatec n = mSelectedLine.getNovatec();
-		n.setControllerSetpoint(setpoint);
+		n.setSetpoint(setpoint);
 		mDbHelper.updateColumn(PrimexDatabaseSchema.Novatecs.TABLE_NAME, 
 				PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT, 
 				null, 
@@ -378,7 +378,7 @@ public class PrimexModel {
 				propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, null, mGrossPph);
 				
 				if (mGrossPph > 0) {
-					mColorPercent =  mSelectedLine.getNovatec().getRate() / mGrossPph;
+					mColorPercent =  mSelectedLine.getNovatec().getFeedRate() / mGrossPph;
 					propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, null, mColorPercent);
 				}
 
