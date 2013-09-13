@@ -39,7 +39,8 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 	TextView mTxt_netPph;
 	TextView mTxt_grossPph;
 	EditText mEdit_novatecSetpoint;
-	Button mBtn_calculateColorPercent;
+	Button mBtn_calculateRates;
+	Button mBtn_enterProduct;
 	TextView mTxt_colorPercent;
 	TextView mLbl_novatecSetpoint;
 	private List<EditText> mEditableGroup = new ArrayList<EditText>();
@@ -81,9 +82,13 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 		
 		mLbl_novatecSetpoint = (TextView) rootView.findViewById(R.id.lbl_novatec_setpoint);
 		
-		mBtn_calculateColorPercent = (Button) rootView.findViewById(R.id.btn_calculate_rates);
-		mBtn_calculateColorPercent.setOnClickListener(this);
-		mBtn_calculateColorPercent.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
+		mBtn_calculateRates = (Button) rootView.findViewById(R.id.btn_calculate_rates);
+		mBtn_calculateRates.setOnClickListener(this);
+		mBtn_calculateRates.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
+		
+		mBtn_enterProduct = (Button) rootView.findViewById(R.id.btn_enter_product_rates_frag);
+		mBtn_enterProduct.setOnClickListener(this);
+		mBtn_enterProduct.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
 		
 		return rootView;
 	}
@@ -91,6 +96,13 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case (R.id.btn_enter_product_rates_frag):
+		    for (EditText et : mEditableGroup) {
+                et.clearFocus();
+            }
+		    ((MainActivity)getActivity()).showEnterProductDialog();
+		    break;
+		
 		case (R.id.btn_calculate_rates):
 		    boolean validInputs = true;
 			for (EditText et : mEditableGroup) {
@@ -119,6 +131,9 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 						throw e;
 					}
 				}
+				for (EditText et : mEditableGroup) {
+				    et.clearFocus();
+				}
 			}
 			break;
 		
@@ -132,6 +147,7 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 		    if (newProperty == null) {
 		        mLbl_sheetWeight.setText(getString(R.string.default_sheet_weight_label));
 		        mEdit_sheetWeight.setText(getString(R.string.default_sheet_weight));
+		        mBtn_calculateRates.setEnabled(false);
 		    } else {
 		        Product p = (Product)newProperty;
 		        mLbl_sheetWeight.setText(HelperFunction.capitalizeFirstChar(p.getUnit()) + " weight");
@@ -142,6 +158,7 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 		            String swdisp = new DecimalFormat("#0.###").format(sheetWeight);
 		            mEdit_sheetWeight.setText(swdisp);
 		        }
+		        mBtn_calculateRates.setEnabled(true);
 		    }
 			
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
