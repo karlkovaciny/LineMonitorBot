@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	style="@style/ParentFragment"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ParentFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -17,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="Draining coming soon... \nHere's something else instead.\n"
+            android:text="Draining coming soon... \nHere&apos;s something else instead.\n"
             android:textSize="35px" />
 
         <LinearLayout
@@ -31,14 +32,105 @@
                 android:layout_height="wrap_content"
                 android:text="SELF-DESTRUCT!"
                 android:textColor="@color/red" />
+        </LinearLayout>
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gross rate"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Blender hoppers"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <LinearLayout
+            android:id="@+id/container_blender_hoppers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <EditText
+                android:id="@+id/EditText06"
+                style="@style/EditText.HopperPercent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <EditText
+                android:id="@+id/EditText05"
+                style="@style/EditText.HopperPercent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <EditText
+                android:id="@+id/EditText04"
+                style="@style/EditText.HopperPercent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <EditText
+                android:id="@+id/EditText03"
+                style="@style/EditText.HopperPercent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <EditText
+                android:id="@+id/EditText02"
+                style="@style/EditText.HopperPercent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <EditText
+                android:id="@+id/EditText01"
+                style="@style/EditText.HopperPercent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Extruder hopper"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/EditText07"
+            style="@style/EditText.HopperPercent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10" >
+
+            <requestFocus />
+        </EditText>
+
     </LinearLayout>
-        <fragment
-            android:id="@+id/floating_toolbar_3"
-            android:name="com.kovaciny.linemonitorbot.FloatingToolbarFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    
+
+    <fragment
+        android:id="@+id/floating_toolbar_3"
+        android:name="com.kovaciny.linemonitorbot.FloatingToolbarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/floating_toolbar_fragment" />
+
 </LinearLayout>
