@@ -74,8 +74,9 @@ public class MainActivity extends FragmentActivity implements
 
     /**
 	 * The {@link ViewPager} that will host the section contents.
+	 * Only public for testing.
 	 */
-	ViewPager mViewPager;
+	public ViewPager mViewPager;
 
 	private MenuItem mJobPicker;
 	private MenuItem mLinePicker;

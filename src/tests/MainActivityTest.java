@@ -82,6 +82,12 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	    mContainerEnterProductButton = (RelativeLayout)mActivity.findViewById(R.id.container_enter_product_button);
 	    assertTrue(mSkidTimesFragment != null);
 		assertTrue(mRatesFragment != null);
+		 getActivity().runOnUiThread(new Runnable() {
+	            public void run() {
+	                mActivity.mViewPager.setCurrentItem(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
+	            }
+	        });
+	        getInstrumentation().waitForIdleSync();
 	}
 
 	@Test
