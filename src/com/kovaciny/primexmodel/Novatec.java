@@ -10,17 +10,17 @@ public class Novatec implements Hopper {
 	Material mReferenceMaterial; 
 	private double mControllerSetpoint;
 	double mLbsContained;
-	private double mLetdownRatio;
+	private double mScrewSizeFactor;
 	private double mRate;
 	Material mContents;
 	
-	public Novatec(double capacity, double setpoint, double letdownRatio) {
-		if ((capacity < 0) || (setpoint < 0) || (letdownRatio < 0)) {
+	public Novatec(double capacity, double setpoint, double screwSizeFactor) {
+		if ((capacity < 0) || (setpoint < 0) || (screwSizeFactor < 0)) {
 			throw new IllegalArgumentException("No negative numbers");
 		}
 		mCapacity = capacity;
 		mControllerSetpoint = setpoint;
-		mLetdownRatio = letdownRatio;
+		mScrewSizeFactor = screwSizeFactor;
 		mLbsContained = 0;
 		mReferenceMaterial = new Material("105 Concentrate");
 		mContents = mReferenceMaterial;
@@ -32,7 +32,7 @@ public class Novatec implements Hopper {
 	}
 	
 	private void updateRate(){
-		mRate = mControllerSetpoint * mLetdownRatio * mContents.getDensity()/mReferenceMaterial.getDensity();
+		mRate = mControllerSetpoint * mScrewSizeFactor * mContents.getDensity()/mReferenceMaterial.getDensity();
 	}
 	public double getRate(){
 		updateRate();
@@ -68,12 +68,12 @@ public class Novatec implements Hopper {
 		else return mLbsContained = lbs;
 	}
 
-	public double getLetdownRatio() {
-		return mLetdownRatio;
+	public double getScrewSizeFactor() {
+		return mScrewSizeFactor;
 	}
 
-	public void setLetdownRatio(double letdownRatio) {
-		this.mLetdownRatio = letdownRatio;
+	public void setScrewSizeFactor(double screwSizeFactor) {
+		this.mScrewSizeFactor = screwSizeFactor;
 		updateRate();
 	}
 

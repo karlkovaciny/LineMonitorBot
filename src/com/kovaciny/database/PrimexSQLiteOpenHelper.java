@@ -463,7 +463,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	
     	ContentValues values = new ContentValues();
     	values.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT, novatec.getControllerSetpoint());
-    	values.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO, novatec.getLetdownRatio());
+    	values.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO, novatec.getScrewSizeFactor());
     	int lineId = getIdOfValue(PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
     			PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, lineNumber);
     	values.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID, lineId);
