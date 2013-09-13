@@ -30,7 +30,7 @@ public class ProductionLine {
 		//TODO default settings
 		mSpeedValues = new SpeedValues(0,1,1);
 		mNumberOfWebs = 1;
-		mNovatec = new Novatec(50,0,1); 
+		mNovatec = new Novatec(); 
 	}
 	
 	/* (non-Javadoc)
