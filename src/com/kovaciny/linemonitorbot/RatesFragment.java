@@ -202,9 +202,9 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 		else if (propertyName == PrimexModel.NOVATEC_CHANGE_EVENT) {
 			Novatec n = (Novatec)newProperty;
 			SpannableStringBuilder labelSb = new SpannableStringBuilder(getString(R.string.label_novatec_setpoint));
-			if (n.getLetdownRatio() != 1) {
+			if (n.getScrewSizeFactor() != 1) {
 			    SpannableString screwSizeIndicator = 
-			            new SpannableString("\n(" + String.valueOf(n.getLetdownRatio()) + "x screw)");
+			            new SpannableString("\n(" + String.valueOf(n.getScrewSizeFactor()) + "x screw)");
 			    screwSizeIndicator.setSpan(new RelativeSizeSpan(.75f), 0, screwSizeIndicator.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			    labelSb.append(screwSizeIndicator);
 			}
