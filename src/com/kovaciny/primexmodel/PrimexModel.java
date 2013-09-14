@@ -111,10 +111,10 @@ public class PrimexModel {
 		ProductionLine oldLine = mSelectedLine;
 		
 		mSelectedLine = line;
-		mSelectedLine.setNovatec(mDbHelper.loadNovatec(line.getLineNumber()));
+		mSelectedLine.setPrimaryNovatec(mDbHelper.loadNovatec(line.getLineNumber()));
 
 		propChangeSupport.firePropertyChange(SELECTED_LINE_CHANGE_EVENT, oldLine, mSelectedLine);
-		propChangeSupport.firePropertyChange(NOVATEC_CHANGE_EVENT, null, mSelectedLine.getNovatec());
+		propChangeSupport.firePropertyChange(NOVATEC_CHANGE_EVENT, null, mSelectedLine.getPrimaryNovatec());
 		propChangeSupport.firePropertyChange(GROSS_WIDTH_CHANGE_EVENT, null, mSelectedLine.getWebWidth());
 		
 		int associatedWoNumber = mDbHelper.getSelectedWoNumberByLine(line.getLineNumber());
@@ -234,7 +234,7 @@ public class PrimexModel {
 	}
  
 	public void changeNovatecSetpoint (Double setpoint) {
-		Novatec n = mSelectedLine.getNovatec();
+		Novatec n = mSelectedLine.getPrimaryNovatec();
 		n.setSetpoint(setpoint);
 		mDbHelper.updateColumn(PrimexDatabaseSchema.Novatecs.TABLE_NAME, 
 				PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT, 
@@ -378,7 +378,7 @@ public class PrimexModel {
 				propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, null, mGrossPph);
 				
 				if (mGrossPph > 0) {
-					mColorPercent =  mSelectedLine.getNovatec().getFeedRate() / mGrossPph;
+					mColorPercent =  mSelectedLine.getPrimaryNovatec().getFeedRate() / mGrossPph;
 					propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, null, mColorPercent);
 				}
 

@@ -9,8 +9,8 @@ public class Novatec extends Hopper {
 	/*
 	 * "0" for alarmVolume represents no alarm
 	 */
-	public Novatec(double volume, double alarmVolume, double setpoint, double screwSizeFactor) {
-		super(volume, alarmVolume, setpoint);
+	public Novatec(double volume, double alarmVolume, double screwSizeFactor) {
+		super(volume, alarmVolume);
 	    if (screwSizeFactor <= 0d) {
 			throw new IllegalArgumentException("Invalid screw size factor");
 		}
@@ -18,7 +18,7 @@ public class Novatec extends Hopper {
 	}
 	
 	public Novatec() {
-		this(DEFAULT_VOLUME,0,0,DEFAULT_SCREW_SIZE_FACTOR);
+		this(DEFAULT_VOLUME,0, DEFAULT_SCREW_SIZE_FACTOR);
 	}
 	
 	@Override

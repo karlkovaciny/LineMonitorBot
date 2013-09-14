@@ -24,7 +24,7 @@ public class PrimexDatabaseSchema {
 		public static final String COLUMN_NAME_PRODUCTS_PER_MINUTE = "products_per_minute";
 		public static final String COLUMN_NAME_NUMBER_OF_TABLE_SKIDS = "number_of_table_skids";
 	}
-	
+
 	public static abstract class ProductionLines implements BaseColumns {
 	    public static final String TABLE_NAME = "production_lines";
 	    public static final String COLUMN_NAME_LINE_NUMBER = "line_number";
@@ -38,8 +38,10 @@ public class PrimexDatabaseSchema {
 	    public static final String COLUMN_NAME_DIFFERENTIAL_RANGE_HIGH = "differential_range_high";
 	    public static final String COLUMN_NAME_SPEED_FACTOR = "speed_factor";
 	    public static final String COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE = "takeoff_equipment_type";
-	}	
-	
+	    public static final String COLUMN_NAME_EXTRUDER_HOPPER_DRAIN_FACTOR = "extruder_drain_factor";
+	    public static final String COLUMN_NAME_COEXTRUDER_HOPPER_DRAIN_FACTOR = "coex_drain_factor";
+	}   
+
 	public static abstract class WorkOrders implements BaseColumns {
 		public static final String TABLE_NAME = "work_orders";
 		public static final String COLUMN_NAME_WO_NUMBER = "WO_number";		

@@ -1,6 +1,7 @@
 package com.kovaciny.primexmodel;
 
 public class Hopper {
+    public static double DEFAULT_HOPPER_CAPACITY = 150d;
     private double mFeedRate;
     private Material mContents;
     private double mVolume;
@@ -8,16 +9,19 @@ public class Hopper {
     private double mSetpoint;
     public double mLbsContained;
 
+    public Hopper() {
+        this(DEFAULT_HOPPER_CAPACITY, 0);
+    }
     /*
      * "0" for alarmVolume represents no alarm
      */
-    public Hopper(double volume, double alarmVolume, double setpoint) {
-        if ((volume <= 0d) || (alarmVolume < 0d) || (setpoint < 0d)) {
+    public Hopper(double volume, double alarmVolume) {
+        if ((volume <= 0d) || (alarmVolume < 0d)) {
             throw new IllegalArgumentException("No negative numbers");
         }
         mVolume = volume;
         mAlarmVolume = alarmVolume;
-        mSetpoint = setpoint;
+        mSetpoint = 0;
         mLbsContained = 0;
     }
 
