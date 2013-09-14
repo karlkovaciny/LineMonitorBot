@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.kovaciny.primexmodel.Hopper;
 import com.kovaciny.primexmodel.Novatec;
 import com.kovaciny.primexmodel.Pallet;
 import com.kovaciny.primexmodel.PrimexModel;
@@ -220,6 +221,10 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         			);
         	Iterator<String> speedControllerTypesIterator = speedControllerTypesList.iterator();
 
+        	//This number represents how long it takes to drain the extruder hopper to a dangerous level.
+        	List<Integer> drainFactorsList = Arrays.asList(new Integer[]{0,0,0,0,0, 22000,0,0,0,0, 0,0,0});
+        	Iterator<Integer> drainFactorsIterator = drainFactorsList.iterator();
+        	
         	db.beginTransaction();
         	for (Integer lineNum : lineNumbers) {
         		ContentValues values = new ContentValues();
@@ -231,6 +236,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR, speedFactorsIterator.next());
         		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE, speedControllerTypesIterator.next());
         		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE, "Maxson");
+        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_EXTRUDER_HOPPER_DRAIN_FACTOR, drainFactorsIterator.next());
 
         		db.insertOrThrow(
         				PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
@@ -419,7 +425,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
      * Also updates Novatec
      */
     public long insertOrUpdateLine(ProductionLine newLine) {
-    	insertOrUpdateNovatec(newLine.getNovatec(), newLine.getLineNumber());
+    	insertOrUpdateNovatec(newLine.getPrimaryNovatec(), newLine.getLineNumber());
     	SQLiteDatabase db = getWritableDatabase();
     	
     	ContentValues values = new ContentValues();
@@ -507,7 +513,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	    	double diff = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT));
 	    	double sf = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR));
 	    	
-	    	ProductionLine newLine = new ProductionLine(ln,ll,dw,sct,tet);
+	    	ProductionLine newLine = new ProductionLine(ln,ll,dw,sct,tet, new Hopper());
 	    	SpeedValues sv = new SpeedValues(sp,diff,sf);
 	    	newLine.setSpeedValues(sv);
 	    	Log.v("loadLine", "just loaded speed values of " + sv.toString());
@@ -542,7 +548,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				
 				double setpoint = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT));
 				double letdownRatio = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO));
-				n = new Novatec(Novatec.DEFAULT_VOLUME, 0, setpoint, letdownRatio);
+				n = new Novatec(Novatec.DEFAULT_VOLUME, 0, letdownRatio);
+				n.setSetpoint(setpoint);
 			} else {
 				Log.e("error", "SQLiteOpenHelper::getNovatec returned no results");
 			}

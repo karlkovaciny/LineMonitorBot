@@ -9,28 +9,29 @@ public class ProductionLine {
 	private int mLineLength; //in feet
 	private int mDieWidth; //in inches
 	private double mWebWidth;
-	private int mNumberOfWebs;
 	private SpeedValues mSpeedValues;
 	private double[] mDifferentialRange;
 	private String mSpeedControllerType;
 	private String mTakeoffEquipmentType;
-	private Novatec mNovatec;
+	private Extruder mExtruder;
+	private Novatec mNovatec1;
+	private Novatec mNovatec2;
 	
 	public static final String SPEED_CONTROLLER_TYPE_GEARED = "ProductionLine.Geared";
 	public static final String SPEED_CONTROLLER_TYPE_PERCENT = "ProductionLine.Percent";
 	public static final String SPEED_CONTROLLER_TYPE_RATIO = "ProductionLine.Ratio";
 	public static final String SPEED_CONTROLLER_TYPE_NONE = "ProductionLine.None";
 	
-	public ProductionLine(int lineNumber, int lineLength, int dieWidth, String speedControllerType, String takeoffEquipmentType) {
+	public ProductionLine(int lineNumber, int lineLength, int dieWidth, String speedControllerType, String takeoffEquipmentType, Hopper extruderHopper) {
 		setLineNumber(lineNumber);
 		setLineLength(lineLength);
 		setDieWidth(dieWidth);
 		setSpeedControllerType(speedControllerType);
 		setTakeoffEquipmentType(takeoffEquipmentType);
+		mExtruder = new Extruder(extruderHopper);
 		//TODO default settings
 		mSpeedValues = new SpeedValues(0,1,1);
-		mNumberOfWebs = 1;
-		mNovatec = new Novatec(); 
+		mNovatec1 = new Novatec(); 
 	}
 	
 	/* (non-Javadoc)
@@ -122,11 +123,17 @@ public class ProductionLine {
 	public void setTakeoffEquipmentType(String takeOffEquipment) {
 		this.mTakeoffEquipmentType = takeOffEquipment;
 	}
-	public Novatec getNovatec() {
-		return mNovatec;
+	public Novatec getPrimaryNovatec() {
+		return mNovatec1;
 	}
-	public void setNovatec(Novatec novatec) {
-		this.mNovatec = novatec;
+	public void setPrimaryNovatec(Novatec novatec) {
+		this.mNovatec1 = novatec;
+	}
+	public Novatec getSecondaryNovatec() {
+	    return mNovatec2;
+	}
+	public void setSecondaryNovatec(Novatec novatec) {
+	    this.mNovatec2 = novatec;
 	}
 	public double getWebWidth() {
 		return mWebWidth;

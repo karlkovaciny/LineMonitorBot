@@ -575,7 +575,7 @@ public class MainActivity extends FragmentActivity implements
 	public void updateRatesData(Double grossWidth, Double unitWeight,
 			Double novaSetpoint) {
 		mModel.getSelectedLine().setWebWidth(grossWidth);
-		mModel.getSelectedLine().getNovatec()
+		mModel.getSelectedLine().getPrimaryNovatec()
 				.setSetpoint(novaSetpoint); // TODO ug...ly.
 		if (mModel.hasSelectedProduct()) {
 			Product p = mModel.getSelectedWorkOrder().getProduct();
