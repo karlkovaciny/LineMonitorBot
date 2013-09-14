@@ -32,6 +32,7 @@ final public class HelperFunction {
 
 	public static final float RELATIVE_SIZE_SUPERSCRIPT = 0.66f;
 	public static final float RELATIVE_SIZE_SUBSCRIPT = 0.66f;
+	public static final float RELATIVE_SIZE_SMALLER = 0.75f;
 
 	/*
 	 * Time functions

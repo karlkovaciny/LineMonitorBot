@@ -147,7 +147,13 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 		    if (newProperty == null) {
 		        mLbl_sheetWeight.setText(getString(R.string.default_sheet_weight_label));
 		        mEdit_sheetWeight.setText(getString(R.string.default_sheet_weight));
+		        mBtn_enterProduct.setText(getString(R.string.btn_enter_product_text));
 		        mBtn_calculateRates.setEnabled(false);
+
+		        //Reset enter product button
+		        mBtn_enterProduct.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
+                mBtn_enterProduct.setTextAppearance(getActivity(), R.style.Button);
+                mBtn_enterProduct.setText(getString(R.string.btn_enter_product_text));
 		    } else {
 		        Product p = (Product)newProperty;
 		        mLbl_sheetWeight.setText(HelperFunction.capitalizeFirstChar(p.getUnit()) + " weight");
@@ -159,6 +165,22 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 		            mEdit_sheetWeight.setText(swdisp);
 		        }
 		        mBtn_calculateRates.setEnabled(true);
+		      
+		        //Set button text to display product dimensions
+                if (p.getUnits().equals("sheets") || p.getUnits().equals("cuts")) {
+                    SpannableStringBuilder productDimensions = new SpannableStringBuilder();
+                    productDimensions
+                         .append(HelperFunction.formatDecimalAsProperFraction( p.getWidth()/p.getNumberOfWebs() ))
+                        .append(" x ")
+                        .append(HelperFunction.formatDecimalAsProperFraction(p.getLength()));
+                    mBtn_enterProduct.setText(productDimensions);
+                    mBtn_enterProduct.getBackground().clearColorFilter();
+                    mBtn_enterProduct.setTextAppearance(getActivity(), R.style.Button_Minor);
+                } else { //TODO it should work for R3 and R6 too, reset the button for now
+                    mBtn_enterProduct.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
+                    mBtn_enterProduct.setTextAppearance(getActivity(), R.style.Button);
+                    mBtn_enterProduct.setText(getString(R.string.btn_enter_product_text));
+                }
 		    }
 			
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
@@ -222,7 +244,10 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 			if (n.getScrewSizeFactor() != 1) {
 			    SpannableString screwSizeIndicator = 
 			            new SpannableString("\n(" + String.valueOf(n.getScrewSizeFactor()) + "x screw)");
-			    screwSizeIndicator.setSpan(new RelativeSizeSpan(.75f), 0, screwSizeIndicator.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			    screwSizeIndicator.setSpan(new RelativeSizeSpan(HelperFunction.RELATIVE_SIZE_SMALLER),
+			            0, 
+			            screwSizeIndicator.length(), 
+			            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			    labelSb.append(screwSizeIndicator);
 			}
 			mLbl_novatecSetpoint.setText(labelSb); 

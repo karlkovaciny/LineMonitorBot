@@ -22,6 +22,9 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.RelativeSizeSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -411,6 +414,9 @@ public class SkidTimesFragment extends Fragment implements
 			    mProductGrouping = DEFAULT_PRODUCT_GROUPING;
 			    mBtn_goByHeight.setVisibility(Button.GONE);
 			    mBtn_calculateTimes.setEnabled(false);
+			    mBtn_enterProduct.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
+			    mBtn_enterProduct.setTextAppearance(getActivity(), R.style.Button);
+			    mBtn_enterProduct.setText(getString(R.string.btn_enter_product_text));
 			} else {
 			    Product p = (Product)newProperty;
 			    mProductUnits = HelperFunction.capitalizeFirstChar(p.getUnits());
@@ -419,6 +425,22 @@ public class SkidTimesFragment extends Fragment implements
 			    else mBtn_goByHeight.setVisibility(Button.GONE);
 			    mBtn_calculateTimes.setEnabled(true);
 			    mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
+			    
+			    //Set button text to display product dimensions
+			    if (p.getUnits().equals("sheets") || p.getUnits().equals("cuts")) {
+			        SpannableStringBuilder productDimensions = new SpannableStringBuilder();
+			        productDimensions
+			             .append(HelperFunction.formatDecimalAsProperFraction( p.getWidth()/p.getNumberOfWebs() ))
+			            .append(" x ")
+			            .append(HelperFunction.formatDecimalAsProperFraction(p.getLength()));
+			        mBtn_enterProduct.setText(productDimensions);
+			        mBtn_enterProduct.getBackground().clearColorFilter();
+			        mBtn_enterProduct.setTextAppearance(getActivity(), R.style.Button_Minor);
+			    } else { //TODO it should work for R3 and R6 too, reset the button for now
+			        mBtn_enterProduct.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
+	                mBtn_enterProduct.setTextAppearance(getActivity(), R.style.Button);
+	                mBtn_enterProduct.setText(getString(R.string.btn_enter_product_text));
+			    }
 			}
 			updateLabels();
 			
