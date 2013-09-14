@@ -69,6 +69,7 @@
 	<string name="default_sheet_weight_label">Sheet weight</string>
 	<string name="default_sheet_weight">0.0</string>
 	<string name="btn_go_by_height_text">Go by\nheight</string>
+	<string name="btn_enter_product_text">Enter Product</string>
 	<string name="lbl_finished_height">Finished height\n<small>(highest spot)</small></string>
 	<string name="lbl_current_gauge">Current gauge\n<small>(highest reading)</small></string>
 	<string name="error_empty_field">Please enter a value</string>
