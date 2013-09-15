@@ -33,7 +33,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 151;
+    public static final int DATABASE_VERSION = 154;
     public static final String DATABASE_NAME = "Primex.db";
     
     public static final int DEFAULT_INITIAL_LINE_ID = 7;
@@ -75,6 +75,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_RANGE_HIGH + DOUBLE_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR + DOUBLE_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE + TEXT_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_EXTRUDER_HOPPER_SAFE_DRAIN_TIME + REAL_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_COEXTRUDER_HOPPER_SAFE_DRAIN_TIME + REAL_TYPE + COMMA_SEP +
 					" UNIQUE (" + PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + ")" +
 					" )";
 
@@ -112,10 +114,29 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 					" UNIQUE ("  + PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + ")" +
 					" )";
 
+	private static final String SQL_CREATE_HOPPERS = 
+            "CREATE TABLE " + PrimexDatabaseSchema.Hoppers.TABLE_NAME + " (" +
+                    PrimexDatabaseSchema.Hoppers._ID + " INTEGER PRIMARY KEY," +
+                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP + 
+                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_DISPLAY_NAME + TEXT_TYPE + COMMA_SEP + 
+                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_SAFE_DRAIN_TIME_RESIN + REAL_TYPE + COMMA_SEP + 
+                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_SAFE_DRAIN_TIME_PREMIX + REAL_TYPE + COMMA_SEP + 
+                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_SAFE_DRAIN_TIME_BLEND + REAL_TYPE + COMMA_SEP + 
+                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_SAFE_DRAIN_TIME_HICAL + REAL_TYPE + COMMA_SEP + 
+                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_SAFE_DRAIN_TIME_HM10MAX + REAL_TYPE + COMMA_SEP + 
+                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_SAFE_DRAIN_TIME_3414 + REAL_TYPE + COMMA_SEP + 
+                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_CONTENTS + TEXT_TYPE + COMMA_SEP + 
+                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_PERCENT_SETPOINT + REAL_TYPE + COMMA_SEP + 
+                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_EXTRUDER_NUMBER + INTEGER_TYPE + COMMA_SEP +
+                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_LINE_NUMBER_ID + INTEGER_TYPE + COMMA_SEP +
+                    " UNIQUE (" + PrimexDatabaseSchema.Hoppers.COLUMN_NAME_NAME + ")" +
+
+            " )";
+	
 	private static final String SQL_CREATE_NOVATECS = 
 			"CREATE TABLE " + PrimexDatabaseSchema.Novatecs.TABLE_NAME + " (" +
 					PrimexDatabaseSchema.Novatecs._ID + " INTEGER PRIMARY KEY," +
-					PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO + REAL_TYPE + COMMA_SEP + 
+					PrimexDatabaseSchema.Novatecs.COLUMN_NAME_SCREW_SIZE_FACTOR + REAL_TYPE + COMMA_SEP + 
 					PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT + REAL_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID + INTEGER_TYPE + COMMA_SEP +
 					" UNIQUE (" + PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID + ")" +
@@ -146,6 +167,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 					" )";
 
 	//list "child" tables, which have a foreign key, before their parent, so drop table works
+	private static final String TABLE_NAME_HOPPERS = PrimexDatabaseSchema.Hoppers.TABLE_NAME;
 	private static final String TABLE_NAME_NOVATECS = PrimexDatabaseSchema.Novatecs.TABLE_NAME;
 	private static final String TABLE_NAME_SKIDS = PrimexDatabaseSchema.Skids.TABLE_NAME;
 	private static final String TABLE_NAME_LINE_WORK_ORDER_LINK = PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME;
@@ -155,6 +177,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	private static final String TABLE_NAME_PRODUCTION_LINES = PrimexDatabaseSchema.ProductionLines.TABLE_NAME;
 	private static final String TABLE_NAME_MODEL_STATE = PrimexDatabaseSchema.ModelState.TABLE_NAME;
 
+    private static final String SQL_DELETE_HOPPERS =
+            "DROP TABLE IF EXISTS " + TABLE_NAME_HOPPERS;
     private static final String SQL_DELETE_NOVATECS =
     		"DROP TABLE IF EXISTS " + TABLE_NAME_NOVATECS;
     private static final String SQL_DELETE_SKIDS = 
@@ -236,7 +260,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR, speedFactorsIterator.next());
         		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE, speedControllerTypesIterator.next());
         		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE, "Maxson");
-        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_EXTRUDER_HOPPER_DRAIN_FACTOR, drainFactorsIterator.next());
+        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_EXTRUDER_HOPPER_SAFE_DRAIN_TIME, drainFactorsIterator.next());
 
         		db.insertOrThrow(
         				PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
@@ -290,6 +314,38 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         	db.endTransaction();
         }
 
+        db.execSQL(SQL_CREATE_HOPPERS);
+        try {
+            db.beginTransaction();
+            
+            for (Integer lineNum : lineNumbers) {
+                ContentValues hopperValues = new ContentValues();
+                int lineId = getIdOfValue(PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
+                        PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, 
+                        lineNum, 
+                        db);
+                hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_LINE_NUMBER_ID, lineId);
+                
+                if (lineId == 5){ //line 11
+                    hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_NAME, "Line_11_hopper_1");
+                    hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_DISPLAY_NAME, "1");
+                    hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_SAFE_DRAIN_TIME_RESIN, 9.5);
+                    hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_EXTRUDER_NUMBER, 0);
+                    
+                    hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_NAME, "Line_11_hopper_1");
+                    hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_DISPLAY_NAME, "2");
+                    hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_SAFE_DRAIN_TIME_RESIN, 9.5);
+                    hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_EXTRUDER_NUMBER, 0);
+                }
+                
+                db.insertOrThrow(PrimexDatabaseSchema.Hoppers.TABLE_NAME, null, hopperValues);
+            }
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        
         db.execSQL(SQL_CREATE_NOVATECS);
         try {
         	db.beginTransaction();
@@ -297,8 +353,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         	List<Integer> linesWithBigNovatecs = Arrays.asList(new Integer[] {1,11,12,13,14});
         	double screwRatio;
 
-        	ContentValues novatecValues = new ContentValues();
         	for (Integer lineNum : lineNumbers) {
+        	    ContentValues novatecValues = new ContentValues();
         		int lineId = getIdOfValue(PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
         				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, 
         				lineNum, 
@@ -308,7 +364,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         		if (linesWithBigNovatecs.contains(lineNum)) {
         			screwRatio = 1.5; 
         		} else screwRatio = 1d;
-        		novatecValues.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO, screwRatio);
+        		novatecValues.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_SCREW_SIZE_FACTOR, screwRatio);
         		db.insertOrThrow(PrimexDatabaseSchema.Novatecs.TABLE_NAME, null, novatecValues);
         	}
 
@@ -335,6 +391,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO: upgrade policy is
         // to simply to discard the data and start over
+        db.execSQL(SQL_DELETE_HOPPERS);
         db.execSQL(SQL_DELETE_NOVATECS);
     	db.execSQL(SQL_DELETE_SKIDS);
         db.execSQL(SQL_DELETE_LINE_WORK_ORDER_LINK);
@@ -466,7 +523,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	
     	ContentValues values = new ContentValues();
     	values.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT, novatec.getSetpoint());
-    	values.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO, novatec.getScrewSizeFactor());
+    	values.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_SCREW_SIZE_FACTOR, novatec.getScrewSizeFactor());
     	int lineId = getIdOfValue(PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
     			PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, lineNumber);
     	values.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID, lineId);
@@ -547,7 +604,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			if (resultCursor.moveToFirst()) {
 				
 				double setpoint = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT));
-				double letdownRatio = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LETDOWN_RATIO));
+				double letdownRatio = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_SCREW_SIZE_FACTOR));
 				n = new Novatec(Novatec.DEFAULT_VOLUME, 0, letdownRatio);
 				n.setSetpoint(setpoint);
 			} else {
@@ -557,7 +614,20 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			if (resultCursor != null) {resultCursor.close();}
 		}	
 		return n;
-	
+    }
+    
+    public Cursor loadHoppers(int lineNumber) {
+        SQLiteDatabase db = getReadableDatabase();
+        
+        String sql = "SELECT * FROM " +
+                PrimexDatabaseSchema.Hoppers.TABLE_NAME +
+                " WHERE " + PrimexDatabaseSchema.Hoppers.COLUMN_NAME_LINE_NUMBER_ID + "=?";
+        long lineId = getIdOfValue(PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
+                PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, 
+                lineNumber);
+        String[] whereargs = new String[]{String.valueOf(lineId)};
+        Cursor resultCursor = db.rawQuery(sql, whereargs);
+        return resultCursor;
     }
     
     public List<Integer> getLineNumbers() {
