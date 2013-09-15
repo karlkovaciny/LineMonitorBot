@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import android.test.ActivityInstrumentationTestCase2;
 
+import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.linemonitorbot.MainActivity;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
@@ -39,7 +40,7 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 		super.tearDown();
 	}
 
-	public void loadTestCase(int caseNumber) {
+	public PrimexTestCase loadTestCase(int caseNumber) {
 	    final PrimexTestCase testCase = new PrimexTestCase(caseNumber);
 	    getActivity().runOnUiThread(new Runnable() {
             public void run() {
@@ -51,12 +52,30 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
                 mModel.changeProduct(p);
                 mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(testCase.mTotalItems);
                 mModel.calculateTimes();
-                mModel.calculateRates();
+                mModel.calculateRates(testCase.mLetdownGrams);
             }
         });
         getInstrumentation().waitForIdleSync();
+        return testCase;
 	}
-	
+
+	@Test
+	public void testCalculateRates() {
+	    final PrimexTestCase joma = loadTestCase(PrimexTestCase.JOMA_ROLLS);
+	    getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                mModel.calculateRates(joma.mLetdownGrams);
+            }
+        });
+        getInstrumentation().waitForIdleSync();
+	    
+	    assertEquals(1009.3652, mModel.getNetPph(), HelperFunction.EPSILON);
+	    assertEquals(0.1916, mModel.getEdgeTrimRatio(), HelperFunction.EPSILON);
+	    assertEquals(1248.69926, mModel.getGrossPph(), HelperFunction.EPSILON);
+	    assertEquals(0.0286, mModel.getColorPercent(), HelperFunction.EPSILON);
+	}
+
+
 	@Test
 	public void testCalculateSheetsFromGauge() {
 		int sheets = mModel.calculateSheetsFromGauge(6d, .100);
@@ -77,7 +96,7 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 				mModel.changeProduct(p);
 				mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(7100);
 				mModel.calculateTimes();
-				mModel.calculateRates();
+				mModel.calculateRates(0d);
 			}
 		});
 		getInstrumentation().waitForIdleSync();
@@ -108,7 +127,7 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 				mModel.changeProduct(p);
 				mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(1924); //cuts not sheets TODO
 				mModel.calculateTimes();
-				mModel.calculateRates();
+				mModel.calculateRates(0d);
 			}
 		});
 		getInstrumentation().waitForIdleSync();
@@ -139,7 +158,7 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 				mModel.changeProduct(p);
 				mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(3848); //sheets not cuts TODO
 				mModel.calculateTimes();
-				mModel.calculateRates();
+				mModel.calculateRates(0d);
 			}
 		});
 		getInstrumentation().waitForIdleSync();
@@ -170,7 +189,7 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 				mModel.changeProduct(p);
 				mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(960); //sheets not cuts TODO
 				mModel.calculateTimes();
-				mModel.calculateRates();
+				mModel.calculateRates(0d);
 			}
 		});
 		getInstrumentation().waitForIdleSync();
@@ -307,11 +326,6 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 
 	@Test
 	public void testGetProductsPerMinute() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public void testCalculateRates() {
 		fail("Not yet implemented"); // TODO
 	}
 

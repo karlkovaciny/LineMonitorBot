@@ -39,6 +39,7 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 	TextView mTxt_netPph;
 	TextView mTxt_grossPph;
 	EditText mEdit_novatecSetpoint;
+	EditText mEdit_tenSecondLetdownGrams;
 	Button mBtn_calculateRates;
 	Button mBtn_enterProduct;
 	TextView mTxt_colorPercent;
@@ -62,6 +63,8 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 		mEditableGroup.add(mEdit_sheetWeight);
 		mEdit_novatecSetpoint = (EditText) rootView.findViewById(R.id.edit_novatec_setpoint);
 		mEditableGroup.add(mEdit_novatecSetpoint);
+		mEdit_tenSecondLetdownGrams = (EditText) rootView.findViewById(R.id.edit_ten_second_letdown_grams);
+		mEditableGroup.add(mEdit_tenSecondLetdownGrams);
 		
 		mTxt_edgeTrimPercent = (TextView) rootView.findViewById(R.id.txt_edge_trim_percent);
 		mLbl_sheetWeight = (TextView) rootView.findViewById(R.id.lbl_sheet_weight);
@@ -104,21 +107,46 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 		    break;
 		
 		case (R.id.btn_calculate_rates):
+            for (EditText et : mEditableGroup) {
+                et.setError(null);
+            }
 		    boolean validInputs = true;
-			for (EditText et : mEditableGroup) {
-				String value = et.getText().toString();
-				if (value.equals("")) {
-					et.setError(getString(R.string.error_empty_field));
-					validInputs = false;
-				} else et.setError(null);
-			}
+		    
+		    if (mEdit_grossWidth.getText().length() == 0) {
+                mEdit_grossWidth.setError(getString(R.string.error_empty_field));
+                validInputs = false;
+            }
+            if (mEdit_sheetWeight.getText().length() == 0) {
+                mEdit_sheetWeight.setError(getString(R.string.error_empty_field));
+                validInputs = false;
+            }
+    		if ((mEdit_novatecSetpoint.getText().length() == 0) && (mEdit_tenSecondLetdownGrams.getText().length() == 0)) {
+    		    mEdit_novatecSetpoint.setError(getString(R.string.error_need_at_least_one));
+    		    mEdit_tenSecondLetdownGrams.setError(getString(R.string.error_need_at_least_one));
+    		    validInputs = false;
+    		} 
+    		if ((mEdit_novatecSetpoint.getText().length() > 0) && 
+    		        (mEdit_tenSecondLetdownGrams.length() > 0) &&
+    		        (Double.valueOf(mEdit_novatecSetpoint.getText().toString()) > 0d)) {
+    		    mEdit_novatecSetpoint.setError(getString(R.string.error_need_only_one));
+    		    mEdit_tenSecondLetdownGrams.setError(getString(R.string.error_need_only_one));
+    		    validInputs = false;
+    		}
+			
 			if (validInputs) {
 				Double grossWidth = Double.valueOf(mEdit_grossWidth.getText().toString());
 				Double sheetWeight = Double.valueOf(mEdit_sheetWeight.getText().toString());
-				Double novaSetpoint = Double.valueOf(mEdit_novatecSetpoint.getText().toString());
+				Double novaSetpoint = 0d; 
+				if (mEdit_novatecSetpoint.getText().length() > 0) {
+				    novaSetpoint = Double.valueOf(mEdit_novatecSetpoint.getText().toString());
+				}
+				Double letdownGrams = 0d;
+				if (mEdit_tenSecondLetdownGrams.getText().length() > 0) {
+				    letdownGrams = Double.valueOf(mEdit_tenSecondLetdownGrams.getText().toString());
+				}
 				((MainActivity)getActivity()).hideKeyboard();
 				try {
-					((MainActivity)getActivity()).updateRatesData(grossWidth, sheetWeight, novaSetpoint);
+					((MainActivity)getActivity()).updateRatesData(grossWidth, sheetWeight, novaSetpoint, letdownGrams);
 				} catch (IllegalStateException e) {
 					String cause = e.getCause().getMessage();
 					if (cause.equals(PrimexModel.ERROR_NET_LESS_THAN_GROSS)) {
@@ -229,16 +257,24 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 			
 		} else if (propertyName == PrimexModel.COLOR_PERCENT_CHANGE_EVENT) {
 			double concPercent = (Double)newProperty;
-			if (concPercent <= 0) {
+			if (concPercent <= 0d) {
 				mTxt_colorPercent.setText("");
 			} else {
 				String concdisp = new DecimalFormat("#0.0").format(concPercent*100); //TODO use round instead?
 				concdisp += "%";
 				mTxt_colorPercent.setText(concdisp);	
 			}
-		} 
-		
-		else if (propertyName == PrimexModel.NOVATEC_CHANGE_EVENT) {
+			
+		} else if (propertyName == PrimexModel.TEN_SECOND_LETDOWN_CHANGE_EVENT) {
+		    double letdownGrams = (Double) newProperty;
+		    if (letdownGrams <= 0d) {
+		        mEdit_tenSecondLetdownGrams.setText("");
+		    } else {
+		        String gramsDisp = new DecimalFormat("#0.####").format(letdownGrams);
+		        mEdit_tenSecondLetdownGrams.setText(gramsDisp);
+		    }
+		    
+		} else if (propertyName == PrimexModel.NOVATEC_CHANGE_EVENT) {
 			Novatec n = (Novatec)newProperty;
 			SpannableStringBuilder labelSb = new SpannableStringBuilder(getString(R.string.label_novatec_setpoint));
 			if (n.getScrewSizeFactor() != 1) {

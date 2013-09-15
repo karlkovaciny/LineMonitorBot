@@ -92,7 +92,7 @@ public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<Main
                 mActivity.mModel.changeProduct(p);
                 mActivity.mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(testCase.mTotalItems);
                 mActivity.mModel.calculateTimes();
-                mActivity.mModel.calculateRates();
+                mActivity.mModel.calculateRates(0d);
             }
         });
         getInstrumentation().waitForIdleSync();
