@@ -27,6 +27,7 @@ final public class HelperFunction {
 	public static final long MINUTES_PER_HOUR = 60;
 	public static final long SECONDS_PER_MINUTE = 60;
 	public static final double INCHES_PER_FOOT = 12.0;
+	public static final double GRAMS_PER_POUND = 453.592;
 	
 	public static final double EPSILON = 0.0001; //for comparing doubles
 

@@ -45,6 +45,7 @@ public class PrimexModel {
 	public static final String NUMBER_OF_WEBS_CHANGE_EVENT = "PrimexModel.NUMBER_OF_WEBS_CHANGE";
 	public static final String GROSS_WIDTH_CHANGE_EVENT = "PrimexModel.GROSS_WIDTH_CHANGE"; //TODO not fired 
 	public static final String COLOR_PERCENT_CHANGE_EVENT = "PrimexModel.NOVATEC_LETDOWN_CHANGE"; 
+	public static final String TEN_SECOND_LETDOWN_CHANGE_EVENT = "PrimexModel.TEN_SECOND_LETDOWN_GRAMS_CHANGE"; 
 	public static final String EDGE_TRIM_RATIO_CHANGE_EVENT = "PrimexModel.EDGE_TRIM_PERCENT_CHANGE"; 
 	public static final String NOVATEC_CHANGE_EVENT = "PrimexModel.NOVATEC_CHANGE"; 
 	 
@@ -65,6 +66,7 @@ public class PrimexModel {
 	private PrimexSQLiteOpenHelper mDbHelper;
 	
 	private double mColorPercent;
+	private double mTenSecondLetdownGrams;
 	private Date mCreateDate;
 	private double mDifferentialSetpoint;
 	private double mEdgeTrimRatio;
@@ -147,6 +149,7 @@ public class PrimexModel {
             mNetPph = 0d;
             mGrossPph = 0d;
             mColorPercent= 0d;
+            mTenSecondLetdownGrams = 0d;
             setCurrentSpeed(mSelectedLine.getSpeedValues());
             mNumberOfTableSkids = 1;
 		} else {
@@ -173,6 +176,7 @@ public class PrimexModel {
 		propChangeSupport.firePropertyChange(NET_PPH_CHANGE_EVENT, null, getNetPph()); 
 		propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, null, getGrossPph()); 
 		propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, null, getColorPercent()); 
+		propChangeSupport.firePropertyChange(TEN_SECOND_LETDOWN_CHANGE_EVENT, null, getTenSecondLetdownGrams()); 
 		propChangeSupport.firePropertyChange(SELECTED_WO_CHANGE_EVENT, null, mSelectedWorkOrder);
 		propChangeSupport.firePropertyChange(NUMBER_OF_TABLE_SKIDS_CHANGE_EVENT, null, getNumberOfTableSkids());
 	}
@@ -330,6 +334,7 @@ public class PrimexModel {
 		    	mNetPph = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NET_PPH));
 		    	mGrossPph = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_GROSS_PPH));
 		    	mColorPercent= cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_COLOR_PERCENT));
+		    	mTenSecondLetdownGrams = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_TEN_SECOND_LETDOWN_GRAMS));
 		    	mLineSpeedSetpoint = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_LINE_SPEED_SETPOINT));
 		    	mDifferentialSetpoint = cursor.getDouble(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_DIFFERENTIAL_SETPOINT));
 		    	mNumberOfTableSkids = cursor.getInt(cursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_TABLE_SKIDS));
@@ -344,8 +349,10 @@ public class PrimexModel {
 	 * This function is called whenever relevant properties change.
 	 * TODO should not need to remember to call it before times.
 	 */
-	public void calculateRates() {
-		if (!hasSelectedProduct()) {
+	public void calculateRates(double tenSecondLetdownGrams) {
+		mTenSecondLetdownGrams = tenSecondLetdownGrams;
+		
+	    if (!hasSelectedProduct()) {
 			throw new IllegalStateException(new Throwable(ERROR_NO_PRODUCT_SELECTED));
 		}
 		
@@ -378,7 +385,14 @@ public class PrimexModel {
 				propChangeSupport.firePropertyChange(GROSS_PPH_CHANGE_EVENT, null, mGrossPph);
 				
 				if (mGrossPph > 0) {
-					mColorPercent =  mSelectedLine.getPrimaryNovatec().getFeedRate() / mGrossPph;
+				    double letdownLbsPerHour;
+				    if (tenSecondLetdownGrams > 0) {
+				        double gramsPerHour = tenSecondLetdownGrams * 6d * HelperFunction.MINUTES_PER_HOUR;
+				        letdownLbsPerHour = gramsPerHour / HelperFunction.GRAMS_PER_POUND;
+				    } else {
+				        letdownLbsPerHour =  mSelectedLine.getPrimaryNovatec().getFeedRate();
+				    }
+				    mColorPercent = letdownLbsPerHour / mGrossPph;
 					propChangeSupport.firePropertyChange(COLOR_PERCENT_CHANGE_EVENT, null, mColorPercent);
 				}
 
@@ -502,6 +516,10 @@ public class PrimexModel {
 			return mSelectedWorkOrder.hasProduct();	
 		} else return false;		
 	}
+	public boolean hasLineSpeed() {
+	    return ( (mSelectedLine.getSpeedValues().lineSpeedSetpoint > 0) && 
+	            (mSelectedLine.getSpeedValues().differentialSpeed > 0) ); 
+	}
 	public ProductionLine getSelectedLine() {
 		return mSelectedLine;
 	}
@@ -566,6 +584,14 @@ public class PrimexModel {
 		this.mGrossPph = grossPph;
 	}
 
+	public double getTenSecondLetdownGrams() {
+	    return mTenSecondLetdownGrams;
+	}
+	
+	public void setTenSecondLetdownGrams(double grams) {
+	    this.mTenSecondLetdownGrams = grams;
+	}
+	
 	public double getColorPercent() {
 		return mColorPercent;
 	}

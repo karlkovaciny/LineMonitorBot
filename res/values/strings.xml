@@ -72,6 +72,7 @@
 	<string name="btn_enter_product_text">Enter Product</string>
 	<string name="lbl_finished_height">Finished height\n<small>(highest spot)</small></string>
 	<string name="lbl_current_gauge">Current gauge\n<small>(highest reading)</small></string>
+	<string name="lbl_ten_second_letdown">10-second letdown\n<small>(grams)</small></string>
 	<string name="error_empty_field">Please enter a value</string>
 	<string name="error_need_nonzero">Value must be greater than zero</string>
 	<string name="error_net_less_than_gross">Gross width must be larger than sheet width</string>

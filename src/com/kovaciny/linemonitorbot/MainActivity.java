@@ -422,8 +422,6 @@ public class MainActivity extends FragmentActivity implements
 		
 		String eventName = event.getPropertyName();
 		Object newProperty = event.getNewValue();
-		String objectDescription = (newProperty == null) ? "null" : newProperty
-				.toString();
 		
 		if (eventName == PrimexModel.SELECTED_LINE_CHANGE_EVENT) {
 			CharSequence lineTitle = "Line "
@@ -479,7 +477,8 @@ public class MainActivity extends FragmentActivity implements
 				|| (eventName == PrimexModel.GROSS_PPH_CHANGE_EVENT)
 				|| (eventName == PrimexModel.GROSS_WIDTH_CHANGE_EVENT)
 				|| (eventName == PrimexModel.NOVATEC_CHANGE_EVENT)
-				|| (eventName == PrimexModel.COLOR_PERCENT_CHANGE_EVENT)) {
+				|| (eventName == PrimexModel.TEN_SECOND_LETDOWN_CHANGE_EVENT)
+		        || (eventName == PrimexModel.COLOR_PERCENT_CHANGE_EVENT)) {
 			ratesFrag.modelPropertyChange(event);
 		}
 	}
@@ -573,7 +572,7 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public void updateRatesData(Double grossWidth, Double unitWeight,
-			Double novaSetpoint) {
+			Double novaSetpoint, Double letdownGrams) {
 		mModel.getSelectedLine().setWebWidth(grossWidth);
 		mModel.getSelectedLine().getPrimaryNovatec()
 				.setSetpoint(novaSetpoint); // TODO ug...ly.
@@ -586,7 +585,7 @@ public class MainActivity extends FragmentActivity implements
 			mModel.changeProduct(p);
 		}
 		mModel.saveSelectedLine();
-		mModel.calculateRates();
+		mModel.calculateRates(letdownGrams);
 	}
 
 	@Override

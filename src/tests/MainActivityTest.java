@@ -144,7 +144,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
                 mActivity.mModel.changeProduct(p);
                 mActivity.mModel.getSelectedWorkOrder().getSelectedSkid().setTotalItems(testCase.mTotalItems);
                 mActivity.mModel.calculateTimes();
-                mActivity.mModel.calculateRates();
+                mActivity.mModel.calculateRates(0d);
             }
         });
         getInstrumentation().waitForIdleSync();

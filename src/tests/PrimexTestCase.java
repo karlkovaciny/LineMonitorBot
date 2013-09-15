@@ -23,6 +23,7 @@ public class PrimexTestCase {
     public double mWidth;
     public double mLength;
     public double mUnitWeight;
+    public double mLetdownGrams = 0;
     public int mTotalItems;
     public Product mProduct;
     public WorkOrder mWorkOrder;
@@ -35,7 +36,7 @@ public class PrimexTestCase {
         switch(caseNumber) {
             case JOMA_ROLLS:
                 mLineNumber = 9;
-                mSheetsPerMinute = 58.46;
+                mSheetsPerMinute = 58.46; //note this gives inconsistent gross than the line speed, differential, and unit weight
                 mRollDiameter = 35.1875;
                 mCoreDiameter = 6d;
                 mLinearFeet = 2950;
@@ -49,6 +50,7 @@ public class PrimexTestCase {
                 mLength = 12d;
                 mUnitWeight = .288; //semi made up
                 mTotalItems = 2950;
+                mLetdownGrams = 45; //made up
                 mProduct = Products.makeProduct(mProductType, mGauge, mWidth, mLength);
                 mWorkOrder = new WorkOrder(1);
                 for (int i = 0; i < 3; i++) {

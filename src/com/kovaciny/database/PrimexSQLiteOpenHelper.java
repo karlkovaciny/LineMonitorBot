@@ -33,7 +33,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 154;
+    public static final int DATABASE_VERSION = 155;
     public static final String DATABASE_NAME = "Primex.db";
     
     public static final int DEFAULT_INITIAL_LINE_ID = 7;
@@ -54,6 +54,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_NET_PPH + DOUBLE_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_GROSS_PPH + DOUBLE_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_COLOR_PERCENT + DOUBLE_TYPE + COMMA_SEP +
+					PrimexDatabaseSchema.ModelState.COLUMN_NAME_TEN_SECOND_LETDOWN_GRAMS + DOUBLE_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_LINE_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_DIFFERENTIAL_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.ModelState.COLUMN_NAME_PRODUCTS_PER_MINUTE + DOUBLE_TYPE + COMMA_SEP +
@@ -443,6 +444,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     	ContentValues values = new ContentValues();
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, model.getSelectedWorkOrder().getWoNumber());
     	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_COLOR_PERCENT, model.getColorPercent());
+    	values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_TEN_SECOND_LETDOWN_GRAMS, model.getTenSecondLetdownGrams());
     	if (model.getCreateDate() != null) {
     		values.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE, model.getCreateDate().getTime());
     	} 
