@@ -196,11 +196,15 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 		      
 		        //Set button text to display product dimensions
                 if (p.getUnits().equals("sheets") || p.getUnits().equals("cuts")) {
+                    //Round dimensions to the nearest 1/64
+                    double roundedWidth = Math.round( p.getWidth() / p.getNumberOfWebs() * 64d ) / 64d;
+                    double roundedLength = Math.round( p.getLength() * 64d ) / 64d;
+                    
                     SpannableStringBuilder productDimensions = new SpannableStringBuilder();
                     productDimensions
-                         .append(HelperFunction.formatDecimalAsProperFraction( p.getWidth()/p.getNumberOfWebs() ))
+                         .append(HelperFunction.formatDecimalAsProperFraction(roundedWidth))
                         .append(" x ")
-                        .append(HelperFunction.formatDecimalAsProperFraction(p.getLength()));
+                        .append(HelperFunction.formatDecimalAsProperFraction(roundedLength));
                     mBtn_enterProduct.setText(productDimensions);
                     mBtn_enterProduct.getBackground().clearColorFilter();
                     mBtn_enterProduct.setTextAppearance(getActivity(), R.style.Button_Minor);
