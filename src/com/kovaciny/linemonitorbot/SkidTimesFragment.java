@@ -55,6 +55,7 @@ public class SkidTimesFragment extends Fragment implements
 	private ImageButton mImgBtn_cancelAlarm;
 	private Button mBtn_calculateTimes;
 	private Button mBtn_goByHeight;
+	private Button mBtn_rollMath;
 	private ImageButton mBtn_skidNumberUp;
 	private ImageButton mBtn_totalSkidsUp;
 	
@@ -151,6 +152,9 @@ public class SkidTimesFragment extends Fragment implements
 		mBtn_goByHeight = (Button) rootView.findViewById(R.id.btn_go_by_height);
 		mBtn_goByHeight.setOnClickListener(this);
 		
+		mBtn_rollMath = (Button) rootView.findViewById(R.id.btn_roll_math);
+        mBtn_rollMath.setOnClickListener(this);
+		
 		//set up textViews
 		mLbl_productType = (TextView) rootView.findViewById(R.id.lbl_product_type);
 		mTxt_timePerSkid = (TextView) rootView.findViewById(R.id.txt_time_per_skid);		
@@ -234,6 +238,10 @@ public class SkidTimesFragment extends Fragment implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case (R.id.btn_roll_math):
+		    Intent rollMathIntent = new Intent(getActivity(), RollMathActivity.class);
+		    getActivity().startActivity(rollMathIntent);
+		    break;
 		case (R.id.btn_skid_number_up):
 			((MainActivity)getActivity()).hideKeyboard();
 			HelperFunction.incrementEditText(mEdit_currentSkidNumber);
@@ -413,6 +421,7 @@ public class SkidTimesFragment extends Fragment implements
 			    mProductUnits = DEFAULT_PRODUCT_UNITS;
 			    mProductGrouping = DEFAULT_PRODUCT_GROUPING;
 			    mBtn_goByHeight.setVisibility(Button.GONE);
+			    mBtn_rollMath.setVisibility(Button.GONE);
 			    mBtn_calculateTimes.setEnabled(false);
 			    mBtn_enterProduct.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
 			    mBtn_enterProduct.setTextAppearance(getActivity(), R.style.Button);
@@ -421,8 +430,13 @@ public class SkidTimesFragment extends Fragment implements
 			    Product p = (Product)newProperty;
 			    mProductUnits = HelperFunction.capitalizeFirstChar(p.getUnits());
 			    mProductGrouping = HelperFunction.capitalizeFirstChar(p.getGrouping());
-			    if (p.hasStacks()) mBtn_goByHeight.setVisibility(Button.VISIBLE);
-			    else mBtn_goByHeight.setVisibility(Button.GONE);
+			    if (p.hasStacks()) {
+			        mBtn_goByHeight.setVisibility(Button.VISIBLE);
+			        mBtn_rollMath.setVisibility(Button.GONE);
+			    } else {
+			        mBtn_goByHeight.setVisibility(Button.GONE);
+			        mBtn_rollMath.setVisibility(Button.VISIBLE);
+			    }
 			    mBtn_calculateTimes.setEnabled(true);
 			    mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
 			    
