@@ -158,6 +158,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/textView124"
                 android:layout_toRightOf="@+id/edit_num_skids_in_job"
+                android:layout_marginLeft="@dimen/btn_go_by_height_margin"
                 android:visibility="gone"
                 android:text="Roll math" />
             

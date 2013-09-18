@@ -29,7 +29,7 @@
                 <TextView
                     android:id="@+id/lbl_gross_width"
                     style="@style/Label.TwoColumns"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:text="Gross width" />
 
                 <TextView
@@ -118,8 +118,8 @@
                         style="@style/Label"
                         android:gravity="center_vertical"
                         android:minHeight="@dimen/label_row_height"
-                        android:paddingLeft="6px"
-                        android:paddingRight="4px"
+                        android:paddingLeft="6dp"
+                        android:paddingRight="4dp"
                         android:text="/" />
 
                     <TextView
