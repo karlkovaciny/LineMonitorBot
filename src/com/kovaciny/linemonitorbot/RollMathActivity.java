@@ -1,7 +1,5 @@
 package com.kovaciny.linemonitorbot;
 
-import java.util.Locale;
-
 import android.app.ActionBar;
 import android.app.ActionBar.TabListener;
 import android.app.FragmentTransaction;
@@ -11,12 +9,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 public class RollMathActivity extends FragmentActivity implements TabListener {
 
+    int mCoreType;
+    int mLinearFeet;
+    
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -34,8 +32,13 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
     public ViewPager mViewPager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle args) {
+        super.onCreate(args);
+        
+        Bundle extras = getIntent().getExtras();
+        mCoreType = extras.getInt("coreType");
+        mLinearFeet = extras.getInt("linearFeet");
+        
         setContentView(R.layout.activity_roll_math);
 
         // Set up the action bar.
@@ -102,8 +105,11 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             Fragment fragment = null;
+            Bundle args = new Bundle();
             switch(position) {
-                case (0): fragment = new FloatingToolbarFragment();
+                case (0): fragment = new RollMathDiameterFragment();
+                args.putInt("coreType", mCoreType);
+                args.putInt("linearFeet", mLinearFeet);
                 break;
                 
                 case (1): fragment = new FloatingToolbarFragment();
@@ -113,8 +119,7 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
                 break;
             }
           
-//            Bundle args = new Bundle();
-//            fragment.setArguments(args);
+            fragment.setArguments(args);
             return fragment;
         }
 
@@ -122,20 +127,6 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
         public int getCount() {
             // Show 3 total pages.
             return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            Locale l = Locale.getDefault();
-            switch (position) {
-                case 0:
-                    return getString(R.string.title_fragment_draining).toUpperCase(l);
-                case 1:
-                    return getString(R.string.title_fragment_weight).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_fragment_linear_feet).toUpperCase(l);
-            }
-            return null;
         }
 
         public int getPageLabel(int position) {

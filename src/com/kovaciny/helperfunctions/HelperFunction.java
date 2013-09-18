@@ -75,8 +75,14 @@ final public class HelperFunction {
 		return capitalized.toString();
 	}
 	
-	public static Spannable formatDecimalAsProperFraction(double decimal) {
-		Fraction fraction = Fraction.getFraction(decimal);
+	public static Spannable formatDecimalAsProperFraction(double decimal, double maxDenominator) {
+	    Fraction fraction;
+	    if (maxDenominator == 0){
+	        fraction = Fraction.getFraction(decimal);
+	    } else {
+	        double roundedDecimal = Math.round(decimal * maxDenominator) / maxDenominator;
+	        fraction = Fraction.getFraction(roundedDecimal);
+	    }
 		String whole = String.valueOf(fraction.getProperWhole());
 		if (fraction.getProperNumerator() == 0) return new SpannableString(whole);
 		

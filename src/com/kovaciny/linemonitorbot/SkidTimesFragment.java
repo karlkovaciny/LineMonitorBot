@@ -22,9 +22,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.RelativeSizeSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +45,7 @@ import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Skid;
+import com.kovaciny.primexmodel.Roll;
 import com.kovaciny.primexmodel.WorkOrder;
 
 public class SkidTimesFragment extends Fragment implements
@@ -153,7 +152,7 @@ public class SkidTimesFragment extends Fragment implements
 		mBtn_goByHeight.setOnClickListener(this);
 		
 		mBtn_rollMath = (Button) rootView.findViewById(R.id.btn_roll_math);
-        mBtn_rollMath.setOnClickListener(this);
+        mBtn_rollMath.setOnClickListener((MainActivity)getActivity());
 		
 		//set up textViews
 		mLbl_productType = (TextView) rootView.findViewById(R.id.lbl_product_type);
@@ -238,10 +237,6 @@ public class SkidTimesFragment extends Fragment implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case (R.id.btn_roll_math):
-		    Intent rollMathIntent = new Intent(getActivity(), RollMathActivity.class);
-		    getActivity().startActivity(rollMathIntent);
-		    break;
 		case (R.id.btn_skid_number_up):
 			((MainActivity)getActivity()).hideKeyboard();
 			HelperFunction.incrementEditText(mEdit_currentSkidNumber);
@@ -441,24 +436,23 @@ public class SkidTimesFragment extends Fragment implements
 			    mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
 			    
 			    //Set button text to display product dimensions
+			    SpannableStringBuilder productDimensions = new SpannableStringBuilder();
 			    if (p.getUnits().equals("sheets") || p.getUnits().equals("cuts")) {
-			        //Round dimensions to the nearest 1/64
-			        double roundedWidth = Math.round( p.getWidth() / p.getNumberOfWebs() * 64d ) / 64d;
-			        double roundedLength = Math.round( p.getLength() * 64d ) / 64d;
-
-			        SpannableStringBuilder productDimensions = new SpannableStringBuilder();
 			        productDimensions
-			             .append(HelperFunction.formatDecimalAsProperFraction( roundedWidth ))
+			             .append(HelperFunction.formatDecimalAsProperFraction( p.getWidth() / p.getNumberOfWebs(), 64d))
 			            .append(" x ")
-			            .append(HelperFunction.formatDecimalAsProperFraction(roundedLength));
-			        mBtn_enterProduct.setText(productDimensions);
-			        mBtn_enterProduct.getBackground().clearColorFilter();
-			        mBtn_enterProduct.setTextAppearance(getActivity(), R.style.Button_Minor);
-			    } else { //TODO it should work for R3 and R6 too, reset the button for now
-			        mBtn_enterProduct.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
-	                mBtn_enterProduct.setTextAppearance(getActivity(), R.style.Button);
-	                mBtn_enterProduct.setText(getString(R.string.btn_enter_product_text));
+			            .append(HelperFunction.formatDecimalAsProperFraction(p.getLength(), 64d));
+			    } else if (p instanceof Roll) { 
+			        Roll pRoll = (Roll) p;
+			        String coreDescription = Roll.coreTypeToDescriptionMap.get(((Roll) p).getCoreType());
+			        productDimensions
+			            .append(HelperFunction.formatDecimalAsProperFraction( p.getWidth() / p.getNumberOfWebs(), 64d))
+			            .append(" x ")
+			            .append(coreDescription);
 			    }
+			    mBtn_enterProduct.setText(productDimensions);
+                mBtn_enterProduct.getBackground().clearColorFilter();
+                mBtn_enterProduct.setTextAppearance(getActivity(), R.style.Button_Minor);
 			}
 			updateLabels();
 			
