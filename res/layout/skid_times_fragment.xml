@@ -148,7 +148,18 @@
                 android:layout_marginLeft="@dimen/btn_go_by_height_margin"
                 android:drawableLeft="@drawable/ic_ruler"
                 android:drawablePadding="10dp"
+                android:visibility="gone"
                 android:text="@string/btn_go_by_height_text" />
+            
+            <Button
+                android:id="@+id/btn_roll_math"
+                style="@style/Button.Minor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/textView124"
+                android:layout_toRightOf="@+id/edit_num_skids_in_job"
+                android:visibility="gone"
+                android:text="Roll math" />
             
         </RelativeLayout>
     </LinearLayout>

@@ -2,19 +2,26 @@
 <resources>
 
     <string name="app_name">LineMonitorBot</string>
-    <string name="settings_activity_name">Settings</string>
     <string name="database_viewer_activity_name">Database Viewer</string>
+    <string name="roll_math_activity_name">Roll Math</string>
     <string name="select_line_activity_name">LineMonitorBot</string>
+    <string name="settings_activity_name">Settings</string>
     <string name="tips_activity_name">LineMonitorBot Tips</string>
-    <string name="action_settings">Settings</string>
+    
     <string name="title_fragment_skid_times">Skid Times</string>
     <string name="title_fragment_rates">Rates</string>
     <string name="title_fragment_draining">Draining</string>
     <string name="title_fragment_calculator_button">Calculator</string>
+    <string name="title_fragment_diameter">Diameter</string>
+    <string name="title_fragment_weight">Weight</string>
+    <string name="title_fragment_linear_feet">Linear Feet</string>
+    
     <string name="action_pick_line_title">Pick Line</string>
     <string name="action_pick_job_title">Pick Job</string>
+    <string name="action_settings">Settings</string>
     <string name="action_view_database_title">View Database</string>
     <string name="action_tips_and_apps_title">Tips and Apps</string>
+    
     <string-array name="line_list">
         <item >Line 42</item>    
     </string-array>
