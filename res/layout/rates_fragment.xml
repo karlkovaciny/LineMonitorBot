@@ -29,6 +29,7 @@
                 <TextView
                     android:id="@+id/lbl_gross_width"
                     style="@style/Label.TwoColumns"
+                    android:gravity="center_vertical"
                     android:text="Gross width" />
 
                 <TextView
@@ -97,7 +98,8 @@
                         android:id="@+id/edit_sheet_weight"
                         style="@style/EditText.TwoColumns"
                         android:ems="3"
-                        android:imeOptions="actionDone"
+                        android:imeOptions="actionNext"
+                        android:gravity="center_vertical"
                         android:inputType="numberDecimal"
                         android:maxLength="5"
                         android:text="@string/default_sheet_weight" >
