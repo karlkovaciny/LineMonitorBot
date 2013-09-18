@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -44,7 +45,7 @@ import com.kovaciny.primexmodel.WorkOrder;
 public class MainActivity extends FragmentActivity implements
 		ActionBar.TabListener, PropertyChangeListener,
 		EnterProductDialogFragment.EnterProductDialogListener,
-		GoByHeightDialogListener {
+		GoByHeightDialogListener, View.OnClickListener {
     
     public static final boolean DEBUG = true;
 
@@ -372,9 +373,8 @@ public class MainActivity extends FragmentActivity implements
     		}
 
     		mModel.changeSelectedSkid(currentSkid.getSkidNumber()); //to trigger events
-			double roundedHeight = Math.round(totalHeight*16d) / 16d; //round to the nearest 1/16
-    		Spannable heightAsFraction = new SpannableStringBuilder(
-    				HelperFunction.formatDecimalAsProperFraction(roundedHeight)).append("\"");
+			Spannable heightAsFraction = new SpannableStringBuilder(
+    				HelperFunction.formatDecimalAsProperFraction(totalHeight, 16d)).append("\"");
     		View heightButton = this.findViewById(R.id.btn_go_by_height);
     		if (heightButton != null) ((Button) heightButton).setText(heightAsFraction);    		
     	}
@@ -413,7 +413,26 @@ public class MainActivity extends FragmentActivity implements
     		updateProductData(productType, gauge, width, length, epd.getNumberOfWebs(), epd.getCoreTypeSelection());
     	}
     }
-	/*
+	@Override
+    public void onClick(View v) {
+	    switch (v.getId()) {
+	        case (R.id.btn_roll_math):
+	            Intent rollMathIntent = new Intent(this, RollMathActivity.class);
+
+	            Roll roll = (Roll) mModel.getSelectedWorkOrder().getProduct();
+	            rollMathIntent.putExtra("coreType", roll.getCoreType());
+	            
+	            EditText editFeet = (EditText) this.findViewById(R.id.edit_total_sheets_per_skid);
+	            if (editFeet.getText().length() > 0) {
+	                rollMathIntent.putExtra("linearFeet", Integer.valueOf(editFeet.getText().toString()));
+	            }
+	            
+	            startActivity(rollMathIntent);
+	            break;
+	    }
+    }
+
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.

@@ -1,5 +1,9 @@
 package com.kovaciny.primexmodel;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Roll implements Product {
 	private double mLinearFootWeight = 0;
 	private int mLinearFeet = 0;
@@ -17,8 +21,28 @@ public class Roll implements Product {
 	public static final int CORE_TYPE_R8 = 8;
 	public static final int CORE_TYPE_R3_HEAVY = 4;
 	public static final int CORE_TYPE_R6_HEAVY = 7;
-	public static final int CORE_TYPE_R8_HEAVY = 9;
 	
+	public static final Map<Integer, Double> coreTypeToOutsideDiameterMap;
+	static {
+	    Map<Integer, Double> aMap = new HashMap<Integer, Double>();
+	    aMap.put(CORE_TYPE_R3, 3.5);
+	    aMap.put(CORE_TYPE_R6, 6.75);
+	    aMap.put(CORE_TYPE_R8, 0d);
+	    aMap.put(CORE_TYPE_R3_HEAVY, 4d);
+	    aMap.put(CORE_TYPE_R6_HEAVY, 7d);
+	    coreTypeToOutsideDiameterMap = Collections.unmodifiableMap(aMap);
+	}
+	
+	public static final Map<Integer, String> coreTypeToDescriptionMap;
+    static {
+        Map<Integer, String> anotherMap = new HashMap<Integer, String>();
+        anotherMap.put(CORE_TYPE_R3, "R3");
+        anotherMap.put(CORE_TYPE_R6, "R6");
+        anotherMap.put(CORE_TYPE_R8, "R8");
+        anotherMap.put(CORE_TYPE_R3_HEAVY, "R3");
+        anotherMap.put(CORE_TYPE_R6_HEAVY, "R6");
+        coreTypeToDescriptionMap = Collections.unmodifiableMap(anotherMap);
+    }
 	/*
 	 * 
 	 */

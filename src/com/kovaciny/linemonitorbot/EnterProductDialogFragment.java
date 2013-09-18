@@ -379,7 +379,6 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 	            mRadio_r6.setChecked(true);
 	            break;
 	        case Roll.CORE_TYPE_R8:
-	        case Roll.CORE_TYPE_R8_HEAVY:
 	            mRadio_r8.setChecked(true);
 	            break;
 	        default:
