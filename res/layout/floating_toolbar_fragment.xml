@@ -29,6 +29,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_calculator" />
+        
+        <ImageButton
+            android:id="@+id/btn_pomodroido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/ic_pomodroido" />
         </LinearLayout>
     </LinearLayout>
 

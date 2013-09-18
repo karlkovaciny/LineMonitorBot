@@ -15,11 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import static com.kovaciny.linemonitorbot.MainActivity.DEBUG;
 
 public class FloatingToolbarFragment extends Fragment implements View.OnClickListener {
 
     private ImageButton mImgBtn_calculator;
     private ImageButton mImgBtn_flashlight;
+    private ImageButton mImgBtn_pomodroido;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,6 +35,12 @@ public class FloatingToolbarFragment extends Fragment implements View.OnClickLis
         mImgBtn_flashlight = (ImageButton) rootView.findViewById(R.id.btn_flashlight);
         mImgBtn_flashlight.setOnClickListener(this);        
 
+        if (DEBUG) {
+            mImgBtn_pomodroido = (ImageButton) rootView.findViewById(R.id.btn_pomodroido);
+            mImgBtn_pomodroido.setOnClickListener(this);
+            mImgBtn_pomodroido.setVisibility(ImageButton.VISIBLE);
+        }
+        
         return rootView;
     }
 
@@ -48,6 +56,9 @@ public class FloatingToolbarFragment extends Fragment implements View.OnClickLis
                 if (!launchAppByName("flashlight", "", "flashlight", "com.devuni.flashlight")) {
                     Toast.makeText(getActivity(), "No flashlight app found. Try downloading the suggested flashlight app from the tips page.", Toast.LENGTH_LONG).show();
                 }
+                break;
+            case (R.id.btn_pomodroido):
+                launchAppByName("pomodroido", "net.artifix.pomodroido", "pomodroido", "net.artifix.pomodroido.free");
                 break;
             default:
         }
