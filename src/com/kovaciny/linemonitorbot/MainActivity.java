@@ -34,6 +34,7 @@ import com.kovaciny.linemonitorbot.GoByHeightDialogFragment.GoByHeightDialogList
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Products;
+import com.kovaciny.primexmodel.Roll;
 import com.kovaciny.primexmodel.Rollset;
 import com.kovaciny.primexmodel.Sheetset;
 import com.kovaciny.primexmodel.Skid;
@@ -312,6 +313,10 @@ public class MainActivity extends FragmentActivity implements
 			args.putString("ProductType", currentProd.getType());
 			args.putInt("NumberOfWebs", currentProd.getNumberOfWebs());
 		}
+		
+		if (currentProd instanceof Roll) {
+		    args.putInt("CoreType", ((Roll)currentProd).getCoreType());
+		}
 		newFragment.setArguments(args);
 		newFragment.show(this.getFragmentManager(), "EnterProductDialog");
 		return args; // for unit testing
@@ -388,7 +393,8 @@ public class MainActivity extends FragmentActivity implements
     		updateSpeedData(lineSpeed, diffSpeed, speedFactor);
     		String productType;
     		if (epd.getSheetsOrRollsState().equals(EnterProductDialogFragment.ROLLS_MODE)) {
-    			if (epd.getNumberOfWebs() == 1) {
+    			
+    		    if (epd.getNumberOfWebs() == 1) {
     				productType = Product.ROLLS_TYPE;
     			} else {
     				productType = Product.ROLLSET_TYPE;
@@ -404,7 +410,7 @@ public class MainActivity extends FragmentActivity implements
     				}
     			}
     		}
-    		updateProductData(productType, gauge, width, length, epd.getNumberOfWebs());
+    		updateProductData(productType, gauge, width, length, epd.getNumberOfWebs(), epd.getCoreTypeSelection());
     	}
     }
 	/*
@@ -546,11 +552,26 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	protected void updateProductData(String productType, double gauge,
-			double width, double length, int numberOfWebs) {
+			double width, double length, int numberOfWebs, int coreTypeSelection) {
 		Product p;
 		try {
 			p = Products.makeProduct(productType, gauge, width, length,
 					numberOfWebs);
+			if (p instanceof Roll) {
+                Roll pRoll = (Roll) p;
+			    switch (coreTypeSelection) {
+			        case R.id.radio_r3:
+			            pRoll.setCoreType(Roll.CORE_TYPE_R3);
+			            break;
+			        case R.id.radio_r6:
+			            pRoll.setCoreType(Roll.CORE_TYPE_R6);
+			            break;
+			        case R.id.radio_r8:
+			            pRoll.setCoreType(Roll.CORE_TYPE_R8);
+			            break;
+			    }
+			}
+			
 			Product oldProduct = mModel.getSelectedWorkOrder().getProduct();
 			if (oldProduct != null) {
 				p.setUnitWeight(oldProduct.getUnitWeight()

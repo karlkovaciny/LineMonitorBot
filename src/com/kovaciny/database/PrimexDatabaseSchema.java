@@ -69,6 +69,7 @@ public class PrimexDatabaseSchema {
 		public static final String COLUMN_NAME_WO_NUMBER = "wo_number";
 		public static final String COLUMN_NAME_UNIT_WEIGHT = "unit_weight";
 		public static final String COLUMN_NAME_NUMBER_OF_WEBS = "number_of_webs";
+		public static final String COLUMN_NAME_CORE_TYPE = "core_type";
 	}
 	
 	public static abstract class Hoppers implements BaseColumns {

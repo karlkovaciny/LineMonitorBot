@@ -6,23 +6,30 @@ public class Roll implements Product {
 	private double mGauge; //sheet thickness in inches
 	private double mAverageGauge;
 	private double mWidth; //traverse direction in inches
-	private double mLength = 12d; //one linear foot
 	private double mDensity;
 	private static final String mUnitSingular = "foot";
 	private static final String mUnitPlural = "feet";
 	private static final String mGrouping = "roll";
-	public int mLineNumber;
+	private int mCoreType;
+	
+	public static final int CORE_TYPE_R3 = 3;
+	public static final int CORE_TYPE_R6 = 6;
+	public static final int CORE_TYPE_R8 = 8;
+	public static final int CORE_TYPE_R3_HEAVY = 4;
+	public static final int CORE_TYPE_R6_HEAVY = 7;
+	public static final int CORE_TYPE_R8_HEAVY = 9;
 	
 	/*
 	 * 
 	 */
-	public Roll(double gauge, double width, int linearFeet) {
+	public Roll(double gauge, double width, int linearFeet, int coreType) {
 		if ( (gauge < 0 || width < 0) ) {
 			throw new IllegalArgumentException("invalid dimensions");
 		}
 		mGauge = gauge;
 		mWidth = width;
 		mLinearFeet = linearFeet;
+		mCoreType = coreType; 
 		mDensity = .0375d;
 	}
 		
@@ -93,6 +100,12 @@ public class Roll implements Product {
 	}
 	public int getNumberOfWebs() {
 		return 1;
+	}
+	public int getCoreType() {
+	    return mCoreType;
+	}
+	public void setCoreType(int coreType){
+	    mCoreType = coreType;
 	}
 	public String getUnit() {
 		return mUnitSingular;
