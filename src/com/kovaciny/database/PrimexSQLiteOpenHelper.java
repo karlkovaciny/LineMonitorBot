@@ -22,6 +22,7 @@ import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.ProductionLine;
 import com.kovaciny.primexmodel.Products;
+import com.kovaciny.primexmodel.Roll;
 import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.SpeedValues;
 import com.kovaciny.primexmodel.WorkOrder;
@@ -33,7 +34,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 156;
+    public static final int DATABASE_VERSION = 157;
     public static final String DATABASE_NAME = "Primex.db";
     
     public static final int DEFAULT_INITIAL_LINE_ID = 7;
@@ -112,6 +113,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 					PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + INTEGER_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.Products.COLUMN_NAME_UNIT_WEIGHT + REAL_TYPE + COMMA_SEP +
 					PrimexDatabaseSchema.Products.COLUMN_NAME_NUMBER_OF_WEBS + INTEGER_TYPE + COMMA_SEP +					
+					PrimexDatabaseSchema.Products.COLUMN_NAME_CORE_TYPE + INTEGER_TYPE + COMMA_SEP +					
 					" UNIQUE ("  + PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + ")" +
 					" )";
 
@@ -960,6 +962,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER, otherForeign);
 		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_UNIT_WEIGHT, newProduct.getUnitWeight());
 		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_NUMBER_OF_WEBS, newProduct.getNumberOfWebs());
+		if (newProduct instanceof Roll) {
+		    values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_CORE_TYPE, ((Roll) newProduct).getCoreType());
+		}
     	
 		long rowId = db.insertWithOnConflict(
 				PrimexDatabaseSchema.Products.TABLE_NAME, 
@@ -1007,7 +1012,11 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				if (type.equals(Product.ROLLSET_TYPE) || type.equals(Product.SHEETSET_TYPE)) {
 					width /= numberOfWebs;
 				}
+				int coreType = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_CORE_TYPE));
 				p = Products.makeProduct(type, gauge, width, length, numberOfWebs);
+				if (p instanceof Roll) {
+				    ((Roll) p).setCoreType(coreType);
+				}
 				double unitWeight = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Products.COLUMN_NAME_UNIT_WEIGHT));
 				p.setUnitWeight(unitWeight);
 			} else {

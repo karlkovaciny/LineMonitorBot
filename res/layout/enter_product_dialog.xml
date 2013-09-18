@@ -85,12 +85,32 @@
                 android:src="@drawable/ic_plus" />
             
         </LinearLayout>
+	
+    <RadioGroup
+        android:id="@+id/radio_group_core_size" 
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:visibility="gone" >
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal" >
-        </RelativeLayout>
+    <RadioButton
+        android:id="@+id/radio_r3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="R3&#160;&#160;" />
+	
+        <RadioButton
+        android:id="@+id/radio_r6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="R6&#160;&#160;" />
+        
+        <RadioButton
+        android:id="@+id/radio_r8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="R8" />
+</RadioGroup>
     </LinearLayout>
 
     <TableLayout

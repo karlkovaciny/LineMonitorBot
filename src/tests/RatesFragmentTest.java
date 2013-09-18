@@ -44,7 +44,7 @@ public class RatesFragmentTest extends
 	    
 	    mEdit_sheetWeight = (EditText) mActivity.findViewById(R.id.edit_sheet_weight);
 
-		Product oldProduct = new Roll(.020, 55d, 1000);
+		Product oldProduct = new Roll(.020, 55d, 1000, Roll.CORE_TYPE_R3);
 		Product newProduct = new Sheet(.010, 40d, 28d);
 		newProduct.setUnitWeight(1.0015); //testing round up
 		oldProduct.setUnitWeight(0.990);

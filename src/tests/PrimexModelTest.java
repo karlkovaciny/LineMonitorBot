@@ -11,6 +11,7 @@ import com.kovaciny.linemonitorbot.MainActivity;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Products;
+import com.kovaciny.primexmodel.Roll;
 import com.kovaciny.primexmodel.Rollset;
 import com.kovaciny.primexmodel.Sheet;
 import com.kovaciny.primexmodel.Sheetset;
@@ -90,7 +91,7 @@ public class PrimexModelTest extends ActivityInstrumentationTestCase2<MainActivi
 				// no asserts allowed in here! junit.framework.AssertionFailedError.
 				mModel.setSelectedLine(6);
 				mModel.getSelectedLine().setWebWidth(36d);
-				Product p = new Rollset(.012, 31.25, 12, 2); //twice the width of one web
+				Product p = new Rollset(.012, 31.25, 12, 2, Roll.CORE_TYPE_R3); //twice the width of one web
 				p.setUnitWeight(.214); //twice the weight of one linear foot
 				mModel.setCurrentSpeed(new SpeedValues(1331,.660,.07775));
 				mModel.changeProduct(p);

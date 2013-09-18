@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.ProductionLine;
+import com.kovaciny.primexmodel.Roll;
 
 public class EnterProductDialogFragment extends DialogFragment implements OnClickListener {
 
@@ -63,9 +64,15 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
   	TextView mLbl_differentialSpeed;
   	TextView mLbl_reminderNoDifferentialSpeed;
   	ImageButton mImgbtnSheetsOrRolls;
+
   	RadioGroup mRadioGroup_skidsOnTable;
-  	RadioButton mRadioButton_oneSkid;
-  	RadioButton mRadioButton_twoSkids;
+  	RadioButton mRadio_oneSkid;
+  	RadioButton mRadio_twoSkids;
+  	
+  	RadioGroup mRadioGroup_coreSize;
+  	RadioButton mRadio_r3;
+  	RadioButton mRadio_r6;
+  	RadioButton mRadio_r8;
   	private String mSheetsOrRollsState;
   	private String mSpeedControllerType = ProductionLine.SPEED_CONTROLLER_TYPE_NONE;
   	private Double mDifferentialRangeLow;
@@ -105,10 +112,15 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 		mContainerSkidsOnTable = (LinearLayout) inflater.inflate(R.layout.container_skids_on_table, null);
 		
 		mContainerProductDetails = (LinearLayout) rootView.findViewById(R.id.container_product_details);
-		mRadioGroup_skidsOnTable = (RadioGroup) mContainerSkidsOnTable.findViewById(R.id.radio_group_skids_on_table);
 		
-		mRadioButton_oneSkid = (RadioButton) mContainerSkidsOnTable.findViewById(R.id.radio_one_skid);
-		mRadioButton_twoSkids = (RadioButton) mContainerSkidsOnTable.findViewById(R.id.radio_two_skids);
+		mRadioGroup_skidsOnTable = (RadioGroup) mContainerSkidsOnTable.findViewById(R.id.radio_group_skids_on_table);
+		mRadio_oneSkid = (RadioButton) mContainerSkidsOnTable.findViewById(R.id.radio_one_skid);
+		mRadio_twoSkids = (RadioButton) mContainerSkidsOnTable.findViewById(R.id.radio_two_skids);
+		
+		mRadioGroup_coreSize = (RadioGroup) mContainerProductDetails.findViewById(R.id.radio_group_core_size);
+		mRadio_r3 = (RadioButton) mContainerProductDetails.findViewById(R.id.radio_r3);
+		mRadio_r6 = (RadioButton) mContainerProductDetails.findViewById(R.id.radio_r6);
+		mRadio_r8 = (RadioButton) mContainerProductDetails.findViewById(R.id.radio_r8);
 		
 		mBtn_addWeb = (ImageButton) rootView.findViewById(R.id.btn_add_web);
 		mBtn_addWeb.setOnClickListener(this);
@@ -146,6 +158,7 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 			mNumberOfWebs = getArguments().getInt("NumberOfWebs", 1);
 			int numberOfSkids = getArguments().getInt("NumberOfSkids", 0);
 			double factor = getArguments().getDouble("SpeedFactor", 0d);
+			int coreType = getArguments().getInt("CoreType", 0);
 			String prodtype = getArguments().getString("ProductType");
 			if (prodtype == null) {
 				prodtype = settings.getString("savedMode", "");
@@ -172,18 +185,24 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 			}
 			
 			if (factor > 0) mEdit_speedFactor.setText(String.valueOf(factor));
+			if (coreType > 0) {
+			    setCoreType(coreType);
+			}
 			setSheetsOrRollsState(prodtype);
 
 			setNumberOfWebs(mNumberOfWebs);
 			
-			if (numberOfSkids == 1) mRadioButton_oneSkid.setChecked(true);
-			if (numberOfSkids == 2) mRadioButton_twoSkids.setChecked(true);
+			if (numberOfSkids == 1) mRadio_oneSkid.setChecked(true);
+			if (numberOfSkids == 2) mRadio_twoSkids.setChecked(true);
 			
 			if (!MainActivity.DEBUG) {
 				mLbl_speedFactor.setVisibility(TextView.GONE);
 				mEdit_speedFactor.setVisibility(EditText.GONE);
 			}
-		} else setNumberOfWebs(1);
+		} else {
+		    setNumberOfWebs(1);
+		    setCoreType(Roll.CORE_TYPE_R3);
+		}
 		
 		mImgbtnSheetsOrRolls.setOnClickListener(this);
 		
@@ -299,16 +318,19 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 			this.mSheetsOrRollsState = ROLLS_MODE;
 			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.roll_slider120);
 			this.mEdit_sheetLength.setText("12");
-			this.mLbl_sheetLength.setEnabled(false);
-			this.mEdit_sheetLength.setEnabled(false);
+			this.mLbl_sheetLength.setVisibility(TextView.GONE);
+			this.mEdit_sheetLength.setVisibility(EditText.GONE);
+			this.mRadioGroup_coreSize.setVisibility(RadioGroup.VISIBLE);
 			this.mEdit_sheetWidth.setNextFocusDownId(R.id.edit_line_speed);
 			mContainerProductDetails.removeView(mContainerSkidsOnTable);
 			setNumberOfWebs(getNumberOfWebs());
 		} else if (state.equals(SHEETS_MODE) || state.equals(Product.SHEETSET_TYPE)) {
 			this.mSheetsOrRollsState = SHEETS_MODE;
 			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.sheet_slider120);
-			this.mLbl_sheetLength.setEnabled(true);
-			this.mEdit_sheetLength.setEnabled(true);
+			this.mEdit_sheetLength.setText("");
+			this.mLbl_sheetLength.setVisibility(TextView.VISIBLE);
+			this.mEdit_sheetLength.setVisibility(EditText.VISIBLE);
+			this.mRadioGroup_coreSize.setVisibility(RadioGroup.GONE);
 			this.mEdit_sheetWidth.setNextFocusDownId(R.id.edit_sheet_length);
 			setNumberOfWebs(getNumberOfWebs()); //to trigger the check for added views TODO ugly
 		}
@@ -341,9 +363,28 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 				mContainerProductDetails.addView(mContainerSkidsOnTable);
 			}
 		} else {
-			mRadioButton_oneSkid.setChecked(true);
+			mRadio_oneSkid.setChecked(true);
 			mContainerProductDetails.removeView(mContainerSkidsOnTable);
 		}
+	}
+
+	private void setCoreType(int coreType) {
+	    switch(coreType){
+	        case Roll.CORE_TYPE_R3:
+	        case Roll.CORE_TYPE_R3_HEAVY:
+	            mRadio_r3.setChecked(true);
+	            break;
+	        case Roll.CORE_TYPE_R6:
+	        case Roll.CORE_TYPE_R6_HEAVY:
+	            mRadio_r6.setChecked(true);
+	            break;
+	        case Roll.CORE_TYPE_R8:
+	        case Roll.CORE_TYPE_R8_HEAVY:
+	            mRadio_r8.setChecked(true);
+	            break;
+	        default:
+	            mRadio_r3.setChecked(true);
+	    }
 	}
 	
 	public int getNumberOfWebs() {
@@ -393,5 +434,11 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 		if (mRadioGroup_skidsOnTable.getCheckedRadioButtonId() == R.id.radio_two_skids) {
 			return 2;
 		} else return 1;
+	}
+	/*
+	 * Returns the id of the selected radio button.
+	 */
+	public int getCoreTypeSelection() {
+	    return mRadioGroup_coreSize.getCheckedRadioButtonId();
 	}
 }

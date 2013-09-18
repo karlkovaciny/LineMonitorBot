@@ -6,8 +6,8 @@ public class Rollset extends Roll {
 	private static final String mUnitPlural = "feet";
 	private static final String mGrouping = "rollset";
 	
-	public Rollset(double gauge, double width, int linearFeet, int numberOfWebs) {
-		super(gauge, width, linearFeet);
+	public Rollset(double gauge, double width, int linearFeet, int numberOfWebs, int coreType) {
+		super(gauge, width, linearFeet, coreType);
 		setNumberOfWebs(numberOfWebs);
 	}
 

@@ -8,6 +8,9 @@
     <dimen name="fragment_divider_padding">12dp</dimen>
 	<dimen name="table_column_padding">8dp</dimen>
 	<dimen name="padding_table_row">8dp</dimen>
+	<dimen name="padding_before_checkbox">30dp</dimen>
+	<dimen name="padding_before_radiobutton">4dp</dimen>
+	
 	<dimen name="borderless_row_padding">4dp</dimen>
 	<dimen name="dialog_sheets_per_minute_width">250dp</dimen>
 	<dimen name="dialog_sheets_per_minute_height">425dp</dimen>
