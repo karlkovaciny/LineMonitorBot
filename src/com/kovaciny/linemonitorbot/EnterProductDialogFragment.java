@@ -158,7 +158,7 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 			mNumberOfWebs = getArguments().getInt("NumberOfWebs", 1);
 			int numberOfSkids = getArguments().getInt("NumberOfSkids", 0);
 			double factor = getArguments().getDouble("SpeedFactor", 0d);
-			int coreType = getArguments().getInt("CoreType", 0);
+			int coreType = getArguments().getInt("CoreType", Roll.CORE_TYPE_R3);
 			String prodtype = getArguments().getString("ProductType");
 			if (prodtype == null) {
 				prodtype = settings.getString("savedMode", "");
