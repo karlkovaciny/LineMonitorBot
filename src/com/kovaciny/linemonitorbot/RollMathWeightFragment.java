@@ -20,9 +20,9 @@ import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Roll;
 
-public class RollMathDiameterFragment extends Fragment implements View.OnClickListener {
+public class RollMathWeightFragment extends Fragment implements View.OnClickListener {
 
-    Button mBtn_getDiameter;
+    Button mBtn_getWeight;
     CheckBox mChk_heavyWall;
 
     EditText mEdit_linearFeet;
@@ -48,10 +48,10 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.roll_math_diameter_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.roll_math_weight_fragment, container, false);
         
-        mBtn_getDiameter = (Button) rootView.findViewById(R.id.btn_get_diameter);
-        mBtn_getDiameter.setOnClickListener(this);
+        mBtn_getWeight = (Button) rootView.findViewById(R.id.btn_get_diameter);
+        mBtn_getWeight.setOnClickListener(this);
         
         mChk_heavyWall = (CheckBox) rootView.findViewById(R.id.chk_heavy_wall);
 
@@ -96,21 +96,10 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
     public void onClick(View v) {
         if (v.getId() == R.id.btn_get_diameter) {
             if (validateInputs()) {
-                int linearFeet = Integer.valueOf(mEdit_linearFeet.getText().toString());
+                double linearInches = Double.valueOf(mEdit_linearFeet.getText().toString()) * HelperFunction.INCHES_PER_FOOT;
                 double orderedGauge = Double.valueOf(mEdit_orderedGauge.getText().toString());
-                double diameter = ((RollMathActivity)getActivity()).calculateRollDiameter(getCoreType(), linearFeet, orderedGauge);
                 SpannableStringBuilder diameterSb = new SpannableStringBuilder();
-                diameterSb.append(HelperFunction.formatDecimalAsProperFraction(diameter, 8d))
-                    .append("\"");
-                mTxt_rollDiameter.setText(diameterSb);
                 
-                //store values for other fragments
-                SharedPreferences settings = getActivity().getPreferences(Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = settings.edit();
-                
-                editor.putInt("RollMath.linearFeet", linearFeet);
-                editor.putFloat("RollMath.orderedGauge", (float) orderedGauge);
-                editor.putFloat("RollMath.diameter", (float) diameter);
             }
         }
     }

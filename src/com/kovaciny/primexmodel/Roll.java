@@ -43,6 +43,32 @@ public class Roll implements Product {
         anotherMap.put(CORE_TYPE_R6_HEAVY, "R6");
         coreTypeToDescriptionMap = Collections.unmodifiableMap(anotherMap);
     }
+
+    public static final Map<Integer, Double> coreTypeToWeightPerInchMap;
+    static {
+        Map<Integer, Double> thirdMap = new HashMap<Integer, Double>();
+        thirdMap.put(CORE_TYPE_R3, .0833333);
+        thirdMap.put(CORE_TYPE_R6, .1666666);
+        thirdMap.put(CORE_TYPE_R8, .1);
+        thirdMap.put(CORE_TYPE_R3_HEAVY, .121212);
+        thirdMap.put(CORE_TYPE_R6_HEAVY, .25);
+        coreTypeToWeightPerInchMap = Collections.unmodifiableMap(thirdMap);
+    }
+    
+    /*
+     * 
+     */
+    public static double getCoreWeight (int coreType, double coreLength) {
+       return coreTypeToWeightPerInchMap.get(coreType); 
+    }
+    
+    public static double getCoreOutsideRadius(int coreType) {
+        return coreTypeToOutsideDiameterMap.get(coreType) / 2d;
+    }
+    
+    public static double getCoreArea(int coreType) {
+        return Math.PI * Math.pow(getCoreOutsideRadius(coreType), 2d);
+    }
 	/*
 	 * 
 	 */
