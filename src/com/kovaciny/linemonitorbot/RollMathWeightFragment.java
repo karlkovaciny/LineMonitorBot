@@ -50,7 +50,7 @@ public class RollMathWeightFragment extends Fragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.roll_math_weight_fragment, container, false);
         
-        mBtn_getWeight = (Button) rootView.findViewById(R.id.btn_get_diameter);
+        mBtn_getWeight = (Button) rootView.findViewById(R.id.btn_get_weight);
         mBtn_getWeight.setOnClickListener(this);
         
         mChk_heavyWall = (CheckBox) rootView.findViewById(R.id.chk_heavy_wall);
@@ -99,7 +99,7 @@ public class RollMathWeightFragment extends Fragment implements View.OnClickList
                 double linearInches = Double.valueOf(mEdit_linearFeet.getText().toString()) * HelperFunction.INCHES_PER_FOOT;
                 double orderedGauge = Double.valueOf(mEdit_orderedGauge.getText().toString());
                 SpannableStringBuilder diameterSb = new SpannableStringBuilder();
-                
+                HelperFunction.hideKeyboard(getActivity());
             }
         }
     }

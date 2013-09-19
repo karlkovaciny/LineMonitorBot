@@ -24,7 +24,6 @@ import android.text.SpannableStringBuilder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -85,8 +84,6 @@ public class MainActivity extends FragmentActivity implements
 	public PrimexModel mModel; // only public so I can do testing!
 	private boolean mForceUserToSelectLine;
 	private boolean mShowTutorial;
-
-	private ActionBar mActionBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -149,8 +146,6 @@ public class MainActivity extends FragmentActivity implements
 				(lastTabPos == DRAINING_FRAGMENT_POSITION)) {
 			mViewPager.setCurrentItem(lastTabPos);			
 		}
-		
-		mActionBar = actionBar;
 	}
 
     @Override
@@ -309,7 +304,7 @@ public class MainActivity extends FragmentActivity implements
 		if (currentProd != null) {
 			args.putDouble("Gauge", currentProd.getGauge());
 			args.putDouble("SheetWidth",
-					currentProd.getWidth() / currentProd.getNumberOfWebs());
+					currentProd.getWidth() / Double.valueOf(currentProd.getNumberOfWebs()));
 			args.putDouble("SheetLength", currentProd.getLength());
 			args.putString("ProductType", currentProd.getType());
 			args.putInt("NumberOfWebs", currentProd.getNumberOfWebs());
@@ -421,6 +416,7 @@ public class MainActivity extends FragmentActivity implements
 
 	            Roll roll = (Roll) mModel.getSelectedWorkOrder().getProduct();
 	            rollMathIntent.putExtra("coreType", roll.getCoreType());
+	            rollMathIntent.putExtra("width", (float) (roll.getWidth() / Double.valueOf(roll.getNumberOfWebs())));
 	            
 	            EditText editFeet = (EditText) this.findViewById(R.id.edit_total_sheets_per_skid);
 	            if (editFeet.getText().length() > 0) {
@@ -455,7 +451,7 @@ public class MainActivity extends FragmentActivity implements
 			ratesFrag.modelPropertyChange(event);
 
 		} else if (eventName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
-            hideKeyboard();
+            HelperFunction.hideKeyboard(this);
 
             WorkOrder newWo = (WorkOrder) newProperty;
 			CharSequence woTitle = generateJobTitle(newWo.getWoNumber());
@@ -594,7 +590,7 @@ public class MainActivity extends FragmentActivity implements
 			Product oldProduct = mModel.getSelectedWorkOrder().getProduct();
 			if (oldProduct != null) {
 				p.setUnitWeight(oldProduct.getUnitWeight()
-						* p.getNumberOfWebs() / oldProduct.getNumberOfWebs());
+						* Double.valueOf(p.getNumberOfWebs()) / Double.valueOf(oldProduct.getNumberOfWebs()));
 			}
 		} catch (IllegalArgumentException e) {
 		    if (e.getCause().equals(PrimexModel.ERROR_NO_PRODUCT_SELECTED)) {
@@ -619,7 +615,7 @@ public class MainActivity extends FragmentActivity implements
 		if (mModel.hasSelectedProduct()) {
 			Product p = mModel.getSelectedWorkOrder().getProduct();
 			if (p instanceof Rollset || p instanceof Sheetset) {
-				unitWeight *= p.getNumberOfWebs();
+				unitWeight *= Double.valueOf(p.getNumberOfWebs());
 			}
 			p.setUnitWeight(unitWeight);
 			mModel.changeProduct(p);
@@ -652,7 +648,7 @@ public class MainActivity extends FragmentActivity implements
 		// the ViewPager.
 		int pos = tab.getPosition();
 		mViewPager.setCurrentItem(pos);
-		hideKeyboard();
+		HelperFunction.hideKeyboard(this);
 	}
 
 	@Override
@@ -784,15 +780,5 @@ public class MainActivity extends FragmentActivity implements
 			}
 		}
 		super.onStop();
-	}
-
-	public void hideKeyboard() {
-		InputMethodManager inputMethodManager = (InputMethodManager) this
-				.getSystemService(Context.INPUT_METHOD_SERVICE);
-		View focus = this.getCurrentFocus();
-		if (focus != null) {
-			inputMethodManager.hideSoftInputFromWindow(focus.getWindowToken(),
-					0);
-		}
 	}
 }

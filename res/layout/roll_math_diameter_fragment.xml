@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ParentFragment"
+    style="@style/ParentFragment.VerticallyDivided"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-   <RelativeLayout 
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center" >
-    <TextView 
-        android:id="@+id/lbl_core_size"
-        style="@style/Label"
-        android:paddingRight="@dimen/label_padding_right"
-        android:layout_centerVertical="true"
-        android:text="Core size:" />
-    
-    		<RadioGroup
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/lbl_core_size"
+                style="@style/Label"
+                android:layout_centerVertical="true"
+                android:paddingRight="@dimen/label_padding_right"
+                android:text="Core size:" />
+
+            <RadioGroup
                 android:id="@+id/radio_group_core_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -45,70 +52,184 @@
                     android:text="R8" />
             </RadioGroup>
         </RelativeLayout>
-        
-    <CheckBox
-        android:id="@+id/chk_heavy_wall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Heavy wall" />
 
-    <TableLayout
+        <CheckBox
+            android:id="@+id/chk_heavy_wall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Heavy wall" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-        
-        <TableRow>
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                style="@style/TwoColumns"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/lbl_ordered_gauge"
+                    style="@style/Label"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Ordered gauge" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:gravity="bottom" >
+
+                    <EditText
+                        android:id="@+id/edit_ordered_gauge"
+                        style="@style/EditText.TwoColumns"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="1"
+                        android:ems="3"
+                        android:maxLength="5"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberDecimal"
+                        android:nextFocusDown="@+id/edit_linear_feet" >
+                        android:nextFocusForward="@id/edit_linear_feet" >
+
+                    </EditText>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/lbl_linear_feet"
+                    style="@style/Label"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Linear feet" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:gravity="bottom" >
+
+                    <EditText
+                        android:id="@id/edit_linear_feet"
+                        style="@style/EditText.TwoColumns"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="1"
+                        android:ems="3"
+                        android:maxLength="5"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberDecimal" />
+                </LinearLayout>
+            </LinearLayout>
+
             <TextView
-                android:id="@+id/textView1"
-                style="@style/Label.TwoColumns"
-                android:text="Ordered gauge"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:id="@+id/textView2"
+                style="@style/Label"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1"
+                android:gravity="center"
+                android:minHeight="@dimen/label_row_height"
+                android:text="or"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
 
-                        <TextView
-                android:id="@+id/textView3"
-                style="@style/Label.TwoColumns"
-                android:text="Linear feet"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-            
-                    </TableRow>
+ 			<!--                   column two                      -->
+            <LinearLayout
+                style="@style/TwoColumns"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
 
-        <TableRow>
+				<TextView
+                    android:id="@+id/lbl_gross_weight"
+                    style="@style/Label"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Gross weight" />
 
-            <LinearLayout style="@style/TwoColumns" >
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
 
-                <EditText
-                    android:id="@+id/edit_ordered_gauge"
-                    style="@style/EditText.TwoColumns"
-                    android:inputType="numberDecimal"
-                    android:imeOptions="actionNext" >
-                </EditText>
+                    <EditText
+                        android:id="@+id/edit_gross_weight"
+                        style="@style/EditText.TwoColumns"
+                        android:layout_weight="1"
+                        android:ems="3"
+                        android:maxLength="4"
+                        android:imeOptions="actionDone"
+                        android:nextFocusDown="@+id/edit_material_density"
+                        android:inputType="number" />
+                </LinearLayout>
+                
+             	<TextView
+                    android:id="@+id/lbl_material_density"
+                    style="@style/Label"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Material density" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <EditText
+                        android:id="@+id/edit_material_density"
+                        style="@style/EditText.TwoColumns"
+                        android:layout_weight="1"
+                        android:ems="3"
+                        android:maxLength="6"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberDecimal"
+                        android:text=".0375" />
+                </LinearLayout>
+                
+                				<TextView
+                    android:id="@+id/lbl_width"
+                    style="@style/Label"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Width" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <EditText
+                        android:id="@+id/edit_width"
+                        style="@style/EditText.TwoColumns"
+                        android:layout_weight="1"
+                        android:maxLength="6"
+                        android:ems="3"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberDecimal" />
+                </LinearLayout>
+                
             </LinearLayout>
-            
-            <LinearLayout style="@style/TwoColumns" >
+        </LinearLayout>
 
-                <EditText
-                    android:id="@+id/edit_linear_feet"
-                    style="@style/EditText.TwoColumns"
-                    android:inputType="number" >
-                </EditText>
-            </LinearLayout>
-        </TableRow>
+        <Button
+            android:id="@+id/btn_get_diameter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_roll_math_buttons"
+            android:text="Get Diameter" />
 
-    </TableLayout>
+        <TextView
+            android:id="@+id/txt_roll_diameter"
+            style="@style/Label"
+            android:layout_gravity="center_horizontal"
+            android:textSize="40sp" />
 
-    	<Button
-	        android:id="@+id/btn_get_diameter"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_gravity="center_horizontal"
-	        android:layout_marginTop="@dimen/margin_roll_math_buttons"
-	        android:text="Get Diameter" />
-
-    			<TextView
-		    android:id="@+id/txt_roll_diameter"
-		    style="@style/Label"
-		    android:textSize="40sp"
-		    android:layout_gravity="center" />
+    </LinearLayout>
 		
     	
 </LinearLayout>

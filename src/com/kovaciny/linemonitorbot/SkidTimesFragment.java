@@ -238,7 +238,7 @@ public class SkidTimesFragment extends Fragment implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case (R.id.btn_skid_number_up):
-			((MainActivity)getActivity()).hideKeyboard();
+			HelperFunction.hideKeyboard(getActivity());
 			HelperFunction.incrementEditText(mEdit_currentSkidNumber);
 			if (Double.valueOf(mEdit_currentSkidNumber.getText().toString()) >
 					Math.ceil(Double.valueOf(mEdit_numSkidsInJob.getText().toString()))) { 
@@ -250,7 +250,7 @@ public class SkidTimesFragment extends Fragment implements
             }
 			break;
 		case (R.id.btn_total_skids_up):
-			((MainActivity)getActivity()).hideKeyboard();
+			HelperFunction.hideKeyboard(getActivity());
 			HelperFunction.incrementEditText(mEdit_numSkidsInJob);
 			mEdit_numSkidsInJob.clearFocus();
 			for (EditText ett : mEditableGroup) {
@@ -342,7 +342,7 @@ public class SkidTimesFragment extends Fragment implements
 			}
 			
 			if (validInputs) {
-				((MainActivity)getActivity()).hideKeyboard();
+				HelperFunction.hideKeyboard(getActivity());
 				mBtn_enterProduct.setError(null);
 				try {
 					((MainActivity)getActivity()).updateSkidData(
