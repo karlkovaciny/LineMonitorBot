@@ -1,5 +1,7 @@
 package com.kovaciny.linemonitorbot;
 
+import com.kovaciny.primexmodel.Roll;
+
 import android.app.ActionBar;
 import android.app.ActionBar.TabListener;
 import android.app.FragmentTransaction;
@@ -140,5 +142,17 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
             }
             return 0;
         }
+    }
+    
+        public double calculateRollDiameter(int coreType, double linearInches, double orderedGauge) {
+            double SAFETY_FACTOR = .1875; //also having them use the ordered, not average gauge
+            
+            double radiusOfCore = Roll.coreTypeToOutsideDiameterMap.get(coreType) / 2d;
+            double areaOfCore = Math.PI * Math.pow(radiusOfCore, 2);
+            double areaOfPlastic = linearInches * orderedGauge;
+            double areaOfRoll = areaOfCore + areaOfPlastic;
+            double radiusOfRoll = Math.sqrt(areaOfRoll / Math.PI);
+            double diameterOfRoll = 2 * radiusOfRoll;
+            return diameterOfRoll + SAFETY_FACTOR;
     }
 }

@@ -20,7 +20,6 @@ import com.kovaciny.primexmodel.Roll;
 
 public class RollMathDiameterFragment extends Fragment implements View.OnClickListener {
 
-    public static double SAFETY_FACTOR = .1875; //also having them use the ordered, not average gauge
     Button mBtn_getDiameter;
     CheckBox mChk_heavyWall;
 
@@ -94,7 +93,9 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
     public void onClick(View v) {
         if (v.getId() == R.id.btn_get_diameter) {
             if (validateInputs()) {
-                double diameter = calculateRollDiameter();
+                double linearInches = Double.valueOf(mEdit_linearFeet.getText().toString()) * HelperFunction.INCHES_PER_FOOT;
+                double orderedGauge = Double.valueOf(mEdit_orderedGauge.getText().toString());
+                double diameter = ((RollMathActivity)getActivity()).calculateRollDiameter(getCoreType(), linearInches, orderedGauge);
                 SpannableStringBuilder diameterSb = new SpannableStringBuilder();
                 diameterSb.append(HelperFunction.formatDecimalAsProperFraction(diameter, 8d))
                     .append("\"");
@@ -126,17 +127,7 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
 
         return validInputs;
     }
-    private double calculateRollDiameter() {
-        double radiusOfCore = Roll.coreTypeToOutsideDiameterMap.get(getCoreType()) / 2d;
-        double areaOfCore = Math.PI * Math.pow(radiusOfCore, 2);
-        double inchesPerRoll = Double.valueOf(mEdit_linearFeet.getText().toString()) * 12d;
-        double orderedGauge = Double.valueOf(mEdit_orderedGauge.getText().toString());
-        double areaOfPlastic = inchesPerRoll * orderedGauge;
-        double areaOfRoll = areaOfCore + areaOfPlastic;
-        double radiusOfRoll = Math.sqrt(areaOfRoll / Math.PI);
-        double diameterOfRoll = 2 * radiusOfRoll;
-        return diameterOfRoll + SAFETY_FACTOR;
-    }
+
 
     
     private void setCoreType(int coreType) {
