@@ -50,7 +50,7 @@ public class RollMathFeetFragment extends Fragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.roll_math_feet_fragment, container, false);
         
-        mBtn_getFeet = (Button) rootView.findViewById(R.id.btn_get_diameter);
+        mBtn_getFeet = (Button) rootView.findViewById(R.id.btn_get_feet);
         mBtn_getFeet.setOnClickListener(this);
         
         mChk_heavyWall = (CheckBox) rootView.findViewById(R.id.chk_heavy_wall);
@@ -98,6 +98,7 @@ public class RollMathFeetFragment extends Fragment implements View.OnClickListen
             if (validateInputs()) {
                 double linearInches = Double.valueOf(mEdit_linearFeet.getText().toString()) * HelperFunction.INCHES_PER_FOOT;
                 double orderedGauge = Double.valueOf(mEdit_orderedGauge.getText().toString());
+                HelperFunction.hideKeyboard(getActivity());
             }
         }
     }

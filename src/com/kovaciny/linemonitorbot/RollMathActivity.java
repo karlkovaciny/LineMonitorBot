@@ -16,6 +16,8 @@ import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.Roll;
 
 public class RollMathActivity extends FragmentActivity implements TabListener {
+    
+    double DIAMETER_SAFETY_FACTOR = .1875; //also having them use the ordered, not average gauge
 
     
     /**
@@ -45,6 +47,7 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
         
         editor.putInt("RollMath.coreType", extras.getInt("coreType"));
         editor.putInt("RollMath.linearFeet", extras.getInt("linearFeet"));
+        editor.putFloat("RollMath.width", extras.getFloat("width"));
 
         editor.commit();
         
@@ -62,7 +65,8 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
+        mViewPager.setOffscreenPageLimit(2); 
+        
         // When swiping between different sections, select the corresponding
         // tab. We can also use ActionBar.Tab#select() to do this if we have
         // a reference to the Tab.
@@ -153,13 +157,11 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
          * 
          */
         public double calculateRollDiameter(int coreType, int linearFeet, double orderedGauge) {
-            double SAFETY_FACTOR = .1875; //also having them use the ordered, not average gauge
-            
             double areaOfPlastic = Double.valueOf(linearFeet) * HelperFunction.INCHES_PER_FOOT * orderedGauge;
             double areaOfRoll = Roll.getCoreArea(coreType) + areaOfPlastic;
             double radiusOfRoll = Math.sqrt(areaOfRoll / Math.PI);
             double diameterOfRoll = 2 * radiusOfRoll;
-            return diameterOfRoll + SAFETY_FACTOR;
+            return diameterOfRoll + DIAMETER_SAFETY_FACTOR;
         }
         
         /*
@@ -171,7 +173,7 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
             double coreVolume = Math.PI * Math.pow(Roll.getCoreOutsideRadius(coreType), 2d) * rollWidth;
             double rollTotalVolume = rollNetVolume + coreVolume;
             double rollRadius = Math.sqrt( rollTotalVolume / Math.PI / rollWidth);
-            return rollRadius * 2d;
+            return (rollRadius * 2d) + DIAMETER_SAFETY_FACTOR;
             //diam from weight and width only, and factor, not gauge.
                         //net weight = a cube width * (rO - rI)
                         //volume = (volume of a cylinder - volume of a inner cylinder)

@@ -565,7 +565,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	}
 
 	@Test
-	public void testHideKeyboard() {
+	public void testHelperFunction.hideKeyboard(getActivity()) {
 		fail("Not yet implemented"); // TODO
 	}
 

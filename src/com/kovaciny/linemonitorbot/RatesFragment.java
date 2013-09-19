@@ -144,7 +144,7 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 				if (mEdit_tenSecondLetdownGrams.getText().length() > 0) {
 				    letdownGrams = Double.valueOf(mEdit_tenSecondLetdownGrams.getText().toString());
 				}
-				((MainActivity)getActivity()).hideKeyboard();
+				HelperFunction.hideKeyboard(getActivity());
 				try {
 					((MainActivity)getActivity()).updateRatesData(grossWidth, sheetWeight, novaSetpoint, letdownGrams);
 				} catch (IllegalStateException e) {

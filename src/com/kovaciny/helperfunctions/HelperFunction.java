@@ -6,6 +6,8 @@ import java.util.GregorianCalendar;
 
 import org.apache.commons.lang3.math.Fraction;
 
+import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -15,6 +17,8 @@ import android.text.SpannedString;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.SubscriptSpan;
 import android.text.style.SuperscriptSpan;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 final public class HelperFunction {
@@ -127,4 +131,13 @@ final public class HelperFunction {
 		et.clearFocus();
 	}
 	
+	public static void hideKeyboard(FragmentActivity fragmentActivity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) fragmentActivity
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        View focus = fragmentActivity.getCurrentFocus();
+        if (focus != null) {
+            inputMethodManager.hideSoftInputFromWindow(focus.getWindowToken(),
+                    0);
+        }
+    }
 }

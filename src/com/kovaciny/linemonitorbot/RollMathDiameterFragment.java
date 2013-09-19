@@ -1,5 +1,7 @@
 package com.kovaciny.linemonitorbot;
 
+import java.text.DecimalFormat;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -27,6 +29,9 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
 
     EditText mEdit_linearFeet;
     EditText mEdit_orderedGauge;
+    EditText mEdit_grossWeight;
+    EditText mEdit_materialDensity;
+    EditText mEdit_width;
     
     RadioGroup mRadioGroup_coreSize;
     RadioButton mRadio_r3;
@@ -37,12 +42,14 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
     
     int mCoreType;
     int mLinearFeet;
+    double mWidth;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         SharedPreferences settings = getActivity().getPreferences(Context.MODE_PRIVATE);
         mCoreType = settings.getInt("RollMath.coreType", Roll.CORE_TYPE_R8);
         mLinearFeet = settings.getInt("RollMath.linearFeet", 0);
+        mWidth = Double.valueOf(settings.getFloat("RollMath.width", 0f));
         super.onCreate(savedInstanceState);
     }
 
@@ -60,7 +67,13 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
         if (mLinearFeet > 0) {
             mEdit_linearFeet.setText(String.valueOf(mLinearFeet));
         }
-
+        mEdit_grossWeight = (EditText) rootView.findViewById(R.id.edit_gross_weight);
+        mEdit_materialDensity = (EditText) rootView.findViewById(R.id.edit_material_density);
+        mEdit_width = (EditText) rootView.findViewById(R.id.edit_width);
+        if (mWidth > 0) {
+            mEdit_width.setText(String.valueOf(mWidth));
+        }
+        
         mRadioGroup_coreSize = (RadioGroup) rootView.findViewById(R.id.radio_group_core_size);
         mRadio_r3 = (RadioButton) rootView.findViewById(R.id.radio_r3);
         mRadio_r6 = (RadioButton) rootView.findViewById(R.id.radio_r6);
@@ -96,51 +109,90 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
     public void onClick(View v) {
         if (v.getId() == R.id.btn_get_diameter) {
             if (validateInputs()) {
-                int linearFeet = Integer.valueOf(mEdit_linearFeet.getText().toString());
-                double orderedGauge = Double.valueOf(mEdit_orderedGauge.getText().toString());
-                double diameter = ((RollMathActivity)getActivity()).calculateRollDiameter(getCoreType(), linearFeet, orderedGauge);
-                SpannableStringBuilder diameterSb = new SpannableStringBuilder();
-                diameterSb.append(HelperFunction.formatDecimalAsProperFraction(diameter, 8d))
-                    .append("\"");
-                mTxt_rollDiameter.setText(diameterSb);
+                HelperFunction.hideKeyboard(getActivity());
                 
-                //store values for other fragments
                 SharedPreferences settings = getActivity().getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = settings.edit();
                 
-                editor.putInt("RollMath.linearFeet", linearFeet);
-                editor.putFloat("RollMath.orderedGauge", (float) orderedGauge);
+                double diameter;
+                
+                if (mEdit_orderedGauge.getText().length() > 0) { //they filled in column 1
+                    int linearFeet = Integer.valueOf(mEdit_linearFeet.getText().toString());
+                    double orderedGauge = Double.valueOf(mEdit_orderedGauge.getText().toString());
+                    diameter = ((RollMathActivity)getActivity())
+                            .calculateRollDiameter(getCoreType(), linearFeet, orderedGauge);
+                    editor.putFloat("RollMath.orderedGauge", (float) orderedGauge);
+                    editor.putInt("RollMath.linearFeet", linearFeet);
+                } else {
+                    double rollWidth = Double.valueOf(mEdit_width.getText().toString());
+                    double grossWeight = Double.valueOf(mEdit_grossWeight.getText().toString());
+                    double materialDensity = Double.valueOf(mEdit_materialDensity.getText().toString());
+                    diameter = ((RollMathActivity)getActivity())
+                            .calculateRollDiameter(getCoreType(), rollWidth, grossWeight, materialDensity);
+                    editor.putFloat("RollMath.width", (float) rollWidth);
+                    editor.putFloat("RollMath.grossWeight", (float) grossWeight);
+                    editor.putFloat("RollMath.materialDensity", (float) materialDensity);
+                }
+                
+                SpannableStringBuilder diameterSb = new SpannableStringBuilder();
+                diameterSb.append(HelperFunction.formatDecimalAsProperFraction(diameter, 8d))
+                .append("\"");
+                mTxt_rollDiameter.setText(diameterSb);
+
                 editor.putFloat("RollMath.diameter", (float) diameter);
+                editor.commit();
             }
         }
     }
 
     private boolean validateInputs() {        
         boolean validInputs = true;
-        if (mEdit_orderedGauge.getText().length() == 0) {
-            mEdit_orderedGauge.setError(getString(R.string.error_empty_field));
+        
+        //establish that the user filled in at least one of the required columns
+        if ((mEdit_orderedGauge.getText().length() == 0) && (mEdit_grossWeight.getText().length() == 0)) {
+            mEdit_orderedGauge.setError(getString(R.string.error_need_at_least_one));
+            mEdit_grossWeight.setError(getString(R.string.error_need_at_least_one));
             validInputs = false;
-        }
-        if (mEdit_linearFeet.getText().length() == 0) {
-            mEdit_linearFeet.setError(getString(R.string.error_empty_field));
+        } 
+        if ((mEdit_orderedGauge.getText().length() > 0) && 
+                (mEdit_grossWeight.length() > 0) &&
+                (Double.valueOf(mEdit_orderedGauge.getText().toString()) > 0d)) {
+            mEdit_orderedGauge.setError(getString(R.string.error_need_only_one));
+            mEdit_grossWeight.setError(getString(R.string.error_need_only_one));
             validInputs = false;
         }
         
-        String averageGauge = mEdit_orderedGauge.getText().toString();
-        //auto-convert if user enters gauge as a whole number instead of a decimal
-        if (!averageGauge.equals("")) {
-            double gaugeValue = Double.valueOf(averageGauge);
-            if (gaugeValue > PrimexModel.MAXIMUM_POSSIBLE_GAUGE) {
-                gaugeValue /= 1000;
-                mEdit_orderedGauge.setText(String.valueOf(gaugeValue));
-            }
-        }
+        //Process only the column they wanted
+        if (validInputs) {
+           if (mEdit_orderedGauge.getText().length() > 0) {
+               if (mEdit_linearFeet.getText().length() == 0) {
+                   mEdit_linearFeet.setError(getString(R.string.error_empty_field));
+                   validInputs = false;
+               }   
+               //auto-convert if user enters gauge as a whole number instead of a decimal, then format as gauge
+               double gaugeValue = Double.valueOf(mEdit_orderedGauge.getText().toString());
+               if (gaugeValue > PrimexModel.MAXIMUM_POSSIBLE_GAUGE) {
+                   gaugeValue /= 1000;
+               }
+               String threeDecimals = new DecimalFormat("#.000").format(gaugeValue);
+               mEdit_orderedGauge.setText(threeDecimals);
+           } else {
+               if (mEdit_materialDensity.getText().length() == 0) {
+                   mEdit_materialDensity.setError(getString(R.string.error_empty_field));
+                   validInputs = false;
+               }
 
+               if (mEdit_width.getText().length() == 0) {
+                   mEdit_width.setError(getString(R.string.error_empty_field));
+                   validInputs = false;
+               }
+           }
+        }
         return validInputs;
     }
 
 
-    
+
     private void setCoreType(int coreType) {
         switch(coreType){
             case Roll.CORE_TYPE_R3:
