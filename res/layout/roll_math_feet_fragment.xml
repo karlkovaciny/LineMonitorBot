@@ -122,10 +122,10 @@
 		    android:layout_gravity="center" />
 		
     	<Button
-	        android:id="@+id/btn_get_weight"
+	        android:id="@+id/btn_get_feet"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_gravity="center_horizontal"
-	        android:text="Get Weight" />
+	        android:text="Get Feet" />
 
 </LinearLayout>

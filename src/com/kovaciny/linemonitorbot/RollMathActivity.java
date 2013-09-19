@@ -1,10 +1,10 @@
 package com.kovaciny.linemonitorbot;
 
-import com.kovaciny.primexmodel.Roll;
-
 import android.app.ActionBar;
 import android.app.ActionBar.TabListener;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -12,10 +12,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.kovaciny.helperfunctions.HelperFunction;
+import com.kovaciny.primexmodel.Roll;
+
 public class RollMathActivity extends FragmentActivity implements TabListener {
 
-    int mCoreType;
-    int mLinearFeet;
     
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -37,9 +38,16 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
     protected void onCreate(Bundle args) {
         super.onCreate(args);
         
+        //Share extras across fragments with SharedPreferences
         Bundle extras = getIntent().getExtras();
-        mCoreType = extras.getInt("coreType");
-        mLinearFeet = extras.getInt("linearFeet");
+        SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+        
+        editor.putInt("RollMath.coreType", extras.getInt("coreType"));
+        editor.putInt("RollMath.linearFeet", extras.getInt("linearFeet"));
+
+        editor.commit();
+        
         
         setContentView(R.layout.activity_roll_math);
 
@@ -110,14 +118,12 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
             Bundle args = new Bundle();
             switch(position) {
                 case (0): fragment = new RollMathDiameterFragment();
-                args.putInt("coreType", mCoreType);
-                args.putInt("linearFeet", mLinearFeet);
                 break;
                 
-                case (1): fragment = new FloatingToolbarFragment();
+                case (1): fragment = new RollMathWeightFragment();
                 break;
                 
-                case (2): fragment = new FloatingToolbarFragment();
+                case (2): fragment = new RollMathFeetFragment();
                 break;
             }
           
@@ -143,16 +149,82 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
             return 0;
         }
     }
-    
-        public double calculateRollDiameter(int coreType, double linearInches, double orderedGauge) {
+        /*
+         * 
+         */
+        public double calculateRollDiameter(int coreType, int linearFeet, double orderedGauge) {
             double SAFETY_FACTOR = .1875; //also having them use the ordered, not average gauge
             
-            double radiusOfCore = Roll.coreTypeToOutsideDiameterMap.get(coreType) / 2d;
-            double areaOfCore = Math.PI * Math.pow(radiusOfCore, 2);
-            double areaOfPlastic = linearInches * orderedGauge;
-            double areaOfRoll = areaOfCore + areaOfPlastic;
+            double areaOfPlastic = Double.valueOf(linearFeet) * HelperFunction.INCHES_PER_FOOT * orderedGauge;
+            double areaOfRoll = Roll.getCoreArea(coreType) + areaOfPlastic;
             double radiusOfRoll = Math.sqrt(areaOfRoll / Math.PI);
             double diameterOfRoll = 2 * radiusOfRoll;
             return diameterOfRoll + SAFETY_FACTOR;
-    }
+        }
+        
+        /*
+         * 
+         */
+        public double calculateRollDiameter(int coreType, double rollWidth, double rollGrossWeight, double materialDensity) {
+            double rollNetWeight = rollGrossWeight - Roll.getCoreWeight(coreType, rollWidth);
+            double rollNetVolume = rollNetWeight / materialDensity;
+            double coreVolume = Math.PI * Math.pow(Roll.getCoreOutsideRadius(coreType), 2d) * rollWidth;
+            double rollTotalVolume = rollNetVolume + coreVolume;
+            double rollRadius = Math.sqrt( rollTotalVolume / Math.PI / rollWidth);
+            return rollRadius * 2d;
+            //diam from weight and width only, and factor, not gauge.
+                        //net weight = a cube width * (rO - rI)
+                        //volume = (volume of a cylinder - volume of a inner cylinder)
+                        //volume = mass/density
+                    //TODO how about a reference weight version?
+                    //or a gauge factor version
+        }
+        
+        /*
+         * 
+         */
+        public double calculateMaterialDensity(double linearFootWeight, double gauge, double rollWidth) {
+            double linearFootVolume = gauge * rollWidth * HelperFunction.INCHES_PER_FOOT;
+            return linearFootWeight / linearFootVolume;
+            
+        }
+
+        /*
+         * 
+         */
+        public double calculateLinearFeet(double rollNetWeight, double referenceNetWeight, int referenceLinearFeet) {
+            return Double.valueOf(referenceLinearFeet) * rollNetWeight / referenceNetWeight;
+        }
+        
+        /*
+         * 
+         */
+        public double calculateLinearFeet(int coreType, double width, double rollGrossWeight, double linearFootWeight) {
+            double plasticWeight = rollGrossWeight - Roll.getCoreWeight(coreType, width);
+            return plasticWeight / linearFootWeight;
+        }
+        
+        /*
+         * 
+         */
+        public double calculateLinearFeet(int coreType, double rollRadius, double orderedGauge) {
+            double rollArea = Math.PI * Math.pow(rollRadius, 2d);
+            double coreArea = Roll.getCoreArea(coreType);
+            double plasticArea = rollArea - coreArea;
+            return plasticArea / 12 / orderedGauge;
+        }
+        
+        /*
+         * 
+         */
+        public double calculateRollNetWeight(int linearFeet, double footWeight) {
+            return Double.valueOf(linearFeet) * footWeight;
+        }
+        
+        /*
+         * 
+         */
+        public double calculateRollNetWeight(int linearFeet, double referenceNetWeight, int referenceLinearFeet) {
+            return Double.valueOf(linearFeet) / Double.valueOf(referenceLinearFeet) * referenceNetWeight;
+        }
 }
