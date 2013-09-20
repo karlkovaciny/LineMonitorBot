@@ -27,6 +27,7 @@ import android.widget.RadioGroup;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.ProductionLine;
 import com.kovaciny.primexmodel.Roll;
@@ -317,7 +318,6 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 		if (state.equals(ROLLS_MODE) || state.equals(Product.ROLLSET_TYPE)) {
 			this.mSheetsOrRollsState = ROLLS_MODE;
 			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.roll_slider120);
-			this.mEdit_sheetLength.setText("12");
 			this.mLbl_sheetLength.setVisibility(TextView.GONE);
 			this.mEdit_sheetLength.setVisibility(EditText.GONE);
 			this.mRadioGroup_coreSize.setVisibility(RadioGroup.VISIBLE);
@@ -327,7 +327,6 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 		} else if (state.equals(SHEETS_MODE) || state.equals(Product.SHEETSET_TYPE)) {
 			this.mSheetsOrRollsState = SHEETS_MODE;
 			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.sheet_slider120);
-			this.mEdit_sheetLength.setText("");
 			this.mLbl_sheetLength.setVisibility(TextView.VISIBLE);
 			this.mEdit_sheetLength.setVisibility(EditText.VISIBLE);
 			this.mRadioGroup_coreSize.setVisibility(RadioGroup.GONE);
@@ -409,10 +408,10 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 		} else return Double.valueOf(width);
 	}
 	public double getSheetLengthValue() {
-		String length = mEdit_sheetLength.getText().toString().trim();
-		if (length.equals("")) {
-			return 0;
-		} else return Double.valueOf(length);}
+		if (mSheetsOrRollsState == ROLLS_MODE) return HelperFunction.INCHES_PER_FOOT;
+		if (mEdit_sheetLength.getText().length() == 0) return 0;
+		return Double.valueOf(mEdit_sheetLength.getText().toString());
+	}
 	
 	public double getDifferentialSpeedValue() {
 		String diff = mEdit_differentialSpeed.getText().toString().trim();
@@ -420,12 +419,14 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 			return 0;
 		} else return Double.valueOf(diff);
 	}
+	
 	public double getSpeedFactorValue() {
 		String factor = mEdit_speedFactor.getText().toString().trim();
 		if (factor.equals("")) {
 			return 0;
 		} else return Double.valueOf(factor);
 	}
+	
 	public String getSheetsOrRollsState() {
 		return mSheetsOrRollsState;
 	}

@@ -226,6 +226,16 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
         /*
          * 
          */
+        public double calculateRollNetWeight(int coreType, double rollWidth, double diameter, double materialDensity) {
+            double rollVolume = Math.PI * Math.pow(diameter / 2, 2) * rollWidth;
+            double coreVolume = Math.PI * Math.pow(Roll.getCoreOutsideRadius(coreType), 2d) * rollWidth;
+            double netVolume = rollVolume - coreVolume;
+            return netVolume * materialDensity;
+        }
+        
+        /*
+         * 
+         */
         public double calculateRollNetWeight(int linearFeet, double referenceNetWeight, int referenceLinearFeet) {
             return Double.valueOf(linearFeet) / Double.valueOf(referenceLinearFeet) * referenceNetWeight;
         }
