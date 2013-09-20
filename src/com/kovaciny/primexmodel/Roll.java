@@ -59,7 +59,7 @@ public class Roll implements Product {
      * 
      */
     public static double getCoreWeight (int coreType, double coreLength) {
-       return coreTypeToWeightPerInchMap.get(coreType); 
+       return coreTypeToWeightPerInchMap.get(coreType) * coreLength; 
     }
     
     public static double getCoreOutsideRadius(int coreType) {

@@ -39,6 +39,7 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
     RadioButton mRadio_r8;
     
     TextView mTxt_rollDiameter;
+    TextView mTxt_coreWeight;
     
     int mCoreType;
     int mLinearFeet;
@@ -62,18 +63,6 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
         
         mChk_heavyWall = (CheckBox) rootView.findViewById(R.id.chk_heavy_wall);
 
-        mEdit_orderedGauge = (EditText) rootView.findViewById(R.id.edit_ordered_gauge);
-        mEdit_linearFeet = (EditText) rootView.findViewById(R.id.edit_linear_feet);
-        if (mLinearFeet > 0) {
-            mEdit_linearFeet.setText(String.valueOf(mLinearFeet));
-        }
-        mEdit_grossWeight = (EditText) rootView.findViewById(R.id.edit_gross_weight);
-        mEdit_materialDensity = (EditText) rootView.findViewById(R.id.edit_material_density);
-        mEdit_width = (EditText) rootView.findViewById(R.id.edit_width);
-        if (mWidth > 0) {
-            mEdit_width.setText(String.valueOf(mWidth));
-        }
-        
         mRadioGroup_coreSize = (RadioGroup) rootView.findViewById(R.id.radio_group_core_size);
         mRadio_r3 = (RadioButton) rootView.findViewById(R.id.radio_r3);
         mRadio_r6 = (RadioButton) rootView.findViewById(R.id.radio_r6);
@@ -99,7 +88,24 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
                 
             }
         });
-        
+
+        mEdit_orderedGauge = (EditText) rootView.findViewById(R.id.edit_ordered_gauge);
+        mEdit_linearFeet = (EditText) rootView.findViewById(R.id.edit_linear_feet);
+        if (mLinearFeet > 0) {
+            mEdit_linearFeet.setText(String.valueOf(mLinearFeet));
+        }
+        mEdit_grossWeight = (EditText) rootView.findViewById(R.id.edit_gross_weight);
+        mEdit_materialDensity = (EditText) rootView.findViewById(R.id.edit_material_density);
+        mEdit_width = (EditText) rootView.findViewById(R.id.edit_width);
+        mTxt_coreWeight = (TextView) rootView.findViewById(R.id.txt_core_weight);
+        if (mWidth > 0) {
+            mEdit_width.setText(String.valueOf(mWidth));
+            double coreWeight = Roll.getCoreWeight(getCoreType(), mWidth);
+            //round to nearest 0.5
+            coreWeight = Math.round(coreWeight * 2d) / 2d;
+            String coreWeightDisplay = new DecimalFormat("0.#").format(coreWeight) + " lbs";
+            mTxt_coreWeight.setText(coreWeightDisplay);            
+        }
         mTxt_rollDiameter = (TextView) rootView.findViewById(R.id.txt_roll_diameter);
                 
         return rootView;
