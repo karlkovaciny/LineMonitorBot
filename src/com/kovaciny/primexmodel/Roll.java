@@ -25,9 +25,9 @@ public class Roll implements Product {
 	public static final Map<Integer, Double> coreTypeToOutsideDiameterMap;
 	static {
 	    Map<Integer, Double> aMap = new HashMap<Integer, Double>();
-	    aMap.put(CORE_TYPE_R3, 3.5);
-	    aMap.put(CORE_TYPE_R6, 6.75);
-	    aMap.put(CORE_TYPE_R8, 0d);
+	    aMap.put(CORE_TYPE_R3, 3.5d);
+	    aMap.put(CORE_TYPE_R6, 6.75d);
+	    aMap.put(CORE_TYPE_R8, 8.5d);
 	    aMap.put(CORE_TYPE_R3_HEAVY, 4d);
 	    aMap.put(CORE_TYPE_R6_HEAVY, 7d);
 	    coreTypeToOutsideDiameterMap = Collections.unmodifiableMap(aMap);
@@ -47,11 +47,11 @@ public class Roll implements Product {
     public static final Map<Integer, Double> coreTypeToWeightPerInchMap;
     static {
         Map<Integer, Double> thirdMap = new HashMap<Integer, Double>();
-        thirdMap.put(CORE_TYPE_R3, .0833333);
-        thirdMap.put(CORE_TYPE_R6, .1666666);
-        thirdMap.put(CORE_TYPE_R8, .1);
-        thirdMap.put(CORE_TYPE_R3_HEAVY, .121212);
-        thirdMap.put(CORE_TYPE_R6_HEAVY, .25);
+        thirdMap.put(CORE_TYPE_R3, .0614955d);
+        thirdMap.put(CORE_TYPE_R6, .1948504d);
+        thirdMap.put(CORE_TYPE_R8, .1496599d);
+        thirdMap.put(CORE_TYPE_R3_HEAVY, .121212d); //total guess
+        thirdMap.put(CORE_TYPE_R6_HEAVY, .2541806d);
         coreTypeToWeightPerInchMap = Collections.unmodifiableMap(thirdMap);
     }
     

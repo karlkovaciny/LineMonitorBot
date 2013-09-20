@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="2dp"
-            android:background="@drawable/border_rectangle">
+            android:background="@drawable/border_rectangle_2dp">
         <ImageButton
             android:id="@+id/btn_flashlight"
             android:layout_width="wrap_content"
