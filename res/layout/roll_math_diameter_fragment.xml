@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ParentFragment.VerticallyDivided"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ParentFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -51,13 +52,34 @@
                     android:layout_height="wrap_content"
                     android:text="R8" />
             </RadioGroup>
-        </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+                android:layout_alignParentLeft="@id/lbl_core_size"
+                android:layout_below="@id/lbl_core_size"
+        android:orientation="horizontal">
+                
+            <TextView
+                android:id="@+id/lbl_core_weight"
+                style="@style/Label"
+                android:paddingLeft="@dimen/label_padding_right"
+                android:text="Core weight:&#160;" />
+            
+            <TextView
+                android:id="@+id/txt_core_weight"
+                style="@style/Label"
+                android:text="44 lbs" />
 
-        <CheckBox
+            
+            </LinearLayout>
+                   <CheckBox
             android:id="@+id/chk_heavy_wall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/radio_r8"
             android:text="Heavy wall" />
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -75,7 +97,9 @@
             <LinearLayout
                 style="@style/TwoColumns"
                 android:layout_height="match_parent"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:background="@drawable/border_rectangle_1dp"
+                 >
 
                 <TextView
                     android:id="@+id/lbl_ordered_gauge"
@@ -96,13 +120,11 @@
                         android:layout_gravity="bottom"
                         android:layout_weight="1"
                         android:ems="3"
-                        android:maxLength="5"
                         android:imeOptions="actionDone"
                         android:inputType="numberDecimal"
-                        android:nextFocusDown="@+id/edit_linear_feet" >
-                        android:nextFocusForward="@id/edit_linear_feet" >
-
-                    </EditText>
+                        android:maxLength="5"
+                        android:nextFocusDown="@+id/edit_linear_feet"
+                        android:nextFocusForward="@id/edit_linear_feet" />
                 </LinearLayout>
 
                 <TextView
@@ -124,9 +146,9 @@
                         android:layout_gravity="bottom"
                         android:layout_weight="1"
                         android:ems="3"
-                        android:maxLength="5"
                         android:imeOptions="actionDone"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:maxLength="5" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -138,17 +160,19 @@
                 android:layout_weight="0.1"
                 android:gravity="center"
                 android:minHeight="@dimen/label_row_height"
-                android:text="or"
+                android:text="OR"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold" />
 
- 			<!--                   column two                      -->
+            <!-- column two -->
+
             <LinearLayout
                 style="@style/TwoColumns"
                 android:layout_height="match_parent"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:background="@drawable/border_rectangle_1dp" >
 
-				<TextView
+                <TextView
                     android:id="@+id/lbl_gross_weight"
                     style="@style/Label"
                     android:layout_gravity="center_horizontal"
@@ -164,13 +188,13 @@
                         style="@style/EditText.TwoColumns"
                         android:layout_weight="1"
                         android:ems="3"
-                        android:maxLength="4"
                         android:imeOptions="actionDone"
-                        android:nextFocusDown="@+id/edit_material_density"
-                        android:inputType="number" />
+                        android:inputType="number"
+                        android:maxLength="4"
+                        android:nextFocusDown="@+id/edit_material_density" />
                 </LinearLayout>
-                
-             	<TextView
+
+                <TextView
                     android:id="@+id/lbl_material_density"
                     style="@style/Label"
                     android:layout_gravity="center_horizontal"
@@ -186,13 +210,13 @@
                         style="@style/EditText.TwoColumns"
                         android:layout_weight="1"
                         android:ems="3"
-                        android:maxLength="6"
                         android:imeOptions="actionDone"
                         android:inputType="numberDecimal"
+                        android:maxLength="6"
                         android:text=".0375" />
                 </LinearLayout>
-                
-                				<TextView
+
+                <TextView
                     android:id="@+id/lbl_width"
                     style="@style/Label"
                     android:layout_gravity="center_horizontal"
@@ -207,12 +231,11 @@
                         android:id="@+id/edit_width"
                         style="@style/EditText.TwoColumns"
                         android:layout_weight="1"
-                        android:maxLength="6"
                         android:ems="3"
                         android:imeOptions="actionDone"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:maxLength="6" />
                 </LinearLayout>
-                
             </LinearLayout>
         </LinearLayout>
 
@@ -229,7 +252,12 @@
             android:layout_gravity="center_horizontal"
             android:textSize="40sp" />
 
+        <fragment
+            android:id="@+id/floating_toolbar_4"
+            android:name="com.kovaciny.linemonitorbot.FloatingToolbarFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/floating_toolbar_fragment" />
     </LinearLayout>
-		
-    	
+
 </LinearLayout>
