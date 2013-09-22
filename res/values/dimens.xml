@@ -10,7 +10,7 @@
 	<dimen name="padding_table_row">8dp</dimen>
 	<dimen name="padding_before_checkbox">30dp</dimen>
 	<dimen name="padding_before_radiobutton">4dp</dimen>
-	<dimen name="margin_vertical_separator">20dp</dimen>
+	<dimen name="margin_vertical_separator">25dp</dimen>
 	<dimen name="margin_roll_math_buttons">20dp</dimen>
 	<dimen name="borderless_row_padding">4dp</dimen>
 	<dimen name="dialog_sheets_per_minute_width">250dp</dimen>

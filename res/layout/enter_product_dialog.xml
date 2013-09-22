@@ -114,7 +114,7 @@
     </LinearLayout>
 
     <TableLayout
-        android:id="@+id/table_spm_dialog"
+        android:id="@+id/container_dimensions_and_speed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
         android:shrinkColumns="*"
@@ -148,7 +148,7 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/TableRow01"
+            android:id="@+id/row_sheet_width"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
@@ -173,10 +173,9 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/tableRow1"
+            android:id="@+id/row_sheet_length"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" 
-            android:paddingBottom="30dip">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/lbl_sheet_length"
@@ -203,7 +202,8 @@
         <TableRow
             android:id="@+id/tableRow2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_vertical_separator" >
 
             <TextView
                 android:id="@+id/lbl_line_speed"
