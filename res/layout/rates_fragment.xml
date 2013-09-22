@@ -98,7 +98,7 @@
                         android:id="@+id/edit_sheet_weight"
                         style="@style/EditText.TwoColumns"
                         android:ems="3"
-                        android:imeOptions="actionNext"
+                        android:imeOptions="actionDone"
                         android:gravity="center"
                         android:inputType="numberDecimal"
                         android:maxLength="5"

@@ -1,8 +1,5 @@
 package com.kovaciny.linemonitorbot;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -50,6 +47,9 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 
   	LinearLayout mContainerProductDetails;
   	LinearLayout mContainerSkidsOnTable;
+  	TableLayout mContainerDimensionsAndSpeed;
+  	TableRow mRow_sheetLength;
+  	
   	ImageButton mBtn_addWeb;
   	ImageButton mBtn_subtractWeb;
   	EditText mEdit_gauge;
@@ -110,9 +110,11 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View rootView = inflater.inflate(R.layout.enter_product_dialog, null);
 		builder.setView(rootView);
-		mContainerSkidsOnTable = (LinearLayout) inflater.inflate(R.layout.container_skids_on_table, null);
 		
+		mContainerSkidsOnTable = (LinearLayout) inflater.inflate(R.layout.container_skids_on_table, null);
 		mContainerProductDetails = (LinearLayout) rootView.findViewById(R.id.container_product_details);
+		mContainerDimensionsAndSpeed = (TableLayout) rootView.findViewById(R.id.container_dimensions_and_speed);
+		mRow_sheetLength = (TableRow) rootView.findViewById(R.id.row_sheet_length);
 		
 		mRadioGroup_skidsOnTable = (RadioGroup) mContainerSkidsOnTable.findViewById(R.id.radio_group_skids_on_table);
 		mRadio_oneSkid = (RadioButton) mContainerSkidsOnTable.findViewById(R.id.radio_one_skid);
@@ -235,7 +237,7 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 					@Override
 					public void onClick(View v) {
 						View parent = (View)v.getRootView();
-						ViewGroup table = (ViewGroup)parent.findViewById(R.id.table_spm_dialog);
+						ViewGroup table = (ViewGroup)parent.findViewById(R.id.container_dimensions_and_speed);
 						boolean validInputs = true;
 						if (table != null) {					
 							for (int i = 0, n = table.getChildCount(); i < n; i++) {
@@ -318,17 +320,17 @@ public class EnterProductDialogFragment extends DialogFragment implements OnClic
 		if (state.equals(ROLLS_MODE) || state.equals(Product.ROLLSET_TYPE)) {
 			this.mSheetsOrRollsState = ROLLS_MODE;
 			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.roll_slider120);
-			this.mLbl_sheetLength.setVisibility(TextView.GONE);
-			this.mEdit_sheetLength.setVisibility(EditText.GONE);
 			this.mRadioGroup_coreSize.setVisibility(RadioGroup.VISIBLE);
 			this.mEdit_sheetWidth.setNextFocusDownId(R.id.edit_line_speed);
+			mContainerDimensionsAndSpeed.removeView(mRow_sheetLength);
 			mContainerProductDetails.removeView(mContainerSkidsOnTable);
 			setNumberOfWebs(getNumberOfWebs());
 		} else if (state.equals(SHEETS_MODE) || state.equals(Product.SHEETSET_TYPE)) {
 			this.mSheetsOrRollsState = SHEETS_MODE;
 			mImgbtnSheetsOrRolls.setBackgroundResource(R.drawable.sheet_slider120);
-			this.mLbl_sheetLength.setVisibility(TextView.VISIBLE);
-			this.mEdit_sheetLength.setVisibility(EditText.VISIBLE);
+			if (mRow_sheetLength.getParent() == null) {
+				mContainerDimensionsAndSpeed.addView(mRow_sheetLength, 2);
+			}
 			this.mRadioGroup_coreSize.setVisibility(RadioGroup.GONE);
 			this.mEdit_sheetWidth.setNextFocusDownId(R.id.edit_sheet_length);
 			setNumberOfWebs(getNumberOfWebs()); //to trigger the check for added views TODO ugly
