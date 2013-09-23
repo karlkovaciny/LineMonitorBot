@@ -33,6 +33,14 @@
         <item name="android:textColor">@color/gray</item>
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
     </style>
+
+    <style name="Button.RollMath">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/margin_roll_math_buttons</item>
+        <item name="android:layout_marginBottom">@dimen/margin_roll_math_buttons_bottom</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
     
     <style name="EditText" parent="@android:style/Widget.EditText">
         <item name="android:textColor">#1964DE</item>

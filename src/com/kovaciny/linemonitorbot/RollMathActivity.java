@@ -60,6 +60,7 @@ public class RollMathActivity extends FragmentActivity implements TabListener, O
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("RollMath.linearFeet", extras.getInt("linearFeet"));
         editor.putFloat("RollMath.width", extras.getFloat("width"));
+        editor.putFloat("RollMath.footWeight", extras.getFloat("footWeight"));
 
         editor.commit();
         

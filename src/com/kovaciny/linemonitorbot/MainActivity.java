@@ -46,7 +46,7 @@ public class MainActivity extends FragmentActivity implements
 		EnterProductDialogFragment.EnterProductDialogListener,
 		GoByHeightDialogListener, View.OnClickListener {
     
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
 	private static final int LINE_LIST_MENU_GROUP = 1111;
 	private static final int LINE_LIST_ID_RANDOMIZER = 1234; //TODO replace this by adding line number to Menu.FIRST
@@ -417,6 +417,7 @@ public class MainActivity extends FragmentActivity implements
 	            Roll roll = (Roll) mModel.getSelectedWorkOrder().getProduct();
 	            rollMathIntent.putExtra("coreType", roll.getCoreType());
 	            rollMathIntent.putExtra("width", (float) (roll.getWidth() / Double.valueOf(roll.getNumberOfWebs())));
+	            rollMathIntent.putExtra("footWeight", (float) (roll.getUnitWeight() / Double.valueOf(roll.getNumberOfWebs())));
 	            
 	            EditText editFeet = (EditText) this.findViewById(R.id.edit_total_sheets_per_skid);
 	            if (editFeet.getText().length() > 0) {

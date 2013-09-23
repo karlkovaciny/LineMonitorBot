@@ -12,6 +12,7 @@
 	<dimen name="padding_before_radiobutton">4dp</dimen>
 	<dimen name="margin_vertical_separator">25dp</dimen>
 	<dimen name="margin_roll_math_buttons">20dp</dimen>
+	<dimen name="margin_roll_math_buttons_bottom">10dp</dimen>
 	<dimen name="borderless_row_padding">4dp</dimen>
 	<dimen name="dialog_sheets_per_minute_width">250dp</dimen>
 	<dimen name="dialog_sheets_per_minute_height">425dp</dimen>
@@ -32,4 +33,5 @@
 	<dimen name="up_arrow_top_padding">10dp</dimen>
 	<dimen name="up_arrow_bottom_padding">16dp</dimen>
 	<dimen name="floating_toolbar_height">400dp</dimen>
+	<dimen name="textsize_roll_math_results">24sp</dimen>
 </resources>
