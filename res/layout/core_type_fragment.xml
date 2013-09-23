@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+ 	<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_vertical_separator"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/lbl_core_weight"
+                style="@style/Label"
+                android:paddingLeft="@dimen/label_padding_right"
+                android:text="Core weight: " />
+
+            <TextView
+                android:id="@+id/txt_core_weight"
+                style="@style/Label" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:id="@+id/core_size_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
+
+                <TextView
+                    android:id="@+id/lbl_core_size"
+                    style="@style/Label"
+                    android:layout_gravity="center_vertical"
+                    android:paddingRight="@dimen/label_padding_right"
+                    android:text="Core:"
+                    android:visibility="gone" />
+
+                <RadioGroup
+                    android:id="@+id/radio_group_core_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/padding_before_checkbox" >
+
+                    <RadioButton
+                        android:id="@+id/radio_r3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="R3  " />
+
+                    <RadioButton
+                        android:id="@+id/radio_r6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="R6  " />
+
+                    <RadioButton
+                        android:id="@+id/radio_r8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="R8" />
+                </RadioGroup>
+
+                <CheckBox
+                    android:id="@+id/chk_heavy_wall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Heavy wall" />
+            </LinearLayout>
+        </RelativeLayout>
+</LinearLayout>

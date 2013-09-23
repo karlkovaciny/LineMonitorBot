@@ -25,30 +25,21 @@ import com.kovaciny.primexmodel.Roll;
 public class RollMathDiameterFragment extends Fragment implements View.OnClickListener {
 
     Button mBtn_getDiameter;
-    CheckBox mChk_heavyWall;
-
+    
     EditText mEdit_linearFeet;
     EditText mEdit_orderedGauge;
     EditText mEdit_grossWeight;
     EditText mEdit_materialDensity;
     EditText mEdit_width;
     
-    RadioGroup mRadioGroup_coreSize;
-    RadioButton mRadio_r3;
-    RadioButton mRadio_r6;
-    RadioButton mRadio_r8;
-    
     TextView mTxt_rollDiameter;
-    TextView mTxt_coreWeight;
     
-    int mCoreType;
-    int mLinearFeet;
     double mWidth;
+    int mLinearFeet;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         SharedPreferences settings = getActivity().getPreferences(Context.MODE_PRIVATE);
-        mCoreType = settings.getInt("RollMath.coreType", Roll.CORE_TYPE_R8);
         mLinearFeet = settings.getInt("RollMath.linearFeet", 0);
         mWidth = Double.valueOf(settings.getFloat("RollMath.width", 0f));
         super.onCreate(savedInstanceState);
@@ -61,34 +52,6 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
         mBtn_getDiameter = (Button) rootView.findViewById(R.id.btn_get_diameter);
         mBtn_getDiameter.setOnClickListener(this);
         
-        mChk_heavyWall = (CheckBox) rootView.findViewById(R.id.chk_heavy_wall);
-
-        mRadioGroup_coreSize = (RadioGroup) rootView.findViewById(R.id.radio_group_core_size);
-        mRadio_r3 = (RadioButton) rootView.findViewById(R.id.radio_r3);
-        mRadio_r6 = (RadioButton) rootView.findViewById(R.id.radio_r6);
-        mRadio_r8 = (RadioButton) rootView.findViewById(R.id.radio_r8);
-        setCoreType(mCoreType);
-        mRadioGroup_coreSize.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.radio_r3:
-                        mChk_heavyWall.setEnabled(true);
-                        break;
-                    case R.id.radio_r6:
-                        mChk_heavyWall.setEnabled(true);
-                        break;
-                    case R.id.radio_r8:
-                        mChk_heavyWall.setEnabled(false);
-                        break;
-                    default:
-                        mRadioGroup_coreSize.clearCheck();
-                }
-                
-            }
-        });
-
         mEdit_orderedGauge = (EditText) rootView.findViewById(R.id.edit_ordered_gauge);
         mEdit_linearFeet = (EditText) rootView.findViewById(R.id.edit_linear_feet);
         if (mLinearFeet > 0) {
@@ -97,14 +60,8 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
         mEdit_grossWeight = (EditText) rootView.findViewById(R.id.edit_gross_weight);
         mEdit_materialDensity = (EditText) rootView.findViewById(R.id.edit_material_density);
         mEdit_width = (EditText) rootView.findViewById(R.id.edit_width);
-        mTxt_coreWeight = (TextView) rootView.findViewById(R.id.txt_core_weight);
         if (mWidth > 0) {
-            mEdit_width.setText(String.valueOf(mWidth));
-            double coreWeight = Roll.getCoreWeight(getCoreType(), mWidth);
-            //round to nearest 0.5
-            coreWeight = Math.round(coreWeight * 2d) / 2d;
-            String coreWeightDisplay = new DecimalFormat("0.#").format(coreWeight) + " lbs";
-            mTxt_coreWeight.setText(coreWeightDisplay);            
+        	mEdit_width.setText(String.valueOf(mWidth));
         }
         mTxt_rollDiameter = (TextView) rootView.findViewById(R.id.txt_roll_diameter);
                 
@@ -126,7 +83,7 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
                     int linearFeet = Integer.valueOf(mEdit_linearFeet.getText().toString());
                     double orderedGauge = Double.valueOf(mEdit_orderedGauge.getText().toString());
                     diameter = ((RollMathActivity)getActivity())
-                            .calculateRollDiameter(getCoreType(), linearFeet, orderedGauge);
+                            .calculateRollDiameter(((RollMathActivity)getActivity()).getCoreType(), linearFeet, orderedGauge);
                     editor.putFloat("RollMath.orderedGauge", (float) orderedGauge);
                     editor.putInt("RollMath.linearFeet", linearFeet);
                 } else {
@@ -134,7 +91,7 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
                     double grossWeight = Double.valueOf(mEdit_grossWeight.getText().toString());
                     double materialDensity = Double.valueOf(mEdit_materialDensity.getText().toString());
                     diameter = ((RollMathActivity)getActivity())
-                            .calculateRollDiameter(getCoreType(), rollWidth, grossWeight, materialDensity);
+                            .calculateRollDiameter(((RollMathActivity)getActivity()).getCoreType(), rollWidth, grossWeight, materialDensity);
                     editor.putFloat("RollMath.width", (float) rollWidth);
                     editor.putFloat("RollMath.grossWeight", (float) grossWeight);
                     editor.putFloat("RollMath.materialDensity", (float) materialDensity);
@@ -195,45 +152,6 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
            }
         }
         return validInputs;
-    }
-
-
-
-    private void setCoreType(int coreType) {
-        switch(coreType){
-            case Roll.CORE_TYPE_R3:
-            case Roll.CORE_TYPE_R3_HEAVY:
-                mRadio_r3.setChecked(true);
-                break;
-            case Roll.CORE_TYPE_R6:
-            case Roll.CORE_TYPE_R6_HEAVY:
-                mRadio_r6.setChecked(true);
-                break;
-            case Roll.CORE_TYPE_R8:
-                mRadio_r8.setChecked(true);
-                break;
-            default:
-                mRadio_r3.setChecked(true);
-        }
-    }
-    
-    private int getCoreType() {
-        boolean heavyWalled = mChk_heavyWall.isChecked();
-        switch (mRadioGroup_coreSize.getCheckedRadioButtonId()) {
-            case R.id.radio_r3:
-                if (heavyWalled) return Roll.CORE_TYPE_R3_HEAVY;
-                else return Roll.CORE_TYPE_R3;
-            case R.id.radio_r6:
-                mChk_heavyWall.setEnabled(true);
-                if (heavyWalled) return Roll.CORE_TYPE_R6_HEAVY;
-                else return Roll.CORE_TYPE_R6;
-            case R.id.radio_r8:
-                mChk_heavyWall.setEnabled(false);
-                return Roll.CORE_TYPE_R8;
-            default:
-                mRadioGroup_coreSize.clearCheck();
-                return 0;
-        }
     }
     
     @Override
