@@ -1,5 +1,9 @@
 package com.kovaciny.linemonitorbot;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import android.app.ActionBar;
 import android.app.ActionBar.TabListener;
 import android.app.FragmentTransaction;
@@ -13,12 +17,18 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.kovaciny.helperfunctions.HelperFunction;
+import com.kovaciny.linemonitorbot.CoreTypeFragment.OnCoreTypeChangedListener;
 import com.kovaciny.primexmodel.Roll;
 
-public class RollMathActivity extends FragmentActivity implements TabListener {
+public class RollMathActivity extends FragmentActivity implements TabListener, OnCoreTypeChangedListener {
     
-    double DIAMETER_SAFETY_FACTOR = .1875; //also having them use the ordered, not average gauge
-
+    public static final double DIAMETER_SAFETY_FACTOR = .1875; //also having them use the ordered, not average gauge
+    public static final int DIAMETER_FRAGMENT_POSITION = 0;
+    public static final int WEIGHT_FRAGMENT_POSITION = 1;
+    public static final int FEET_FRAGMENT_POSITION = 2;
+    
+    int mCoreType;
+    double mWidth;
     
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -32,6 +42,7 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
 
     /**
      * The {@link ViewPager} that will host the section contents.
+     * 
      * Only public for testing.
      */
     public ViewPager mViewPager;
@@ -40,17 +51,17 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
     protected void onCreate(Bundle args) {
         super.onCreate(args);
         
-        //Share extras across fragments with SharedPreferences
         Bundle extras = getIntent().getExtras();
-        SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
+        mCoreType = extras.getInt("coreType");
+        mWidth = Double.valueOf(extras.getFloat("width"));
         
-        editor.putInt("RollMath.coreType", extras.getInt("coreType"));
+        //Share extras across fragments with SharedPreferences
+        SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);	//TODO don't use
+        SharedPreferences.Editor editor = settings.edit();
         editor.putInt("RollMath.linearFeet", extras.getInt("linearFeet"));
         editor.putFloat("RollMath.width", extras.getFloat("width"));
 
         editor.commit();
-        
         
         setContentView(R.layout.activity_roll_math);
 
@@ -121,13 +132,16 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
             Fragment fragment = null;
             Bundle args = new Bundle();
             switch(position) {
-                case (0): fragment = new RollMathDiameterFragment();
+                case DIAMETER_FRAGMENT_POSITION: 
+                	fragment = new RollMathDiameterFragment();
                 break;
                 
-                case (1): fragment = new RollMathWeightFragment();
+                case (WEIGHT_FRAGMENT_POSITION): 
+                	fragment = new RollMathWeightFragment();
                 break;
                 
-                case (2): fragment = new RollMathFeetFragment();
+                case (FEET_FRAGMENT_POSITION): 
+                	fragment = new RollMathFeetFragment();
                 break;
             }
           
@@ -153,6 +167,12 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
             return 0;
         }
     }
+    
+	public Fragment findFragmentByPosition(int pos) {
+		String tag = "android:switcher:" + mViewPager.getId() + ":" + pos;
+		Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+		return fragment;
+	}
         /*
          * 
          */
@@ -238,5 +258,32 @@ public class RollMathActivity extends FragmentActivity implements TabListener {
          */
         public double calculateRollNetWeight(int linearFeet, double referenceNetWeight, int referenceLinearFeet) {
             return Double.valueOf(linearFeet) / Double.valueOf(referenceLinearFeet) * referenceNetWeight;
+        }
+        
+        public void onCoreTypeChanged(int checkedRadio, boolean heavyWallChecked) {
+			switch (checkedRadio) {
+			case R.id.radio_r3:
+				mCoreType = heavyWallChecked ? Roll.CORE_TYPE_R3_HEAVY : Roll.CORE_TYPE_R3;
+				break;
+			case R.id.radio_r6:
+				mCoreType = heavyWallChecked ? Roll.CORE_TYPE_R6_HEAVY : Roll.CORE_TYPE_R6;
+				break;
+			case R.id.radio_r8:
+				mCoreType = Roll.CORE_TYPE_R8;
+				break;
+			default: throw new RuntimeException("invalid core type");
+			}
+			
+			List<CoreTypeFragment> ctfs = new ArrayList<CoreTypeFragment>();
+			ctfs.add((CoreTypeFragment) getSupportFragmentManager().findFragmentById(R.id.core_type_fragment_1));
+			ctfs.add((CoreTypeFragment) getSupportFragmentManager().findFragmentById(R.id.core_type_fragment_2));
+			ctfs.add((CoreTypeFragment) getSupportFragmentManager().findFragmentById(R.id.core_type_fragment_3));
+			for (Iterator<CoreTypeFragment> i = ctfs.iterator(); i.hasNext(); ) {
+			    i.next().onCoreWeightChanged(Roll.getCoreWeight(mCoreType, mWidth));
+			}
+        }
+        
+        public int getCoreType() {
+        	 return mCoreType;
         }
 }

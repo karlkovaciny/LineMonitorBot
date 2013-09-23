@@ -117,6 +117,13 @@
         </TableRow>
     </TableLayout>
 
+        <fragment
+            android:id="@+id/core_type_fragment_2"
+            android:name="com.kovaciny.linemonitorbot.CoreTypeFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/core_type_fragment" />
+    
     <TextView
         android:id="@+id/lbl_roll_diameter"
         style="@style/Label"

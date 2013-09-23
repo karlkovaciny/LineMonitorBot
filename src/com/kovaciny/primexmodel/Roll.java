@@ -59,11 +59,13 @@ public class Roll implements Product {
      * 
      */
     public static double getCoreWeight (int coreType, double coreLength) {
-       return coreTypeToWeightPerInchMap.get(coreType) * coreLength; 
+    	if (!coreTypeToWeightPerInchMap.containsKey(coreType)) throw new IllegalArgumentException("unknown core type");
+    	return coreTypeToWeightPerInchMap.get(coreType) * coreLength; 
     }
     
     public static double getCoreOutsideRadius(int coreType) {
-        return coreTypeToOutsideDiameterMap.get(coreType) / 2d;
+    	if (!coreTypeToOutsideDiameterMap.containsKey(coreType)) throw new IllegalArgumentException("unknown core type");
+    	return coreTypeToOutsideDiameterMap.get(coreType) / 2d;
     }
     
     public static double getCoreArea(int coreType) {
