@@ -53,7 +53,6 @@ android.support.v4.app.Fragment:
     static final int RESUMED
     481:481:public final int getId()
     488:488:public final java.lang.String getTag()
-    499:503:public void setArguments(android.os.Bundle)
     510:510:public final android.os.Bundle getArguments()
     522:527:public void setInitialSavedState(android.support.v4.app.Fragment$SavedState)
     541:543:public void setTargetFragment(android.support.v4.app.Fragment,int)
@@ -95,7 +94,6 @@ android.support.v4.app.FragmentActivity$FragmentTag:
 android.support.v4.app.FragmentManager:
     public static final int POP_BACK_STACK_INCLUSIVE
     139:139:public android.support.v4.app.FragmentTransaction openTransaction()
-    public abstract android.support.v4.app.Fragment findFragmentById(int)
     public abstract void popBackStack()
     public abstract boolean popBackStackImmediate()
     public abstract void popBackStack(java.lang.String,int)
@@ -926,6 +924,7 @@ com.kovaciny.database.DatabaseViewer:
     public static final java.lang.String DATABASE_NAME
     35:36:public android.database.Cursor selectRecordsFromDB(java.lang.String,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String,java.lang.String,java.lang.String)
 com.kovaciny.database.PrimexDatabaseSchema
+com.kovaciny.database.PrimexDatabaseSchema$Hoppers
 com.kovaciny.database.PrimexDatabaseSchema$LineWorkOrderLink
 com.kovaciny.database.PrimexDatabaseSchema$ModelState
 com.kovaciny.database.PrimexDatabaseSchema$Novatecs
@@ -949,9 +948,11 @@ com.kovaciny.database.PrimexSQLiteOpenHelper:
     private static final java.lang.String SQL_CREATE_WORK_ORDERS
     private static final java.lang.String SQL_CREATE_LINE_WORK_ORDER_LINK
     private static final java.lang.String SQL_CREATE_PRODUCTS
+    private static final java.lang.String SQL_CREATE_HOPPERS
     private static final java.lang.String SQL_CREATE_NOVATECS
     private static final java.lang.String SQL_CREATE_SKIDS
     private static final java.lang.String SQL_CREATE_PRODUCT_TYPES
+    private static final java.lang.String TABLE_NAME_HOPPERS
     private static final java.lang.String TABLE_NAME_NOVATECS
     private static final java.lang.String TABLE_NAME_SKIDS
     private static final java.lang.String TABLE_NAME_LINE_WORK_ORDER_LINK
@@ -960,6 +961,7 @@ com.kovaciny.database.PrimexSQLiteOpenHelper:
     private static final java.lang.String TABLE_NAME_WORK_ORDERS
     private static final java.lang.String TABLE_NAME_PRODUCTION_LINES
     private static final java.lang.String TABLE_NAME_MODEL_STATE
+    private static final java.lang.String SQL_DELETE_HOPPERS
     private static final java.lang.String SQL_DELETE_NOVATECS
     private static final java.lang.String SQL_DELETE_SKIDS
     private static final java.lang.String SQL_DELETE_LINE_WORK_ORDER_LINK
@@ -968,10 +970,11 @@ com.kovaciny.database.PrimexSQLiteOpenHelper:
     private static final java.lang.String SQL_DELETE_PRODUCTION_LINES
     private static final java.lang.String SQL_DELETE_WORK_ORDERS
     private static final java.lang.String SQL_DELETE_MODEL_STATE
-    705:722:public java.util.Date getLatestWoCreateDate()
-    777:796:public int getProductType(int)
-    818:835:public java.lang.String getFieldAsString(java.lang.String,java.lang.String,java.lang.String,java.lang.String[])
-    1028:1046:public void deleteSkid(int,int)
+    624:634:public android.database.Cursor loadHoppers(int)
+    783:800:public java.util.Date getLatestWoCreateDate()
+    855:874:public int getProductType(int)
+    896:913:public java.lang.String getFieldAsString(java.lang.String,java.lang.String,java.lang.String,java.lang.String[])
+    1113:1131:public void deleteSkid(int,int)
 com.kovaciny.helperfunctions.HelperFunction:
     public static final long ONE_HOUR_IN_MILLIS
     public static final long ONE_MINUTE_IN_MILLIS
@@ -979,10 +982,12 @@ com.kovaciny.helperfunctions.HelperFunction:
     public static final long MINUTES_PER_HOUR
     public static final long SECONDS_PER_MINUTE
     public static final double INCHES_PER_FOOT
+    public static final double GRAMS_PER_POUND
     public static final double EPSILON
     public static final float RELATIVE_SIZE_SUPERSCRIPT
     public static final float RELATIVE_SIZE_SUBSCRIPT
-    21:23:private HelperFunction()
+    public static final float RELATIVE_SIZE_SMALLER
+    25:27:private HelperFunction()
 com.kovaciny.linemonitorbot.BuildConfig
 com.kovaciny.linemonitorbot.EnterProductDialogFragment:
     public static final java.lang.String SHEETS_MODE
@@ -990,7 +995,8 @@ com.kovaciny.linemonitorbot.EnterProductDialogFragment:
     public static final int MAXIMUM_NUMBER_OF_WEBS
 com.kovaciny.linemonitorbot.FirstLaunchActivity:
     private static final int LINE_LIST_MENU_GROUP
-com.kovaciny.linemonitorbot.Job
+com.kovaciny.linemonitorbot.FloatingToolbarFragment:
+    private android.widget.ImageButton mImgBtn_pomodroido
 com.kovaciny.linemonitorbot.MainActivity:
     public static final boolean DEBUG
     private static final int LINE_LIST_MENU_GROUP
@@ -1018,6 +1024,16 @@ com.kovaciny.linemonitorbot.R$menu
 com.kovaciny.linemonitorbot.R$string
 com.kovaciny.linemonitorbot.R$style
 com.kovaciny.linemonitorbot.R$xml
+com.kovaciny.linemonitorbot.RollMathActivity:
+    public static final double DIAMETER_SAFETY_FACTOR
+    public static final int DIAMETER_FRAGMENT_POSITION
+    public static final int WEIGHT_FRAGMENT_POSITION
+    public static final int FEET_FRAGMENT_POSITION
+    173:175:public android.support.v4.app.Fragment findFragmentByPosition(int)
+    210:211:public double calculateMaterialDensity(double,double,double)
+    219:219:public double calculateLinearFeet(double,double,int)
+    226:227:public double calculateLinearFeet(int,double,double,double)
+    261:261:public double calculateRollNetWeight(int,double,int)
 com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver:
     public static final java.lang.String ONE_TIME
     public static final java.lang.String REPEATING
@@ -1027,26 +1043,32 @@ com.kovaciny.linemonitorbot.SkidTimesFragment:
     public static final int MAXIMUM_NUMBER_OF_SKIDS
     public static final java.lang.String DEFAULT_PRODUCT_UNITS
     public static final java.lang.String DEFAULT_PRODUCT_GROUPING
-    215:215:public java.util.List getSkidList()
-    219:220:public void setSkidList(java.util.List)
+    221:221:public java.util.List getSkidList()
+    225:226:public void setSkidList(java.util.List)
 com.kovaciny.linemonitorbot.TipsActivityFragment:
     public static final java.lang.String MOTION_ACTIONS_PACKAGE_NAME
     public static final java.lang.String TINY_FLASHLIGHT_PACKAGE_NAME
     public static final java.lang.String PROXIMITY_ACTIONS_PACKAGE_NAME
 com.kovaciny.linemonitorbot.ViewEventResponder
 com.kovaciny.primexmodel.Concentrate
-com.kovaciny.primexmodel.Hopper
-com.kovaciny.primexmodel.Material:
-    25:25:public java.lang.String getName()
+com.kovaciny.primexmodel.Extruder:
+    private double mOutputRate
+    12:14:public void setOutputRate(double)
+    17:17:public double getOutputRate()
+com.kovaciny.primexmodel.Hopper:
+    private com.kovaciny.primexmodel.Material mContents
+    29:29:public double getUsableVolume()
+    33:33:public double getAlarmVolume()
+    47:47:public boolean hasAlarm()
+    51:51:public com.kovaciny.primexmodel.Material getContents()
+    55:56:public void setContents(com.kovaciny.primexmodel.Material)
+    62:63:public void setFeedRate(double)
+    66:66:public double getLbsContained()
+    70:71:public double setLbsContained(double)
+com.kovaciny.primexmodel.Material
 com.kovaciny.primexmodel.Novatec:
-    55:55:public double estimateMinimumFullCapacity()
-    59:59:public double estimateAlarmCapacity()
-    63:63:public double getLbsContained()
-    67:68:public double setLbsContained(double)
-    76:78:public void setLetdownRatio(double)
-    81:81:public com.kovaciny.primexmodel.Material getContents()
-    85:88:public void setContents(com.kovaciny.primexmodel.Material)
-    91:92:private void updateCapacity()
+    double mLbsContained
+    39:40:public void setScrewSizeFactor(double)
 com.kovaciny.primexmodel.Pallet:
     double mLength
     double mWidth
@@ -1072,6 +1094,7 @@ com.kovaciny.primexmodel.PrimexModel:
     public static final java.lang.String NUMBER_OF_WEBS_CHANGE_EVENT
     public static final java.lang.String GROSS_WIDTH_CHANGE_EVENT
     public static final java.lang.String COLOR_PERCENT_CHANGE_EVENT
+    public static final java.lang.String TEN_SECOND_LETDOWN_CHANGE_EVENT
     public static final java.lang.String EDGE_TRIM_RATIO_CHANGE_EVENT
     public static final java.lang.String NOVATEC_CHANGE_EVENT
     public static final java.lang.String ERROR_NET_LESS_THAN_GROSS
@@ -1082,19 +1105,21 @@ com.kovaciny.primexmodel.PrimexModel:
     public static final java.lang.String ERROR_ZERO_LINE_SPEED
     public static final java.lang.String ERROR_NO_PPM_VALUE
     public static final double MAXIMUM_POSSIBLE_GAUGE
-    96:97:public void removePropertyChangeListener(java.beans.PropertyChangeListener)
-    184:188:public com.kovaciny.primexmodel.Skid addSkid(int,int)
-    237:244:public void changeNovatecSetpoint(java.lang.Double)
-    456:485:public void changeNumberOfSkids(double)
-    488:489:public void closeDb()
-    518:518:public java.util.List getWoNumbers()
-    522:522:public java.util.Date getLatestWoCreateDate()
-    542:543:public void setProductsPerMinute(double)
-    550:551:public void setEdgeTrimPercent(double)
-    558:559:public void setNetPph(double)
-    566:567:public void setGrossPph(double)
-    574:575:public void setColorPercent(double)
-    599:600:public void setCreateDate(java.util.Date)
+    98:99:public void removePropertyChangeListener(java.beans.PropertyChangeListener)
+    188:192:public com.kovaciny.primexmodel.Skid addSkid(int,int)
+    241:248:public void changeNovatecSetpoint(java.lang.Double)
+    470:499:public void changeNumberOfSkids(double)
+    502:503:public void closeDb()
+    520:520:public boolean hasLineSpeed()
+    536:536:public java.util.List getWoNumbers()
+    540:540:public java.util.Date getLatestWoCreateDate()
+    560:561:public void setProductsPerMinute(double)
+    568:569:public void setEdgeTrimPercent(double)
+    576:577:public void setNetPph(double)
+    584:585:public void setGrossPph(double)
+    592:593:public void setTenSecondLetdownGrams(double)
+    600:601:public void setColorPercent(double)
+    625:626:public void setCreateDate(java.util.Date)
 com.kovaciny.primexmodel.Product:
     public static final java.lang.String SHEETS_TYPE
     public static final java.lang.String SHEETSET_TYPE
@@ -1108,10 +1133,13 @@ com.kovaciny.primexmodel.Product:
     public abstract java.lang.String getMaterialType()
     public abstract boolean setMaterialType()
 com.kovaciny.primexmodel.ProductionLine:
+    private com.kovaciny.primexmodel.Novatec mNovatec2
     public static final java.lang.String SPEED_CONTROLLER_TYPE_GEARED
     public static final java.lang.String SPEED_CONTROLLER_TYPE_PERCENT
     public static final java.lang.String SPEED_CONTROLLER_TYPE_RATIO
     public static final java.lang.String SPEED_CONTROLLER_TYPE_NONE
+    133:133:public com.kovaciny.primexmodel.Novatec getSecondaryNovatec()
+    136:137:public void setSecondaryNovatec(com.kovaciny.primexmodel.Novatec)
 com.kovaciny.primexmodel.Products:
     3:3:public Products()
     5:14:public static com.kovaciny.primexmodel.Product makeProduct(java.lang.String,double,double,double)
@@ -1119,18 +1147,22 @@ com.kovaciny.primexmodel.Roll:
     private static final java.lang.String mUnitSingular
     private static final java.lang.String mUnitPlural
     private static final java.lang.String mGrouping
-    public int mLineNumber
-    30:30:public double getEstimatedWeight()
-    35:35:public double getHeight()
-    43:44:public void setGauge(double)
-    68:71:public void setLength(double)
-    73:73:public int getLinearFeet()
-    77:78:public void setLinearFeet(int)
-    84:86:public void setWidth(double)
-    88:88:public java.lang.String getMaterialType()
-    92:92:public boolean setMaterialType()
-    113:113:public double getDensity()
-    117:118:public void setDensity(double)
+    public static final int CORE_TYPE_R3
+    public static final int CORE_TYPE_R6
+    public static final int CORE_TYPE_R8
+    public static final int CORE_TYPE_R3_HEAVY
+    public static final int CORE_TYPE_R6_HEAVY
+    89:89:public double getEstimatedWeight()
+    94:94:public double getHeight()
+    102:103:public void setGauge(double)
+    127:130:public void setLength(double)
+    132:132:public int getLinearFeet()
+    136:137:public void setLinearFeet(int)
+    143:145:public void setWidth(double)
+    147:147:public java.lang.String getMaterialType()
+    151:151:public boolean setMaterialType()
+    178:178:public double getDensity()
+    182:183:public void setDensity(double)
 com.kovaciny.primexmodel.Rollset:
     private static final java.lang.String mUnitSingular
     private static final java.lang.String mUnitPlural
@@ -1567,6 +1599,7 @@ org.junit.runners.model.TestClass
 tests.ATestSuiteRunner
 tests.MainActivityTest
 tests.MainActivityTest$1
+tests.MainActivityTest$10
 tests.MainActivityTest$2
 tests.MainActivityTest$3
 tests.MainActivityTest$4
@@ -1583,6 +1616,7 @@ tests.PrimexModelTest$3
 tests.PrimexModelTest$4
 tests.PrimexModelTest$5
 tests.PrimexModelTest$6
+tests.PrimexModelTest$7
 tests.PrimexTestCase
 tests.RatesFragmentTest
 tests.RatesFragmentTest$1
