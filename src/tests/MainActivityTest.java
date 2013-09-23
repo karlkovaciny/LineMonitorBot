@@ -370,7 +370,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				spmEdit_sheetWidth.setText(String.valueOf(NEW_WIDTH_SETPOINT));
-				spmEdit_sheetLength.setText(String.valueOf(NEW_LENGTH_SETPOINT));
+				if (spmEdit_sheetLength != null) spmEdit_sheetLength.setText(String.valueOf(NEW_LENGTH_SETPOINT));
 				spmEdit_lineSpeed.setText(String.valueOf(NEW_LINE_SPEED_SETPOINT));
 				spmEdit_diffSpeed.setText(String.valueOf(NEW_DIFFERENTIAL));
 				mEdit_totalCount.setText("1000");

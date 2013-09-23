@@ -53,6 +53,7 @@
                         android:ems="10"
                         android:inputType="numberDecimal"
                         android:maxEms="3"
+                        android:imeOptions="actionDone"
                         android:maxLength="6" />
                 </LinearLayout>
 

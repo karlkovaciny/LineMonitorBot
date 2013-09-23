@@ -1,33 +1,29 @@
 package com.kovaciny.linemonitorbot;
 
+import java.text.DecimalFormat;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.PrimexModel;
-import com.kovaciny.primexmodel.Roll;
 
 public class RollMathFeetFragment extends Fragment implements View.OnClickListener {
 
     Button mBtn_getFeet;
 
-    EditText mEdit_linearFeet;
     EditText mEdit_orderedGauge;
+    EditText mEdit_targetDiameter;
     
-    TextView mTxt_rollDiameter;
+    TextView mTxt_linearFeet;
     
     int mLinearFeet;
     
@@ -45,14 +41,10 @@ public class RollMathFeetFragment extends Fragment implements View.OnClickListen
         mBtn_getFeet = (Button) rootView.findViewById(R.id.btn_get_feet);
         mBtn_getFeet.setOnClickListener(this);
         
+        mEdit_targetDiameter = (EditText) rootView.findViewById(R.id.edit_target_diameter);
         mEdit_orderedGauge = (EditText) rootView.findViewById(R.id.edit_ordered_gauge);
-        mEdit_linearFeet = (EditText) rootView.findViewById(R.id.edit_linear_feet);
-        if (mLinearFeet > 0) {
-            mEdit_linearFeet.setText(String.valueOf(mLinearFeet));
-        }
-
-        
-        mTxt_rollDiameter = (TextView) rootView.findViewById(R.id.txt_roll_diameter);
+                
+        mTxt_linearFeet = (TextView) rootView.findViewById(R.id.txt_linear_feet);
                 
         return rootView;
     }
@@ -61,21 +53,34 @@ public class RollMathFeetFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         if (v.getId() == R.id.btn_get_feet) {
             if (validateInputs()) {
-                double linearInches = Double.valueOf(mEdit_linearFeet.getText().toString()) * HelperFunction.INCHES_PER_FOOT;
-                double orderedGauge = Double.valueOf(mEdit_orderedGauge.getText().toString());
                 HelperFunction.hideKeyboard(getActivity());
+                
+                
+                double targetDiameter = Double.valueOf(mEdit_targetDiameter.getText().toString());
+                double orderedGauge = Double.valueOf(mEdit_orderedGauge.getText().toString());
+                int coreType = ((RollMathActivity)getActivity()).getCoreType();
+                double linearFeet = Math.max(0d, 
+                        ((RollMathActivity)getActivity()).calculateLinearFeet(coreType, targetDiameter / 2d, orderedGauge));
+                String linearFeetDisplay = new DecimalFormat("####0").format(linearFeet) + " feet";
+                mTxt_linearFeet.setText(String.valueOf(linearFeetDisplay));
+                
+                SharedPreferences settings = getActivity().getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putFloat("RollMath.orderedGauge", (float) orderedGauge);
+                editor.putFloat("RollMath.diameter", (float) targetDiameter);
+                editor.commit();
             }
         }
     }
 
     private boolean validateInputs() {        
         boolean validInputs = true;
-        if (mEdit_orderedGauge.getText().length() == 0) {
-            mEdit_orderedGauge.setError(getString(R.string.error_empty_field));
+        if (mEdit_targetDiameter.getText().length() == 0) {
+            mEdit_targetDiameter.setError(getString(R.string.error_empty_field));
             validInputs = false;
         }
-        if (mEdit_linearFeet.getText().length() == 0) {
-            mEdit_linearFeet.setError(getString(R.string.error_empty_field));
+        if (mEdit_orderedGauge.getText().length() == 0) {
+            mEdit_orderedGauge.setError(getString(R.string.error_empty_field));
             validInputs = false;
         }
         

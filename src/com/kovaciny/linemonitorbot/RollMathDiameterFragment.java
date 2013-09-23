@@ -118,7 +118,7 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
             validInputs = false;
         } 
         if ((mEdit_orderedGauge.getText().length() > 0) && 
-                (mEdit_grossWeight.length() > 0) &&
+                (mEdit_grossWeight.getText().length() > 0) &&
                 (Double.valueOf(mEdit_orderedGauge.getText().toString()) > 0d)) {
             mEdit_orderedGauge.setError(getString(R.string.error_need_only_one));
             mEdit_grossWeight.setError(getString(R.string.error_need_only_one));

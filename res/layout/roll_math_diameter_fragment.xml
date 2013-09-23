@@ -8,14 +8,6 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical" >
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical" >
@@ -171,20 +163,19 @@
         android:id="@+id/core_type_fragment_1"
         android:name="com.kovaciny.linemonitorbot.CoreTypeFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        tools:layout="@layout/core_type_fragment" />
     
         <Button
             android:id="@+id/btn_get_diameter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_roll_math_buttons"
-            android:text="Get Diameter" />
+            style="@style/Button.RollMath"
+        	android:text="Get Diameter" />
 
         <TextView
             android:id="@+id/txt_roll_diameter"
             style="@style/Label"
             android:layout_gravity="center_horizontal"
-            android:textSize="40sp" />
+            android:textSize="@dimen/textsize_roll_math_results" />
 
         <fragment
             android:id="@+id/floating_toolbar_4"
