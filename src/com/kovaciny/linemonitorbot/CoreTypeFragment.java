@@ -62,6 +62,16 @@ public class CoreTypeFragment extends Fragment {
 				container, false);
 
 		mChk_heavyWall = (CheckBox) rootView.findViewById(R.id.chk_heavy_wall);
+		mRadioGroup_coreSize = (RadioGroup) rootView
+		        .findViewById(R.id.radio_group_core_size);
+		mRadio_r3 = (RadioButton) rootView.findViewById(R.id.radio_r3);
+		mRadio_r6 = (RadioButton) rootView.findViewById(R.id.radio_r6);
+		mRadio_r8 = (RadioButton) rootView.findViewById(R.id.radio_r8);
+		
+		mTxt_coreWeight = (TextView) rootView.findViewById(R.id.txt_core_weight);
+		
+		initializeViews(((RollMathActivity)getActivity()).getCoreType(), ((RollMathActivity)getActivity()).getCoreWeight());
+		
 		mChk_heavyWall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			
 			@Override
@@ -70,11 +80,6 @@ public class CoreTypeFragment extends Fragment {
 			}
 		});
 		
-		mRadioGroup_coreSize = (RadioGroup) rootView
-				.findViewById(R.id.radio_group_core_size);
-		mRadio_r3 = (RadioButton) rootView.findViewById(R.id.radio_r3);
-		mRadio_r6 = (RadioButton) rootView.findViewById(R.id.radio_r6);
-		mRadio_r8 = (RadioButton) rootView.findViewById(R.id.radio_r8);
 		mRadioGroup_coreSize
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -98,9 +103,6 @@ public class CoreTypeFragment extends Fragment {
 					}
 				});
 
-		mTxt_coreWeight = (TextView) rootView
-				.findViewById(R.id.txt_core_weight);
-		setCoreType(((RollMathActivity)getActivity()).getCoreType());
 
 		return rootView;
 	}
@@ -113,30 +115,36 @@ public class CoreTypeFragment extends Fragment {
 		mTxt_coreWeight.setText(coreWeightDisplay);
 	}
 
-	private void setCoreType(int coreType) {
+	public void initializeViews(int coreType, double weight) {
 		switch (coreType) {
 		case Roll.CORE_TYPE_R3:
 		    mRadio_r3.setChecked(true);
+		    mChk_heavyWall.setEnabled(true);
 		    mChk_heavyWall.setChecked(false);
 		    break;
 		case Roll.CORE_TYPE_R3_HEAVY:
-		    mChk_heavyWall.setChecked(true);
 		    mRadio_r3.setChecked(true);
+		    mChk_heavyWall.setEnabled(true);
+		    mChk_heavyWall.setChecked(true);
 		    break;
 		case Roll.CORE_TYPE_R6:
 		    mRadio_r6.setChecked(true);
+		    mChk_heavyWall.setEnabled(true);
 		    mChk_heavyWall.setChecked(false);
+		    break;
 		case Roll.CORE_TYPE_R6_HEAVY:
-			mRadio_r6.setChecked(true);
-			mChk_heavyWall.setChecked(true);
+		    mRadio_r6.setChecked(true);
+		    mChk_heavyWall.setEnabled(true);
+		    mChk_heavyWall.setChecked(true);
 			break;
 		case Roll.CORE_TYPE_R8:
-			mRadio_r8.setChecked(true);
-			mChk_heavyWall.setChecked(false);
+		    mRadio_r8.setChecked(true);
+		    mChk_heavyWall.setEnabled(false);
+		    mChk_heavyWall.setChecked(false);
 			break;
 		default:
 			mRadio_r3.setChecked(true);
 		}
-		mCallback.onCoreTypeChanged(mRadioGroup_coreSize.getCheckedRadioButtonId(), mChk_heavyWall.isChecked());
+		onCoreWeightChanged(weight);
 	}
 }

@@ -279,11 +279,18 @@ public class RollMathActivity extends FragmentActivity implements TabListener, O
 			ctfs.add((CoreTypeFragment) getSupportFragmentManager().findFragmentById(R.id.core_type_fragment_2));
 			ctfs.add((CoreTypeFragment) getSupportFragmentManager().findFragmentById(R.id.core_type_fragment_3));
 			for (Iterator<CoreTypeFragment> i = ctfs.iterator(); i.hasNext(); ) {
-			    i.next().onCoreWeightChanged(Roll.getCoreWeight(mCoreType, mWidth));
+			    CoreTypeFragment ctf = i.next();
+			    if (ctf != null) {
+			        ctf.initializeViews(mCoreType, getCoreWeight());
+			    }
 			}
         }
         
         public int getCoreType() {
         	 return mCoreType;
+        }
+        
+        public double getCoreWeight() {
+            return Roll.getCoreWeight(mCoreType, mWidth);
         }
 }
