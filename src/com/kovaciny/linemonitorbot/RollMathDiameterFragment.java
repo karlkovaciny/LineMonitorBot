@@ -33,6 +33,7 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
     EditText mEdit_width;
     
     TextView mTxt_rollDiameter;
+    TextView mTxt_rollDiameterHigh;
     
     double mWidth;
     int mLinearFeet;
@@ -64,6 +65,7 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
         	mEdit_width.setText(String.valueOf(mWidth));
         }
         mTxt_rollDiameter = (TextView) rootView.findViewById(R.id.txt_roll_diameter);
+        mTxt_rollDiameterHigh = (TextView) rootView.findViewById(R.id.txt_roll_diameter_high);
                 
         return rootView;
     }
@@ -78,6 +80,8 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
                 SharedPreferences.Editor editor = settings.edit();
                 
                 double diameter;
+                SpannableStringBuilder diameterSb = new SpannableStringBuilder();
+                SpannableStringBuilder diameterHighSb = new SpannableStringBuilder();
                 
                 if (mEdit_orderedGauge.getText().length() > 0) { //they filled in column 1
                     int linearFeet = Integer.valueOf(mEdit_linearFeet.getText().toString());
@@ -90,17 +94,21 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
                     double rollWidth = Double.valueOf(mEdit_width.getText().toString());
                     double grossWeight = Double.valueOf(mEdit_grossWeight.getText().toString());
                     double materialDensity = Double.valueOf(mEdit_materialDensity.getText().toString());
-                    diameter = ((RollMathActivity)getActivity())
+                    double diameterHigh = ((RollMathActivity)getActivity())
                             .calculateRollDiameter(((RollMathActivity)getActivity()).getCoreType(), rollWidth, grossWeight, materialDensity);
+                    diameter = diameterHigh * .975; //Represents running at -2.5% of ordered gauge
                     editor.putFloat("RollMath.width", (float) rollWidth);
                     editor.putFloat("RollMath.grossWeight", (float) grossWeight);
                     editor.putFloat("RollMath.materialDensity", (float) materialDensity);
+                    diameterHighSb.append("(")
+                    .append(HelperFunction.formatDecimalAsProperFraction(diameterHigh, 8d))
+                    .append("\" at full ordered gauge)");
                 }
-                
-                SpannableStringBuilder diameterSb = new SpannableStringBuilder();
+                 
                 diameterSb.append(HelperFunction.formatDecimalAsProperFraction(diameter, 8d))
-                .append("\"");
+                    .append("\"");
                 mTxt_rollDiameter.setText(diameterSb);
+                mTxt_rollDiameterHigh.setText(diameterHighSb);
 
                 editor.putFloat("RollMath.diameter", (float) diameter);
                 editor.commit();
@@ -137,8 +145,8 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
                if (gaugeValue > PrimexModel.MAXIMUM_POSSIBLE_GAUGE) {
                    gaugeValue /= 1000;
                }
-               String threeDecimals = new DecimalFormat("#.000").format(gaugeValue);
-               mEdit_orderedGauge.setText(threeDecimals);
+               String threeDecimalsPlus = new DecimalFormat("#.000#").format(gaugeValue);
+               mEdit_orderedGauge.setText(threeDecimalsPlus);
            } else {
                if (mEdit_materialDensity.getText().length() == 0) {
                    mEdit_materialDensity.setError(getString(R.string.error_empty_field));
