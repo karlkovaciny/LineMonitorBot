@@ -177,6 +177,15 @@
             android:layout_gravity="center_horizontal"
             android:textSize="@dimen/textsize_roll_math_results" />
 
+        <TextView
+            android:id="@+id/txt_roll_diameter_high"
+            style="@style/Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
         <fragment
             android:id="@+id/floating_toolbar_4"
             android:name="com.kovaciny.linemonitorbot.FloatingToolbarFragment"

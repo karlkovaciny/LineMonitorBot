@@ -20,6 +20,7 @@ public class PrimexTestCase {
     public double mWebWidth;
     public String mProductType;
     public double mGauge;
+    public double mGaugeFactor;
     public double mWidth;
     public double mLength;
     public double mUnitWeight;
@@ -31,6 +32,8 @@ public class PrimexTestCase {
     
     public static final int JOMA_ROLLS = 1;
     public static final int LINE_14 = 14;
+    public static final int LINE_6_ROLLS = 141;
+    public static final int LINE_11_HORTICULTURAL = 151;
     
     PrimexTestCase(int caseNumber) {
         switch(caseNumber) {
@@ -66,7 +69,19 @@ public class PrimexTestCase {
                 mDifferentialSetpoint = 103;
                 //top/bottom roll setpoint: 99.5/101.5
                 mUnitWeight = 5.885;
-                        
+            case LINE_6_ROLLS:
+                mGaugeFactor = .036;
+                mRollDiameter = 24d;
+                mLinearFeet = 1980;
+                //252/roll
+                mUnitWeight = .12727;
+                mGauge = 18.2;
+            case LINE_11_HORTICULTURAL:
+                mGaugeFactor = .0386;
+                mGauge = .0146;
+                mUnitWeight = .2298;
+                mWidth = 35;
+                mRollDiameter = 36.18;
             default:
                 throw new IllegalArgumentException("invalid case number");
         }
