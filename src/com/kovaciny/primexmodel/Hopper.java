@@ -1,38 +1,33 @@
 package com.kovaciny.primexmodel;
 
+import android.annotation.SuppressLint;
+import java.util.HashMap;
+import java.util.Map;
+
+@SuppressLint("UseSparseArrays")
 public class Hopper {
-    public static double DEFAULT_HOPPER_CAPACITY = 150d;
+    public static final double REFERENCE_GROSS_RATE = 1000d; //lbs/hr
     private double mFeedRate;
-    private Material mContents;
-    private double mVolume;
-    private double mAlarmVolume;
+    private int mContentsType;
     private double mSetpoint;
     public double mLbsContained;
+    private HashMap<Integer, Double> mMaterialToSafeDrainTimeMap;
+    private HashMap<Integer, Double> mMaterialToEstimatedDrainTimeMap;
 
     public Hopper() {
-        this(DEFAULT_HOPPER_CAPACITY, 0);
+        
     }
     /*
-     * "0" for alarmVolume represents no alarm
+     * 
      */
-    public Hopper(double volume, double alarmVolume) {
-        if ((volume <= 0d) || (alarmVolume < 0d)) {
-            throw new IllegalArgumentException("No negative numbers");
-        }
-        mVolume = volume;
-        mAlarmVolume = alarmVolume;
+    public Hopper(Map<Integer, Double> materialToSafeDrainTimeMap, 
+                Map<Integer, Double> materialToEstimatedDrainTimeMap) {
+        mMaterialToSafeDrainTimeMap = new HashMap<Integer, Double>(materialToSafeDrainTimeMap);
+        mMaterialToEstimatedDrainTimeMap = new HashMap<Integer, Double>(materialToEstimatedDrainTimeMap);
         mSetpoint = 0;
         mLbsContained = 0;
     }
-
-    public double getUsableVolume() {
-        return mVolume; //need to change w/ new matl
-    }
-    
-    public double getAlarmVolume() {
-        return mAlarmVolume;
-    }	
-	   
+   
 	public void setSetpoint(double setpoint) {
         if (setpoint < 0) {
             throw new IllegalArgumentException("No negative numbers");
@@ -43,16 +38,12 @@ public class Hopper {
         return mSetpoint;
     }
     
-    public boolean hasAlarm() {
-        return (mAlarmVolume > 0) ? true : false; 
-    }
-    
-    public Material getContents() {
-        return mContents;
+    public int getContentsType() {
+        return mContentsType;
     }
 
-    public void setContents(Material mContents) {
-        this.mContents = mContents;
+    public void setContents(int contentsType) {
+        this.mContentsType = contentsType;
     }
     
 	public double getFeedRate(){ //measured in pounds per hour
@@ -69,5 +60,16 @@ public class Hopper {
     public double setLbsContained(double lbs) {
         if (lbs < 0) return 0;
         else return mLbsContained = lbs;
+    }
+    
+    public double getSafeDrainTime(double safetyMargin) {
+        double relativeDrainRate = mFeedRate / REFERENCE_GROSS_RATE;
+        double safeDrainTime;
+        if (mMaterialToSafeDrainTimeMap.containsKey(mContentsType)) {
+            safeDrainTime = mMaterialToSafeDrainTimeMap.get(mContentsType) * relativeDrainRate;
+        } else {
+            safeDrainTime = mMaterialToEstimatedDrainTimeMap.get(mContentsType) * relativeDrainRate;
+        }
+        return safeDrainTime;
     }
 }

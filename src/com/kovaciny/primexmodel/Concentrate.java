@@ -10,6 +10,6 @@ public class Concentrate extends Material {
 	}
 
 	public Concentrate(double mDensity, String mName) {
-		super(mDensity, mName);
+		super(mDensity, mName, Material.CONCENTRATE_TYPE);
 	}
 }

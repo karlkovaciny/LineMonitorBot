@@ -1,5 +1,8 @@
 package com.kovaciny.primexmodel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Novatec extends Hopper {
     public static double DEFAULT_VOLUME = 50d;
     public static double DEFAULT_SCREW_SIZE_FACTOR = 1d;
@@ -9,8 +12,10 @@ public class Novatec extends Hopper {
 	/*
 	 * "0" for alarmVolume represents no alarm
 	 */
-	public Novatec(double volume, double alarmVolume, double screwSizeFactor) {
-		super(volume, alarmVolume);
+	public Novatec(Map<Integer, Double> materialToSafeDrainTimeMap, 
+            Map<Integer, Double> materialToEstimatedDrainTimeMap, double screwSizeFactor) {
+//		super(materialToSafeDrainTimeMap, materialToEstimatedDrainTimeMap); 
+	    super();//TODO call the real one
 	    if (screwSizeFactor <= 0d) {
 			throw new IllegalArgumentException("Invalid screw size factor");
 		}
@@ -18,7 +23,7 @@ public class Novatec extends Hopper {
 	}
 	
 	public Novatec() {
-		this(DEFAULT_VOLUME,0, DEFAULT_SCREW_SIZE_FACTOR);
+		this(new HashMap<Integer,Double>(), new HashMap<Integer, Double>(), DEFAULT_SCREW_SIZE_FACTOR); //TODO delete
 	}
 	
 	@Override
