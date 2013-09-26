@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.kovaciny.primexmodel.DrainingController;
+
 public class DrainingFragment extends Fragment implements View.OnClickListener {
 
     private Button mBtn_selfDestruct;
