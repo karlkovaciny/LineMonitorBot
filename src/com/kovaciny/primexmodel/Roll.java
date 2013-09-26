@@ -1,9 +1,11 @@
 package com.kovaciny.primexmodel;
 
+import android.annotation.SuppressLint;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressLint("UseSparseArrays")
 public class Roll implements Product {
 	private double mLinearFootWeight = 0;
 	private int mLinearFeet = 0;
@@ -50,7 +52,7 @@ public class Roll implements Product {
         thirdMap.put(CORE_TYPE_R3, .0614955d);
         thirdMap.put(CORE_TYPE_R6, .1948504d);
         thirdMap.put(CORE_TYPE_R8, .1496599d);
-        thirdMap.put(CORE_TYPE_R3_HEAVY, .121212d); //total guess
+        thirdMap.put(CORE_TYPE_R3_HEAVY, .1328904d);
         thirdMap.put(CORE_TYPE_R6_HEAVY, .2541806d);
         coreTypeToWeightPerInchMap = Collections.unmodifiableMap(thirdMap);
     }
