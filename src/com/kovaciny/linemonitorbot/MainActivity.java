@@ -156,7 +156,6 @@ public class MainActivity extends FragmentActivity implements
         if ( (lastRun > 0) && ((now - lastRun) > (12 * HelperFunction.ONE_HOUR_IN_MILLIS) )) {
             mModel.deleteWorkOrders();
             mForceUserToSelectLine = true;
-            if (DEBUG) Toast.makeText(this, "clearing work orders", Toast.LENGTH_LONG).show();
         }
         SharedPreferences.Editor editor = settings.edit();
         editor.putLong("mostRecentStartDate", now);

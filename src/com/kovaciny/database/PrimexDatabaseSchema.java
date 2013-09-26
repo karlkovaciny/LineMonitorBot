@@ -39,8 +39,6 @@ public class PrimexDatabaseSchema {
 	    public static final String COLUMN_NAME_DIFFERENTIAL_RANGE_HIGH = "differential_range_high";
 	    public static final String COLUMN_NAME_SPEED_FACTOR = "speed_factor";
 	    public static final String COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE = "takeoff_equipment_type";
-	    public static final String COLUMN_NAME_EXTRUDER_HOPPER_SAFE_DRAIN_TIME = "extruder_drain_factor";
-	    public static final String COLUMN_NAME_COEXTRUDER_HOPPER_SAFE_DRAIN_TIME = "coex_drain_factor";
 	}   
 
 	public static abstract class WorkOrders implements BaseColumns {
@@ -82,12 +80,34 @@ public class PrimexDatabaseSchema {
         public static final String COLUMN_NAME_SAFE_DRAIN_TIME_HICAL = "safe_drain_time_hical";
         public static final String COLUMN_NAME_SAFE_DRAIN_TIME_HM10MAX = "safe_drain_time_hm10max";
         public static final String COLUMN_NAME_SAFE_DRAIN_TIME_3414 = "safe_drain_time_3414";
+        public static final String COLUMN_NAME_ESTIMATED_DRAIN_TIME_RESIN = "estimated_drain_time_resin";
+        public static final String COLUMN_NAME_ESTIMATED_DRAIN_TIME_PREMIX = "estimated_drain_time_premix";
+        public static final String COLUMN_NAME_ESTIMATED_DRAIN_TIME_BLEND = "estimated_drain_time_blend";
+        public static final String COLUMN_NAME_ESTIMATED_DRAIN_TIME_HICAL = "estimated_drain_time_hical";
+        public static final String COLUMN_NAME_ESTIMATED_DRAIN_TIME_HM10MAX = "estimated_drain_time_hm10max";
+        public static final String COLUMN_NAME_ESTIMATED_DRAIN_TIME_3414 = "estimated_drain_time_3414";
         public static final String COLUMN_NAME_CONTENTS = "contents";
         public static final String COLUMN_NAME_PERCENT_SETPOINT = "percent_setpoint";
         public static final String COLUMN_NAME_EXTRUDER_NUMBER = "extruder_number"; //0 is main, 1 is coex
         public static final String COLUMN_NAME_LINE_NUMBER_ID = "line_number_id";
     }
-	
+
+   public static abstract class BlendedHoppers implements BaseColumns {
+        public static final String TABLE_NAME = "blended_hoppers";
+        public static final String COLUMN_NAME_NAME = "hopper_name";
+        public static final String COLUMN_NAME_DISPLAY_NAME = "display_name";
+        public static final String COLUMN_NAME_SAFE_DRAIN_TIME_RESIN = "safe_drain_time_resin";
+        public static final String COLUMN_NAME_SAFE_DRAIN_TIME_REGRIND = "safe_drain_time_regrind";
+        public static final String COLUMN_NAME_SAFE_DRAIN_TIME_30_70_BLEND = "safe_drain_time_30_70_blend";
+        public static final String COLUMN_NAME_ESTIMATED_DRAIN_TIME_RESIN = "estimated_drain_time_resin";
+        public static final String COLUMN_NAME_ESTIMATED_DRAIN_TIME_REGRIND = "estimated_drain_time_regrind";
+        public static final String COLUMN_NAME_ESTIMATED_DRAIN_TIME_30_70_BLEND = "estimated_drain_time_30_70_blend";
+        public static final String COLUMN_NAME_CONTENTS = "contents";
+        public static final String COLUMN_NAME_PERCENT_SETPOINT = "percent_setpoint";
+        public static final String COLUMN_NAME_EXTRUDER_POSITION = "extruder_position"; //0 is main, 1 is coex
+        public static final String COLUMN_NAME_LINE_NUMBER_ID = "line_number_id";
+   }
+	   
 	public static abstract class Novatecs implements BaseColumns {
 		public static final String TABLE_NAME = "novatecs";
 		public static final String COLUMN_NAME_SCREW_SIZE_FACTOR = "screw_size_factor";

@@ -1,10 +1,8 @@
 package com.kovaciny.database;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -34,142 +32,11 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 	
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 157;
+    public static final int DATABASE_VERSION = 159;
     public static final String DATABASE_NAME = "Primex.db";
     
-    public static final int DEFAULT_INITIAL_LINE_ID = 7;
-    public static final int DEFAULT_INITIAL_WO_NUM = 123;
-    
-	private static final String TEXT_TYPE = " TEXT";
-	private static final String DOUBLE_TYPE = " DOUBLE";
-	private static final String INTEGER_TYPE = " INTEGER";
-	private static final String COMMA_SEP = ",";
-	private static final String REAL_TYPE = " REAL";
-	
-	private static final String SQL_CREATE_MODEL_STATE = 
-			"CREATE TABLE " + PrimexDatabaseSchema.ModelState.TABLE_NAME + " (" +
-					PrimexDatabaseSchema.ModelState._ID + " INTEGER PRIMARY KEY," +
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_EDGE_TRIM_PERCENT + DOUBLE_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_NET_PPH + DOUBLE_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_GROSS_PPH + DOUBLE_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_COLOR_PERCENT + DOUBLE_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_TEN_SECOND_LETDOWN_GRAMS + DOUBLE_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_LINE_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_DIFFERENTIAL_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_PRODUCTS_PER_MINUTE + DOUBLE_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ModelState.COLUMN_NAME_NUMBER_OF_TABLE_SKIDS + INTEGER_TYPE + COMMA_SEP +
-					"UNIQUE (" + PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER + ")" +
-					")";
-
-	private static final String SQL_CREATE_PRODUCTION_LINES =
-			"CREATE TABLE " + PrimexDatabaseSchema.ProductionLines.TABLE_NAME + " (" +
-					PrimexDatabaseSchema.ProductionLines._ID + " INTEGER PRIMARY KEY," +
-					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LENGTH + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_WEB_WIDTH + REAL_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE + TEXT_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT + DOUBLE_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_RANGE_LOW + DOUBLE_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_RANGE_HIGH + DOUBLE_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR + DOUBLE_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE + TEXT_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_EXTRUDER_HOPPER_SAFE_DRAIN_TIME + REAL_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_COEXTRUDER_HOPPER_SAFE_DRAIN_TIME + REAL_TYPE + COMMA_SEP +
-					" UNIQUE (" + PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + ")" +
-					" )";
-
-	private static final String SQL_CREATE_WORK_ORDERS =
-			"CREATE TABLE " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + " (" +
-					PrimexDatabaseSchema.WorkOrders._ID + " INTEGER PRIMARY KEY," +
-					PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_PRODUCT_ID + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED + DOUBLE_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT + DOUBLE_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME + INTEGER_TYPE + COMMA_SEP +
-					" UNIQUE (" + PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + ")" +
-					" )";
-
-	private static final String SQL_CREATE_LINE_WORK_ORDER_LINK = 
-			"CREATE TABLE " + PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME + " (" +
-					PrimexDatabaseSchema.LineWorkOrderLink._ID + " INTEGER PRIMARY KEY, " + 
-					PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID + INTEGER_TYPE + COMMA_SEP + 
-					PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_IS_SELECTED + INTEGER_TYPE + COMMA_SEP +
-					" UNIQUE (" + PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID + ")" +
-					")";
-
-	private static final String SQL_CREATE_PRODUCTS = 
-			"CREATE TABLE " + PrimexDatabaseSchema.Products.TABLE_NAME + " (" +
-					PrimexDatabaseSchema.Products._ID + " INTEGER PRIMARY KEY," +
-					PrimexDatabaseSchema.Products.COLUMN_NAME_GAUGE + REAL_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.Products.COLUMN_NAME_WIDTH + REAL_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.Products.COLUMN_NAME_LENGTH + REAL_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE_ID + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.Products.COLUMN_NAME_UNIT_WEIGHT + REAL_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.Products.COLUMN_NAME_NUMBER_OF_WEBS + INTEGER_TYPE + COMMA_SEP +					
-					PrimexDatabaseSchema.Products.COLUMN_NAME_CORE_TYPE + INTEGER_TYPE + COMMA_SEP +					
-					" UNIQUE ("  + PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER + ")" +
-					" )";
-
-	private static final String SQL_CREATE_HOPPERS = 
-            "CREATE TABLE " + PrimexDatabaseSchema.Hoppers.TABLE_NAME + " (" +
-                    PrimexDatabaseSchema.Hoppers._ID + " INTEGER PRIMARY KEY," +
-                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP + 
-                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_DISPLAY_NAME + TEXT_TYPE + COMMA_SEP + 
-                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_SAFE_DRAIN_TIME_RESIN + REAL_TYPE + COMMA_SEP + 
-                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_SAFE_DRAIN_TIME_PREMIX + REAL_TYPE + COMMA_SEP + 
-                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_SAFE_DRAIN_TIME_BLEND + REAL_TYPE + COMMA_SEP + 
-                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_SAFE_DRAIN_TIME_HICAL + REAL_TYPE + COMMA_SEP + 
-                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_SAFE_DRAIN_TIME_HM10MAX + REAL_TYPE + COMMA_SEP + 
-                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_SAFE_DRAIN_TIME_3414 + REAL_TYPE + COMMA_SEP + 
-                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_CONTENTS + TEXT_TYPE + COMMA_SEP + 
-                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_PERCENT_SETPOINT + REAL_TYPE + COMMA_SEP + 
-                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_EXTRUDER_NUMBER + INTEGER_TYPE + COMMA_SEP +
-                    PrimexDatabaseSchema.Hoppers.COLUMN_NAME_LINE_NUMBER_ID + INTEGER_TYPE + COMMA_SEP +
-                    " UNIQUE (" + PrimexDatabaseSchema.Hoppers.COLUMN_NAME_NAME + ")" +
-
-            " )";
-	
-	private static final String SQL_CREATE_NOVATECS = 
-			"CREATE TABLE " + PrimexDatabaseSchema.Novatecs.TABLE_NAME + " (" +
-					PrimexDatabaseSchema.Novatecs._ID + " INTEGER PRIMARY KEY," +
-					PrimexDatabaseSchema.Novatecs.COLUMN_NAME_SCREW_SIZE_FACTOR + REAL_TYPE + COMMA_SEP + 
-					PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT + REAL_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID + INTEGER_TYPE + COMMA_SEP +
-					" UNIQUE (" + PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID + ")" +
-
-    		" )";
-
-	private static final String SQL_CREATE_SKIDS = 
-			"CREATE TABLE " + PrimexDatabaseSchema.Skids.TABLE_NAME + " (" +
-					PrimexDatabaseSchema.Skids._ID + " INTEGER PRIMARY KEY," +
-					PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.Skids.COLUMN_NAME_CURRENT_ITEMS + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.Skids.COLUMN_NAME_TOTAL_ITEMS + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.Skids.COLUMN_NAME_STACKS + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.Skids.COLUMN_NAME_START_DATE + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.Skids.COLUMN_NAME_FINISH_DATE + INTEGER_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.Skids.COLUMN_NAME_TIME_PER_SKID + REAL_TYPE + COMMA_SEP +
-					PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID + INTEGER_TYPE + COMMA_SEP +
-					" UNIQUE (" + PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER + ", " + PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID + ")" +
-					" )";
-
-	private static final String SQL_CREATE_PRODUCT_TYPES = 
-			"CREATE TABLE " + PrimexDatabaseSchema.ProductTypes.TABLE_NAME + " (" +
-					PrimexDatabaseSchema.ProductTypes._ID + " INTEGER PRIMARY KEY," +
-					PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES + TEXT_TYPE +
-					//I'm just gonna be careful cause I don't want to turn foreign keys on.
-					//"FOREIGN KEY(" + PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES + ") REFERENCES +" +
-					//		PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES +
-					" )";
-
 	//list "child" tables, which have a foreign key, before their parent, so drop table works
+    private static final String TABLE_NAME_BLENDED_HOPPERS = PrimexDatabaseSchema.BlendedHoppers.TABLE_NAME;
 	private static final String TABLE_NAME_HOPPERS = PrimexDatabaseSchema.Hoppers.TABLE_NAME;
 	private static final String TABLE_NAME_NOVATECS = PrimexDatabaseSchema.Novatecs.TABLE_NAME;
 	private static final String TABLE_NAME_SKIDS = PrimexDatabaseSchema.Skids.TABLE_NAME;
@@ -180,6 +47,8 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	private static final String TABLE_NAME_PRODUCTION_LINES = PrimexDatabaseSchema.ProductionLines.TABLE_NAME;
 	private static final String TABLE_NAME_MODEL_STATE = PrimexDatabaseSchema.ModelState.TABLE_NAME;
 
+	private static final String SQL_DELETE_BLENDED_HOPPERS =
+	        "DROP TABLE IF EXISTS " + TABLE_NAME_BLENDED_HOPPERS;
     private static final String SQL_DELETE_HOPPERS =
             "DROP TABLE IF EXISTS " + TABLE_NAME_HOPPERS;
     private static final String SQL_DELETE_NOVATECS =
@@ -200,209 +69,13 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 			"DROP TABLE IF EXISTS " + TABLE_NAME_MODEL_STATE;
 	
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_MODEL_STATE);
-        //Batch insert to SQLite database on Android
-        try {
-        	db.beginTransaction();
-        	Integer woNum = DEFAULT_INITIAL_WO_NUM;
-        	ContentValues modvalues = new ContentValues();
-        	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_SELECTED_WORK_ORDER, woNum);
-        	modvalues.put(PrimexDatabaseSchema.ModelState.COLUMN_NAME_CREATE_DATE,0);
-
-        	db.insertOrThrow(PrimexDatabaseSchema.ModelState.TABLE_NAME, null, modvalues);
-
-        	db.setTransactionSuccessful();
-        } finally {
-        	db.endTransaction();
-        }
-
-    	db.execSQL(SQL_CREATE_PRODUCTION_LINES);
-    	final List<Integer> lineNumbers = Arrays.asList(1,6,7,9,10,  11,12,13,14,15,  16,17,18); //13 lines
-        try {
-        	List<Double> lengthsList = 
-        			Arrays.asList(new Double[] {99.0d, 51.5d, 34.2d, 46.0d, 44.7d,  45.7d,56.7d,56.3d,64.3d,46.5d, 45.0d,61.9d, 71d});
-        	Iterator<Double> lengthsIterator = lengthsList.iterator();
-        	
-        	List<Double> dieWidthsList = Arrays.asList(new Double[]{130d,58d,53d,58d,64d, 64d,78d,75d,75d,64d, 64d, 58.5d, 53d});
-        	Iterator<Double> dieWidthsIterator = dieWidthsList.iterator();
-        	
-        	List<Double> speedFactorsList = Arrays.asList(new Double[]{.995d,.07746d,.01d,1.01d,.0102d,  1d,1d,.0098d,.0098d,1.01d, 1.01d,.0347d,.01003d});        	
-        	Iterator<Double> speedFactorsIterator = speedFactorsList.iterator();
-        	
-        	List<String> speedControllerTypesList = Arrays.asList(
-        			ProductionLine.SPEED_CONTROLLER_TYPE_NONE, 
-        			ProductionLine.SPEED_CONTROLLER_TYPE_GEARED, 
-        			ProductionLine.SPEED_CONTROLLER_TYPE_PERCENT, 
-        			ProductionLine.SPEED_CONTROLLER_TYPE_GEARED, 
-        			ProductionLine.SPEED_CONTROLLER_TYPE_PERCENT,
-        			
-        			ProductionLine.SPEED_CONTROLLER_TYPE_RATIO,
-        			ProductionLine.SPEED_CONTROLLER_TYPE_NONE,
-        			ProductionLine.SPEED_CONTROLLER_TYPE_PERCENT,
-        			ProductionLine.SPEED_CONTROLLER_TYPE_PERCENT,
-        			ProductionLine.SPEED_CONTROLLER_TYPE_RATIO,
-        			
-        			ProductionLine.SPEED_CONTROLLER_TYPE_RATIO,
-        			ProductionLine.SPEED_CONTROLLER_TYPE_GEARED,
-        			ProductionLine.SPEED_CONTROLLER_TYPE_PERCENT
-        			);
-        	Iterator<String> speedControllerTypesIterator = speedControllerTypesList.iterator();
-
-        	//This number represents how long it takes to drain the extruder hopper to a dangerous level.
-        	List<Integer> drainFactorsList = Arrays.asList(new Integer[]{0,0,0,0,0, 22000,0,0,0,0, 0,0,0});
-        	Iterator<Integer> drainFactorsIterator = drainFactorsList.iterator();
-        	
-        	db.beginTransaction();
-        	for (Integer lineNum : lineNumbers) {
-        		ContentValues values = new ContentValues();
-        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, lineNum);
-        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LENGTH, lengthsIterator.next());
-        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIE_WIDTH, dieWidthsIterator.next());
-        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT, 0);
-        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT, 0);
-        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR, speedFactorsIterator.next());
-        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_CONTROLLER_TYPE, speedControllerTypesIterator.next());
-        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_TAKEOFF_EQUIPMENT_TYPE, "Maxson");
-        		values.put(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_EXTRUDER_HOPPER_SAFE_DRAIN_TIME, drainFactorsIterator.next());
-
-        		db.insertOrThrow(
-        				PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
-        				null, 
-        				values);	        	
-        	}
-        	db.setTransactionSuccessful();
-        } finally {
-        	db.endTransaction();
-        }
-
-        db.execSQL(SQL_CREATE_WORK_ORDERS);
-        try {
-        	db.beginTransaction();
-        	ContentValues values = new ContentValues();
-        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, DEFAULT_INITIAL_WO_NUM);
-        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED,1000);
-        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT,0);
-        	values.put(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER,1);
-
-        	db.insertOrThrow(PrimexDatabaseSchema.WorkOrders.TABLE_NAME, null, values);
-        	db.setTransactionSuccessful();
-        } finally {
-        	db.endTransaction();
-        }
-
-        db.execSQL(SQL_CREATE_LINE_WORK_ORDER_LINK);
-        try {
-        	db.beginTransaction();
-        	ContentValues values = new ContentValues();
-        	values.put(PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_LINE_ID, DEFAULT_INITIAL_LINE_ID);
-        	values.put(PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_ID, DEFAULT_INITIAL_WO_NUM);
-        	values.put(PrimexDatabaseSchema.LineWorkOrderLink.COLUMN_NAME_WO_IS_SELECTED, 1);
-        	db.insertOrThrow(PrimexDatabaseSchema.LineWorkOrderLink.TABLE_NAME, null, values);
-        	db.setTransactionSuccessful();
-        } finally {
-        	db.endTransaction();
-        }
-        db.execSQL(SQL_CREATE_PRODUCT_TYPES);
-        try {
-        	db.beginTransaction();
-        	String[] types = {Product.SHEETS_TYPE, Product.ROLLS_TYPE, Product.ROLLSET_TYPE, Product.SHEETSET_TYPE};
-        	for (int j = 0; j < types.length; j++) {
-        		ContentValues ptvalues = new ContentValues();
-        		ptvalues.put(PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES, types[j]);
-
-        		db.insertOrThrow(PrimexDatabaseSchema.ProductTypes.TABLE_NAME, null, ptvalues);
-        	}
-        	db.setTransactionSuccessful();
-        } finally {
-        	db.endTransaction();
-        }
-
-        db.execSQL(SQL_CREATE_HOPPERS);
-        try {
-            db.beginTransaction();
-            
-            for (Integer lineNum : lineNumbers) {
-                ContentValues hopperValues = new ContentValues();
-                int lineId = getIdOfValue(PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
-                        PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, 
-                        lineNum, 
-                        db);
-                hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_LINE_NUMBER_ID, lineId);
-                
-                if (lineId == 5){ //line 11
-                    hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_NAME, "Line_11_hopper_1");
-                    hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_DISPLAY_NAME, "1");
-                    hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_SAFE_DRAIN_TIME_RESIN, 9.5);
-                    hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_EXTRUDER_NUMBER, 0);
-                    
-                    hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_NAME, "Line_11_hopper_1");
-                    hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_DISPLAY_NAME, "2");
-                    hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_SAFE_DRAIN_TIME_RESIN, 9.5);
-                    hopperValues.put(PrimexDatabaseSchema.Hoppers.COLUMN_NAME_EXTRUDER_NUMBER, 0);
-                }
-                
-                db.insertOrThrow(PrimexDatabaseSchema.Hoppers.TABLE_NAME, null, hopperValues);
-            }
-
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-        
-        db.execSQL(SQL_CREATE_NOVATECS);
-        try {
-        	db.beginTransaction();
-        	Integer defaultSetpoint = 0;
-        	List<Integer> linesWithBigNovatecs = Arrays.asList(new Integer[] {1,11,12,13,14});
-        	double screwRatio;
-
-        	for (Integer lineNum : lineNumbers) {
-        	    ContentValues novatecValues = new ContentValues();
-        		int lineId = getIdOfValue(PrimexDatabaseSchema.ProductionLines.TABLE_NAME, 
-        				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER, 
-        				lineNum, 
-        				db);
-        		novatecValues.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_LINE_NUMBER_ID, lineId);
-        		novatecValues.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT, defaultSetpoint);
-        		if (linesWithBigNovatecs.contains(lineNum)) {
-        			screwRatio = 1.5; 
-        		} else screwRatio = 1d;
-        		novatecValues.put(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_SCREW_SIZE_FACTOR, screwRatio);
-        		db.insertOrThrow(PrimexDatabaseSchema.Novatecs.TABLE_NAME, null, novatecValues);
-        	}
-
-        	db.setTransactionSuccessful();
-        } finally {
-        	db.endTransaction();
-        }
-
-        db.execSQL(SQL_CREATE_PRODUCTS);
-        db.execSQL(SQL_CREATE_SKIDS);
-        try {
-        	db.beginTransaction();
-        	ContentValues values = new ContentValues();
-        	values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_SKID_NUMBER, 1);
-        	values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_WO_ID, 1);
-        	values.put(PrimexDatabaseSchema.Skids.COLUMN_NAME_TOTAL_ITEMS, 1000);
-        	db.insertOrThrow(PrimexDatabaseSchema.Skids.TABLE_NAME, null, values);
-        	db.setTransactionSuccessful();
-        } finally {
-        	db.endTransaction();
-        }
+        PrimexDatabaseCreator creator = new PrimexDatabaseCreator();
+        creator.create(db);
     }
     
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // TODO: upgrade policy is
-        // to simply to discard the data and start over
-        db.execSQL(SQL_DELETE_HOPPERS);
-        db.execSQL(SQL_DELETE_NOVATECS);
-    	db.execSQL(SQL_DELETE_SKIDS);
-        db.execSQL(SQL_DELETE_LINE_WORK_ORDER_LINK);
-    	db.execSQL(SQL_DELETE_PRODUCTION_LINES);
-        db.execSQL(SQL_DELETE_WORK_ORDERS);
-        db.execSQL(SQL_DELETE_PRODUCT_TYPES);
-        db.execSQL(SQL_DELETE_PRODUCTS);
-        db.execSQL(SQL_DELETE_MODEL_STATE);
+        // upgrade policy is simply to discard the data and start over
+        dropAllTables(db);
         onCreate(db);
     }
     
@@ -410,7 +83,24 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
     
+    public void dropAllTables(SQLiteDatabase db) {
+        db.execSQL(SQL_DELETE_BLENDED_HOPPERS);
+        db.execSQL(SQL_DELETE_HOPPERS);
+        db.execSQL(SQL_DELETE_NOVATECS);
+        db.execSQL(SQL_DELETE_SKIDS);
+        db.execSQL(SQL_DELETE_LINE_WORK_ORDER_LINK);
+        db.execSQL(SQL_DELETE_PRODUCTION_LINES);
+        db.execSQL(SQL_DELETE_WORK_ORDERS);
+        db.execSQL(SQL_DELETE_PRODUCT_TYPES);
+        db.execSQL(SQL_DELETE_PRODUCTS);
+        db.execSQL(SQL_DELETE_MODEL_STATE);
+    }
     
+    public void clearWorkOrders() {
+        SQLiteDatabase db = getWritableDatabase();
+        dropAllTables(db);
+        onCreate(db);
+    }
     
     
     
@@ -574,7 +264,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	    	double diff = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT));
 	    	double sf = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR));
 	    	
-	    	ProductionLine newLine = new ProductionLine(ln,ll,dw,sct,tet, new Hopper());
+	    	ProductionLine newLine = new ProductionLine(ln,ll,dw,sct,tet, new Hopper()); //TODO add hashmaps
 	    	SpeedValues sv = new SpeedValues(sp,diff,sf);
 	    	newLine.setSpeedValues(sv);
 	    	Log.v("loadLine", "just loaded speed values of " + sv.toString());
@@ -609,7 +299,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				
 				double setpoint = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT));
 				double letdownRatio = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_SCREW_SIZE_FACTOR));
-				n = new Novatec(Novatec.DEFAULT_VOLUME, 0, letdownRatio);
+				n = new Novatec(null, null, letdownRatio); //TODO need hashmaps
 				n.setSetpoint(setpoint);
 			} else {
 				Log.e("error", "SQLiteOpenHelper::getNovatec returned no results");
@@ -826,19 +516,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		return workOrders;
 	}
 	
-	public void clearWorkOrders() {
-		SQLiteDatabase db = getWritableDatabase();
-		db.execSQL(SQL_DELETE_LINE_WORK_ORDER_LINK);
-		db.execSQL(SQL_CREATE_LINE_WORK_ORDER_LINK);
-		db.execSQL(SQL_DELETE_WORK_ORDERS);
-		db.execSQL(SQL_CREATE_WORK_ORDERS);
-		db.execSQL(SQL_DELETE_PRODUCTS);
-		db.execSQL(SQL_CREATE_PRODUCTS);
-		db.execSQL(SQL_DELETE_SKIDS);		
-		db.execSQL(SQL_CREATE_SKIDS);		
-		db.execSQL(SQL_DELETE_MODEL_STATE);
-		db.execSQL(SQL_CREATE_MODEL_STATE);
-	}
 	
 	
 	
