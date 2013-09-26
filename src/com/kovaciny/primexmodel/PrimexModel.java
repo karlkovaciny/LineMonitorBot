@@ -218,23 +218,7 @@ public class PrimexModel {
 		mSelectedLine.setSpeedValues(values);
 		setLineSpeedSetpoint(values.lineSpeedSetpoint);
 		setDifferentialSetpoint(values.differentialSpeed);
- 		String[] lineNum = new String[]{String.valueOf(mSelectedLine.getLineNumber())};
-		mDbHelper.updateColumn(PrimexDatabaseSchema.ProductionLines.TABLE_NAME,
-				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_SETPOINT,
-				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + "=?",
-				lineNum,
-				String.valueOf(values.lineSpeedSetpoint));
-		mDbHelper.updateColumn(PrimexDatabaseSchema.ProductionLines.TABLE_NAME,
-				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT,
-				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + "=?",
-				lineNum,
-				String.valueOf(values.differentialSpeed));
-		mDbHelper.updateColumn(PrimexDatabaseSchema.ProductionLines.TABLE_NAME,
-				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR,
-				PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_LINE_NUMBER + "=?",
-				lineNum,
-				String.valueOf(values.speedFactor));
-		mSpeedChanged = true;
+ 		mSpeedChanged = true;
 	}
  
 	public void changeNovatecSetpoint (Double setpoint) {
