@@ -1,6 +1,7 @@
 package com.kovaciny.linemonitorbot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.os.Bundle;
@@ -11,7 +12,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
+import com.kovaciny.helperfunctions.MutuallyExclusiveViewSet;
 import com.kovaciny.primexmodel.DrainingController;
 
 public class DrainingFragment extends Fragment implements View.OnClickListener {
@@ -19,6 +22,7 @@ public class DrainingFragment extends Fragment implements View.OnClickListener {
     private Button mBtn_selfDestruct;
     private Button mBtn_getDrainTimes;
     
+    LinearLayout mContainerDrainingFragment;
     private List<EditText> mEditableGroup = new ArrayList<EditText>();
     private EditText mEdit_grossRate;
 
@@ -41,9 +45,10 @@ public class DrainingFragment extends Fragment implements View.OnClickListener {
 		mBtn_getDrainTimes = (Button) rootView.findViewById(R.id.btn_get_drain_times);
 		mBtn_getDrainTimes.setOnClickListener(this);
 		
+		mContainerDrainingFragment = (LinearLayout) rootView.findViewById(R.id.container_draining_fragment);
 		mEdit_grossRate = (EditText) rootView.findViewById(R.id.edit_gross_rate);
 		mEditableGroup.add(mEdit_grossRate);
-		
+
 		return rootView;
 	}
 

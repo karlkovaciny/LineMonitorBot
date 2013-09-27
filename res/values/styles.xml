@@ -144,6 +144,13 @@
         <item name="android:layout_weight">0.5</item>
         <item name="android:minHeight">@dimen/label_row_height</item>
     </style>
+
+    <style name="TwoColumns.MutuallyExclusive">
+    	<item name="android:clickable">true</item>    
+    	<item name="android:focusableInTouchMode">true</item>    
+    	<item name="android:focusable">true</item>
+    	<item name="android:background">@drawable/selector_viewgroup_exclusive</item>    	    
+    </style>
     
     <style name="Hint">
 		<item name="android:textColor">@color/SlateGray</item>

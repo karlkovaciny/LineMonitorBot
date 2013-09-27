@@ -1,6 +1,7 @@
 package com.kovaciny.linemonitorbot;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,16 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kovaciny.helperfunctions.HelperFunction;
+import com.kovaciny.helperfunctions.MutuallyExclusiveViewSet;
 import com.kovaciny.primexmodel.PrimexModel;
-import com.kovaciny.primexmodel.Roll;
 
 public class RollMathDiameterFragment extends Fragment implements View.OnClickListener {
 
@@ -31,6 +29,9 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
     EditText mEdit_grossWeight;
     EditText mEdit_materialDensity;
     EditText mEdit_width;
+    
+    LinearLayout mContainer_diameterInputs1;
+    LinearLayout mContainer_diameterInputs2;
     
     TextView mTxt_rollDiameter;
     TextView mTxt_rollDiameterHigh;
@@ -52,6 +53,9 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
         
         mBtn_getDiameter = (Button) rootView.findViewById(R.id.btn_get_diameter);
         mBtn_getDiameter.setOnClickListener(this);
+    
+        mContainer_diameterInputs1 = (LinearLayout) rootView.findViewById(R.id.container_diameter_inputs_1);
+        mContainer_diameterInputs2 = (LinearLayout) rootView.findViewById(R.id.container_diameter_inputs_2);
         
         mEdit_orderedGauge = (EditText) rootView.findViewById(R.id.edit_ordered_gauge);
         mEdit_linearFeet = (EditText) rootView.findViewById(R.id.edit_linear_feet);
@@ -66,7 +70,12 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
         }
         mTxt_rollDiameter = (TextView) rootView.findViewById(R.id.txt_roll_diameter);
         mTxt_rollDiameterHigh = (TextView) rootView.findViewById(R.id.txt_roll_diameter_high);
-                
+        
+        HashMap<ViewGroup, EditText> containerToRequiredFieldMap = new HashMap<ViewGroup, EditText>();
+        containerToRequiredFieldMap.put(mContainer_diameterInputs1, mEdit_orderedGauge);
+        containerToRequiredFieldMap.put(mContainer_diameterInputs2, mEdit_grossWeight);
+        MutuallyExclusiveViewSet<ViewGroup> mevs = new MutuallyExclusiveViewSet<ViewGroup>(getActivity(), containerToRequiredFieldMap);
+        mContainer_diameterInputs1.setSelected(true);
         return rootView;
     }
 
