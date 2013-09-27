@@ -3,6 +3,7 @@ package com.kovaciny.helperfunctions;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 
 import org.apache.commons.lang3.math.Fraction;
 
@@ -140,4 +141,20 @@ final public class HelperFunction {
                     0);
         }
     }
+	
+	public static <E> E getOnlyElement(Iterable<E> iterable) {
+	    Iterator<E> iterator = iterable.iterator();
+
+	    if (!iterator.hasNext()) {
+	        throw new RuntimeException("Collection is empty");
+	    }
+
+	    E element = iterator.next();
+
+	    if (iterator.hasNext()) {
+	        throw new RuntimeException("Collection contains more than one item");
+	    }
+
+	    return element;
+	}
 }

@@ -18,7 +18,8 @@
             android:orientation="horizontal" >
 
             <LinearLayout
-                style="@style/TwoColumns"
+                android:id="@+id/container_diameter_inputs_1"
+                style="@style/TwoColumns.MutuallyExclusive"
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
 
@@ -88,7 +89,8 @@
             <!-- column two -->
 
             <LinearLayout
-                style="@style/TwoColumns"
+                android:id="@+id/container_diameter_inputs_2"
+                style="@style/TwoColumns.MutuallyExclusive"
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
 
