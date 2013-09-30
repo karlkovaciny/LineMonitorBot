@@ -4,21 +4,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
 import com.kovaciny.linemonitorbot.R;
 
-public class MutuallyExclusiveViewSet<ViewGroup> {
+public class MutuallyExclusiveViewSet<ViewGroup> implements View.OnTouchListener {
 
+
+    public static final int NO_BACKGROUND = 0;
+    
     Context mContext;
     HashMap<ViewGroup, EditText> mGroupsToRequiredFieldsMap = new HashMap<ViewGroup, EditText>();
     
-    public MutuallyExclusiveViewSet(Context context, HashMap<ViewGroup, EditText> groupsToRequiredFieldsMap) {
+    public MutuallyExclusiveViewSet(Context context, HashMap<ViewGroup, EditText> groupsToRequiredFieldsMap, int backgroundSelectorId) {
         mGroupsToRequiredFieldsMap = groupsToRequiredFieldsMap;
         mContext = context;
-        setBackgroundSelector(R.drawable.selector_viewgroup_exclusive);
+        if (backgroundSelectorId != NO_BACKGROUND) {
+            setBackgroundSelector(backgroundSelectorId);
+        }
+        for (Map.Entry<ViewGroup, EditText> entry : mGroupsToRequiredFieldsMap.entrySet()) {
+            EditText et = entry.getValue();
+            et.setOnTouchListener(this);
+        }
     }
     
     public void setBackgroundSelector(int id) {
@@ -27,6 +36,21 @@ public class MutuallyExclusiveViewSet<ViewGroup> {
             vg.setBackgroundResource(id);
         }
     }
+    
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if(MotionEvent.ACTION_UP == event.getAction()) {
+                for (ViewGroup vg : mGroupsToRequiredFieldsMap.keySet()) {
+                    View view = (View) vg;
+                    if (mGroupsToRequiredFieldsMap.get(vg) == v) {
+                        view.setSelected(true);
+                    } else {
+                        view.setSelected(false);
+                    }
+                }
+            }
+            return false;
+        }
     
     /*
      * If exactly one group is valid, returns it, otherwise sets errors in fields and returns null. 

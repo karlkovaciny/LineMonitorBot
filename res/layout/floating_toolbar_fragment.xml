@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="bottom|center"
         android:paddingTop="@dimen/fragment_vertical_margin" 
         android:paddingBottom="@dimen/fragment_vertical_margin"
@@ -18,26 +18,25 @@
             android:layout_height="wrap_content"
             android:padding="2dp"
             android:background="@drawable/border_rectangle_2dp">
-        <ImageButton
-            android:id="@+id/btn_flashlight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_flashlight" />
-
-        <ImageButton
-            android:id="@+id/btn_calculator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_calculator" />
-        
-        <ImageButton
-            android:id="@+id/btn_pomodroido"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:background="?android:selectableItemBackground"
-            android:src="@drawable/ic_pomodroido" />
+	        <ImageButton
+	            android:id="@+id/btn_flashlight"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/ic_flashlight" />
+	
+	        <ImageButton
+	            android:id="@+id/btn_calculator"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:src="@drawable/ic_calculator" />
+	        
+	        <ImageButton
+	            android:id="@+id/btn_pomodroido"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:visibility="gone"
+	            android:background="?android:selectableItemBackground"
+	            android:src="@drawable/ic_pomodroido" />
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>
