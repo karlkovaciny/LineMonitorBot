@@ -88,7 +88,7 @@ public class SkidTimesFragment extends Fragment implements
 	private String mProductUnits = DEFAULT_PRODUCT_UNITS;
 	private String mProductGrouping = DEFAULT_PRODUCT_GROUPING;
 	
-	public static final int MAXIMUM_NUMBER_OF_SKIDS = 100;
+	public static final int MAXIMUM_NUMBER_OF_SKIDS = 200;
 	public static final String DEFAULT_PRODUCT_UNITS = "Sheets";
     public static final String DEFAULT_PRODUCT_GROUPING = "Skid";
 	

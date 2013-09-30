@@ -74,8 +74,9 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
         HashMap<ViewGroup, EditText> containerToRequiredFieldMap = new HashMap<ViewGroup, EditText>();
         containerToRequiredFieldMap.put(mContainer_diameterInputs1, mEdit_orderedGauge);
         containerToRequiredFieldMap.put(mContainer_diameterInputs2, mEdit_grossWeight);
-        MutuallyExclusiveViewSet<ViewGroup> mevs = new MutuallyExclusiveViewSet<ViewGroup>(getActivity(), containerToRequiredFieldMap);
-        mContainer_diameterInputs1.setSelected(true);
+        MutuallyExclusiveViewSet<ViewGroup> mevs = 
+                new MutuallyExclusiveViewSet<ViewGroup>(
+                        getActivity(), containerToRequiredFieldMap, R.drawable.selector_viewgroup_exclusive);
         return rootView;
     }
 
