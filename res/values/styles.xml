@@ -148,6 +148,7 @@
     <style name="TwoColumns.MutuallyExclusive">
     	<item name="android:paddingTop">8dp</item>
     	<item name="android:paddingBottom">8dp</item>
+    	<item name="android:layout_margin">@dimen/margin_around_outlined_linear_layout</item>
     	<item name="android:clickable">true</item>    
     	<item name="android:focusableInTouchMode">true</item>    
     	<item name="android:focusable">true</item>
