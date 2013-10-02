@@ -12,6 +12,8 @@
 	<dimen name="padding_before_radiobutton">4dp</dimen>
 	<dimen name="padding_border_rectangle">8dp</dimen>
 	<dimen name="margin_vertical_separator">25dp</dimen>
+	<dimen name="margin_below_tab_bar">8dp</dimen>
+	<dimen name="margin_around_outlined_linear_layout">6dp</dimen>
 	<dimen name="margin_roll_math_buttons">20dp</dimen>
 	<dimen name="margin_roll_math_buttons_bottom">10dp</dimen>
 	<dimen name="borderless_row_padding">4dp</dimen>
