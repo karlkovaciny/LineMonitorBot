@@ -75,10 +75,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
 
-                <TextView
-                    android:id="@+id/lbl_sheet_weight"
-                    style="@style/Label.TwoColumns"
-                    android:text="Sheet weight" />
+                <LinearLayout
+                    style="@style/TwoColumns"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/lbl_sheet_weight"
+                        style="@style/Label"
+                        android:layout_gravity="center"
+                        android:text="Sheet weight" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/lbl_net_pph"
@@ -105,6 +112,15 @@
                         android:maxLength="5"
                         android:text="@string/default_sheet_weight" >
                     </EditText>
+                    
+                    <ImageButton
+                        android:id="@+id/imgbtn_calculate_sheet_weight"
+                        android:layout_width="@dimen/touch_target_default"
+                        android:layout_height="@dimen/touch_target_default"
+                        android:layout_marginLeft="-12dp"
+                        android:background="?android:selectableItemBackground"
+                        android:src="@drawable/ic_calculator_small" />
+                    
                 </LinearLayout>
 
                 <LinearLayout style="@style/TwoColumns" >

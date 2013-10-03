@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="bottom|center"
+        android:layout_gravity="bottom|center"
         android:paddingTop="@dimen/fragment_vertical_margin" 
         android:paddingBottom="@dimen/fragment_vertical_margin"
         android:paddingRight="@dimen/fragment_horizontal_margin"
