@@ -7,7 +7,9 @@ import java.util.Locale;
 import com.kovaciny.helperfunctions.HelperFunction;
 
 public class Skid<E extends Product> implements Comparable<Skid>{
-	Pallet mPallet;
+
+    public static final int DEFAULT_SHEET_COUNT = 1000;
+    Pallet mPallet;
 	Product mProductUnit;
 	Integer mCurrentItems = 0;
 	Integer mTotalItems = null;
@@ -49,6 +51,10 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 		this(new Pallet(), totalItems, 0d, 1, product);
 	}
 
+	public Skid() {
+	    this(DEFAULT_SHEET_COUNT, null);
+	}
+	
 	public double getEstimatedStackHeight() {
 		return mTotalItems / mNumberOfStacks * mProductUnit.getHeight();
 	}
