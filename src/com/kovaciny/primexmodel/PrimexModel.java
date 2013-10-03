@@ -204,7 +204,7 @@ public class PrimexModel {
 		mDbHelper.insertOrUpdateWorkOrder(newWo);
 		mWoNumbersList.add(newWo.getWoNumber());
 		if (newWo.getSkidsList().isEmpty()) { //Doing this after inserting the WO so that the WO will be in the table so I can look up its id. TODO stop exposing the skids list.
-			Skid<Product> defaultSkid = new Skid<Product>(1000, null);
+			Skid<Product> defaultSkid = new Skid<Product>();
 			newWo.addOrUpdateSkid(defaultSkid);
 			mDbHelper.insertOrReplaceSkid(defaultSkid, newWo.getWoNumber());
 			newWo.selectSkid(defaultSkid.getSkidNumber());

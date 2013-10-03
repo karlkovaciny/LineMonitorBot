@@ -22,6 +22,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -42,6 +43,7 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 	EditText mEdit_tenSecondLetdownGrams;
 	Button mBtn_calculateRates;
 	Button mBtn_enterProduct;
+	ImageButton mImgBtn_calculateSheetWeight;
 	TextView mTxt_colorPercent;
 	TextView mLbl_novatecSetpoint;
 	private List<EditText> mEditableGroup = new ArrayList<EditText>();
@@ -93,78 +95,87 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 		mBtn_enterProduct.setOnClickListener(this);
 		mBtn_enterProduct.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
 		
+		mImgBtn_calculateSheetWeight = (ImageButton) rootView.findViewById(R.id.imgbtn_calculate_sheet_weight);
+		mImgBtn_calculateSheetWeight.setOnClickListener(this);
+		
 		return rootView;
 	}
 		
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case (R.id.btn_enter_product_rates_frag):
-		    for (EditText et : mEditableGroup) {
-                et.clearFocus();
-            }
-		    ((MainActivity)getActivity()).showEnterProductDialog();
-		    break;
-		
-		case (R.id.btn_calculate_rates):
-            for (EditText et : mEditableGroup) {
-                et.setError(null);
-            }
-		    boolean validInputs = true;
+		case (R.id.imgbtn_calculate_sheet_weight):
 		    
+		    break;
+		    
+		case (R.id.btn_enter_product_rates_frag):
+		        for (EditText et : mEditableGroup) {
+		            et.clearFocus();
+		        }
+		    DialogController dc = new DialogController((MainActivity)getActivity());
+		    dc.showEnterProductDialog();
+		    break;
+
+		case (R.id.btn_calculate_rates):
+		        for (EditText et : mEditableGroup) {
+		            et.setError(null);
+		        }
+		    boolean validInputs = true;
+
 		    if (mEdit_grossWidth.getText().length() == 0) {
-                mEdit_grossWidth.setError(getString(R.string.error_empty_field));
-                validInputs = false;
-            }
-            if (mEdit_sheetWeight.getText().length() == 0) {
-                mEdit_sheetWeight.setError(getString(R.string.error_empty_field));
-                validInputs = false;
-            }
-    		if ((mEdit_novatecSetpoint.getText().length() == 0) && (mEdit_tenSecondLetdownGrams.getText().length() == 0)) {
-    		    mEdit_novatecSetpoint.setError(getString(R.string.error_need_at_least_one));
-    		    mEdit_tenSecondLetdownGrams.setError(getString(R.string.error_need_at_least_one));
-    		    validInputs = false;
-    		} 
-    		if ((mEdit_novatecSetpoint.getText().length() > 0) && 
-    		        (mEdit_tenSecondLetdownGrams.length() > 0) &&
-    		        (Double.valueOf(mEdit_novatecSetpoint.getText().toString()) > 0d)) {
-    		    mEdit_novatecSetpoint.setError(getString(R.string.error_need_only_one));
-    		    mEdit_tenSecondLetdownGrams.setError(getString(R.string.error_need_only_one));
-    		    validInputs = false;
-    		}
-			
-			if (validInputs) {
-				Double grossWidth = Double.valueOf(mEdit_grossWidth.getText().toString());
-				Double sheetWeight = Double.valueOf(mEdit_sheetWeight.getText().toString());
-				Double novaSetpoint = 0d; 
-				if (mEdit_novatecSetpoint.getText().length() > 0) {
-				    novaSetpoint = Double.valueOf(mEdit_novatecSetpoint.getText().toString());
-				}
-				Double letdownGrams = 0d;
-				if (mEdit_tenSecondLetdownGrams.getText().length() > 0) {
-				    letdownGrams = Double.valueOf(mEdit_tenSecondLetdownGrams.getText().toString());
-				}
-				HelperFunction.hideKeyboard(getActivity());
-				try {
-					((MainActivity)getActivity()).updateRatesData(grossWidth, sheetWeight, novaSetpoint, letdownGrams);
-				} catch (IllegalStateException e) {
-					String cause = e.getCause().getMessage();
-					if (cause.equals(PrimexModel.ERROR_NET_LESS_THAN_GROSS)) {
-						mEdit_grossWidth.setError(getString(R.string.error_net_less_than_gross));
-					} else if (cause.equals(PrimexModel.ERROR_NO_PRODUCT_SELECTED) || 
-							cause.equals(PrimexModel.ERROR_NO_PPM_VALUE)){
-						Toast.makeText(getActivity(), R.string.prompt_need_product, Toast.LENGTH_LONG).show();
-						((MainActivity)getActivity()).showEnterProductDialog();
-					} else {
-						throw e;
-					}
-				}
-				for (EditText et : mEditableGroup) {
-				    et.clearFocus();
-				}
-			}
-			break;
-		
+		        mEdit_grossWidth.setError(getString(R.string.error_empty_field));
+		        validInputs = false;
+		    }
+		    if (mEdit_sheetWeight.getText().length() == 0) {
+		        mEdit_sheetWeight.setError(getString(R.string.error_empty_field));
+		        validInputs = false;
+		    }
+		    if ((mEdit_novatecSetpoint.getText().length() == 0) && (mEdit_tenSecondLetdownGrams.getText().length() == 0)) {
+		        mEdit_novatecSetpoint.setError(getString(R.string.error_need_at_least_one));
+		        mEdit_tenSecondLetdownGrams.setError(getString(R.string.error_need_at_least_one));
+		        validInputs = false;
+		    } 
+		    if ((mEdit_novatecSetpoint.getText().length() > 0) && 
+		            (mEdit_tenSecondLetdownGrams.length() > 0) &&
+		            (Double.valueOf(mEdit_novatecSetpoint.getText().toString()) > 0d)) {
+		        mEdit_novatecSetpoint.setError(getString(R.string.error_need_only_one));
+		        mEdit_tenSecondLetdownGrams.setError(getString(R.string.error_need_only_one));
+		        validInputs = false;
+		    }
+
+		    if (validInputs) {
+		        Double grossWidth = Double.valueOf(mEdit_grossWidth.getText().toString());
+		        Double sheetWeight = Double.valueOf(mEdit_sheetWeight.getText().toString());
+		        Double novaSetpoint = 0d; 
+		        if (mEdit_novatecSetpoint.getText().length() > 0) {
+		            novaSetpoint = Double.valueOf(mEdit_novatecSetpoint.getText().toString());
+		        }
+		        Double letdownGrams = 0d;
+		        if (mEdit_tenSecondLetdownGrams.getText().length() > 0) {
+		            letdownGrams = Double.valueOf(mEdit_tenSecondLetdownGrams.getText().toString());
+		        }
+		        HelperFunction.hideKeyboard(getActivity());
+		        DialogController dialogController = new DialogController((MainActivity)getActivity());
+		        try {
+		            dialogController.updateRatesData(grossWidth, sheetWeight, novaSetpoint, letdownGrams);
+		        } catch (IllegalStateException e) {
+		            String cause = e.getCause().getMessage();
+		            if (cause.equals(PrimexModel.ERROR_NET_LESS_THAN_GROSS)) {
+		                mEdit_grossWidth.setError(getString(R.string.error_net_less_than_gross));
+		            } else if (cause.equals(PrimexModel.ERROR_NO_PRODUCT_SELECTED) || 
+		                    cause.equals(PrimexModel.ERROR_NO_PPM_VALUE)){
+		                Toast.makeText(getActivity(), R.string.prompt_need_product, Toast.LENGTH_LONG).show();
+		                dialogController.showEnterProductDialog();
+		            } else {
+		                throw e;
+		            }
+		        }
+		        for (EditText et : mEditableGroup) {
+		            et.clearFocus();
+		        }
+		    }
+		    break;
+
 		}
 	}
 

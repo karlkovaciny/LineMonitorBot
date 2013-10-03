@@ -44,8 +44,8 @@ import android.widget.ViewSwitcher;
 import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
-import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.Roll;
+import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.WorkOrder;
 
 public class SkidTimesFragment extends Fragment implements
@@ -152,7 +152,7 @@ public class SkidTimesFragment extends Fragment implements
 		mBtn_goByHeight.setOnClickListener(this);
 		
 		mBtn_rollMath = (Button) rootView.findViewById(R.id.btn_roll_math);
-        mBtn_rollMath.setOnClickListener((MainActivity)getActivity());
+        mBtn_rollMath.setOnClickListener((MainActivity) getActivity());
 		
 		//set up textViews
 		mLbl_productType = (TextView) rootView.findViewById(R.id.lbl_product_type);
@@ -236,7 +236,8 @@ public class SkidTimesFragment extends Fragment implements
 
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
+		DialogController dialogController = new DialogController((MainActivity)getActivity());
+	    switch (v.getId()) {
 		case (R.id.btn_skid_number_up):
 			HelperFunction.hideKeyboard(getActivity());
 			HelperFunction.incrementEditText(mEdit_currentSkidNumber);
@@ -262,15 +263,19 @@ public class SkidTimesFragment extends Fragment implements
 			for (EditText et : mEditableGroup) {
 				et.clearFocus();
 			}
-			((MainActivity)getActivity()).showEnterProductDialog();
+			dialogController.showEnterProductDialog();
 			break;
 		case (R.id.btn_go_by_height):
-			int updatedTotalSheets = 1000;
+			int updatedTotalSheets = Skid.DEFAULT_SHEET_COUNT;
 			if (mEdit_totalCountPerSkid.getText().length() > 0) {
 				updatedTotalSheets = Integer.valueOf(mEdit_totalCountPerSkid.getText().toString());
 			}
-			((MainActivity)getActivity()).showGoByHeightDialog(updatedTotalSheets);
+			dialogController.showGoByHeightDialog(updatedTotalSheets);
 			break;
+		case (R.id.imgbtn_cancel_alarm):
+		    cancelAlarm();
+		    Toast.makeText(getActivity(), getResources().getString(R.string.toast_alarm_canceled), Toast.LENGTH_SHORT).show();
+		    break;
 		case (R.id.btn_calculate_times):
 			//supply default values
 			if (mEdit_currentCount.getText().length() == 0) {
@@ -345,7 +350,7 @@ public class SkidTimesFragment extends Fragment implements
 				HelperFunction.hideKeyboard(getActivity());
 				mBtn_enterProduct.setError(null);
 				try {
-					((MainActivity)getActivity()).updateSkidData(
+					dialogController.updateSkidData(
 							Integer.valueOf(mEdit_currentSkidNumber.getText().toString()),
 							Integer.valueOf(mEdit_currentCount.getText().toString()),
 							Integer.valueOf(mEdit_totalCountPerSkid.getText().toString()),
@@ -364,10 +369,6 @@ public class SkidTimesFragment extends Fragment implements
 					ett.clearFocus();
 				}
 			}
-			break;
-		case (R.id.imgbtn_cancel_alarm):
-			cancelAlarm();
-		    Toast.makeText(getActivity(), getResources().getString(R.string.toast_alarm_canceled), Toast.LENGTH_SHORT).show();
 			break;
 		}
 	}
