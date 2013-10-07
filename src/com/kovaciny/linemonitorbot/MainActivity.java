@@ -365,7 +365,9 @@ public class MainActivity extends FragmentActivity implements
 
 		switch (item.getItemId()) {
 		case R.id.new_wo:
-			mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());
+			SwitchJobsTask task = new SwitchJobsTask(this, this.mModel, mModel.addWorkOrder().getWoNumber());
+			task.execute();
+//			mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());
 			break;
 		case R.id.clear_wos:
 			ClearWorkOrdersDialogFragment clearDialog = new ClearWorkOrdersDialogFragment();
