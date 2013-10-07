@@ -30,7 +30,7 @@ public class SwitchJobsTask extends AsyncTask {
 		Animation fadeOut = AnimationUtils.loadAnimation(mActivity, R.anim.fade_out);
 		fadeOut.setFillAfter(true);
 	    ViewSwitcher viewSwitcher = (ViewSwitcher) mActivity.findViewById(R.id.view_switcher_skid_times_fragment);
-	    viewSwitcher.showNext(); //so it starts 
+	    viewSwitcher.showNext(); //I want to animate the first view fading out, so I have to switch to it
 	    viewSwitcher.setAnimation(fadeOut);
 	    viewSwitcher.showNext(); 
 	    
@@ -51,8 +51,9 @@ public class SwitchJobsTask extends AsyncTask {
         if (!mActivity.isFinishing()) {
         	Animation fadeIn = AnimationUtils.loadAnimation(mActivity, R.anim.fade_in);
     	    ViewSwitcher viewSwitcher = (ViewSwitcher) mActivity.findViewById(R.id.view_switcher_skid_times_fragment);
+    	    viewSwitcher.showPrevious();
     	    viewSwitcher.setAnimation(fadeIn);
-            viewSwitcher.showNext();
+            viewSwitcher.showPrevious();
 //            Toast.makeText(mActivity, "fading in", Toast.LENGTH_SHORT).show();
         }
     }
