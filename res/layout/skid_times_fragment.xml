@@ -1,199 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/view_switcher_skid_times_fragment"
-        style="@style/ParentFragment" 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    
-  <LinearLayout 
-	android:id="@+id/container_skid_times_fragment"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_switcher_skid_times_fragment"
+    style="@style/ParentFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/data_entry_group_left_padding"
-        android:orientation="vertical" >
-
-        <RelativeLayout
-            android:id="@+id/rl_data_entry_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/lbl_product_type"
-                style="@style/Label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/lbl_products"
-                android:layout_alignRight="@id/lbl_products"
-                android:layout_below="@+id/btn_skid_number_up"
-                android:gravity="center"
-                android:text="Skid:"
-                android:width="@dimen/sheets_label_width" />
-
-            <ImageButton
-                android:id="@id/btn_skid_number_up"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/edit_skid_number"
-                android:layout_alignParentTop="true"
-                android:layout_alignRight="@+id/edit_skid_number"
-                android:background="?android:selectableItemBackground"
-                android:paddingBottom="@dimen/up_arrow_bottom_padding"
-                android:paddingTop="@dimen/up_arrow_top_padding"
-                android:src="@drawable/numberpicker_up_btn_holo_dark" />
-
-            <EditText
-                android:id="@id/edit_skid_number"
-                style="@style/EditText"
-                android:layout_width="@dimen/edit_skid_number_width"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/lbl_product_type"
-                android:layout_below="@id/btn_skid_number_up"
-                android:layout_toLeftOf="@+id/textView123"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:maxLength="3"
-                android:text="1" />
-
-            <TextView
-                android:id="@id/textView123"
-                style="@style/Label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/textView124"
-                android:layout_alignBaseline="@id/lbl_product_type"
-                android:layout_alignLeft="@id/textView124"
-                android:layout_below="@id/btn_skid_number_up"
-                android:text="of" />
-
-            <ImageButton
-                android:id="@+id/btn_total_skids_up"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/edit_num_skids_in_job"
-                android:layout_alignParentTop="true"
-                android:layout_alignRight="@+id/edit_num_skids_in_job"
-				android:background="?android:selectableItemBackground"
-                android:paddingBottom="@dimen/up_arrow_bottom_padding"
-                android:paddingTop="@dimen/up_arrow_top_padding"
-                android:src="@drawable/numberpicker_up_btn_holo_dark" />
-
-            <EditText
-                android:id="@+id/edit_num_skids_in_job"
-                style="@style/EditText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/lbl_product_type"
-                android:layout_toRightOf="@id/textView123"
-                android:imeOptions="actionNext"
-                android:inputType="numberDecimal"
-                android:maxLength="6"
-                android:minEms="3"
-                android:nextFocusForward="@+id/edit_current_count" />
-
-            <TextView
-                android:id="@id/lbl_products"
-                style="@style/Label"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@id/edit_skid_number"
-                android:gravity="center_horizontal"
-                android:text="Sheets:"
-                android:width="@dimen/sheets_label_width" />
-
-            <EditText
-                android:id="@id/edit_current_count"
-                style="@style/EditText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/lbl_products"
-                android:layout_below="@id/edit_skid_number"
-                android:layout_toRightOf="@id/lbl_products"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:maxLength="4"
-                android:minEms="3" />
-
-            <TextView
-                android:id="@id/textView124"
-                style="@style/Label"
-                android:layout_alignBaseline="@id/lbl_products"
-                android:layout_below="@id/edit_skid_number"
-                android:layout_toRightOf="@id/edit_current_count"
-                android:text="of" />
-
-            <EditText
-                android:id="@+id/edit_total_sheets_per_skid"
-                style="@style/EditText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/lbl_products"
-                android:layout_below="@id/edit_skid_number"
-                android:layout_toRightOf="@id/textView124"
-                android:imeOptions="actionDone"
-                android:inputType="number"
-                android:maxLength="4"
-                android:minEms="3" />
-
-            <Button
-                android:id="@+id/btn_go_by_height"
-                style="@style/Button.Minor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/textView124"
-                android:layout_toRightOf="@+id/edit_num_skids_in_job"
-                android:layout_marginLeft="@dimen/btn_go_by_height_margin"
-                android:drawableLeft="@drawable/ic_ruler"
-                android:drawablePadding="10dp"
-                android:visibility="gone"
-                android:text="@string/btn_go_by_height_text" />
-            
-            <Button
-                android:id="@+id/btn_roll_math"
-                style="@style/Button.Minor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/textView124"
-                android:layout_toRightOf="@+id/edit_num_skids_in_job"
-                android:layout_marginLeft="@dimen/btn_go_by_height_margin"
-                android:visibility="gone"
-                android:text="Roll math" />
-            
-        </RelativeLayout>
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/container_enter_product_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/borderless_row_padding"
-        android:paddingBottom="@dimen/borderless_row_padding" >
-
-        <Button
-            android:id="@+id/btn_enter_product"
-            android:layout_width="@dimen/button_width_default"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="8dp"
-            android:text="@string/btn_enter_product_text" />
-
-        <Button
-            android:id="@+id/btn_calculate_times"
-            android:layout_width="@dimen/button_width_default"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/btn_enter_product"
-            android:layout_marginLeft="@dimen/button_row_spacing"
-            android:text="Get Times" />
-
-    </RelativeLayout>
-
-    <LinearLayout
+        android:id="@+id/container_skid_times_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/data_entry_group_left_padding" >
+
+            <RelativeLayout
+                android:id="@+id/rl_data_entry_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/lbl_product_type"
+                    style="@style/Label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/lbl_products"
+                    android:layout_alignRight="@id/lbl_products"
+                    android:layout_below="@+id/btn_skid_number_up"
+                    android:gravity="center"
+                    android:text="Skid:"
+                    android:width="@dimen/sheets_label_width" />
+
+                <ImageButton
+                    android:id="@id/btn_skid_number_up"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/edit_skid_number"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignRight="@+id/edit_skid_number"
+                    android:background="?android:selectableItemBackground"
+                    android:paddingBottom="@dimen/up_arrow_bottom_padding"
+                    android:paddingTop="@dimen/up_arrow_top_padding"
+                    android:src="@drawable/numberpicker_up_btn_holo_dark" />
+
+                <EditText
+                    android:id="@id/edit_skid_number"
+                    style="@style/EditText"
+                    android:layout_width="@dimen/edit_skid_number_width"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/lbl_product_type"
+                    android:layout_below="@id/btn_skid_number_up"
+                    android:layout_toLeftOf="@+id/textView123"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:text="1" />
+
+                <TextView
+                    android:id="@id/textView123"
+                    style="@style/Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/textView124"
+                    android:layout_alignBaseline="@id/lbl_product_type"
+                    android:layout_alignLeft="@id/textView124"
+                    android:layout_below="@id/btn_skid_number_up"
+                    android:text="of" />
+
+                <ImageButton
+                    android:id="@+id/btn_total_skids_up"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/edit_num_skids_in_job"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignRight="@+id/edit_num_skids_in_job"
+                    android:background="?android:selectableItemBackground"
+                    android:paddingBottom="@dimen/up_arrow_bottom_padding"
+                    android:paddingTop="@dimen/up_arrow_top_padding"
+                    android:src="@drawable/numberpicker_up_btn_holo_dark" />
+
+                <EditText
+                    android:id="@+id/edit_num_skids_in_job"
+                    style="@style/EditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/lbl_product_type"
+                    android:layout_toRightOf="@id/textView123"
+                    android:imeOptions="actionNext"
+                    android:inputType="numberDecimal"
+                    android:maxLength="6"
+                    android:minEms="3"
+                    android:nextFocusForward="@+id/edit_current_count" />
+
+                <TextView
+                    android:id="@id/lbl_products"
+                    style="@style/Label"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/edit_skid_number"
+                    android:gravity="center_horizontal"
+                    android:text="Sheets:"
+                    android:width="@dimen/sheets_label_width" />
+
+                <EditText
+                    android:id="@id/edit_current_count"
+                    style="@style/EditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/lbl_products"
+                    android:layout_below="@id/edit_skid_number"
+                    android:layout_toRightOf="@id/lbl_products"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLength="4"
+                    android:minEms="3" />
+
+                <TextView
+                    android:id="@id/textView124"
+                    style="@style/Label"
+                    android:layout_alignBaseline="@id/lbl_products"
+                    android:layout_below="@id/edit_skid_number"
+                    android:layout_toRightOf="@id/edit_current_count"
+                    android:text="of" />
+
+                <EditText
+                    android:id="@+id/edit_total_sheets_per_skid"
+                    style="@style/EditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/lbl_products"
+                    android:layout_below="@id/edit_skid_number"
+                    android:layout_toRightOf="@id/textView124"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:maxLength="4"
+                    android:minEms="3" />
+
+                <Button
+                    android:id="@+id/btn_go_by_height"
+                    style="@style/Button.Minor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/textView124"
+                    android:layout_marginLeft="@dimen/btn_go_by_height_margin"
+                    android:layout_toRightOf="@+id/edit_num_skids_in_job"
+                    android:drawableLeft="@drawable/ic_ruler"
+                    android:drawablePadding="10dp"
+                    android:text="@string/btn_go_by_height_text"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/btn_roll_math"
+                    style="@style/Button.Minor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/textView124"
+                    android:layout_marginLeft="@dimen/btn_go_by_height_margin"
+                    android:layout_toRightOf="@+id/edit_num_skids_in_job"
+                    android:text="Roll math"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/container_enter_product_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/borderless_row_padding"
+            android:paddingTop="@dimen/borderless_row_padding" >
+
+            <Button
+                android:id="@+id/btn_enter_product"
+                android:layout_width="@dimen/button_width_default"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="8dp"
+                android:text="@string/btn_enter_product_text" />
+
+            <Button
+                android:id="@+id/btn_calculate_times"
+                android:layout_width="@dimen/button_width_default"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/button_row_spacing"
+                android:layout_toRightOf="@id/btn_enter_product"
+                android:text="Get Times" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
             <TableLayout
                 android:layout_width="fill_parent"
@@ -201,6 +200,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:shrinkColumns="3" >
+
                 <TableRow
                     android:id="@+id/tableRow6"
                     android:layout_width="fill_parent"
@@ -318,14 +318,26 @@
                 </TableRow>
             </TableLayout>
 
-        <fragment
-            android:id="@+id/floating_toolbar_1"
-            android:name="com.kovaciny.linemonitorbot.FloatingToolbarFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <fragment
+                android:id="@+id/floating_toolbar_1"
+                android:name="com.kovaciny.linemonitorbot.FloatingToolbarFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout="@layout/floating_toolbar_fragment" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Large Text"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
     </LinearLayout>
-    
-  </LinearLayout>
 
 </ViewSwitcher>

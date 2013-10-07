@@ -560,11 +560,6 @@ public class SkidTimesFragment extends Fragment implements
 			}
 			
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
-		    Animation fadeOutFadeIn = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out_fade_in);
-		    ViewSwitcher viewSwitcher = (ViewSwitcher) getView().findViewById(R.id.view_switcher_skid_times_fragment);
-		    viewSwitcher.setAnimation(fadeOutFadeIn);
-	        viewSwitcher.showNext();
-	        
 		    WorkOrder wo = (WorkOrder)newProperty;
 			Skid<Product> skid = wo.getSelectedSkid();
 			mEdit_currentSkidNumber.setText(String.valueOf(skid.getSkidNumber()));
