@@ -297,4 +297,10 @@
             tools:layout="@layout/floating_toolbar_fragment" />
     
 	</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </LinearLayout>
+
 </ViewSwitcher>
