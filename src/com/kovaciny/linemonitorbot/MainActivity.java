@@ -357,17 +357,19 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		if (item.getGroupId() == LINE_LIST_MENU_GROUP) {
-			mModel.setSelectedLine(item.getItemId() - LINE_LIST_ID_RANDOMIZER);
+			int lineNumber = item.getItemId() - LINE_LIST_ID_RANDOMIZER;
+			SwitchJobsTask task = new SwitchJobsTask(this, this.mModel, lineNumber, true);
+			task.execute();
 		}
 		if (item.getGroupId() == JOB_LIST_MENU_GROUP) {
-			mModel.setSelectedWorkOrder(item.getItemId());
+			SwitchJobsTask task = new SwitchJobsTask(this, this.mModel, item.getItemId(), false);
+			task.execute();
 		}
 
 		switch (item.getItemId()) {
 		case R.id.new_wo:
-			SwitchJobsTask task = new SwitchJobsTask(this, this.mModel, mModel.addWorkOrder().getWoNumber());
+			SwitchJobsTask task = new SwitchJobsTask(this, this.mModel, mModel.addWorkOrder().getWoNumber(), false);
 			task.execute();
-//			mModel.setSelectedWorkOrder(mModel.addWorkOrder().getWoNumber());
 			break;
 		case R.id.clear_wos:
 			ClearWorkOrdersDialogFragment clearDialog = new ClearWorkOrdersDialogFragment();

@@ -223,10 +223,7 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 		    }
 			
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
-		    Animation fadeOutFadeIn = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out_fade_in);
-            ViewSwitcher viewSwitcher = (ViewSwitcher) getView().findViewById(R.id.view_switcher_rates_fragment);
-            viewSwitcher.setAnimation(fadeOutFadeIn);
-            viewSwitcher.showNext();
+
 		} else if (propertyName == PrimexModel.SELECTED_LINE_CHANGE_EVENT){
 			
 		} else if (propertyName == PrimexModel.EDGE_TRIM_RATIO_CHANGE_EVENT) {

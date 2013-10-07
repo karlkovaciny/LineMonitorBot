@@ -135,7 +135,13 @@ public class PrimexModel {
 		}
 		if (woNumber <= 0) throw new IllegalArgumentException("Work order number must be positive");
 		
-		if (hasSelectedWorkOrder()) saveState();
+		if (hasSelectedWorkOrder()) {
+			if (mSelectedWorkOrder.getWoNumber() == woNumber) {
+				return;
+			} else {
+				saveState();
+			}
+		}
 	
 		mSelectedWorkOrder = mDbHelper.getWorkOrder(woNumber);
 		mDbHelper.updateLineWorkOrderLink(mSelectedLine.getLineNumber(), woNumber);
