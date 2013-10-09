@@ -152,6 +152,7 @@
     	<item name="android:clickable">true</item>    
     	<item name="android:focusableInTouchMode">true</item>    
     	<item name="android:focusable">true</item>
+    	<item name="android:gravity">center</item>
     	<item name="android:background">@drawable/selector_viewgroup_exclusive</item>    	    
     </style>
     

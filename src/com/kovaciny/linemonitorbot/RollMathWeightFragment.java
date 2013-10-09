@@ -1,5 +1,8 @@
 package com.kovaciny.linemonitorbot;
 
+import java.text.DecimalFormat;
+import java.util.HashMap;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,9 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kovaciny.helperfunctions.HelperFunction;
+import com.kovaciny.helperfunctions.MutuallyExclusiveViewSet;
+import com.kovaciny.primexmodel.PrimexModel;
 
 public class RollMathWeightFragment extends Fragment implements View.OnClickListener {
 
@@ -26,6 +32,10 @@ public class RollMathWeightFragment extends Fragment implements View.OnClickList
     EditText mEdit_footWeight;
     EditText mEdit_width;
     
+    LinearLayout mContainer_weightInputs1;
+    LinearLayout mContainer_weightInputs2;
+    
+    MutuallyExclusiveViewSet<ViewGroup> mMutuallyExclusiveViewSet;
     TextView mTxt_rollWeight;
     
     int mLinearFeet;
@@ -75,8 +85,20 @@ public class RollMathWeightFragment extends Fragment implements View.OnClickList
             mEdit_footWeight.setText(String.valueOf(mFootWeight));
         }
 
+        mContainer_weightInputs1 = (LinearLayout) rootView.findViewById(R.id.container_weight_inputs_1);
+        mContainer_weightInputs2 = (LinearLayout) rootView.findViewById(R.id.container_weight_inputs_2);
+         
         mTxt_rollWeight = (TextView) rootView.findViewById(R.id.txt_roll_weight);
                 
+        HashMap<ViewGroup, EditText> containerToRequiredFieldMap = new HashMap<ViewGroup, EditText>();
+        containerToRequiredFieldMap.put(mContainer_weightInputs1, mEdit_footWeight);
+        containerToRequiredFieldMap.put(mContainer_weightInputs2, mEdit_targetDiameter);
+        
+        mMutuallyExclusiveViewSet = 
+                new MutuallyExclusiveViewSet<ViewGroup>(
+                        getActivity(), containerToRequiredFieldMap, R.drawable.selector_viewgroup_exclusive);
+
+        
         return rootView;
     }
 
@@ -127,41 +149,26 @@ public class RollMathWeightFragment extends Fragment implements View.OnClickList
 
     private boolean validateInputs() {
         boolean validInputs = true;
-        
-        //establish that the user filled in at least one of the required columns
-        if ((mEdit_linearFeet.getText().length() == 0) && (mEdit_targetDiameter.getText().length() == 0)) {
-            mEdit_linearFeet.setError(getString(R.string.error_need_at_least_one));
-            mEdit_targetDiameter.setError(getString(R.string.error_need_at_least_one));
+        LinearLayout validGroup = (LinearLayout) mMutuallyExclusiveViewSet.validateGroups();
+        if (validGroup == mContainer_weightInputs1) {
+            if (mEdit_linearFeet.getText().length() == 0) {
+                mEdit_linearFeet.setError(getString(R.string.error_empty_field));
+                validInputs = false;
+            }   
+        } else if (validGroup == mContainer_weightInputs2) {
+            if (mEdit_materialDensity.getText().length() == 0) {
+                mEdit_materialDensity.setError(getString(R.string.error_empty_field));
+                validInputs = false;
+            }
+            
+            if (mEdit_width.getText().length() == 0) {
+                mEdit_width.setError(getString(R.string.error_empty_field));
+                validInputs = false;
+            }
+        } else {
             validInputs = false;
         } 
-        
-        if ((mEdit_linearFeet.getText().length() > 0) && 
-                (mEdit_targetDiameter.getText().length() > 0) &&
-                (Double.valueOf(mEdit_linearFeet.getText().toString()) > 0d)) {
-            mEdit_linearFeet.setError(getString(R.string.error_need_only_one));
-            mEdit_targetDiameter.setError(getString(R.string.error_need_only_one));
-            validInputs = false;
-        }
-        
-        //Process only the column they wanted
-        if (validInputs) {
-           if (mEdit_linearFeet.getText().length() > 0) {
-               if (mEdit_linearFeet.getText().length() == 0) {
-                   mEdit_linearFeet.setError(getString(R.string.error_empty_field));
-                   validInputs = false;
-               }   
-           } else {
-               if (mEdit_materialDensity.getText().length() == 0) {
-                   mEdit_materialDensity.setError(getString(R.string.error_empty_field));
-                   validInputs = false;
-               }
 
-               if (mEdit_width.getText().length() == 0) {
-                   mEdit_width.setError(getString(R.string.error_empty_field));
-                   validInputs = false;
-               }
-           }
-        }
         return validInputs;
     }
     

@@ -33,6 +33,8 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
     LinearLayout mContainer_diameterInputs1;
     LinearLayout mContainer_diameterInputs2;
     
+    MutuallyExclusiveViewSet<ViewGroup> mMutuallyExclusiveViewSet;
+    
     TextView mTxt_rollDiameter;
     TextView mTxt_rollDiameterHigh;
     
@@ -74,7 +76,7 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
         HashMap<ViewGroup, EditText> containerToRequiredFieldMap = new HashMap<ViewGroup, EditText>();
         containerToRequiredFieldMap.put(mContainer_diameterInputs1, mEdit_orderedGauge);
         containerToRequiredFieldMap.put(mContainer_diameterInputs2, mEdit_grossWeight);
-        MutuallyExclusiveViewSet<ViewGroup> mevs = 
+        mMutuallyExclusiveViewSet = 
                 new MutuallyExclusiveViewSet<ViewGroup>(
                         getActivity(), containerToRequiredFieldMap, R.drawable.selector_viewgroup_exclusive);
         return rootView;
@@ -128,47 +130,34 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
 
     private boolean validateInputs() {        
         boolean validInputs = true;
-        
-        //establish that the user filled in at least one of the required columns
-        if ((mEdit_orderedGauge.getText().length() == 0) && (mEdit_grossWeight.getText().length() == 0)) {
-            mEdit_orderedGauge.setError(getString(R.string.error_need_at_least_one));
-            mEdit_grossWeight.setError(getString(R.string.error_need_at_least_one));
+        LinearLayout validGroup = (LinearLayout) mMutuallyExclusiveViewSet.validateGroups();
+        if (validGroup == mContainer_diameterInputs1) {
+            if (mEdit_linearFeet.getText().length() == 0) {
+                mEdit_linearFeet.setError(getString(R.string.error_empty_field));
+                validInputs = false;
+            }   
+            //auto-convert if user enters gauge as a whole number instead of a decimal, then format as gauge
+            double gaugeValue = Double.valueOf(mEdit_orderedGauge.getText().toString());
+            if (gaugeValue > PrimexModel.MAXIMUM_POSSIBLE_GAUGE) {
+                gaugeValue /= 1000;
+            }
+            String threeDecimalsPlus = new DecimalFormat("#.000#").format(gaugeValue);
+            mEdit_orderedGauge.setText(threeDecimalsPlus);
+        } else if (validGroup == mContainer_diameterInputs2) {
+            if (mEdit_materialDensity.getText().length() == 0) {
+                mEdit_materialDensity.setError(getString(R.string.error_empty_field));
+                validInputs = false;
+            }
+            
+            if (mEdit_width.getText().length() == 0) {
+                mEdit_width.setError(getString(R.string.error_empty_field));
+                validInputs = false;
+            }
+            
+        } else {
             validInputs = false;
         } 
-        if ((mEdit_orderedGauge.getText().length() > 0) && 
-                (mEdit_grossWeight.getText().length() > 0) &&
-                (Double.valueOf(mEdit_orderedGauge.getText().toString()) > 0d)) {
-            mEdit_orderedGauge.setError(getString(R.string.error_need_only_one));
-            mEdit_grossWeight.setError(getString(R.string.error_need_only_one));
-            validInputs = false;
-        }
-        
-        //Process only the column they wanted
-        if (validInputs) {
-           if (mEdit_orderedGauge.getText().length() > 0) {
-               if (mEdit_linearFeet.getText().length() == 0) {
-                   mEdit_linearFeet.setError(getString(R.string.error_empty_field));
-                   validInputs = false;
-               }   
-               //auto-convert if user enters gauge as a whole number instead of a decimal, then format as gauge
-               double gaugeValue = Double.valueOf(mEdit_orderedGauge.getText().toString());
-               if (gaugeValue > PrimexModel.MAXIMUM_POSSIBLE_GAUGE) {
-                   gaugeValue /= 1000;
-               }
-               String threeDecimalsPlus = new DecimalFormat("#.000#").format(gaugeValue);
-               mEdit_orderedGauge.setText(threeDecimalsPlus);
-           } else {
-               if (mEdit_materialDensity.getText().length() == 0) {
-                   mEdit_materialDensity.setError(getString(R.string.error_empty_field));
-                   validInputs = false;
-               }
 
-               if (mEdit_width.getText().length() == 0) {
-                   mEdit_width.setError(getString(R.string.error_empty_field));
-                   validInputs = false;
-               }
-           }
-        }
         return validInputs;
     }
     
