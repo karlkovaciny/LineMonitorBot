@@ -57,21 +57,26 @@ public class MutuallyExclusiveViewSet<ViewGroup> implements View.OnTouchListener
      */
     public ViewGroup validateGroups() {
         HashMap<ViewGroup, EditText> groupsWithValuesMap = new HashMap<ViewGroup, EditText>();
-        for (Map.Entry<ViewGroup, EditText> entry : groupsWithValuesMap.entrySet()) {
-            if (entry.getValue().getText().length() == 0) {
-                groupsWithValuesMap.remove(entry.getKey());
+        for (Map.Entry<ViewGroup, EditText> entry : mGroupsToRequiredFieldsMap.entrySet()) {
+            if (entry.getValue().getText().length() > 0) {
+                groupsWithValuesMap.put(entry.getKey(), entry.getValue());
             }
         }
         if (groupsWithValuesMap.size() == 0) {
             for (Map.Entry<ViewGroup, EditText> entry : mGroupsToRequiredFieldsMap.entrySet()) {
-                entry.getValue().setError(mContext.getString(R.string.error_need_at_least_one));
+                entry.getValue().setError(mContext.getString(R.string.error_mutually_exclusive_need_at_least_one));
             }
             return null; 
         } else if (groupsWithValuesMap.size() > 1) {
             for (Map.Entry<ViewGroup, EditText> entry : groupsWithValuesMap.entrySet()) {
-                entry.getValue().setError(mContext.getString(R.string.error_need_only_one));
+                entry.getValue().setError(mContext.getString(R.string.error_mutually_exclusive_need_only_one));
             }   
             return null;
-        } else return (ViewGroup) groupsWithValuesMap.keySet().toArray()[0];
+        } else {
+            for (Map.Entry<ViewGroup, EditText> entry : groupsWithValuesMap.entrySet()) {
+                entry.getValue().setError(null);
+            }
+            return (ViewGroup) groupsWithValuesMap.keySet().toArray()[0];
+        }
     }
 }
