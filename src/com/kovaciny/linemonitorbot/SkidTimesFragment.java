@@ -423,22 +423,7 @@ public class SkidTimesFragment extends Fragment implements
 			    mBtn_calculateTimes.setEnabled(true);
 			    mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
 			    
-			    //Set button text to display product dimensions
-			    SpannableStringBuilder productDimensions = new SpannableStringBuilder();
-			    if (p.getUnits().equals("sheets") || p.getUnits().equals("cuts")) {
-			        productDimensions
-			             .append(HelperFunction.formatDecimalAsProperFraction( p.getWidth() / p.getNumberOfWebs(), 64d))
-			            .append(" x ")
-			            .append(HelperFunction.formatDecimalAsProperFraction(p.getLength(), 64d));
-			    } else if (p instanceof Roll) { 
-			        Roll pRoll = (Roll) p;
-			        String coreDescription = Roll.coreTypeToDescriptionMap.get(((Roll) p).getCoreType());
-			        productDimensions
-			            .append(HelperFunction.formatDecimalAsProperFraction( p.getWidth() / p.getNumberOfWebs(), 64d))
-			            .append(" x ")
-			            .append(coreDescription);
-			    }
-			    mBtn_enterProduct.setText(productDimensions);
+			    mBtn_enterProduct.setText(p.getFormattedDimensions());
                 mBtn_enterProduct.getBackground().clearColorFilter();
                 mBtn_enterProduct.setTextAppearance(getActivity(), R.style.Button_Minor);
 			}
