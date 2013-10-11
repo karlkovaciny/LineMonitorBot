@@ -222,8 +222,8 @@ public class RollMathActivity extends FragmentActivity implements TabListener, O
         /*
          * 
          */
-        public double calculateLinearFeet(int coreType, double width, double rollGrossWeight, double linearFootWeight) {
-            double plasticWeight = rollGrossWeight - Roll.getCoreWeight(coreType, width);
+        public double calculateLinearFeet(double rollGrossWeight, double linearFootWeight) {
+            double plasticWeight = rollGrossWeight - Roll.getCoreWeight(getCoreType(), mWidth);
             return plasticWeight / linearFootWeight;
         }
         

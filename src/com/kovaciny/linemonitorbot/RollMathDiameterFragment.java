@@ -88,21 +88,27 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
             if (validateInputs()) {
                 HelperFunction.hideKeyboard(getActivity());
                 
+                ViewGroup selectedGroup = (ViewGroup) getView().findViewById(mMutuallyExclusiveViewSet.getValidGroupId());
+                if (selectedGroup.findFocus() != null) {
+                    selectedGroup.findFocus().clearFocus();
+                }
+                
                 SharedPreferences settings = getActivity().getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = settings.edit();
                 
-                double diameter;
+                double diameter = 0d;
                 SpannableStringBuilder diameterSb = new SpannableStringBuilder();
                 SpannableStringBuilder diameterHighSb = new SpannableStringBuilder();
                 
-                if (mEdit_orderedGauge.getText().length() > 0) { //they filled in column 1
+                if (selectedGroup.getId() == R.id.container_diameter_inputs_1) { 
                     int linearFeet = Integer.valueOf(mEdit_linearFeet.getText().toString());
                     double orderedGauge = Double.valueOf(mEdit_orderedGauge.getText().toString());
                     diameter = ((RollMathActivity)getActivity())
                             .calculateRollDiameter(((RollMathActivity)getActivity()).getCoreType(), linearFeet, orderedGauge);
                     editor.putFloat("RollMath.orderedGauge", (float) orderedGauge);
                     editor.putInt("RollMath.linearFeet", linearFeet);
-                } else {
+                    
+                } else if (selectedGroup.getId() == R.id.container_diameter_inputs_2) {
                     double rollWidth = Double.valueOf(mEdit_width.getText().toString());
                     double grossWeight = Double.valueOf(mEdit_grossWeight.getText().toString());
                     double materialDensity = Double.valueOf(mEdit_materialDensity.getText().toString());
@@ -130,34 +136,38 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
 
     private boolean validateInputs() {        
         boolean validInputs = true;
-        LinearLayout validGroup = (LinearLayout) mMutuallyExclusiveViewSet.validateGroups();
-        if (validGroup == mContainer_diameterInputs1) {
-            if (mEdit_linearFeet.getText().length() == 0) {
-                mEdit_linearFeet.setError(getString(R.string.error_empty_field));
-                validInputs = false;
-            }   
-            //auto-convert if user enters gauge as a whole number instead of a decimal, then format as gauge
-            double gaugeValue = Double.valueOf(mEdit_orderedGauge.getText().toString());
-            if (gaugeValue > PrimexModel.MAXIMUM_POSSIBLE_GAUGE) {
-                gaugeValue /= 1000;
-            }
-            String threeDecimalsPlus = new DecimalFormat("#.000#").format(gaugeValue);
-            mEdit_orderedGauge.setText(threeDecimalsPlus);
-        } else if (validGroup == mContainer_diameterInputs2) {
-            if (mEdit_materialDensity.getText().length() == 0) {
-                mEdit_materialDensity.setError(getString(R.string.error_empty_field));
-                validInputs = false;
-            }
-            
-            if (mEdit_width.getText().length() == 0) {
-                mEdit_width.setError(getString(R.string.error_empty_field));
-                validInputs = false;
-            }
-            
-        } else {
+        int selectedGroup = mMutuallyExclusiveViewSet.getValidGroupId();
+        if (selectedGroup == 0) {
             validInputs = false;
-        } 
+        } else {
+            LinearLayout validGroup = (LinearLayout) getView().findViewById(mMutuallyExclusiveViewSet.getValidGroupId());
+            if (validGroup == mContainer_diameterInputs1) {
+                if (mEdit_linearFeet.getText().length() == 0) {
+                    mEdit_linearFeet.setError(getString(R.string.error_empty_field));
+                    validInputs = false;
+                }   
+                //auto-convert if user enters gauge as a whole number instead of a decimal, then format as gauge
+                double gaugeValue = Double.valueOf(mEdit_orderedGauge.getText().toString());
+                if (gaugeValue > PrimexModel.MAXIMUM_POSSIBLE_GAUGE) {
+                    gaugeValue /= 1000;
+                }
+                String threeDecimalsPlus = new DecimalFormat("#.000#").format(gaugeValue);
+                mEdit_orderedGauge.setText(threeDecimalsPlus);
+            } else if (validGroup == mContainer_diameterInputs2) {
+                if (mEdit_materialDensity.getText().length() == 0) {
+                    mEdit_materialDensity.setError(getString(R.string.error_empty_field));
+                    validInputs = false;
+                }
 
+                if (mEdit_width.getText().length() == 0) {
+                    mEdit_width.setError(getString(R.string.error_empty_field));
+                    validInputs = false;
+                }
+
+            } else {
+                validInputs = false;
+            } 
+        }
         return validInputs;
     }
     

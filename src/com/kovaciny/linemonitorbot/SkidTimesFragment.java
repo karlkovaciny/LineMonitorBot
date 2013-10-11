@@ -28,8 +28,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
@@ -39,7 +37,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
-import android.widget.ViewSwitcher;
 
 import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.PrimexModel;
@@ -49,7 +46,7 @@ import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.WorkOrder;
 
 public class SkidTimesFragment extends Fragment implements
-		OnClickListener, OnEditorActionListener, OnItemSelectedListener, View.OnFocusChangeListener, ViewEventResponder	{
+		OnClickListener, OnEditorActionListener, OnItemSelectedListener, ViewEventResponder	{
     private Button mBtn_enterProduct;
 	private ImageButton mImgBtn_cancelAlarm;
 	private Button mBtn_calculateTimes;
@@ -84,7 +81,6 @@ public class SkidTimesFragment extends Fragment implements
 	private List<EditText> mEditableGroup;
 	private List<TextView> mTimesDisplayList;
 	private long mMillisPerSkid;
-	private int mNumTableSkids;
 	private String mProductUnits = DEFAULT_PRODUCT_UNITS;
 	private String mProductGrouping = DEFAULT_PRODUCT_GROUPING;
 	
@@ -124,7 +120,6 @@ public class SkidTimesFragment extends Fragment implements
 		for (View v : mEditableGroup) {
 			EditText etv = (EditText) v;
 			etv.setOnEditorActionListener(this);
-			etv.setOnFocusChangeListener(this);
 		}
 
 		//set up buttons
@@ -206,15 +201,6 @@ public class SkidTimesFragment extends Fragment implements
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent arg2) {
 		return false;
-	}
-	
-	/* (non-Javadoc)
-	 * @see android.view.View.OnFocusChangeListener#onFocusChange(android.view.View, boolean)
-	 */
-	@Override
-	public void onFocusChange(View v, boolean hasFocus) {
-		if ( !hasFocus && mEditableGroup.contains(v)) {
-		}
 	}
 	
 	public List<Skid<Product>> getSkidList() {
@@ -517,8 +503,6 @@ public class SkidTimesFragment extends Fragment implements
 			mEdit_numSkidsInJob.setText(number);
 			
 		} else if (propertyName == PrimexModel.NUMBER_OF_TABLE_SKIDS_CHANGE_EVENT) {
-			mNumTableSkids = (Integer)newProperty;
-//			updateLabels(); TODO 
 			
 		} else if (propertyName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) {
 			if (newProperty == null) {

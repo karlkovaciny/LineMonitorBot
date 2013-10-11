@@ -80,18 +80,33 @@ public class RollMathFeetFragment extends Fragment implements View.OnClickListen
             if (validateInputs()) {
                 HelperFunction.hideKeyboard(getActivity());
                 
-                double targetDiameter = Double.valueOf(mEdit_targetDiameter.getText().toString());
-                double orderedGauge = Double.valueOf(mEdit_orderedGauge.getText().toString());
-                int coreType = ((RollMathActivity)getActivity()).getCoreType();
-                double linearFeet = Math.max(0d, 
-                        ((RollMathActivity)getActivity()).calculateLinearFeet(coreType, targetDiameter / 2d, orderedGauge));
-                String linearFeetDisplay = new DecimalFormat("####0").format(linearFeet) + " feet";
-                mTxt_linearFeet.setText(String.valueOf(linearFeetDisplay));
+                ViewGroup selectedGroup = (ViewGroup) getView().findViewById(mMutuallyExclusiveViewSet.getValidGroupId());
+                if (selectedGroup.findFocus() != null) {
+                    selectedGroup.findFocus().clearFocus();
+                }
                 
                 SharedPreferences settings = getActivity().getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putFloat("RollMath.orderedGauge", (float) orderedGauge);
-                editor.putFloat("RollMath.diameter", (float) targetDiameter);
+                double linearFeet = 0d;
+                if (selectedGroup.getId() == R.id.container_feet_inputs_1) {
+                    double targetDiameter = Double.valueOf(mEdit_targetDiameter.getText().toString());
+                    double orderedGauge = Double.valueOf(mEdit_orderedGauge.getText().toString());
+                    int coreType = ((RollMathActivity)getActivity()).getCoreType();
+                    linearFeet = Math.max(0d, 
+                            ((RollMathActivity)getActivity()).calculateLinearFeet(coreType, targetDiameter / 2d, orderedGauge));
+                    editor.putFloat("RollMath.orderedGauge", (float) orderedGauge);
+                    editor.putFloat("RollMath.diameter", (float) targetDiameter);
+                } else if (selectedGroup.getId() == R.id.container_feet_inputs_2) {
+                    int grossWeight = Integer.valueOf(mEdit_grossWeight.getText().toString());
+                    double footWeight = Double.valueOf(mEdit_footWeight.getText().toString());
+                    linearFeet = ((RollMathActivity)getActivity())
+                            .calculateLinearFeet(grossWeight, footWeight);
+                    
+                    editor.putFloat("RollMath.footWeight", (float) footWeight);
+                }
+                String linearFeetDisplay = new DecimalFormat("####0").format(linearFeet) + " feet";
+                mTxt_linearFeet.setText(String.valueOf(linearFeetDisplay));
+                
                 editor.commit();
             }
         }
@@ -99,31 +114,35 @@ public class RollMathFeetFragment extends Fragment implements View.OnClickListen
 
     private boolean validateInputs() {        
         boolean validInputs = true;
-        LinearLayout validGroup = (LinearLayout) mMutuallyExclusiveViewSet.validateGroups();
-        if (validGroup == mContainer_feetInputs1) {
-            if (mEdit_orderedGauge.getText().length() == 0) {
-                mEdit_orderedGauge.setError(getString(R.string.error_empty_field));
-                validInputs = false;
-            } else {
-                String averageGauge = mEdit_orderedGauge.getText().toString();
-                //auto-convert if user enters gauge as a whole number instead of a decimal
-                if (!averageGauge.equals("")) {
-                    double gaugeValue = Double.valueOf(averageGauge);
-                    if (gaugeValue > PrimexModel.MAXIMUM_POSSIBLE_GAUGE) {
-                        gaugeValue /= 1000;
-                        mEdit_orderedGauge.setText(String.valueOf(gaugeValue));
+        int selectedGroup = mMutuallyExclusiveViewSet.getValidGroupId();
+        if (selectedGroup == 0) {
+            validInputs = false;
+        } else {
+            LinearLayout validGroup = (LinearLayout) getView().findViewById(mMutuallyExclusiveViewSet.getValidGroupId());
+            if (validGroup == mContainer_feetInputs1) {
+                if (mEdit_orderedGauge.getText().length() == 0) {
+                    mEdit_orderedGauge.setError(getString(R.string.error_empty_field));
+                    validInputs = false;
+                } else {
+                    String averageGauge = mEdit_orderedGauge.getText().toString();
+                    //auto-convert if user enters gauge as a whole number instead of a decimal
+                    if (!averageGauge.equals("")) {
+                        double gaugeValue = Double.valueOf(averageGauge);
+                        if (gaugeValue > PrimexModel.MAXIMUM_POSSIBLE_GAUGE) {
+                            gaugeValue /= 1000;
+                            mEdit_orderedGauge.setText(String.valueOf(gaugeValue));
+                        }
                     }
                 }
-            }
-        } else if (validGroup == mContainer_feetInputs2) {
-            if (mEdit_footWeight.getText().length() == 0) {
-                mEdit_footWeight.setError(getString(R.string.error_empty_field));
+            } else if (validGroup == mContainer_feetInputs2) {
+                if (mEdit_footWeight.getText().length() == 0) {
+                    mEdit_footWeight.setError(getString(R.string.error_empty_field));
+                    validInputs = false;
+                }
+            } else {
                 validInputs = false;
-            }
-        } else {
-            validInputs = false;
-        } 
-
+            } 
+        }
         return validInputs;
     }
 

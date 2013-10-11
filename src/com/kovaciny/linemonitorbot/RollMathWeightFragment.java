@@ -67,8 +67,6 @@ public class RollMathWeightFragment extends Fragment implements View.OnClickList
                     //they are editing column 2, so they must not want the one that's prefilled
                       mEdit_linearFeet.setText(null);
                   }
-                  
-                
             }
         });
         mEdit_materialDensity = (EditText) rootView.findViewById(R.id.edit_material_density);
@@ -108,12 +106,16 @@ public class RollMathWeightFragment extends Fragment implements View.OnClickList
             if (validateInputs()) {
                 HelperFunction.hideKeyboard(getActivity());
                 
+                ViewGroup selectedGroup = (ViewGroup) getView().findViewById(mMutuallyExclusiveViewSet.getValidGroupId());
+                if (selectedGroup.findFocus() != null) {
+                    selectedGroup.findFocus().clearFocus();
+                }
+                
                 SharedPreferences settings = getActivity().getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = settings.edit();
                 
-                double netWeight;
-                
-                if (mEdit_targetDiameter.getText().length() > 0) { 
+                double netWeight = 0d;
+                if (selectedGroup.getId() == R.id.container_weight_inputs_2) {
                     double rollWidth = Double.valueOf(mEdit_width.getText().toString());
                     double targetDiameter = Double.valueOf(mEdit_targetDiameter.getText().toString());
                     double materialDensity = Double.valueOf(mEdit_materialDensity.getText().toString());
@@ -124,7 +126,7 @@ public class RollMathWeightFragment extends Fragment implements View.OnClickList
                     editor.putFloat("RollMath.width", (float) rollWidth);
                     editor.putFloat("RollMath.grossWeight", (float) targetDiameter);
                     editor.putFloat("RollMath.materialDensity", (float) materialDensity);
-                } else {
+                } else if (selectedGroup.getId() == R.id.container_weight_inputs_1) {
                     int linearFeet = Integer.valueOf(mEdit_linearFeet.getText().toString());
                     double footWeight = Double.valueOf(mEdit_footWeight.getText().toString());
                     netWeight = ((RollMathActivity)getActivity())
@@ -149,26 +151,30 @@ public class RollMathWeightFragment extends Fragment implements View.OnClickList
 
     private boolean validateInputs() {
         boolean validInputs = true;
-        LinearLayout validGroup = (LinearLayout) mMutuallyExclusiveViewSet.validateGroups();
-        if (validGroup == mContainer_weightInputs1) {
-            if (mEdit_linearFeet.getText().length() == 0) {
-                mEdit_linearFeet.setError(getString(R.string.error_empty_field));
-                validInputs = false;
-            }   
-        } else if (validGroup == mContainer_weightInputs2) {
-            if (mEdit_materialDensity.getText().length() == 0) {
-                mEdit_materialDensity.setError(getString(R.string.error_empty_field));
-                validInputs = false;
-            }
-            
-            if (mEdit_width.getText().length() == 0) {
-                mEdit_width.setError(getString(R.string.error_empty_field));
-                validInputs = false;
-            }
-        } else {
+        int selectedGroup = mMutuallyExclusiveViewSet.getValidGroupId();
+        if (selectedGroup == 0) {
             validInputs = false;
-        } 
-
+        } else {
+            LinearLayout validGroup = (LinearLayout) getView().findViewById(selectedGroup);
+            if (validGroup == mContainer_weightInputs1) {
+                if (mEdit_linearFeet.getText().length() == 0) {
+                    mEdit_linearFeet.setError(getString(R.string.error_empty_field));
+                    validInputs = false;
+                }   
+            } else if (validGroup == mContainer_weightInputs2) {
+                if (mEdit_materialDensity.getText().length() == 0) {
+                    mEdit_materialDensity.setError(getString(R.string.error_empty_field));
+                    validInputs = false;
+                }
+                
+                if (mEdit_width.getText().length() == 0) {
+                    mEdit_width.setError(getString(R.string.error_empty_field));
+                    validInputs = false;
+                }
+            } else {
+                validInputs = false;
+            } 
+        }
         return validInputs;
     }
     
