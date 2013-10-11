@@ -6,7 +6,7 @@ import java.util.Locale;
 
 import com.kovaciny.helperfunctions.HelperFunction;
 
-public class Skid<E extends Product> implements Comparable<Skid>{
+public class Skid<E extends Product> implements Comparable<Skid<Product>>{
 
     public static final int DEFAULT_SHEET_COUNT = 1000;
     Pallet mPallet;
@@ -196,7 +196,7 @@ public class Skid<E extends Product> implements Comparable<Skid>{
 				String.valueOf(mMinutesPerSkid) + " minutes per skid";
 	}
 	@Override
-	public int compareTo(Skid arg0) {
+	public int compareTo(Skid<Product> arg0) {
 		return this.mSkidNumber - arg0.getSkidNumber();
 	}
 }
