@@ -1,7 +1,6 @@
 package com.kovaciny.linemonitorbot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.kovaciny.helperfunctions.MutuallyExclusiveViewSet;
 import com.kovaciny.primexmodel.DrainingController;
 
 public class DrainingFragment extends Fragment implements View.OnClickListener {

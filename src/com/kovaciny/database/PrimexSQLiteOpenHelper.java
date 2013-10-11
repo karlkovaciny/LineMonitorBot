@@ -264,7 +264,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 	    	double diff = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_DIFFERENTIAL_SPEED_SETPOINT));
 	    	double sf = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductionLines.COLUMN_NAME_SPEED_FACTOR));
 	    	
-	    	ProductionLine newLine = new ProductionLine(ln,ll,dw,sct,tet, new Hopper()); //TODO add hashmaps
+	    	ProductionLine newLine = new ProductionLine(ln,ll,dw,sct,tet, new Hopper());
 	    	SpeedValues sv = new SpeedValues(sp,diff,sf);
 	    	newLine.setSpeedValues(sv);
 	    	Log.v("loadLine", "just loaded speed values of " + sv.toString());
@@ -299,7 +299,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 				
 				double setpoint = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_CURRENT_SETPOINT));
 				double letdownRatio = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.Novatecs.COLUMN_NAME_SCREW_SIZE_FACTOR));
-				n = new Novatec(null, null, letdownRatio); //TODO need hashmaps
+				n = new Novatec(null, null, letdownRatio);
 				n.setSetpoint(setpoint);
 			} else {
 				Log.e("error", "SQLiteOpenHelper::getNovatec returned no results");
@@ -406,36 +406,24 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 
 		Cursor resultCursor = db.rawQuery("SELECT * FROM " + PrimexDatabaseSchema.WorkOrders.TABLE_NAME + " WHERE " + 
 				PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER + "=?", new String[]{String.valueOf(woNumber)});
-		int wonum = -1;
-		int prod_id = -1;
-		double ordered = -1d;
-		int selected = -1;
-		double height = -1d;
-		long finish;
+		
 		try {
 			if (resultCursor.moveToFirst()) {
-		    	wonum = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER));
-		    	prod_id = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_PRODUCT_ID));
-		    	ordered = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED));
-		    	selected = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER));
-		    	height = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT));
-		    	finish = resultCursor.getLong(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME));
+		    	int wonum = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER));
+		    	double ordered = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_TOTAL_PRODUCTS_ORDERED));
+		    	int selected = resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_SELECTED_SKID_NUMBER));
+		    	double height = resultCursor.getDouble(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_MAXIMUM_STACK_HEIGHT));
+		    	long finish = resultCursor.getLong(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_FINISH_TIME));
 		    	
 		    	WorkOrder wo = new WorkOrder(wonum);
-				if (prod_id != -1) {
-					wo.setProduct(getProduct(wonum));
-				}
-				if (ordered != -1) { //TODO this all seems like really bad error checking.
-					wo.setTotalProductsOrdered(ordered);	
-				}
+				wo.setProduct(getProduct(wonum));
+				wo.setTotalProductsOrdered(ordered);	
 				
 				List<Skid<Product>> skidList = getSkidList(wo.getWoNumber());
 				if (skidList.isEmpty()) throw new RuntimeException ("No skid list found for workorder " + String.valueOf(wo.getWoNumber()));
 				wo.setSkidsList(skidList);				
 				
-				if (selected != -1) {
-					wo.selectSkid(selected);
-				}
+				wo.selectSkid(selected);
 				wo.setMaximumStackHeight(height);
 				if (finish > 0) {
 					wo.setFinishDate(new Date(finish));	
@@ -551,24 +539,6 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public int getProductTypeId(String type){ //TODO replace with getIdOfValue
-		SQLiteDatabase db = getReadableDatabase();
-		
-		String sql = "SELECT * FROM " + PrimexDatabaseSchema.ProductTypes.TABLE_NAME + " WHERE " +
-				PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES + "=?";
-		Cursor resultCursor = db.rawQuery(sql, new String[]{type});
-		
-		int thetype = 0;
-		try {
-			if (resultCursor.moveToFirst()) {
-		    	thetype= resultCursor.getInt(resultCursor.getColumnIndexOrThrow(PrimexDatabaseSchema.ProductTypes._ID));
-			} else Log.e("error", "you didn't match any darn rows");
-	    	return thetype;
-	    } finally {
-	    	if (resultCursor != null) resultCursor.close();
-		}
-	}
-	
 	public String getFieldAsString(String tableName, String columnName, String whereColumn, String[] whereArgs){
 		SQLiteDatabase db = getReadableDatabase();
 		
@@ -633,7 +603,9 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_WIDTH, newProduct.getWidth());
 		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_LENGTH, newProduct.getLength());
 		String type = newProduct.getType();
-		int foreignKey = getProductTypeId(type);
+		int foreignKey = getIdOfValue(PrimexDatabaseSchema.ProductTypes.TABLE_NAME,
+		        PrimexDatabaseSchema.ProductTypes.COLUMN_NAME_TYPES,
+		        type);
 		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_TYPE_ID, foreignKey);
 		int otherForeign = woNumber;
 		values.put(PrimexDatabaseSchema.Products.COLUMN_NAME_WO_NUMBER, otherForeign);

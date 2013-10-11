@@ -8,14 +8,13 @@ import java.util.List;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.os.SystemClock;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ViewSwitcher;
 
 import com.kovaciny.primexmodel.PrimexModel;
 
-public class SwitchJobsTask extends AsyncTask {
+public class SwitchJobsTask extends AsyncTask<Object, Object, Object> {
 
 	Activity mActivity;
 	PrimexModel mModel;
@@ -111,6 +110,4 @@ public class SwitchJobsTask extends AsyncTask {
             viewSwitcherRates.showPrevious();
         }
     }
-
-
 }

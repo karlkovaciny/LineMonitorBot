@@ -154,6 +154,7 @@ public class SkidTimesFragment extends Fragment implements
 		mTxt_timePerSkid = (TextView) rootView.findViewById(R.id.txt_time_per_skid);		
 		mLbl_timePerSkid = (TextView) rootView.findViewById(R.id.lbl_time_per_skid);		
 		mTxt_jobFinishTime = (TextView) rootView.findViewById(R.id.txt_job_finish_time);
+		mLbl_timeToMaxson = (TextView) rootView.findViewById(R.id.lbl_time_to_maxson);
 		mTxt_timeToMaxson = (TextView) rootView.findViewById(R.id.txt_time_to_maxson);
 		mTxt_productsPerMinute = (TextView) rootView.findViewById(R.id.txt_products_per_minute);
 		mLbl_skidStartTime = (TextView) rootView.findViewById(R.id.lbl_skid_start_time);

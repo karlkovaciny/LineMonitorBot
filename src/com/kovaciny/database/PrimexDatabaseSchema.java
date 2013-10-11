@@ -1,10 +1,5 @@
 package com.kovaciny.database;
 
-import java.util.Date;
-
-import com.kovaciny.primexmodel.Pallet;
-import com.kovaciny.primexmodel.Product;
-
 import android.provider.BaseColumns;
 
 public class PrimexDatabaseSchema {

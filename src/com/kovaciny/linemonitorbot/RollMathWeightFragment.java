@@ -1,6 +1,5 @@
 package com.kovaciny.linemonitorbot;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import android.content.Context;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 
 import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.helperfunctions.MutuallyExclusiveViewSet;
-import com.kovaciny.primexmodel.PrimexModel;
 
 public class RollMathWeightFragment extends Fragment implements View.OnClickListener {
 

@@ -299,7 +299,7 @@ public class PrimexDatabaseCreator {
             
             List<String> hopperNames = 
                     Arrays.asList(new String[] {"Line 6 extruder hopper", "Line 6 blender", "Line 6 blender hopper 1", "Line 6 blender hopper 2", "Line 6 blender hopper 3", "Line 6 blender hopper 4"});
-            Iterator<String> lengthsIterator = hopperNames.iterator();
+            Iterator<String> hopperIterator = hopperNames.iterator();
             
             for (Integer lineNum : lineNumbers) {
                 ContentValues hopperValues = new ContentValues();
@@ -367,7 +367,6 @@ public class PrimexDatabaseCreator {
                             6, 6                            
                     });
             
-            Iterator<String> namesItr = hopperNames.iterator();
             Iterator<Double> resinSafeTimesItr = resinSafeDrainTimes.iterator();
             Iterator<Double> regrindSafeTimesItr = regrindSafeDrainTimes.iterator();
             Iterator<Double> blendSafeTimesItr = blendSafeDrainTimes.iterator();
@@ -378,7 +377,7 @@ public class PrimexDatabaseCreator {
                 ContentValues blendedHopperValues = new ContentValues();
                 long lineId = mLineNumberToLineIdMap.get(associatedLinesItr.next());
                 blendedHopperValues.put(PrimexDatabaseSchema.BlendedHoppers.COLUMN_NAME_LINE_NUMBER_ID, lineId);
-                blendedHopperValues.put(PrimexDatabaseSchema.BlendedHoppers.COLUMN_NAME_NAME, namesItr.next());
+                blendedHopperValues.put(PrimexDatabaseSchema.BlendedHoppers.COLUMN_NAME_NAME, hopperName);
                 blendedHopperValues.put(PrimexDatabaseSchema.BlendedHoppers.COLUMN_NAME_SAFE_DRAIN_TIME_RESIN, resinSafeTimesItr.next());
                 blendedHopperValues.put(PrimexDatabaseSchema.BlendedHoppers.COLUMN_NAME_SAFE_DRAIN_TIME_REGRIND, regrindSafeTimesItr.next());
                 blendedHopperValues.put(PrimexDatabaseSchema.BlendedHoppers.COLUMN_NAME_SAFE_DRAIN_TIME_30_70_BLEND, blendSafeTimesItr.next());
