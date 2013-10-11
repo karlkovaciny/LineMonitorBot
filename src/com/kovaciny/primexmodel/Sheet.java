@@ -1,5 +1,9 @@
 package com.kovaciny.primexmodel;
 
+import android.text.SpannableStringBuilder;
+
+import com.kovaciny.helperfunctions.HelperFunction;
+
 public class Sheet implements Product {
 	private double mSheetWeight;
 	private double mGauge; //sheet thickness in inches
@@ -105,6 +109,15 @@ public class Sheet implements Product {
 	}
 	public String getType() {
 		return Product.SHEETS_TYPE;
+	}
+	
+	public SpannableStringBuilder getFormattedDimensions() {
+        SpannableStringBuilder productDimensions = new SpannableStringBuilder();
+        productDimensions
+             .append(HelperFunction.formatDecimalAsProperFraction( this.getWidth() / this.getNumberOfWebs(), 64d))
+            .append(" x ")
+            .append(HelperFunction.formatDecimalAsProperFraction(this.getLength(), 64d));
+        return productDimensions;
 	}
 	
 	@Override

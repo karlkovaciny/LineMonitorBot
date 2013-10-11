@@ -203,20 +203,9 @@ public class RatesFragment extends Fragment implements OnClickListener, ViewEven
 		        mBtn_calculateRates.setEnabled(true);
 		      
 		        //Set button text to display product dimensions
-                if (p.getUnits().equals("sheets") || p.getUnits().equals("cuts")) {
-                    SpannableStringBuilder productDimensions = new SpannableStringBuilder();
-                    productDimensions
-                         .append(HelperFunction.formatDecimalAsProperFraction(p.getWidth() / p.getNumberOfWebs(), 64d))
-                        .append(" x ")
-                        .append(HelperFunction.formatDecimalAsProperFraction(p.getLength(), 64d));
-                    mBtn_enterProduct.setText(productDimensions);
-                    mBtn_enterProduct.getBackground().clearColorFilter();
-                    mBtn_enterProduct.setTextAppearance(getActivity(), R.style.Button_Minor);
-                } else { //TODO it should work for R3 and R6 too, reset the button for now
-                    mBtn_enterProduct.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF, 0xFF0000FF));
-                    mBtn_enterProduct.setTextAppearance(getActivity(), R.style.Button);
-                    mBtn_enterProduct.setText(getString(R.string.btn_enter_product_text));
-                }
+		        mBtn_enterProduct.setText(p.getFormattedDimensions());
+		        mBtn_enterProduct.getBackground().clearColorFilter();
+		        mBtn_enterProduct.setTextAppearance(getActivity(), R.style.Button_Minor);
 		    }
 			
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {

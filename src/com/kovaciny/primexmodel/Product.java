@@ -1,5 +1,7 @@
 package com.kovaciny.primexmodel;
 
+import android.text.SpannableStringBuilder;
+
 public interface Product {
 	double getHeight();
 	double getGauge();
@@ -17,6 +19,7 @@ public interface Product {
 	double getEstimatedWeight();
 	String getMaterialType();
 	boolean setMaterialType();
+	SpannableStringBuilder getFormattedDimensions();
 	String getUnit(); //singular
 	String getUnits(); //plural
 	String getGrouping(); //name for a collection of units

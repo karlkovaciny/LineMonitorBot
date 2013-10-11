@@ -1,9 +1,13 @@
 package com.kovaciny.primexmodel;
 
-import android.annotation.SuppressLint;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import android.annotation.SuppressLint;
+import android.text.SpannableStringBuilder;
+
+import com.kovaciny.helperfunctions.HelperFunction;
 
 @SuppressLint("UseSparseArrays")
 public class Roll implements Product {
@@ -184,6 +188,15 @@ public class Roll implements Product {
 		this.mDensity = density;
 	}
 
+	public SpannableStringBuilder getFormattedDimensions() {
+        SpannableStringBuilder productDimensions = new SpannableStringBuilder();
+        String coreDescription = Roll.coreTypeToDescriptionMap.get( this.getCoreType() );
+        productDimensions
+            .append(HelperFunction.formatDecimalAsProperFraction( this.getWidth() / this.getNumberOfWebs(), 64d))
+            .append(" x ")
+            .append(coreDescription);
+        return productDimensions;
+	}
 	
 	@Override
 	public String toString() {
