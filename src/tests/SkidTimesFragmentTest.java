@@ -106,7 +106,7 @@ public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<Main
 		         mEdit_totalCountPerSkid.setText("0");
 		    	 mEdit_currentCount.setText("1234");
 		    	 mEdit_numSkidsInJob.setText("");
-		    	 mEdit_currentSkidNumber.setText("200");
+		    	 mEdit_currentSkidNumber.setText("220");
 		     }
 		});
 		clickButton(R.id.btn_calculate_times);

@@ -12,6 +12,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Instrumentation.ActivityMonitor;
 import android.graphics.Rect;
+import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
@@ -81,13 +82,14 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	    mContainerSkidTimesFragment = (LinearLayout)mActivity.findViewById(R.id.container_skid_times_fragment);
 	    mContainerEnterProductButton = (RelativeLayout)mActivity.findViewById(R.id.container_enter_product_button);
 	    assertTrue(mSkidTimesFragment != null);
-		assertTrue(mRatesFragment != null);
-		 getActivity().runOnUiThread(new Runnable() {
-	            public void run() {
-	                mActivity.mViewPager.setCurrentItem(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
-	            }
-	        });
-	        getInstrumentation().waitForIdleSync();
+	    assertTrue(mRatesFragment != null);
+	    getActivity().runOnUiThread(new Runnable() {
+	        public void run() {
+	            mActivity.mViewPager.setCurrentItem(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
+	        }
+	    });
+	    getInstrumentation().waitForIdleSync();
+	    SystemClock.sleep(1000); //trying to let my AsyncTask finish 
 	}
 
 	@Test
@@ -154,8 +156,10 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	    int oldWoNumber = mActivity.mModel.getSelectedWorkOrder().getWoNumber();
 	    getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
         getInstrumentation().invokeMenuActionSync(mActivity, R.id.new_wo, 0);
+        getInstrumentation().waitForIdleSync();
+        SystemClock.sleep(1000); //for asynctask
         int newWoNumber = mActivity.mModel.getSelectedWorkOrder().getWoNumber();
-        assertTrue(newWoNumber != oldWoNumber);	    
+        assertTrue("new wo number " + String.valueOf(newWoNumber) + " should not be equal to " + String.valueOf(oldWoNumber), newWoNumber != oldWoNumber);	    
 	}
 	
 	public void testStateDestroyRestoreNumSkids() {
@@ -614,6 +618,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		fail("Not yet implemented"); // TODO
 	}*/
 	public void clickButton(int buttonId) {
+	    SystemClock.sleep(1000); //in case the UI is disabled
 		final Button button = (Button) mActivity.findViewById(buttonId);
 		mActivity.runOnUiThread(new Runnable() {
 		     public void run() {
@@ -623,9 +628,12 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 		     }
 		});
 		getInstrumentation().waitForIdleSync();
-      assertTrue(button.hasFocus());
+		getInstrumentation().waitForIdleSync();
+		getInstrumentation().waitForIdleSync();
+		SystemClock.sleep(1000);
+		assertTrue(button.hasFocus());
 		this.sendKeys(KeyEvent.KEYCODE_DPAD_CENTER);
-	      getInstrumentation().waitForIdleSync();
+		getInstrumentation().waitForIdleSync();
 
 	}
 

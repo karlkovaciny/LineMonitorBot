@@ -56,7 +56,6 @@ public class MutuallyExclusiveViewSet<ViewGroup> implements View.OnTouchListener
      * If exactly one group is valid, selects it (necessary in case a different view has the focus), and returns its id.
      * Otherwise sets errors in fields and returns 0. 
      */
-    @SuppressWarnings("unchecked")
     public int getValidGroupId() {
         HashMap<ViewGroup, EditText> groupsWithValuesMap = new HashMap<ViewGroup, EditText>();
         for (Map.Entry<ViewGroup, EditText> entry : mGroupsToRequiredFieldsMap.entrySet()) {

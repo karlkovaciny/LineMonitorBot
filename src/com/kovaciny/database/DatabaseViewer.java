@@ -3,8 +3,6 @@ package com.kovaciny.database;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.kovaciny.primexmodel.WorkOrder;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;

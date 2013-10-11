@@ -2,11 +2,7 @@ package com.kovaciny.linemonitorbot;
 
 import java.text.DecimalFormat;
 
-import com.kovaciny.primexmodel.Roll;
-
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,8 +12,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.TextView;
+
+import com.kovaciny.primexmodel.Roll;
 
 public class CoreTypeFragment extends Fragment {
 
