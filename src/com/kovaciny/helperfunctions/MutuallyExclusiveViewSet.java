@@ -53,11 +53,14 @@ public class MutuallyExclusiveViewSet<ViewGroup> implements View.OnTouchListener
         }
     
     /*
-     * If exactly one group is valid, returns it, otherwise sets errors in fields and returns null. 
+     * If exactly one group is valid, selects it (necessary in case a different view has the focus), and returns its id.
+     * Otherwise sets errors in fields and returns 0. 
      */
-    public ViewGroup validateGroups() {
+    @SuppressWarnings("unchecked")
+    public int getValidGroupId() {
         HashMap<ViewGroup, EditText> groupsWithValuesMap = new HashMap<ViewGroup, EditText>();
         for (Map.Entry<ViewGroup, EditText> entry : mGroupsToRequiredFieldsMap.entrySet()) {
+            entry.getValue().setError(null);
             if (entry.getValue().getText().length() > 0) {
                 groupsWithValuesMap.put(entry.getKey(), entry.getValue());
             }
@@ -66,17 +69,24 @@ public class MutuallyExclusiveViewSet<ViewGroup> implements View.OnTouchListener
             for (Map.Entry<ViewGroup, EditText> entry : mGroupsToRequiredFieldsMap.entrySet()) {
                 entry.getValue().setError(mContext.getString(R.string.error_mutually_exclusive_need_at_least_one));
             }
-            return null; 
+            return 0; 
         } else if (groupsWithValuesMap.size() > 1) {
             for (Map.Entry<ViewGroup, EditText> entry : groupsWithValuesMap.entrySet()) {
                 entry.getValue().setError(mContext.getString(R.string.error_mutually_exclusive_need_only_one));
             }   
-            return null;
+            return 0;
         } else {
-            for (Map.Entry<ViewGroup, EditText> entry : groupsWithValuesMap.entrySet()) {
-                entry.getValue().setError(null);
-            }
-            return (ViewGroup) groupsWithValuesMap.keySet().toArray()[0];
+            View selected = (View) groupsWithValuesMap.keySet().toArray()[0];
+            clearSelection();
+            selected.setSelected(true);
+            return selected.getId();
+        }
+    }
+    
+    public void clearSelection() {
+        for (Map.Entry<ViewGroup, EditText> entry : mGroupsToRequiredFieldsMap.entrySet()) {
+            View v = (View) entry.getKey();
+            v.setSelected(false);
         }
     }
 }
