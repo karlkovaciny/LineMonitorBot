@@ -22,31 +22,25 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.text.SpannableStringBuilder;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
-import com.kovaciny.primexmodel.Roll;
 import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.WorkOrder;
 
 public class SkidTimesFragment extends Fragment implements
-		OnClickListener, OnEditorActionListener, OnItemSelectedListener, ViewEventResponder	{
+		OnClickListener, ViewEventResponder	{
     private Button mBtn_enterProduct;
 	private ImageButton mImgBtn_cancelAlarm;
 	private Button mBtn_calculateTimes;
@@ -80,6 +74,7 @@ public class SkidTimesFragment extends Fragment implements
 	private List<Skid<Product>> mSkidList;
 	private List<EditText> mEditableGroup;
 	private List<TextView> mTimesDisplayList;
+	private List<TextView> mTimesDisplayLabelsList;
 	private long mMillisPerSkid;
 	private String mProductUnits = DEFAULT_PRODUCT_UNITS;
 	private String mProductGrouping = DEFAULT_PRODUCT_GROUPING;
@@ -117,11 +112,6 @@ public class SkidTimesFragment extends Fragment implements
 			}
 		}
 		
-		for (View v : mEditableGroup) {
-			EditText etv = (EditText) v;
-			etv.setOnEditorActionListener(this);
-		}
-
 		//set up buttons
 		mBtn_skidNumberUp = (ImageButton) rootView.findViewById(R.id.btn_skid_number_up);
 		mBtn_skidNumberUp.setOnClickListener(this);
@@ -150,25 +140,27 @@ public class SkidTimesFragment extends Fragment implements
         mBtn_rollMath.setOnClickListener((MainActivity) getActivity());
 		
 		//set up textViews
-		mLbl_productType = (TextView) rootView.findViewById(R.id.lbl_product_type);
 		mTxt_timePerSkid = (TextView) rootView.findViewById(R.id.txt_time_per_skid);		
-		mLbl_timePerSkid = (TextView) rootView.findViewById(R.id.lbl_time_per_skid);		
 		mTxt_jobFinishTime = (TextView) rootView.findViewById(R.id.txt_job_finish_time);
-		mLbl_timeToMaxson = (TextView) rootView.findViewById(R.id.lbl_time_to_maxson);
 		mTxt_timeToMaxson = (TextView) rootView.findViewById(R.id.txt_time_to_maxson);
 		mTxt_productsPerMinute = (TextView) rootView.findViewById(R.id.txt_products_per_minute);
-		mLbl_skidStartTime = (TextView) rootView.findViewById(R.id.lbl_skid_start_time);
 		mTxt_skidStartTime = (TextView) rootView.findViewById(R.id.txt_skid_start_time);
-		mLbl_skidFinishTime = (TextView) rootView.findViewById(R.id.lbl_skid_finish_time);
 		mTxt_skidFinishTime = (TextView) rootView.findViewById(R.id.txt_skid_finish_time);
-		
 		mTimesDisplayList = Arrays.asList(new TextView[]{mTxt_timePerSkid, mTxt_jobFinishTime, mTxt_timeToMaxson,
 				mTxt_productsPerMinute, mTxt_skidStartTime, mTxt_skidFinishTime});
 		
-		mLbl_productsPerMinute = (TextView) rootView.findViewById(R.id.lbl_products_per_minute);
-		mLbl_products = (TextView) rootView.findViewById(R.id.lbl_products);
-		mLbl_timeToMaxson = (TextView) rootView.findViewById(R.id.lbl_time_to_maxson);
+		mLbl_skidFinishTime = (TextView) rootView.findViewById(R.id.lbl_skid_finish_time);
 		mLbl_jobFinishTime = (TextView) rootView.findViewById(R.id.lbl_job_finish_time);
+		mLbl_skidStartTime = (TextView) rootView.findViewById(R.id.lbl_skid_start_time);
+		mLbl_timePerSkid = (TextView) rootView.findViewById(R.id.lbl_time_per_skid);		
+		mLbl_productsPerMinute = (TextView) rootView.findViewById(R.id.lbl_products_per_minute);
+		mLbl_timeToMaxson = (TextView) rootView.findViewById(R.id.lbl_time_to_maxson);
+		mTimesDisplayLabelsList = Arrays.asList(new TextView[]
+				{mLbl_skidFinishTime, mLbl_jobFinishTime, mLbl_skidStartTime, mLbl_timePerSkid, 
+				mLbl_productsPerMinute, mLbl_timeToMaxson});
+
+		mLbl_products = (TextView) rootView.findViewById(R.id.lbl_products);
+		mLbl_productType = (TextView) rootView.findViewById(R.id.lbl_product_type);
 		
 		//restore saved state
 		SharedPreferences settings = this.getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -192,18 +184,6 @@ public class SkidTimesFragment extends Fragment implements
 		return rootView;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * android.widget.TextView.OnEditorActionListener#onEditorAction(android
-	 * .widget.TextView, int, android.view.KeyEvent)
-	 */
-	@Override
-	public boolean onEditorAction(TextView v, int actionId, KeyEvent arg2) {
-		return false;
-	}
-	
 	public List<Skid<Product>> getSkidList() {
 		return mSkidList;
 	}
@@ -211,15 +191,6 @@ public class SkidTimesFragment extends Fragment implements
 	public void setSkidList(List<Skid<Product>> skidList) {
 		this.mSkidList = skidList;
 	}
-
-	@Override
-	public void onItemSelected(AdapterView<?> parent, View arg1, int pos,
-			long arg3) {
-	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> arg0) {
-	}	
 
 	@Override
 	public void onClick(View v) {
@@ -421,7 +392,6 @@ public class SkidTimesFragment extends Fragment implements
 			        mBtn_rollMath.setVisibility(Button.VISIBLE);
 			    }
 			    mBtn_calculateTimes.setEnabled(true);
-			    mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
 			    
 			    mBtn_enterProduct.setText(p.getFormattedDimensions());
                 mBtn_enterProduct.getBackground().clearColorFilter();
@@ -432,22 +402,28 @@ public class SkidTimesFragment extends Fragment implements
 		} else if (propertyName == PrimexModel.PRODUCTS_PER_MINUTE_CHANGE_EVENT) {
 			if ( (newProperty == null) || ((Double)newProperty <= 0) ) {
 				mTxt_productsPerMinute.setText("");
+				mLbl_productsPerMinute.setVisibility(TextView.INVISIBLE);
 			} else {
 				mTxt_productsPerMinute.setText(String.valueOf(newProperty));
+				mLbl_productsPerMinute.setVisibility(TextView.VISIBLE);
 			}
 			
 		} else if (propertyName == PrimexModel.CURRENT_SKID_FINISH_TIME_CHANGE_EVENT) {
 			if (newProperty == null) {
 				mTxt_skidFinishTime.setText("");
+				mLbl_skidFinishTime.setVisibility(TextView.INVISIBLE);
 				mImgBtn_cancelAlarm.setVisibility(ImageButton.GONE);
-				mTxt_timeToMaxson.setVisibility(TextView.GONE); //TODO not really the right place for it
+				mLbl_timeToMaxson.setVisibility(TextView.INVISIBLE);
+				mTxt_timeToMaxson.setVisibility(TextView.GONE); //TODO not really the right place for it, but don't want it to show when only product is set
 			} else {
 			    Date roundedTimeForDisplay = HelperFunction.toNearestWholeMinute((Date)newProperty);
 			    SimpleDateFormat formatter;
 			    formatter = new SimpleDateFormat("h:mm a", Locale.US); //drops seconds
 			    String formattedTime = formatter.format(roundedTimeForDisplay);
 				mTxt_skidFinishTime.setText(formattedTime);
+				mLbl_skidFinishTime.setVisibility(TextView.VISIBLE);
 				mImgBtn_cancelAlarm.setVisibility(ImageButton.VISIBLE);
+				mLbl_timeToMaxson.setVisibility(TextView.VISIBLE);
 				mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
 				//set alarm 
 				long alarmLeadTime = (long) (1.5 * HelperFunction.ONE_MINUTE_IN_MILLIS); //TODO
@@ -469,19 +445,24 @@ public class SkidTimesFragment extends Fragment implements
 		} else if (propertyName == PrimexModel.CURRENT_SKID_START_TIME_CHANGE_EVENT) {
 			if (newProperty == null) {
 				mTxt_skidStartTime.setText("");
+				mLbl_skidStartTime.setVisibility(TextView.INVISIBLE);
 			} else {
 				SimpleDateFormat formatter2 = new SimpleDateFormat("h:mm a", Locale.US);
 				String formattedTime2 = formatter2.format((Date)newProperty);
 				mTxt_skidStartTime.setText(formattedTime2);
+				mLbl_skidStartTime.setVisibility(TextView.VISIBLE);
 			}
 			
 		} else if (propertyName == PrimexModel.MINUTES_PER_SKID_CHANGE_EVENT) {
 			if ((newProperty == null) || ((Double)newProperty <= 0) ) {
 				mTxt_timePerSkid.setText("");
+				mLbl_timePerSkid.setVisibility(TextView.INVISIBLE);
 			} else {
 				long minutes = Math.round((Double)newProperty);
-				mTxt_timePerSkid.setText( HelperFunction.formatMinutesAsHours(minutes) );
 				mMillisPerSkid = minutes * HelperFunction.ONE_MINUTE_IN_MILLIS;
+				
+				mTxt_timePerSkid.setText( HelperFunction.formatMinutesAsHours(minutes) );
+				mLbl_timePerSkid.setVisibility(TextView.VISIBLE);
 			}
 			
 		} else if (propertyName == PrimexModel.NUMBER_OF_SKIDS_CHANGE_EVENT) {
@@ -493,6 +474,7 @@ public class SkidTimesFragment extends Fragment implements
 		} else if (propertyName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) {
 			if (newProperty == null) {
 				mTxt_jobFinishTime.setText("");
+				mLbl_jobFinishTime.setVisibility(TextView.INVISIBLE);
 			} else {
 			    Date roundedTimeForDisplay = HelperFunction.toNearestWholeMinute((Date)newProperty);
                 SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a E", Locale.US);
@@ -508,6 +490,7 @@ public class SkidTimesFragment extends Fragment implements
 					formatter3 = new SimpleDateFormat("h:mm a", Locale.US);
 				}
 				mTxt_jobFinishTime.setText(formatter3.format(roundedTimeForDisplay));
+				mLbl_jobFinishTime.setVisibility(TextView.VISIBLE);
 			}
 			
 		} else if (propertyName == PrimexModel.SKID_CHANGE_EVENT) {
@@ -528,6 +511,9 @@ public class SkidTimesFragment extends Fragment implements
 			for (TextView tv : mTimesDisplayList) {
 				tv.setText("");
 			}
+			for (TextView lbl : mTimesDisplayLabelsList) {
+				lbl.setVisibility(TextView.INVISIBLE);
+			}
 			
 		} else if (propertyName == PrimexModel.SELECTED_WO_CHANGE_EVENT) {
 		    WorkOrder wo = (WorkOrder)newProperty;
@@ -544,7 +530,6 @@ public class SkidTimesFragment extends Fragment implements
 		mLbl_skidFinishTime.setText(mProductGrouping + " finish");
 		mLbl_skidStartTime.setText(mProductGrouping + " start");
 		mLbl_timePerSkid.setText("Time per " + mProductGrouping.toLowerCase(Locale.getDefault()));
-
 	}
 	
 	@Override
