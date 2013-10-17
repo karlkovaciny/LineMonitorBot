@@ -15,12 +15,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:paddingLeft="@dimen/data_entry_group_left_padding" >
 
             <RelativeLayout
                 android:id="@+id/rl_data_entry_group"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
 
                 <TextView
@@ -163,6 +163,7 @@
                     android:text="Roll math"
                     android:visibility="gone" />
             </RelativeLayout>
+
         </LinearLayout>
 
         <RelativeLayout
@@ -187,6 +188,7 @@
                 android:layout_marginLeft="@dimen/button_row_spacing"
                 android:layout_toRightOf="@id/btn_enter_product"
                 android:text="Get Times" />
+
         </RelativeLayout>
 
         <LinearLayout
@@ -244,7 +246,18 @@
                         style="@style/Label.SecondTableColumn"
                         android:textStyle="bold" />
 
-                    <TextView style="@style/BlankThirdColumn" />
+                    <LinearLayout
+                        style="@style/ThirdColumn" >
+
+                        <ImageButton
+                            android:id="@+id/imgbtn_launch_skids_list"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="?android:selectableItemBackground"
+                            android:src="@drawable/ic_collections_view_as_list"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
                 </TableRow>
 
                 <TableRow

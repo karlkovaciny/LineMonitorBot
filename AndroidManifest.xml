@@ -80,7 +80,17 @@
                 android:name="rollMathActivity"
                 android:value="com.kovaciny.linemonitorbot.RollMathActivity" />
         </activity>
-                        
+		
+        <activity
+            android:name="com.kovaciny.linemonitorbot.SkidsListActivity"
+            android:label="@string/skids_list_activity_name"
+            android:screenOrientation="portrait"
+            android:parentActivityName="com.kovaciny.linemonitorbot.MainActivity" >
+            <meta-data
+                android:name="skidsListActivity"
+                android:value="com.kovaciny.linemonitorbot.skidsListActivity" />
+        </activity>
+        
         <receiver android:name="com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver">
         </receiver>
         

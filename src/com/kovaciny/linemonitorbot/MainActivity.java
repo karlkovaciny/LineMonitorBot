@@ -37,7 +37,7 @@ public class MainActivity extends FragmentActivity implements
 		EnterProductDialogFragment.EnterProductDialogListener, 
 		GoByHeightDialogListener, View.OnClickListener {
     
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
 	private static final int LINE_LIST_MENU_GROUP = 1111;
 	private static final int LINE_LIST_ID_RANDOMIZER = 1234; //TODO replace this by adding line number to Menu.FIRST
@@ -258,7 +258,12 @@ public class MainActivity extends FragmentActivity implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case (R.id.btn_roll_math):
+        	case (R.id.imgbtn_launch_skids_list):
+        		Intent skidsListIntent = new Intent(this, SkidsListActivity.class);
+        		skidsListIntent.putExtra("woNumber", mModel.getSelectedWorkOrder().getWoNumber());
+        		this.startActivity(skidsListIntent);
+        		break;
+	    	case (R.id.btn_roll_math):
                 Intent rollMathIntent = new Intent(this, RollMathActivity.class);
 
                 Roll roll = (Roll) mModel.getSelectedWorkOrder().getProduct();
