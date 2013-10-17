@@ -424,8 +424,6 @@ public class SkidTimesFragment extends Fragment implements
 				mTxt_skidFinishTime.setText("");
 				mLbl_skidFinishTime.setVisibility(TextView.INVISIBLE);
 				mImgBtn_cancelAlarm.setVisibility(ImageButton.GONE);
-				mLbl_timeToMaxson.setVisibility(TextView.INVISIBLE);
-				mTxt_timeToMaxson.setVisibility(TextView.GONE); //TODO not really the right place for it, but don't want it to show when only product is set
 			} else {
 			    Date roundedTimeForDisplay = HelperFunction.toNearestWholeMinute((Date)newProperty);
 			    SimpleDateFormat formatter;
@@ -434,8 +432,7 @@ public class SkidTimesFragment extends Fragment implements
 				mTxt_skidFinishTime.setText(formattedTime);
 				mLbl_skidFinishTime.setVisibility(TextView.VISIBLE);
 				mImgBtn_cancelAlarm.setVisibility(ImageButton.VISIBLE);
-				mLbl_timeToMaxson.setVisibility(TextView.VISIBLE);
-				mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
+				
 				//set alarm 
 				long alarmLeadTime = (long) (1.5 * HelperFunction.ONE_MINUTE_IN_MILLIS); //TODO
 				Date curDate = new Date();
@@ -514,8 +511,12 @@ public class SkidTimesFragment extends Fragment implements
 			Long timeToMaxson = (Long)newProperty;
 			if (!(timeToMaxson > 0)) {
 				mTxt_timeToMaxson.setText("");
+				mLbl_timeToMaxson.setVisibility(TextView.INVISIBLE);
+				mTxt_timeToMaxson.setVisibility(TextView.GONE);
 			} else {
-				mTxt_timeToMaxson.setText( HelperFunction.formatSecondsAsMinutes(timeToMaxson) );
+			    mTxt_timeToMaxson.setText( HelperFunction.formatSecondsAsMinutes(timeToMaxson) );
+			    mLbl_timeToMaxson.setVisibility(TextView.VISIBLE);
+                mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
 			}
 			
 		} else if (propertyName == PrimexModel.NEW_WORK_ORDER_EVENT) {
