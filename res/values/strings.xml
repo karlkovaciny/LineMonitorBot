@@ -7,6 +7,7 @@
     <string name="select_line_activity_name">LineMonitorBot</string>
     <string name="settings_activity_name">Settings</string>
     <string name="tips_activity_name">LineMonitorBot Tips</string>
+    <string name="skids_list_activity_name">Skids List</string>
     
     <string name="title_fragment_skid_times">Skid Times</string>
     <string name="title_fragment_rates">Rates</string>

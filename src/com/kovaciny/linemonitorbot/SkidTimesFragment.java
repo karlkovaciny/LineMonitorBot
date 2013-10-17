@@ -1,5 +1,7 @@
 package com.kovaciny.linemonitorbot;
 
+import static com.kovaciny.linemonitorbot.MainActivity.DEBUG;
+
 import java.beans.PropertyChangeEvent;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -48,6 +50,7 @@ public class SkidTimesFragment extends Fragment implements
 	private Button mBtn_rollMath;
 	private ImageButton mBtn_skidNumberUp;
 	private ImageButton mBtn_totalSkidsUp;
+	private ImageButton mImgBtn_launchSkidsList;
 	
 	private EditText mEdit_currentSkidNumber;
 	private EditText mEdit_currentCount;
@@ -62,6 +65,7 @@ public class SkidTimesFragment extends Fragment implements
 	private TextView mLbl_skidStartTime;
 	private TextView mTxt_skidStartTime;
 	private TextView mLbl_timePerSkid;
+
 	private TextView mTxt_timePerSkid;
 	private TextView mLbl_productsPerMinute;
 	private TextView mTxt_productsPerMinute;
@@ -128,6 +132,13 @@ public class SkidTimesFragment extends Fragment implements
         		
 		mImgBtn_cancelAlarm = (ImageButton) rootView.findViewById(R.id.imgbtn_cancel_alarm);
 		mImgBtn_cancelAlarm.setOnClickListener(this);
+	
+		if (DEBUG) {
+			mImgBtn_launchSkidsList = (ImageButton) rootView.findViewById(R.id.imgbtn_launch_skids_list);
+			mImgBtn_launchSkidsList.setOnClickListener((MainActivity)getActivity());
+			mImgBtn_launchSkidsList.setVisibility(ImageButton.VISIBLE);
+		}
+		
 		
 		mBtn_calculateTimes = (Button) rootView.findViewById(R.id.btn_calculate_times);
 		mBtn_calculateTimes.setOnClickListener(this);
@@ -196,7 +207,7 @@ public class SkidTimesFragment extends Fragment implements
 	public void onClick(View v) {
 		DialogController dialogController = new DialogController((MainActivity)getActivity());
 	    switch (v.getId()) {
-		case (R.id.btn_skid_number_up):
+	    case (R.id.btn_skid_number_up):
 			HelperFunction.hideKeyboard(getActivity());
 			HelperFunction.incrementEditText(mEdit_currentSkidNumber);
 			if (Double.valueOf(mEdit_currentSkidNumber.getText().toString()) >
@@ -477,18 +488,18 @@ public class SkidTimesFragment extends Fragment implements
 				mLbl_jobFinishTime.setVisibility(TextView.INVISIBLE);
 			} else {
 			    Date roundedTimeForDisplay = HelperFunction.toNearestWholeMinute((Date)newProperty);
-                SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a E", Locale.US);
-				
-				//"Pace time": Don't show the day of the week if it's before 6 am the next day. 
-				Calendar finishDate = new GregorianCalendar(Locale.US);
-				finishDate.setTime(roundedTimeForDisplay);
-				Calendar today = Calendar.getInstance(Locale.US);
-				today.add(Calendar.DAY_OF_MONTH, 1);
-				today.set(Calendar.HOUR_OF_DAY, 6);
-				today.set(Calendar.MINUTE, 0);
-				if (finishDate.before(today)) {
-					formatter3 = new SimpleDateFormat("h:mm a", Locale.US);
-				}
+			    SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a E", Locale.US);
+		        
+		        //"Pace time": Don't show the day of the week if it's before 6 am the next day. 
+		        Calendar finishDate = new GregorianCalendar(Locale.US);
+		        finishDate.setTime(roundedTimeForDisplay);
+		        Calendar today = Calendar.getInstance(Locale.US);
+		        today.add(Calendar.DAY_OF_MONTH, 1);
+		        today.set(Calendar.HOUR_OF_DAY, 6);
+		        today.set(Calendar.MINUTE, 0);
+		        if (finishDate.before(today)) {
+		            formatter3 = new SimpleDateFormat("h:mm a", Locale.US);
+		        }
 				mTxt_jobFinishTime.setText(formatter3.format(roundedTimeForDisplay));
 				mLbl_jobFinishTime.setVisibility(TextView.VISIBLE);
 			}
