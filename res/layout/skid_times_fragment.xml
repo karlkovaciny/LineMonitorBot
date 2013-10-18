@@ -176,7 +176,7 @@
             <Button
                 android:id="@+id/btn_enter_product"
                 android:layout_width="@dimen/button_width_default"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/button_height_default"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="8dp"
                 android:text="@string/btn_enter_product_text" />
@@ -255,6 +255,7 @@
                             android:layout_height="wrap_content"
                             android:background="?android:selectableItemBackground"
                             android:src="@drawable/ic_collections_view_as_list"
+                            android:alpha=".50"
                             android:visibility="visible" />
 
                     </LinearLayout>
