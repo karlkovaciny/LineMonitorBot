@@ -5,7 +5,9 @@ Organized by: Willie Tsang
 
 -->
 <resources>
-
+	<!-- my theme -->
+	<color name="PaceLightBlue">#77ACFF</color>
+	
     <!-- Android style -->
     <color name="android_green">#A4C639</color>
 

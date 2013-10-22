@@ -5,7 +5,7 @@
       android:radius="4dp"/>
   <stroke
       android:width="2dp"
-      android:color="#77ACFF" />
+      android:color="@color/PaceLightBlue" />
   <padding
     android:top="@dimen/padding_border_rectangle"
     android:bottom="@dimen/padding_border_rectangle" />

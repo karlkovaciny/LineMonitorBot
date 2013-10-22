@@ -76,7 +76,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 	    mEdit_totalCount = (EditText)mActivity.findViewById(R.id.edit_total_sheets_per_skid);
 	    mEdit_currentSkidNumber = (EditText)mActivity.findViewById(R.id.edit_skid_number);
 	    mEdit_numSkidsInJob = (EditText)mActivity.findViewById(R.id.edit_num_skids_in_job);
-	    mBtn_calculateTimes = (Button)mActivity.findViewById((R.id.btn_calculate_times));
+	    mBtn_calculateTimes = (Button)mActivity.findViewById((R.id.btn_get_times));
 	    mBtn_enterProduct = (Button)mActivity.findViewById(R.id.btn_enter_product);
 	    mBtn_calculateRates = (Button)mActivity.findViewById(R.id.btn_calculate_rates);
 	    mContainerSkidTimesFragment = (LinearLayout)mActivity.findViewById(R.id.container_skid_times_fragment);
@@ -206,7 +206,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 			}
 		});
 		getInstrumentation().waitForIdleSync();
-		clickButton(R.id.btn_calculate_times);
+		clickButton(R.id.btn_get_times);
 		
 	    mSkidTimesFragment = (SkidTimesFragment)mActivity.findFragmentByPosition(MainActivity.SKID_TIMES_FRAGMENT_POSITION);
 	    mEdit_numSkidsInJob = (EditText)mActivity.findViewById(R.id.edit_num_skids_in_job);
@@ -229,7 +229,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         });
         getInstrumentation().waitForIdleSync();
         //asserts and this.sendKeys() OK here
-        clickButton(R.id.btn_calculate_times);
+        clickButton(R.id.btn_get_times);
         String finishTimeBeforeDestroy = mTxt_skidFinishTime.getText().toString();
         
         destroyActivity();
