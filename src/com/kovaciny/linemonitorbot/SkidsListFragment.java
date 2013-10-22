@@ -21,6 +21,7 @@ import com.kovaciny.database.PrimexSQLiteOpenHelper;
 import com.kovaciny.helperfunctions.HelperFunction;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Skid;
+import com.kovaciny.primexmodel.WorkOrder;
 
 public class SkidsListFragment extends Fragment {
 
@@ -31,6 +32,8 @@ public class SkidsListFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
     
+		View rootView = inflater.inflate(R.layout.skids_list_header_row, container, false);
+		
 		int woNumber = getArguments().getInt("woNumber");
 		mDbHelper = new PrimexSQLiteOpenHelper(getActivity());
 		List<Skid<Product>> skidsList = new ArrayList<Skid<Product>>();
@@ -47,37 +50,42 @@ public class SkidsListFragment extends Fragment {
             Skid<Product> skid = skidsList.get(i);
             map.put("skid_number", String.valueOf(skid.getSkidNumber()));
             map.put("item_count", String.valueOf(skid.getTotalItems()));
+            
             if (skid.getFinishTime() != null) {
-                Date roundedTimeForDisplay = HelperFunction.toNearestWholeMinute((Date)skid.getFinishTime());
-                SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a E", Locale.US);
-                
-                //"Pace time": Don't show the day of the week if it's before 6 am the next day. 
-                Calendar finishDate = new GregorianCalendar(Locale.US);
-                finishDate.setTime(roundedTimeForDisplay);
-                Calendar today = Calendar.getInstance(Locale.US);
-                today.add(Calendar.DAY_OF_MONTH, 1);
-                today.set(Calendar.HOUR_OF_DAY, 6);
-                today.set(Calendar.MINUTE, 0);
-                if (finishDate.before(today)) {
-                    formatter3 = new SimpleDateFormat("h:mm a", Locale.US);
-                }    
-                map.put("finish_time", formatter3.format(skid.getFinishTime()));
+            	Date roundedTimeForDisplay = HelperFunction.toNearestWholeMinute(skid.getFinishTime());
+            	SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a E", Locale.US);
+            	
+            	//"Pace time": Don't show the day of the week if it's before 6 am the next day. 
+            	Calendar finishDate = new GregorianCalendar(Locale.US);
+            	finishDate.setTime(roundedTimeForDisplay);
+            	Calendar today = Calendar.getInstance(Locale.US);
+            	today.add(Calendar.DAY_OF_MONTH, 1);
+            	today.set(Calendar.HOUR_OF_DAY, 6);
+            	today.set(Calendar.MINUTE, 0);
+            	if (finishDate.before(today)) {
+            		formatter3 = new SimpleDateFormat("h:mm a", Locale.US);
+            	}
+            	map.put("finish_time", formatter3.format(roundedTimeForDisplay));
+            } else {
+            	map.put("finish_time", "n/a");
             }
             fillMaps.add(map);
         }
  
         // fill in the grid_item layout
-        SimpleAdapter adapter = new SimpleAdapter(getActivity(), fillMaps, R.layout.skids_list_item, from, to);
-        setListAdapter(adapter); //TODO replace with listview once you have rootview merged
+        ColorCodedAdapter adapter = new ColorCodedAdapter(getActivity(), fillMaps, R.layout.skids_list_item, from, to);
+        // identify the currently selected skid
+        WorkOrder wo = mDbHelper.getWorkOrder(woNumber);
+        int currentSkidNumber = wo.getSelectedSkid().getSkidNumber();
+        adapter.getItem(0);
         
-        /*
-		Map<Integer, Integer> skidNumberToSheetCountMap = new HashMap<Integer, Integer>();
-		skidNumberToSheetCountMap.put(1, 1111);
-		skidNumberToSheetCountMap.put(2, 2222);
-		ArrayList<HashMap<Integer, Integer>> skidNumberToValuesMapsList = new ArrayList<HashMap<Integer, Integer>>();
-		SimpleAdapter skidListAdapter = new SimpleAdapter(getActivity(), skidNumberToValuesMapsList, )*/
-		// TODO Auto-generated method stub
-		return super.onCreateView(inflater, container, savedInstanceState);
+        mListView_skidsList = (ListView) rootView.findViewById(R.id.listview_skids_list);
+        mListView_skidsList.setAdapter(adapter);
+        mListView_skidsList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        mListView_skidsList.setSelection(currentSkidNumber - 1);
+        mListView_skidsList.setItemChecked(currentSkidNumber - 1, true);
+
+        return rootView;
 	}
 
 }

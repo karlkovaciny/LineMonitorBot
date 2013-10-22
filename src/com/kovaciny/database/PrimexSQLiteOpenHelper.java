@@ -686,6 +686,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		int woId = getIdOfValue(PrimexDatabaseSchema.WorkOrders.TABLE_NAME, PrimexDatabaseSchema.WorkOrders.COLUMN_NAME_WO_NUMBER, woNumber);
 		if (woId == -1) Log.e("ERROR", "Could not find a work order ID for the wo number " + String.valueOf(woNumber));
 		Cursor resultCursor = db.rawQuery(sql, new String[]{String.valueOf(woId)});
+		int debug = resultCursor.getCount();
 		List<Skid<Product>> skidList = new ArrayList<Skid<Product>>();
 		try {
 			while (resultCursor.moveToNext()){
@@ -750,7 +751,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
 		if (rowId == -1) {
 			Log.v("verbose", "insert error code -1");
 		} else {
-//			Log.v("verbose", "inserted this skid into row ID " + String.valueOf(rowId) + ": " + skid.toString());
+//			Log.v("verbose", "inserted skid number " + skid.getSkidNumber() + " into row ID " + String.valueOf(rowId) + ": " + skid.toString());
 		}
 		return rowId;
 	}

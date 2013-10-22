@@ -55,7 +55,7 @@ public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<Main
 	    mEdit_currentCount = (EditText) mActivity.findViewById(R.id.edit_current_count);
 	    mEdit_totalCountPerSkid = (EditText) mActivity.findViewById(R.id.edit_total_sheets_per_skid);
 
-	    mBtn_calculateTimes = (Button) mActivity.findViewById(R.id.btn_calculate_times);
+	    mBtn_calculateTimes = (Button) mActivity.findViewById(R.id.btn_get_times);
 		
 	}
 
@@ -109,7 +109,7 @@ public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<Main
 		    	 mEdit_currentSkidNumber.setText("220");
 		     }
 		});
-		clickButton(R.id.btn_calculate_times);
+		clickButton(R.id.btn_get_times);
 		assertEquals(mActivity.getString(R.string.error_over_maximum_skids).replace("%1", String.valueOf(SkidTimesFragment.MAXIMUM_NUMBER_OF_SKIDS)), mEdit_numSkidsInJob.getError());
 		assertEquals(mActivity.getString(R.string.error_current_greater_than_total), mEdit_currentCount.getError());
 		assertEquals(mActivity.getString(R.string.error_need_nonzero), mEdit_totalCountPerSkid.getError());
@@ -123,7 +123,7 @@ public class SkidTimesFragmentTest extends ActivityInstrumentationTestCase2<Main
 		    	 mEdit_currentSkidNumber.setText("");
 		     }
 		});
-		clickButton(R.id.btn_calculate_times);
+		clickButton(R.id.btn_get_times);
 		assertEquals(mActivity.getString(R.string.error_over_maximum_skids).replace("%1", String.valueOf(SkidTimesFragment.MAXIMUM_NUMBER_OF_SKIDS)), mEdit_numSkidsInJob.getError());
 		assertEquals(mActivity.getString(R.string.error_current_greater_than_total), mEdit_currentCount.getError());
 		assertEquals(mActivity.getString(R.string.error_need_nonzero), mEdit_totalCountPerSkid.getError());

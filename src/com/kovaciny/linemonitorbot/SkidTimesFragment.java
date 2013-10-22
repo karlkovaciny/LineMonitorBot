@@ -1,7 +1,5 @@
 package com.kovaciny.linemonitorbot;
 
-import static com.kovaciny.linemonitorbot.MainActivity.DEBUG;
-
 import java.beans.PropertyChangeEvent;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -40,6 +38,8 @@ import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.WorkOrder;
+
+import static com.kovaciny.linemonitorbot.MainActivity.DEBUG;
 
 public class SkidTimesFragment extends Fragment implements
 		OnClickListener, ViewEventResponder	{
@@ -140,7 +140,7 @@ public class SkidTimesFragment extends Fragment implements
 		}
 		
 		
-		mBtn_calculateTimes = (Button) rootView.findViewById(R.id.btn_calculate_times);
+		mBtn_calculateTimes = (Button) rootView.findViewById(R.id.btn_get_times);
 		mBtn_calculateTimes.setOnClickListener(this);
 		mBtn_calculateTimes.getBackground().setColorFilter(new LightingColorFilter(0xFF99DDFF,0xFF0000FF));
 		
@@ -245,7 +245,7 @@ public class SkidTimesFragment extends Fragment implements
 		    cancelAlarm();
 		    Toast.makeText(getActivity(), getResources().getString(R.string.toast_alarm_canceled), Toast.LENGTH_SHORT).show();
 		    break;
-		case (R.id.btn_calculate_times):
+		case (R.id.btn_get_times):
 			//supply default values
 			if (mEdit_currentCount.getText().length() == 0) {
 				mEdit_currentCount.setText("0");
@@ -432,7 +432,6 @@ public class SkidTimesFragment extends Fragment implements
 				mTxt_skidFinishTime.setText(formattedTime);
 				mLbl_skidFinishTime.setVisibility(TextView.VISIBLE);
 				mImgBtn_cancelAlarm.setVisibility(ImageButton.VISIBLE);
-				
 				//set alarm 
 				long alarmLeadTime = (long) (1.5 * HelperFunction.ONE_MINUTE_IN_MILLIS); //TODO
 				Date curDate = new Date();
@@ -448,6 +447,30 @@ public class SkidTimesFragment extends Fragment implements
 						onetimeTimer(mTxt_skidFinishTime, triggerAtMillis);
 					}
 				}
+			}
+			
+		} else if (propertyName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) {
+			if (newProperty == null) {
+				mTxt_jobFinishTime.setText("");
+				mLbl_jobFinishTime.setVisibility(TextView.INVISIBLE);
+				mImgBtn_launchSkidsList.setVisibility(ImageButton.INVISIBLE);
+			} else {
+			    Date roundedTimeForDisplay = HelperFunction.toNearestWholeMinute((Date)newProperty);
+                SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a E", Locale.US);
+				
+				//"Pace time": Don't show the day of the week if it's before 6 am the next day. 
+				Calendar finishDate = new GregorianCalendar(Locale.US);
+				finishDate.setTime(roundedTimeForDisplay);
+				Calendar today = Calendar.getInstance(Locale.US);
+				today.add(Calendar.DAY_OF_MONTH, 1);
+				today.set(Calendar.HOUR_OF_DAY, 6);
+				today.set(Calendar.MINUTE, 0);
+				if (finishDate.before(today)) {
+					formatter3 = new SimpleDateFormat("h:mm a", Locale.US);
+				}
+				mTxt_jobFinishTime.setText(formatter3.format(roundedTimeForDisplay));
+				mLbl_jobFinishTime.setVisibility(TextView.VISIBLE);
+				mImgBtn_launchSkidsList.setVisibility(ImageButton.VISIBLE);
 			}
 			
 		} else if (propertyName == PrimexModel.CURRENT_SKID_START_TIME_CHANGE_EVENT) {
@@ -478,29 +501,7 @@ public class SkidTimesFragment extends Fragment implements
 			mEdit_numSkidsInJob.setText(number);
 			
 		} else if (propertyName == PrimexModel.NUMBER_OF_TABLE_SKIDS_CHANGE_EVENT) {
-			
-		} else if (propertyName == PrimexModel.JOB_FINISH_TIME_CHANGE_EVENT) {
-			if (newProperty == null) {
-				mTxt_jobFinishTime.setText("");
-				mLbl_jobFinishTime.setVisibility(TextView.INVISIBLE);
-			} else {
-			    Date roundedTimeForDisplay = HelperFunction.toNearestWholeMinute((Date)newProperty);
-			    SimpleDateFormat formatter3 = new SimpleDateFormat("h:mm a E", Locale.US);
-		        
-		        //"Pace time": Don't show the day of the week if it's before 6 am the next day. 
-		        Calendar finishDate = new GregorianCalendar(Locale.US);
-		        finishDate.setTime(roundedTimeForDisplay);
-		        Calendar today = Calendar.getInstance(Locale.US);
-		        today.add(Calendar.DAY_OF_MONTH, 1);
-		        today.set(Calendar.HOUR_OF_DAY, 6);
-		        today.set(Calendar.MINUTE, 0);
-		        if (finishDate.before(today)) {
-		            formatter3 = new SimpleDateFormat("h:mm a", Locale.US);
-		        }
-				mTxt_jobFinishTime.setText(formatter3.format(roundedTimeForDisplay));
-				mLbl_jobFinishTime.setVisibility(TextView.VISIBLE);
-			}
-			
+
 		} else if (propertyName == PrimexModel.SKID_CHANGE_EVENT) {
 			Skid<?> skid = (Skid<?>)newProperty; //TODO check if null, clear the fields
 			mEdit_currentSkidNumber.setText(String.valueOf(skid.getSkidNumber()));
@@ -512,10 +513,10 @@ public class SkidTimesFragment extends Fragment implements
 			if (!(timeToMaxson > 0)) {
 				mTxt_timeToMaxson.setText("");
 				mLbl_timeToMaxson.setVisibility(TextView.INVISIBLE);
-				mTxt_timeToMaxson.setVisibility(TextView.GONE);
+                mTxt_timeToMaxson.setVisibility(TextView.GONE);
 			} else {
-			    mTxt_timeToMaxson.setText( HelperFunction.formatSecondsAsMinutes(timeToMaxson) );
-			    mLbl_timeToMaxson.setVisibility(TextView.VISIBLE);
+				mTxt_timeToMaxson.setText( HelperFunction.formatSecondsAsMinutes(timeToMaxson) );
+                mLbl_timeToMaxson.setVisibility(TextView.VISIBLE);
                 mTxt_timeToMaxson.setVisibility(TextView.VISIBLE);
 			}
 			
