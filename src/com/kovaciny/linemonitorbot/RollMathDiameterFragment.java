@@ -2,6 +2,7 @@ package com.kovaciny.linemonitorbot;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -26,17 +27,17 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
     
     EditText mEdit_linearFeet;
     EditText mEdit_orderedGauge;
+    EditText mEdit_gauge;
     EditText mEdit_grossWeight;
-    EditText mEdit_materialDensity;
+    EditText mEdit_footWeight;
     EditText mEdit_width;
     
     LinearLayout mContainer_diameterInputs1;
     LinearLayout mContainer_diameterInputs2;
     
-    MutuallyExclusiveViewSet<ViewGroup> mMutuallyExclusiveViewSet;
+    MutuallyExclusiveViewSet mMutuallyExclusiveViewSet;
     
     TextView mTxt_rollDiameter;
-    TextView mTxt_rollDiameterHigh;
     
     double mWidth;
     int mLinearFeet;
@@ -60,24 +61,24 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
         mContainer_diameterInputs2 = (LinearLayout) rootView.findViewById(R.id.container_diameter_inputs_2);
         
         mEdit_orderedGauge = (EditText) rootView.findViewById(R.id.edit_ordered_gauge);
+        mEdit_gauge = (EditText) rootView.findViewById(R.id.edit_gauge);
         mEdit_linearFeet = (EditText) rootView.findViewById(R.id.edit_linear_feet);
         if (mLinearFeet > 0) {
             mEdit_linearFeet.setText(String.valueOf(mLinearFeet));
         }
         mEdit_grossWeight = (EditText) rootView.findViewById(R.id.edit_gross_weight);
-        mEdit_materialDensity = (EditText) rootView.findViewById(R.id.edit_material_density);
+        mEdit_footWeight = (EditText) rootView.findViewById(R.id.edit_foot_weight_3);
         mEdit_width = (EditText) rootView.findViewById(R.id.edit_width);
         if (mWidth > 0) {
         	mEdit_width.setText(String.valueOf(mWidth));
         }
         mTxt_rollDiameter = (TextView) rootView.findViewById(R.id.txt_roll_diameter);
-        mTxt_rollDiameterHigh = (TextView) rootView.findViewById(R.id.txt_roll_diameter_high);
         
         HashMap<ViewGroup, EditText> containerToRequiredFieldMap = new HashMap<ViewGroup, EditText>();
         containerToRequiredFieldMap.put(mContainer_diameterInputs1, mEdit_orderedGauge);
         containerToRequiredFieldMap.put(mContainer_diameterInputs2, mEdit_grossWeight);
         mMutuallyExclusiveViewSet = 
-                new MutuallyExclusiveViewSet<ViewGroup>(
+                new MutuallyExclusiveViewSet(
                         getActivity(), containerToRequiredFieldMap, R.drawable.selector_viewgroup_exclusive);
         return rootView;
     }
@@ -98,7 +99,6 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
                 
                 double diameter = 0d;
                 SpannableStringBuilder diameterSb = new SpannableStringBuilder();
-                SpannableStringBuilder diameterHighSb = new SpannableStringBuilder();
                 
                 if (selectedGroup.getId() == R.id.container_diameter_inputs_1) { 
                     int linearFeet = Integer.valueOf(mEdit_linearFeet.getText().toString());
@@ -111,23 +111,21 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
                 } else if (selectedGroup.getId() == R.id.container_diameter_inputs_2) {
                     double rollWidth = Double.valueOf(mEdit_width.getText().toString());
                     double grossWeight = Double.valueOf(mEdit_grossWeight.getText().toString());
-                    double materialDensity = Double.valueOf(mEdit_materialDensity.getText().toString());
-                    double diameterHigh = ((RollMathActivity)getActivity())
+                    double footWeight = Double.valueOf(mEdit_footWeight.getText().toString());
+                    double gauge = Double.valueOf(mEdit_gauge.getText().toString());
+                    double materialDensity = ((RollMathActivity)getActivity())
+                            .calculateMaterialDensity(footWeight, gauge, rollWidth);
+                    diameter = ((RollMathActivity)getActivity())
                             .calculateRollDiameter(((RollMathActivity)getActivity()).getCoreType(), rollWidth, grossWeight, materialDensity);
-                    diameter = diameterHigh * .975; //Represents running at -2.5% of ordered gauge
                     editor.putFloat("RollMath.width", (float) rollWidth);
                     editor.putFloat("RollMath.grossWeight", (float) grossWeight);
                     editor.putFloat("RollMath.materialDensity", (float) materialDensity);
-                    diameterHighSb.append("(")
-                    .append(HelperFunction.formatDecimalAsProperFraction(diameterHigh, 8d))
-                    .append("\" at full ordered gauge)");
-                }
+               }
                  
                 diameterSb.append(HelperFunction.formatDecimalAsProperFraction(diameter, 8d))
                     .append("\"");
                 mTxt_rollDiameter.setText(diameterSb);
-                mTxt_rollDiameterHigh.setText(diameterHighSb);
-
+ 
                 editor.putFloat("RollMath.diameter", (float) diameter);
                 editor.commit();
             }
@@ -154,16 +152,14 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
                 String threeDecimalsPlus = new DecimalFormat("#.000#").format(gaugeValue);
                 mEdit_orderedGauge.setText(threeDecimalsPlus);
             } else if (validGroup == mContainer_diameterInputs2) {
-                if (mEdit_materialDensity.getText().length() == 0) {
-                    mEdit_materialDensity.setError(getString(R.string.error_empty_field));
-                    validInputs = false;
+                Iterator<EditText> children = HelperFunction.getChildEditTexts(validGroup).iterator();
+                while (children.hasNext()) {
+                    EditText thisChild = children.next();
+                    if (thisChild.getText().length() == 0) {
+                        thisChild.setError(getString(R.string.error_empty_field));
+                        validInputs = false;
+                    }
                 }
-
-                if (mEdit_width.getText().length() == 0) {
-                    mEdit_width.setError(getString(R.string.error_empty_field));
-                    validInputs = false;
-                }
-
             } else {
                 validInputs = false;
             } 

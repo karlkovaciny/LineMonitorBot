@@ -1,9 +1,12 @@
 package com.kovaciny.helperfunctions;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.lang3.math.Fraction;
 
@@ -19,6 +22,7 @@ import android.text.style.RelativeSizeSpan;
 import android.text.style.SubscriptSpan;
 import android.text.style.SuperscriptSpan;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -156,5 +160,18 @@ final public class HelperFunction {
 	    }
 
 	    return element;
+	}
+	
+	public static List<EditText> getChildEditTexts (ViewGroup container) {
+	    List<EditText> children = new ArrayList<EditText>();
+	    for (int i = 0, n = container.getChildCount(); i < n; i++) {
+	        View nextChild = container.getChildAt(i);
+	        if (nextChild instanceof ViewGroup) {
+	            children.addAll(getChildEditTexts((ViewGroup)nextChild));
+	        } else if (nextChild instanceof EditText) {
+	            children.add((EditText)nextChild); 
+	        }
+	    } 
+	    return children;
 	}
 }

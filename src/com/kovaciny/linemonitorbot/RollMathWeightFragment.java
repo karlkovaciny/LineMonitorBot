@@ -33,7 +33,7 @@ public class RollMathWeightFragment extends Fragment implements View.OnClickList
     LinearLayout mContainer_weightInputs1;
     LinearLayout mContainer_weightInputs2;
     
-    MutuallyExclusiveViewSet<ViewGroup> mMutuallyExclusiveViewSet;
+    MutuallyExclusiveViewSet mMutuallyExclusiveViewSet;
     TextView mTxt_rollWeight;
     
     int mLinearFeet;
@@ -91,7 +91,7 @@ public class RollMathWeightFragment extends Fragment implements View.OnClickList
         containerToRequiredFieldMap.put(mContainer_weightInputs2, mEdit_targetDiameter);
         
         mMutuallyExclusiveViewSet = 
-                new MutuallyExclusiveViewSet<ViewGroup>(
+                new MutuallyExclusiveViewSet(
                         getActivity(), containerToRequiredFieldMap, R.drawable.selector_viewgroup_exclusive);
 
         

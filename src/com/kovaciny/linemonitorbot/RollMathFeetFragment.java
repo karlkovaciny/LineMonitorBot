@@ -31,7 +31,7 @@ public class RollMathFeetFragment extends Fragment implements View.OnClickListen
     LinearLayout mContainer_feetInputs1;
     LinearLayout mContainer_feetInputs2;
 
-    MutuallyExclusiveViewSet<ViewGroup> mMutuallyExclusiveViewSet;
+    MutuallyExclusiveViewSet mMutuallyExclusiveViewSet;
     
     TextView mTxt_linearFeet;
     
@@ -68,7 +68,7 @@ public class RollMathFeetFragment extends Fragment implements View.OnClickListen
         containerToRequiredFieldMap.put(mContainer_feetInputs2, mEdit_grossWeight);
         
         mMutuallyExclusiveViewSet = 
-                new MutuallyExclusiveViewSet<ViewGroup>(
+                new MutuallyExclusiveViewSet(
                         getActivity(), containerToRequiredFieldMap, R.drawable.selector_viewgroup_exclusive);
 
         return rootView;
