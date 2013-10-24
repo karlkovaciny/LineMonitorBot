@@ -1,22 +1,26 @@
 package com.kovaciny.helperfunctions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.kovaciny.linemonitorbot.R;
 
-public class MutuallyExclusiveViewSet<ViewGroup> implements View.OnTouchListener {
-
+public class MutuallyExclusiveViewSet implements View.OnTouchListener {
 
     public static final int NO_BACKGROUND = 0;
     
     Context mContext;
     HashMap<ViewGroup, EditText> mGroupsToRequiredFieldsMap = new HashMap<ViewGroup, EditText>();
+    HashMap<ViewGroup, List<EditText>> mGroupsToListOfChildrenMap = new HashMap<ViewGroup, List<EditText>>();
     
     public MutuallyExclusiveViewSet(Context context, HashMap<ViewGroup, EditText> groupsToRequiredFieldsMap, int backgroundSelectorId) {
         mGroupsToRequiredFieldsMap = groupsToRequiredFieldsMap;
@@ -24,9 +28,19 @@ public class MutuallyExclusiveViewSet<ViewGroup> implements View.OnTouchListener
         if (backgroundSelectorId != NO_BACKGROUND) {
             setBackgroundSelector(backgroundSelectorId);
         }
+
+        //Find all EditTexts in the viewgroups so we can check them for validity and focus.
         for (Map.Entry<ViewGroup, EditText> entry : mGroupsToRequiredFieldsMap.entrySet()) {
-            EditText et = entry.getValue();
-            et.setOnTouchListener(this);
+            ViewGroup container = entry.getKey();
+            mGroupsToListOfChildrenMap.put(container, HelperFunction.getChildEditTexts(container));
+        }
+        
+        for (Map.Entry<ViewGroup, List<EditText>> entry : mGroupsToListOfChildrenMap.entrySet() ) {
+            List<EditText> editTexts = entry.getValue();
+            for (Iterator<EditText> itr = editTexts.iterator(); itr.hasNext(); ) {
+                EditText et = itr.next();
+                et.setOnTouchListener(this);
+            }
         }
     }
     
@@ -40,9 +54,9 @@ public class MutuallyExclusiveViewSet<ViewGroup> implements View.OnTouchListener
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if(MotionEvent.ACTION_UP == event.getAction()) {
-                for (ViewGroup vg : mGroupsToRequiredFieldsMap.keySet()) {
+                for (ViewGroup vg : mGroupsToListOfChildrenMap.keySet()) {
                     View view = (View) vg;
-                    if (mGroupsToRequiredFieldsMap.get(vg) == v) {
+                    if (mGroupsToListOfChildrenMap.get(vg).contains(v)) {
                         view.setSelected(true);
                     } else {
                         view.setSelected(false);
