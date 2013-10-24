@@ -186,7 +186,8 @@ public class DialogController {
         mModel.getSelectedWorkOrder().addOrUpdateSkid(skid);
         mModel.changeSelectedSkid(skidNumber);
         mModel.saveSkid(skid);
-
+        mModel.changeNumberOfSkids(numberOfSkids);
+        
         mModel.calculateTimes();
     }
 

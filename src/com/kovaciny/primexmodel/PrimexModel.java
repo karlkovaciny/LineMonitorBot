@@ -454,13 +454,13 @@ public class PrimexModel {
 	}
 	
 	/*
-	 * Dependent on the current skid number being right
+	 * Dependent on the current skid number being right?
 	 */
 	public void changeNumberOfSkids(double num) {
 		if (num <= 0d) throw new IllegalArgumentException("Number of skids not positive");
 		double totalSkids = Math.ceil(num);
 		double fractionalSkid = num % 1.0; //TODO bigdecimal
-		Skid<Product> currentSkid = mSelectedWorkOrder.getSelectedSkid();
+		Skid<Product> currentSkid;
 		
 		while (mSelectedWorkOrder.getNumberOfSkids() < totalSkids) {
 			currentSkid = addSkid(0, mSelectedSkid.getTotalItems());
