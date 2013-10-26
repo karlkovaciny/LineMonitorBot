@@ -1,5 +1,7 @@
 package com.kovaciny.linemonitorbot;
 
+import static com.kovaciny.linemonitorbot.MainActivity.DEBUG;
+
 import java.beans.PropertyChangeEvent;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -38,8 +40,6 @@ import com.kovaciny.primexmodel.PrimexModel;
 import com.kovaciny.primexmodel.Product;
 import com.kovaciny.primexmodel.Skid;
 import com.kovaciny.primexmodel.WorkOrder;
-
-import static com.kovaciny.linemonitorbot.MainActivity.DEBUG;
 
 public class SkidTimesFragment extends Fragment implements
 		OnClickListener, ViewEventResponder	{
