@@ -158,8 +158,9 @@
 
         <Button
             android:id="@+id/btn_enter_product_rates_frag"
-            android:layout_width="@dimen/button_width_default"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/button_height_default"
+            android:layout_width="wrap_content"
+            android:minWidth="@dimen/button_width_default"            
             android:layout_marginLeft="8dp"
             android:text="@string/btn_enter_product_text" />
 
@@ -168,7 +169,7 @@
             android:layout_width="@dimen/button_width_default"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/button_row_spacing"
-            android:text="Get Rates" />
+            android:text="@string/btn_get_rates_text" />
     </LinearLayout>
 
     <LinearLayout
