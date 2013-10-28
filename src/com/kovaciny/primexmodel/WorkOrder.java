@@ -57,8 +57,15 @@ public class WorkOrder {
 			//When you're on skid #3 of 2.5, there are 0 skids left after this one.
 			double skidsAfterThisOne = Math.max(0, getNumberOfSkids() - currentSkid.getSkidNumber()); 
 			long millisPerSkid = Math.round(currentSkid.calculateMinutesPerSkid(productsPerMinute) * HelperFunction.ONE_MINUTE_IN_MILLIS);
+			for (int i = 1, n = (int) skidsAfterThisOne + 1; i < n; i++) {
+			    Skid<Product> futureSkid = mSkidsList.get(mSelectedSkidPosition + i);
+			    Date futureFinishTime = new Date(currentFinishTime.getTime() + (i * millisPerSkid));
+			    futureSkid.setFinishTime(futureFinishTime);
+			}
 			long millisRemaining = (long) (skidsAfterThisOne * millisPerSkid);
 			mFinishDate = new Date(currentFinishTime.getTime() + millisRemaining);
+			Skid<Product> finalSkid = mSkidsList.get(mSkidsList.size() - 1);
+			finalSkid.setFinishTime(mFinishDate); //TODO because partial skids don't get set by the loop above
 		}
 		return mFinishDate;
 	}
