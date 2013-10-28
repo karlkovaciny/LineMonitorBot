@@ -79,9 +79,10 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (!DEBUG) {
+		/*removed to eliminate Internet permission
+		 * if (!DEBUG) {
 		    BugSenseHandler.initAndStartSession(this, "2100e887");
-		}
+		}*/
 		setContentView(R.layout.activity_main);
 		
 		// Initialize settings on first run
