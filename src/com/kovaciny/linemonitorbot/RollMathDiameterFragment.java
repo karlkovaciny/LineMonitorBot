@@ -61,7 +61,7 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
         mContainer_diameterInputs2 = (LinearLayout) rootView.findViewById(R.id.container_diameter_inputs_2);
         
         mEdit_orderedGauge = (EditText) rootView.findViewById(R.id.edit_ordered_gauge);
-        mEdit_gauge = (EditText) rootView.findViewById(R.id.edit_gauge);
+        mEdit_gauge = (EditText) rootView.findViewById(R.id.edit_gauge_3);
         mEdit_linearFeet = (EditText) rootView.findViewById(R.id.edit_linear_feet);
         if (mLinearFeet > 0) {
             mEdit_linearFeet.setText(String.valueOf(mLinearFeet));
@@ -160,6 +160,13 @@ public class RollMathDiameterFragment extends Fragment implements View.OnClickLi
                         validInputs = false;
                     }
                 }
+                //auto-convert if user enters gauge as a whole number instead of a decimal, then format as gauge
+                double gaugeValue = Double.valueOf(mEdit_gauge.getText().toString());
+                if (gaugeValue > PrimexModel.MAXIMUM_POSSIBLE_GAUGE) {
+                    gaugeValue /= 1000;
+                }
+                String threeDecimalsPlus = new DecimalFormat("#.000#").format(gaugeValue);
+                mEdit_gauge.setText(threeDecimalsPlus);
             } else {
                 validInputs = false;
             } 
