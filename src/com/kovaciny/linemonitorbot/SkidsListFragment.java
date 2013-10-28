@@ -72,13 +72,12 @@ public class SkidsListFragment extends Fragment {
             fillMaps.add(map);
         }
  
-        // fill in the grid_item layout
-        ColorCodedAdapter adapter = new ColorCodedAdapter(getActivity(), fillMaps, R.layout.skids_list_item, from, to);
         // identify the currently selected skid
         WorkOrder wo = mDbHelper.getWorkOrder(woNumber);
         int currentSkidNumber = wo.getSelectedSkid().getSkidNumber();
-        adapter.getItem(0);
-        
+        // fill in the grid_item layout
+        ColorCodedAdapter adapter = new ColorCodedAdapter(getActivity(), fillMaps, R.layout.skids_list_item, from, to, currentSkidNumber - 1);
+        //TODO should I have done that in constructor?
         mListView_skidsList = (ListView) rootView.findViewById(R.id.listview_skids_list);
         mListView_skidsList.setAdapter(adapter);
         mListView_skidsList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);

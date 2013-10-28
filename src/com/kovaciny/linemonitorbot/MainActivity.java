@@ -261,6 +261,7 @@ public class MainActivity extends FragmentActivity implements
         	case (R.id.imgbtn_launch_skids_list):
         		Intent skidsListIntent = new Intent(this, SkidsListActivity.class);
         		skidsListIntent.putExtra("woNumber", mModel.getSelectedWorkOrder().getWoNumber());
+        		mModel.saveState(); //TODO this is needed because onStop() gets called too late
         		this.startActivity(skidsListIntent);
         		break;
 	    	case (R.id.btn_roll_math):
