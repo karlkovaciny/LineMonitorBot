@@ -172,11 +172,4 @@
         android:layout_gravity="center"
         android:textSize="@dimen/textsize_roll_math_results" />
 
-    <fragment
-        android:id="@+id/floating_toolbar_5"
-        android:name="com.kovaciny.linemonitorbot.FloatingToolbarFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/floating_toolbar_fragment" />
-
 </LinearLayout>

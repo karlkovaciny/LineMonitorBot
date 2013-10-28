@@ -109,10 +109,10 @@
                         style="@style/EditText.TwoColumns"
                         android:layout_weight="1"
                         android:ems="3"
-                        android:imeOptions="actionDone"
+                        android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="4"
-                        android:nextFocusDown="@+id/edit_material_density" />
+                        android:nextFocusDown="@+id/edit_foot_weight_3" />
                 </LinearLayout>
 
                 <TextView
@@ -129,7 +129,7 @@
                     android:gravity="bottom" >
 
                     <EditText
-                        android:id="@+id/edit_foot_weight_3"
+                        android:id="@id/edit_foot_weight_3"
                         style="@style/EditText.TwoColumns"
                         android:layout_gravity="bottom"
                         android:layout_weight="1"
@@ -215,12 +215,6 @@
             android:layout_gravity="center"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
-        <fragment
-            android:id="@+id/floating_toolbar_4"
-            android:name="com.kovaciny.linemonitorbot.FloatingToolbarFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout="@layout/floating_toolbar_fragment" />
     </LinearLayout>
 
 </LinearLayout>
