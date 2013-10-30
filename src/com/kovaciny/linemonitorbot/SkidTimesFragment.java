@@ -133,12 +133,9 @@ public class SkidTimesFragment extends Fragment implements
 		mImgBtn_cancelAlarm = (ImageButton) rootView.findViewById(R.id.imgbtn_cancel_alarm);
 		mImgBtn_cancelAlarm.setOnClickListener(this);
 	
-		if (DEBUG) {
-			mImgBtn_launchSkidsList = (ImageButton) rootView.findViewById(R.id.imgbtn_launch_skids_list);
-			mImgBtn_launchSkidsList.setOnClickListener((MainActivity)getActivity());
-			mImgBtn_launchSkidsList.setVisibility(ImageButton.VISIBLE);
-		}
-		
+		mImgBtn_launchSkidsList = (ImageButton) rootView.findViewById(R.id.imgbtn_launch_skids_list);
+		mImgBtn_launchSkidsList.setOnClickListener((MainActivity)getActivity());
+		mImgBtn_launchSkidsList.setVisibility(ImageButton.VISIBLE);
 		
 		mBtn_calculateTimes = (Button) rootView.findViewById(R.id.btn_get_times);
 		mBtn_calculateTimes.setOnClickListener(this);
