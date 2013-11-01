@@ -3,7 +3,6 @@ android.support.v4.app.BackStackState: android.os.Parcelable$Creator CREATOR
 android.support.v4.app.Fragment: Fragment()
 android.support.v4.app.Fragment$SavedState
 android.support.v4.app.Fragment$SavedState: android.os.Parcelable$Creator CREATOR
-android.support.v4.app.FragmentActivity
 android.support.v4.app.FragmentActivity: FragmentActivity()
 android.support.v4.app.FragmentManagerState
 android.support.v4.app.FragmentManagerState: android.os.Parcelable$Creator CREATOR
@@ -353,6 +352,8 @@ com.kovaciny.linemonitorbot.MainActivity
 com.kovaciny.linemonitorbot.MainActivity: MainActivity()
 com.kovaciny.linemonitorbot.MainActivity: void onClick(android.view.View)
 com.kovaciny.linemonitorbot.R$anim: int fade_out_fade_in
+com.kovaciny.linemonitorbot.R$anim: int fragment_fade_in
+com.kovaciny.linemonitorbot.R$anim: int fragment_fade_out
 com.kovaciny.linemonitorbot.R$array: int jobs_list
 com.kovaciny.linemonitorbot.R$array: int line_list
 com.kovaciny.linemonitorbot.R$array: int tips_and_apps_details
@@ -452,6 +453,7 @@ com.kovaciny.linemonitorbot.R$color: int OliveDrab
 com.kovaciny.linemonitorbot.R$color: int Orange
 com.kovaciny.linemonitorbot.R$color: int OrangeRed
 com.kovaciny.linemonitorbot.R$color: int Orchid
+com.kovaciny.linemonitorbot.R$color: int PaceLightBlue
 com.kovaciny.linemonitorbot.R$color: int PaleGoldenrod
 com.kovaciny.linemonitorbot.R$color: int PaleGreen
 com.kovaciny.linemonitorbot.R$color: int PaleTurquoise
@@ -515,6 +517,7 @@ com.kovaciny.linemonitorbot.R$dimen: int activity_horizontal_margin
 com.kovaciny.linemonitorbot.R$dimen: int activity_vertical_margin
 com.kovaciny.linemonitorbot.R$dimen: int borderless_row_padding
 com.kovaciny.linemonitorbot.R$dimen: int btn_go_by_height_margin
+com.kovaciny.linemonitorbot.R$dimen: int button_height_default
 com.kovaciny.linemonitorbot.R$dimen: int button_padding_left
 com.kovaciny.linemonitorbot.R$dimen: int button_row_spacing
 com.kovaciny.linemonitorbot.R$dimen: int button_width_default
@@ -529,6 +532,8 @@ com.kovaciny.linemonitorbot.R$dimen: int fragment_horizontal_margin
 com.kovaciny.linemonitorbot.R$dimen: int fragment_vertical_margin
 com.kovaciny.linemonitorbot.R$dimen: int label_padding_right
 com.kovaciny.linemonitorbot.R$dimen: int label_row_height
+com.kovaciny.linemonitorbot.R$dimen: int margin_around_outlined_linear_layout
+com.kovaciny.linemonitorbot.R$dimen: int margin_below_tab_bar
 com.kovaciny.linemonitorbot.R$dimen: int margin_button_row
 com.kovaciny.linemonitorbot.R$dimen: int margin_roll_math_buttons
 com.kovaciny.linemonitorbot.R$dimen: int margin_roll_math_buttons_bottom
@@ -536,6 +541,7 @@ com.kovaciny.linemonitorbot.R$dimen: int margin_vertical_separator
 com.kovaciny.linemonitorbot.R$dimen: int padding_around_divider
 com.kovaciny.linemonitorbot.R$dimen: int padding_before_checkbox
 com.kovaciny.linemonitorbot.R$dimen: int padding_before_radiobutton
+com.kovaciny.linemonitorbot.R$dimen: int padding_border_rectangle
 com.kovaciny.linemonitorbot.R$dimen: int padding_button_row
 com.kovaciny.linemonitorbot.R$dimen: int padding_table_row
 com.kovaciny.linemonitorbot.R$dimen: int sheets_label_width
@@ -546,6 +552,8 @@ com.kovaciny.linemonitorbot.R$dimen: int up_arrow_bottom_padding
 com.kovaciny.linemonitorbot.R$dimen: int up_arrow_top_padding
 com.kovaciny.linemonitorbot.R$drawable: int border_rectangle_1dp
 com.kovaciny.linemonitorbot.R$drawable: int border_rectangle_2dp
+com.kovaciny.linemonitorbot.R$drawable: int border_rectangle_exclusive_view_set
+com.kovaciny.linemonitorbot.R$drawable: int border_rectangle_exclusive_view_set_selected
 com.kovaciny.linemonitorbot.R$drawable: int calculator
 com.kovaciny.linemonitorbot.R$drawable: int ic_1roll
 com.kovaciny.linemonitorbot.R$drawable: int ic_1sheet
@@ -559,6 +567,8 @@ com.kovaciny.linemonitorbot.R$drawable: int ic_5roll
 com.kovaciny.linemonitorbot.R$drawable: int ic_5sheet
 com.kovaciny.linemonitorbot.R$drawable: int ic_audio_alarm_dark
 com.kovaciny.linemonitorbot.R$drawable: int ic_calculator
+com.kovaciny.linemonitorbot.R$drawable: int ic_calculator_small
+com.kovaciny.linemonitorbot.R$drawable: int ic_collections_view_as_list
 com.kovaciny.linemonitorbot.R$drawable: int ic_device_cancel_alarms
 com.kovaciny.linemonitorbot.R$drawable: int ic_diameter_tab
 com.kovaciny.linemonitorbot.R$drawable: int ic_feet_tab
@@ -569,6 +579,7 @@ com.kovaciny.linemonitorbot.R$drawable: int ic_plus
 com.kovaciny.linemonitorbot.R$drawable: int ic_pomodroido
 com.kovaciny.linemonitorbot.R$drawable: int ic_ruler
 com.kovaciny.linemonitorbot.R$drawable: int ic_weight_tab
+com.kovaciny.linemonitorbot.R$drawable: int list_selector
 com.kovaciny.linemonitorbot.R$drawable: int numberpicker_up_btn_holo_dark
 com.kovaciny.linemonitorbot.R$drawable: int numberpicker_up_disabled_focused_holo_dark
 com.kovaciny.linemonitorbot.R$drawable: int numberpicker_up_disabled_holo_dark
@@ -577,6 +588,7 @@ com.kovaciny.linemonitorbot.R$drawable: int numberpicker_up_normal_holo_dark
 com.kovaciny.linemonitorbot.R$drawable: int numberpicker_up_pressed_holo_dark
 com.kovaciny.linemonitorbot.R$drawable: int pointer_arrow
 com.kovaciny.linemonitorbot.R$drawable: int roll_slider120
+com.kovaciny.linemonitorbot.R$drawable: int selector_viewgroup_exclusive
 com.kovaciny.linemonitorbot.R$drawable: int sheet_slider120
 com.kovaciny.linemonitorbot.R$drawable: int tab_selected_example
 com.kovaciny.linemonitorbot.R$drawable: int tab_selected_focused_example
@@ -604,13 +616,14 @@ com.kovaciny.linemonitorbot.R$id: int action_tips_and_apps
 com.kovaciny.linemonitorbot.R$id: int action_view_database
 com.kovaciny.linemonitorbot.R$id: int btn_add_web
 com.kovaciny.linemonitorbot.R$id: int btn_calculate_rates
-com.kovaciny.linemonitorbot.R$id: int btn_calculate_times
 com.kovaciny.linemonitorbot.R$id: int btn_calculator
 com.kovaciny.linemonitorbot.R$id: int btn_enter_product
 com.kovaciny.linemonitorbot.R$id: int btn_enter_product_rates_frag
 com.kovaciny.linemonitorbot.R$id: int btn_flashlight
 com.kovaciny.linemonitorbot.R$id: int btn_get_diameter
+com.kovaciny.linemonitorbot.R$id: int btn_get_drain_times
 com.kovaciny.linemonitorbot.R$id: int btn_get_feet
+com.kovaciny.linemonitorbot.R$id: int btn_get_times
 com.kovaciny.linemonitorbot.R$id: int btn_get_weight
 com.kovaciny.linemonitorbot.R$id: int btn_go_by_height
 com.kovaciny.linemonitorbot.R$id: int btn_pomodroido
@@ -619,30 +632,43 @@ com.kovaciny.linemonitorbot.R$id: int btn_self_destruct
 com.kovaciny.linemonitorbot.R$id: int btn_skid_number_up
 com.kovaciny.linemonitorbot.R$id: int btn_subtract_web
 com.kovaciny.linemonitorbot.R$id: int btn_total_skids_up
+com.kovaciny.linemonitorbot.R$id: int checkBox1
 com.kovaciny.linemonitorbot.R$id: int chk_heavy_wall
 com.kovaciny.linemonitorbot.R$id: int clear_wos
 com.kovaciny.linemonitorbot.R$id: int container_blender_hoppers
+com.kovaciny.linemonitorbot.R$id: int container_diameter_inputs_1
+com.kovaciny.linemonitorbot.R$id: int container_diameter_inputs_2
 com.kovaciny.linemonitorbot.R$id: int container_dimensions_and_speed
+com.kovaciny.linemonitorbot.R$id: int container_draining_fragment
 com.kovaciny.linemonitorbot.R$id: int container_enter_product_button
 com.kovaciny.linemonitorbot.R$id: int container_enter_product_dialog
+com.kovaciny.linemonitorbot.R$id: int container_feet_inputs_1
+com.kovaciny.linemonitorbot.R$id: int container_feet_inputs_2
 com.kovaciny.linemonitorbot.R$id: int container_floating_toolbar
 com.kovaciny.linemonitorbot.R$id: int container_go_by_height_dialog
 com.kovaciny.linemonitorbot.R$id: int container_product_details
+com.kovaciny.linemonitorbot.R$id: int container_skid_times_display
 com.kovaciny.linemonitorbot.R$id: int container_skid_times_fragment
 com.kovaciny.linemonitorbot.R$id: int container_skids_on_table
+com.kovaciny.linemonitorbot.R$id: int container_weight_inputs_1
+com.kovaciny.linemonitorbot.R$id: int container_weight_inputs_2
 com.kovaciny.linemonitorbot.R$id: int core_size_container
 com.kovaciny.linemonitorbot.R$id: int core_type_fragment_1
 com.kovaciny.linemonitorbot.R$id: int core_type_fragment_2
 com.kovaciny.linemonitorbot.R$id: int core_type_fragment_3
-com.kovaciny.linemonitorbot.R$id: int editText1
 com.kovaciny.linemonitorbot.R$id: int edit_current_count
 com.kovaciny.linemonitorbot.R$id: int edit_current_gauge
 com.kovaciny.linemonitorbot.R$id: int edit_current_height
 com.kovaciny.linemonitorbot.R$id: int edit_differential_speed
 com.kovaciny.linemonitorbot.R$id: int edit_finished_height
 com.kovaciny.linemonitorbot.R$id: int edit_foot_weight
+com.kovaciny.linemonitorbot.R$id: int edit_foot_weight_2
+com.kovaciny.linemonitorbot.R$id: int edit_foot_weight_3
 com.kovaciny.linemonitorbot.R$id: int edit_gauge
+com.kovaciny.linemonitorbot.R$id: int edit_gauge_3
+com.kovaciny.linemonitorbot.R$id: int edit_gross_rate
 com.kovaciny.linemonitorbot.R$id: int edit_gross_weight
+com.kovaciny.linemonitorbot.R$id: int edit_gross_weight_2
 com.kovaciny.linemonitorbot.R$id: int edit_gross_width
 com.kovaciny.linemonitorbot.R$id: int edit_line_speed
 com.kovaciny.linemonitorbot.R$id: int edit_linear_feet
@@ -651,6 +677,7 @@ com.kovaciny.linemonitorbot.R$id: int edit_novatec_setpoint
 com.kovaciny.linemonitorbot.R$id: int edit_num_skids_in_job
 com.kovaciny.linemonitorbot.R$id: int edit_number_of_stacks
 com.kovaciny.linemonitorbot.R$id: int edit_ordered_gauge
+com.kovaciny.linemonitorbot.R$id: int edit_ordered_gauge_2
 com.kovaciny.linemonitorbot.R$id: int edit_sheet_length
 com.kovaciny.linemonitorbot.R$id: int edit_sheet_weight
 com.kovaciny.linemonitorbot.R$id: int edit_sheet_width
@@ -658,19 +685,19 @@ com.kovaciny.linemonitorbot.R$id: int edit_sheets_per_skid_height_dialog
 com.kovaciny.linemonitorbot.R$id: int edit_skid_number
 com.kovaciny.linemonitorbot.R$id: int edit_speed_factor
 com.kovaciny.linemonitorbot.R$id: int edit_target_diameter
+com.kovaciny.linemonitorbot.R$id: int edit_target_diameter_2
 com.kovaciny.linemonitorbot.R$id: int edit_ten_second_letdown_grams
 com.kovaciny.linemonitorbot.R$id: int edit_total_sheets_per_skid
 com.kovaciny.linemonitorbot.R$id: int edit_width
 com.kovaciny.linemonitorbot.R$id: int floating_toolbar_1
 com.kovaciny.linemonitorbot.R$id: int floating_toolbar_2
 com.kovaciny.linemonitorbot.R$id: int floating_toolbar_3
-com.kovaciny.linemonitorbot.R$id: int floating_toolbar_4
-com.kovaciny.linemonitorbot.R$id: int floating_toolbar_5
-com.kovaciny.linemonitorbot.R$id: int floating_toolbar_6
 com.kovaciny.linemonitorbot.R$id: int gridview_database
 com.kovaciny.linemonitorbot.R$id: int img_number_of_webs
 com.kovaciny.linemonitorbot.R$id: int img_tutorial_arrow
+com.kovaciny.linemonitorbot.R$id: int imgbtn_calculate_sheet_weight
 com.kovaciny.linemonitorbot.R$id: int imgbtn_cancel_alarm
+com.kovaciny.linemonitorbot.R$id: int imgbtn_launch_skids_list
 com.kovaciny.linemonitorbot.R$id: int imgbtn_sheets_or_rolls
 com.kovaciny.linemonitorbot.R$id: int lbl_color_percent
 com.kovaciny.linemonitorbot.R$id: int lbl_core_size
@@ -678,8 +705,12 @@ com.kovaciny.linemonitorbot.R$id: int lbl_core_weight
 com.kovaciny.linemonitorbot.R$id: int lbl_differential_speed
 com.kovaciny.linemonitorbot.R$id: int lbl_edge_trim_percent
 com.kovaciny.linemonitorbot.R$id: int lbl_foot_weight
+com.kovaciny.linemonitorbot.R$id: int lbl_foot_weight_2
+com.kovaciny.linemonitorbot.R$id: int lbl_foot_weight_3
 com.kovaciny.linemonitorbot.R$id: int lbl_gauge
+com.kovaciny.linemonitorbot.R$id: int lbl_gauge_3
 com.kovaciny.linemonitorbot.R$id: int lbl_gross_weight
+com.kovaciny.linemonitorbot.R$id: int lbl_gross_weight_2
 com.kovaciny.linemonitorbot.R$id: int lbl_gross_width
 com.kovaciny.linemonitorbot.R$id: int lbl_job_finish_time
 com.kovaciny.linemonitorbot.R$id: int lbl_line_speed
@@ -702,15 +733,18 @@ com.kovaciny.linemonitorbot.R$id: int lbl_skid_finish_time
 com.kovaciny.linemonitorbot.R$id: int lbl_skid_start_time
 com.kovaciny.linemonitorbot.R$id: int lbl_speed_factor
 com.kovaciny.linemonitorbot.R$id: int lbl_target_diameter
+com.kovaciny.linemonitorbot.R$id: int lbl_target_diameter_2
 com.kovaciny.linemonitorbot.R$id: int lbl_time_per_skid
 com.kovaciny.linemonitorbot.R$id: int lbl_time_to_maxson
 com.kovaciny.linemonitorbot.R$id: int lbl_width
 com.kovaciny.linemonitorbot.R$id: int line_list
+com.kovaciny.linemonitorbot.R$id: int listview_skids_list
 com.kovaciny.linemonitorbot.R$id: int new_wo
 com.kovaciny.linemonitorbot.R$id: int pager
 com.kovaciny.linemonitorbot.R$id: int pick_job_submenu
 com.kovaciny.linemonitorbot.R$id: int pick_line_submenu
 com.kovaciny.linemonitorbot.R$id: int placeholder
+com.kovaciny.linemonitorbot.R$id: int progressBar1
 com.kovaciny.linemonitorbot.R$id: int radio_group_core_size
 com.kovaciny.linemonitorbot.R$id: int radio_group_skids_on_table
 com.kovaciny.linemonitorbot.R$id: int radio_one_skid
@@ -721,6 +755,13 @@ com.kovaciny.linemonitorbot.R$id: int radio_two_skids
 com.kovaciny.linemonitorbot.R$id: int rl_data_entry_group
 com.kovaciny.linemonitorbot.R$id: int row_sheet_length
 com.kovaciny.linemonitorbot.R$id: int row_sheet_width
+com.kovaciny.linemonitorbot.R$id: int skids_list_column_finish_time
+com.kovaciny.linemonitorbot.R$id: int skids_list_column_item_count
+com.kovaciny.linemonitorbot.R$id: int skids_list_column_skid_number
+com.kovaciny.linemonitorbot.R$id: int skids_list_finish_time_header
+com.kovaciny.linemonitorbot.R$id: int skids_list_item
+com.kovaciny.linemonitorbot.R$id: int skids_list_skid_numbers_header
+com.kovaciny.linemonitorbot.R$id: int skids_list_total_items_header
 com.kovaciny.linemonitorbot.R$id: int tabIcon
 com.kovaciny.linemonitorbot.R$id: int tabText
 com.kovaciny.linemonitorbot.R$id: int tableRow1
@@ -752,6 +793,7 @@ com.kovaciny.linemonitorbot.R$id: int txt_linear_feet
 com.kovaciny.linemonitorbot.R$id: int txt_net_pph
 com.kovaciny.linemonitorbot.R$id: int txt_products_per_minute
 com.kovaciny.linemonitorbot.R$id: int txt_roll_diameter
+com.kovaciny.linemonitorbot.R$id: int txt_roll_diameter_high
 com.kovaciny.linemonitorbot.R$id: int txt_roll_weight
 com.kovaciny.linemonitorbot.R$id: int txt_skid_finish_time
 com.kovaciny.linemonitorbot.R$id: int txt_skid_start_time
@@ -777,6 +819,8 @@ com.kovaciny.linemonitorbot.R$layout: int roll_math_diameter_fragment
 com.kovaciny.linemonitorbot.R$layout: int roll_math_feet_fragment
 com.kovaciny.linemonitorbot.R$layout: int roll_math_weight_fragment
 com.kovaciny.linemonitorbot.R$layout: int skid_times_fragment
+com.kovaciny.linemonitorbot.R$layout: int skids_list_header_row
+com.kovaciny.linemonitorbot.R$layout: int skids_list_item
 com.kovaciny.linemonitorbot.R$layout: int spinnerriffic_textview
 com.kovaciny.linemonitorbot.R$layout: int tab_bar_icon_diameter
 com.kovaciny.linemonitorbot.R$layout: int tab_bar_icon_linear_feet
@@ -790,6 +834,7 @@ com.kovaciny.linemonitorbot.R$string: int action_tips_and_apps_title
 com.kovaciny.linemonitorbot.R$string: int action_view_database_title
 com.kovaciny.linemonitorbot.R$string: int app_name
 com.kovaciny.linemonitorbot.R$string: int btn_enter_product_text
+com.kovaciny.linemonitorbot.R$string: int btn_get_rates_text
 com.kovaciny.linemonitorbot.R$string: int btn_go_by_height_text
 com.kovaciny.linemonitorbot.R$string: int calculate
 com.kovaciny.linemonitorbot.R$string: int cancel
@@ -803,6 +848,8 @@ com.kovaciny.linemonitorbot.R$string: int error_current_greater_than_total
 com.kovaciny.linemonitorbot.R$string: int error_differential_too_high
 com.kovaciny.linemonitorbot.R$string: int error_differential_too_low
 com.kovaciny.linemonitorbot.R$string: int error_empty_field
+com.kovaciny.linemonitorbot.R$string: int error_mutually_exclusive_need_at_least_one
+com.kovaciny.linemonitorbot.R$string: int error_mutually_exclusive_need_only_one
 com.kovaciny.linemonitorbot.R$string: int error_need_at_least_one
 com.kovaciny.linemonitorbot.R$string: int error_need_nonzero
 com.kovaciny.linemonitorbot.R$string: int error_need_only_one
@@ -823,6 +870,7 @@ com.kovaciny.linemonitorbot.R$string: int reminder_no_differential_speed
 com.kovaciny.linemonitorbot.R$string: int roll_math_activity_name
 com.kovaciny.linemonitorbot.R$string: int select_line_activity_name
 com.kovaciny.linemonitorbot.R$string: int settings_activity_name
+com.kovaciny.linemonitorbot.R$string: int skids_list_activity_name
 com.kovaciny.linemonitorbot.R$string: int support_email
 com.kovaciny.linemonitorbot.R$string: int tips_activity_name
 com.kovaciny.linemonitorbot.R$string: int title_activity_alarm_manager
@@ -857,6 +905,7 @@ com.kovaciny.linemonitorbot.R$style: int ParentFragment_VerticallyDivided
 com.kovaciny.linemonitorbot.R$style: int Spinner
 com.kovaciny.linemonitorbot.R$style: int ThirdColumn
 com.kovaciny.linemonitorbot.R$style: int TwoColumns
+com.kovaciny.linemonitorbot.R$style: int TwoColumns_MutuallyExclusive
 com.kovaciny.linemonitorbot.R$xml: int preferences
 com.kovaciny.linemonitorbot.RollMathActivity
 com.kovaciny.linemonitorbot.RollMathActivity: RollMathActivity()
@@ -864,6 +913,8 @@ com.kovaciny.linemonitorbot.SettingsActivity
 com.kovaciny.linemonitorbot.SettingsActivity: SettingsActivity()
 com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver
 com.kovaciny.linemonitorbot.SkidFinishedBroadcastReceiver: SkidFinishedBroadcastReceiver()
+com.kovaciny.linemonitorbot.SkidsListActivity
+com.kovaciny.linemonitorbot.SkidsListActivity: SkidsListActivity()
 com.kovaciny.linemonitorbot.TipsActivity
 com.kovaciny.linemonitorbot.TipsActivity: TipsActivity()
 org.apache.commons.lang3.JavaVersion: org.apache.commons.lang3.JavaVersion[] values()
