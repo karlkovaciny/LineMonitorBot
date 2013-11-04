@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="Draining coming soon... \nHere&apos;s something else instead.\n"
+            android:text="Draining is not ready yet... \nYou can help me test bug reporting though.\n"
             android:textSize="35px" />
 
         <LinearLayout
@@ -40,7 +40,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:orientation="vertical" >
+        android:orientation="vertical" 
+        android:visibility="gone">"
 
         <TextView
             android:id="@+id/textView4"
@@ -136,7 +137,8 @@
                 android:layout_width="@dimen/button_width_default"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Get Drain Times" />
+                android:text="Get Drain Times"
+                android:visibility="gone" />
     
     <fragment
         android:id="@+id/floating_toolbar_3"
