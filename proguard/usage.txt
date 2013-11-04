@@ -1120,20 +1120,20 @@ com.kovaciny.primexmodel.PrimexModel:
     public static final java.lang.String ERROR_ZERO_LINE_SPEED
     public static final java.lang.String ERROR_NO_PPM_VALUE
     public static final double MAXIMUM_POSSIBLE_GAUGE
-    194:198:public com.kovaciny.primexmodel.Skid addSkid(int,int)
-    231:238:public void changeNovatecSetpoint(java.lang.Double)
-    460:489:public void changeNumberOfSkids(double)
-    492:493:public void closeDb()
-    510:510:public boolean hasLineSpeed()
-    526:526:public java.util.List getWoNumbers()
-    530:530:public java.util.Date getLatestWoCreateDate()
-    550:551:public void setProductsPerMinute(double)
-    558:559:public void setEdgeTrimPercent(double)
-    566:567:public void setNetPph(double)
-    574:575:public void setGrossPph(double)
-    582:583:public void setTenSecondLetdownGrams(double)
-    590:591:public void setColorPercent(double)
-    615:616:public void setCreateDate(java.util.Date)
+    196:200:public com.kovaciny.primexmodel.Skid addSkid(int,int)
+    233:240:public void changeNovatecSetpoint(java.lang.Double)
+    462:491:public void changeNumberOfSkids(double)
+    494:495:public void closeDb()
+    512:512:public boolean hasLineSpeed()
+    528:528:public java.util.List getWoNumbers()
+    532:532:public java.util.Date getLatestWoCreateDate()
+    552:553:public void setProductsPerMinute(double)
+    560:561:public void setEdgeTrimPercent(double)
+    568:569:public void setNetPph(double)
+    576:577:public void setGrossPph(double)
+    584:585:public void setTenSecondLetdownGrams(double)
+    592:593:public void setColorPercent(double)
+    617:618:public void setCreateDate(java.util.Date)
 com.kovaciny.primexmodel.Product:
     public static final java.lang.String SHEETS_TYPE
     public static final java.lang.String SHEETSET_TYPE
