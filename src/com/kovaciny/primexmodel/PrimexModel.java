@@ -175,6 +175,8 @@ public class PrimexModel {
 			propChangeSupport.firePropertyChange(PRODUCTS_PER_MINUTE_CHANGE_EVENT, null, getProductsPerMinute()); 
 			if (mSelectedLine.getLineSpeed() > 0) {
 				propChangeSupport.firePropertyChange(SECONDS_TO_MAXSON_CHANGE_EVENT, null, mSelectedLine.getSecondsToMaxson());
+			} else {
+				propChangeSupport.firePropertyChange(SECONDS_TO_MAXSON_CHANGE_EVENT, null, 0l); //so label will hide
 			}
 		}
 		propChangeSupport.firePropertyChange(NUMBER_OF_SKIDS_CHANGE_EVENT, null, mSelectedWorkOrder.getNumberOfSkids());

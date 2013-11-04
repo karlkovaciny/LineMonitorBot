@@ -112,6 +112,7 @@
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="4"
+                        android:nextFocusForward="@+id/edit_foot_weight_3"
                         android:nextFocusDown="@+id/edit_foot_weight_3" />
                 </LinearLayout>
 

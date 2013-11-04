@@ -507,7 +507,7 @@ public class SkidTimesFragment extends Fragment implements
 			
 		} else if (propertyName == PrimexModel.SECONDS_TO_MAXSON_CHANGE_EVENT) {
 			Long timeToMaxson = (Long)newProperty;
-			if (!(timeToMaxson > 0)) {
+			if (!(timeToMaxson > 0l)) {
 				mTxt_timeToMaxson.setText("");
 				mLbl_timeToMaxson.setVisibility(TextView.INVISIBLE);
                 mTxt_timeToMaxson.setVisibility(TextView.GONE);
