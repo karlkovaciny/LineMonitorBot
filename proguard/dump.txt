@@ -87167,7 +87167,7 @@ Methods (count = 20):
     Access flags: 0x11
       = public final void a(int)
     Class member attributes (count = 1):
-    + Code attribute instructions (code length = 498, locals = 2, stack = 9):
+    + Code attribute instructions (code length = 515, locals = 2, stack = 9):
       [0] aload_0 v0
       [1] getfield #95
         + Fieldref [com/kovaciny/c/e.s Ljava/util/List;]
@@ -87342,7 +87342,7 @@ Methods (count = 20):
       [237] aload_0 v0
       [238] getfield #80
         + Fieldref [com/kovaciny/c/e.d Lcom/kovaciny/c/m;]
-      [241] ifnull +120 (target=361)
+      [241] ifnull +137 (target=378)
       [244] aload_0 v0
       [245] getfield #94
         + Fieldref [com/kovaciny/c/e.r Ljava/beans/PropertyChangeSupport;]
@@ -87415,7 +87415,7 @@ Methods (count = 20):
         + Methodref [com/kovaciny/c/g.b ()D]
       [336] dconst_0
       [337] dcmpl
-      [338] ifle +23 (target=361)
+      [338] ifle +26 (target=364)
       [341] aload_0 v0
       [342] getfield #94
         + Fieldref [com/kovaciny/c/e.r Ljava/beans/PropertyChangeSupport;]
@@ -87431,30 +87431,29 @@ Methods (count = 20):
         + Methodref [java/lang/Long.valueOf (J)Ljava/lang/Long;]
       [358] invokevirtual #157
         + Methodref [java/beans/PropertyChangeSupport.firePropertyChange (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V]
-      [361] aload_0 v0
-      [362] getfield #94
+      [361] goto +17 (target=378)
+      [364] aload_0 v0
+      [365] getfield #94
         + Fieldref [com/kovaciny/c/e.r Ljava/beans/PropertyChangeSupport;]
-      [365] ldc #19
-        + String [PrimexModel.NUMBER_OF_SKIDS_CHANGE]
-      [367] aconst_null
-      [368] aload_0 v0
-      [369] getfield #79
-        + Fieldref [com/kovaciny/c/e.c Lcom/kovaciny/c/o;]
-      [372] invokevirtual #153
-        + Methodref [com/kovaciny/c/o.c ()D]
-      [375] invokestatic #159
-        + Methodref [java/lang/Double.valueOf (D)Ljava/lang/Double;]
-      [378] invokevirtual #157
+      [368] ldc #26
+        + String [PrimexModel.SECONDS_TO_MAXSON_CHANGE]
+      [370] aconst_null
+      [371] lconst_0
+      [372] invokestatic #164
+        + Methodref [java/lang/Long.valueOf (J)Ljava/lang/Long;]
+      [375] invokevirtual #157
         + Methodref [java/beans/PropertyChangeSupport.firePropertyChange (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V]
-      [381] aload_0 v0
-      [382] getfield #94
+      [378] aload_0 v0
+      [379] getfield #94
         + Fieldref [com/kovaciny/c/e.r Ljava/beans/PropertyChangeSupport;]
-      [385] ldc #9
-        + String [PrimexModel.EDGE_TRIM_PERCENT_CHANGE]
-      [387] aconst_null
-      [388] aload_0 v0
-      [389] getfield #86
-        + Fieldref [com/kovaciny/c/e.j D]
+      [382] ldc #19
+        + String [PrimexModel.NUMBER_OF_SKIDS_CHANGE]
+      [384] aconst_null
+      [385] aload_0 v0
+      [386] getfield #79
+        + Fieldref [com/kovaciny/c/e.c Lcom/kovaciny/c/o;]
+      [389] invokevirtual #153
+        + Methodref [com/kovaciny/c/o.c ()D]
       [392] invokestatic #159
         + Methodref [java/lang/Double.valueOf (D)Ljava/lang/Double;]
       [395] invokevirtual #157
@@ -87462,12 +87461,12 @@ Methods (count = 20):
       [398] aload_0 v0
       [399] getfield #94
         + Fieldref [com/kovaciny/c/e.r Ljava/beans/PropertyChangeSupport;]
-      [402] ldc #15
-        + String [PrimexModel.NET_PPH_CHANGE]
+      [402] ldc #9
+        + String [PrimexModel.EDGE_TRIM_PERCENT_CHANGE]
       [404] aconst_null
       [405] aload_0 v0
-      [406] getfield #89
-        + Fieldref [com/kovaciny/c/e.m D]
+      [406] getfield #86
+        + Fieldref [com/kovaciny/c/e.j D]
       [409] invokestatic #159
         + Methodref [java/lang/Double.valueOf (D)Ljava/lang/Double;]
       [412] invokevirtual #157
@@ -87475,12 +87474,12 @@ Methods (count = 20):
       [415] aload_0 v0
       [416] getfield #94
         + Fieldref [com/kovaciny/c/e.r Ljava/beans/PropertyChangeSupport;]
-      [419] ldc #10
-        + String [PrimexModel.GROSS_PPH_CHANGE]
+      [419] ldc #15
+        + String [PrimexModel.NET_PPH_CHANGE]
       [421] aconst_null
       [422] aload_0 v0
-      [423] getfield #87
-        + Fieldref [com/kovaciny/c/e.k D]
+      [423] getfield #89
+        + Fieldref [com/kovaciny/c/e.m D]
       [426] invokestatic #159
         + Methodref [java/lang/Double.valueOf (D)Ljava/lang/Double;]
       [429] invokevirtual #157
@@ -87488,12 +87487,12 @@ Methods (count = 20):
       [432] aload_0 v0
       [433] getfield #94
         + Fieldref [com/kovaciny/c/e.r Ljava/beans/PropertyChangeSupport;]
-      [436] ldc #18
-        + String [PrimexModel.NOVATEC_LETDOWN_CHANGE]
+      [436] ldc #10
+        + String [PrimexModel.GROSS_PPH_CHANGE]
       [438] aconst_null
       [439] aload_0 v0
-      [440] getfield #82
-        + Fieldref [com/kovaciny/c/e.f D]
+      [440] getfield #87
+        + Fieldref [com/kovaciny/c/e.k D]
       [443] invokestatic #159
         + Methodref [java/lang/Double.valueOf (D)Ljava/lang/Double;]
       [446] invokevirtual #157
@@ -87501,12 +87500,12 @@ Methods (count = 20):
       [449] aload_0 v0
       [450] getfield #94
         + Fieldref [com/kovaciny/c/e.r Ljava/beans/PropertyChangeSupport;]
-      [453] ldc #28
-        + String [PrimexModel.TEN_SECOND_LETDOWN_GRAMS_CHANGE]
+      [453] ldc #18
+        + String [PrimexModel.NOVATEC_LETDOWN_CHANGE]
       [455] aconst_null
       [456] aload_0 v0
-      [457] getfield #83
-        + Fieldref [com/kovaciny/c/e.g D]
+      [457] getfield #82
+        + Fieldref [com/kovaciny/c/e.f D]
       [460] invokestatic #159
         + Methodref [java/lang/Double.valueOf (D)Ljava/lang/Double;]
       [463] invokevirtual #157
@@ -87514,38 +87513,52 @@ Methods (count = 20):
       [466] aload_0 v0
       [467] getfield #94
         + Fieldref [com/kovaciny/c/e.r Ljava/beans/PropertyChangeSupport;]
-      [470] ldc #29
-        + String [PrimexModel.WO_CHANGE]
+      [470] ldc #28
+        + String [PrimexModel.TEN_SECOND_LETDOWN_GRAMS_CHANGE]
       [472] aconst_null
       [473] aload_0 v0
-      [474] getfield #79
-        + Fieldref [com/kovaciny/c/e.c Lcom/kovaciny/c/o;]
-      [477] invokevirtual #157
+      [474] getfield #83
+        + Fieldref [com/kovaciny/c/e.g D]
+      [477] invokestatic #159
+        + Methodref [java/lang/Double.valueOf (D)Ljava/lang/Double;]
+      [480] invokevirtual #157
         + Methodref [java/beans/PropertyChangeSupport.firePropertyChange (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V]
-      [480] aload_0 v0
-      [481] getfield #94
+      [483] aload_0 v0
+      [484] getfield #94
         + Fieldref [com/kovaciny/c/e.r Ljava/beans/PropertyChangeSupport;]
-      [484] ldc #20
-        + String [PrimexModel.NUMBER_OF_TABLE_SKIDS_CHANGE]
-      [486] aconst_null
-      [487] aload_0 v0
-      [488] getfield #91
-        + Fieldref [com/kovaciny/c/e.o I]
-      [491] invokestatic #163
-        + Methodref [java/lang/Integer.valueOf (I)Ljava/lang/Integer;]
+      [487] ldc #29
+        + String [PrimexModel.WO_CHANGE]
+      [489] aconst_null
+      [490] aload_0 v0
+      [491] getfield #79
+        + Fieldref [com/kovaciny/c/e.c Lcom/kovaciny/c/o;]
       [494] invokevirtual #157
         + Methodref [java/beans/PropertyChangeSupport.firePropertyChange (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V]
-      [497] return
+      [497] aload_0 v0
+      [498] getfield #94
+        + Fieldref [com/kovaciny/c/e.r Ljava/beans/PropertyChangeSupport;]
+      [501] ldc #20
+        + String [PrimexModel.NUMBER_OF_TABLE_SKIDS_CHANGE]
+      [503] aconst_null
+      [504] aload_0 v0
+      [505] getfield #91
+        + Fieldref [com/kovaciny/c/e.o I]
+      [508] invokestatic #163
+        + Methodref [java/lang/Integer.valueOf (I)Ljava/lang/Integer;]
+      [511] invokevirtual #157
+        + Methodref [java/beans/PropertyChangeSupport.firePropertyChange (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V]
+      [514] return
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 1):
-      + Stack map table attribute (count = 7):
+      + Stack map table attribute (count = 8):
         - [26] Var: ..., Stack: (empty)
         - [40] Var: ..., Stack: (empty)
         - [59] Var: ..., Stack: (empty)
         - [63] Var: ..., Stack: (empty)
         - [177] Var: ..., Stack: (empty)
         - [206] Var: ..., Stack: (empty)
-        - [361] Var: ...[a:com/kovaciny/c/f], Stack: (empty)
+        - [364] Var: ...[a:com/kovaciny/c/f], Stack: (empty)
+        - [378] Var: ..., Stack: (empty)
   + Method:       a()Lcom/kovaciny/c/o;
     Access flags: 0x11
       = public final com.kovaciny.c.o a()
