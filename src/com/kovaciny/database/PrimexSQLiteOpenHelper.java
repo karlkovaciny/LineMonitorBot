@@ -31,7 +31,7 @@ public class PrimexSQLiteOpenHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 	
-	// If you change the database schema, you must increment the database version.
+	// If you change the database schema, you must increment the database version. 
     public static final int DATABASE_VERSION = 159;
     public static final String DATABASE_NAME = "Primex.db";
     

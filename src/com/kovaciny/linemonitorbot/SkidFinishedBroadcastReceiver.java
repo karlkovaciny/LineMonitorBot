@@ -25,7 +25,7 @@ public class SkidFinishedBroadcastReceiver extends BroadcastReceiver {
 	         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Skid finished");
 	         
 	         try {
-		         //Acquire the lock
+		         //Acquire the lock 
 		         wl.acquire();
 		 
 		         //You can do the processing here.

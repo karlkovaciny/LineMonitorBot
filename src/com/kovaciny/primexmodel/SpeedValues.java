@@ -6,7 +6,7 @@ public class SpeedValues {
 	public double speedFactor;
 	
 	/*
-	 * 
+	 *  
 	 */
 	public SpeedValues(double linespeed, double differential, double factor) {
 		if (linespeed < 0) {throw new IllegalArgumentException("Line speed setpoint less than zero");}
