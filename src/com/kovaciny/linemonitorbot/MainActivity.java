@@ -406,7 +406,7 @@ public class MainActivity extends FragmentActivity implements
 		// clear the menu title
 		mJobPicker.setTitle(R.string.action_pick_job_title);
 
-		// clear the database
+		// clear the database, in case management worries we're collecting their data
 		mModel.deleteWorkOrders();
 
 		// make sure a new WO always exists
